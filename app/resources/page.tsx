@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import Navbar from "../components/Navbar";
 import { createClient } from "../lib/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -21,16 +22,50 @@ import {
   GraduationCap,
   TrendingUp,
   Code,
+  PlusCircle,
 } from "lucide-react";
+
+interface CommunityResource {
+  id: string;
+  title: string;
+  body: string;
+  tags: string[];
+  resourceType: string;
+  category: string;
+  slug: string;
+  approvedAt: string | null;
+  createdAt: string;
+  hasAttachment: boolean;
+}
 
 export default function DSAKnowledgeHub() {
   const [user, setUser] = useState<User | null>(null);
+  const [communityResources, setCommunityResources] = useState<
+    CommunityResource[]
+  >([]);
+  const [resourcesLoading, setResourcesLoading] = useState(true);
   const supabase = createClient();
+
+  const fetchCommunityResources = async () => {
+    try {
+      const response = await fetch("/api/resources");
+      const data = await response.json();
+
+      if (data.success) {
+        setCommunityResources(data.resources || []);
+      }
+    } catch (error) {
+      console.error("Community resources error:", error);
+    } finally {
+      setResourcesLoading(false);
+    }
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
     });
+    fetchCommunityResources();
   }, []);
 
   const [darkMode, setDarkMode] = useState(false);
@@ -388,6 +423,146 @@ export default function DSAKnowledgeHub() {
               A curated knowledge base connecting standard DSA with real-world
               System Design and CS Fundamentals.
             </p>
+            <div className="flex justify-center">
+              <Link
+                href="/resources/submit"
+                className={`inline-flex items-center gap-2 rounded-2xl border-4 px-6 py-3 text-lg font-black transition-all cartoon-shadow-hover ${
+                  darkMode
+                    ? "border-white bg-green-500 text-white"
+                    : "border-black bg-green-400 text-black"
+                }`}
+              >
+                <PlusCircle className="h-5 w-5" />
+                {user ? "Submit your resource" : "Login to submit resource"}
+              </Link>
+            </div>
+          </div>
+
+          {/* --- Latest Community Resources --- */}
+          <div className="mb-20">
+            <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <BookOpen
+                    className={`w-8 h-8 ${darkMode ? "text-pink-400" : "text-pink-600"}`}
+                  />
+                  <h2
+                    className={`text-3xl font-black ${darkMode ? "text-white" : "text-black"}`}
+                  >
+                    Latest Community Resources
+                  </h2>
+                </div>
+                <p
+                  className={`max-w-2xl font-semibold ${
+                    darkMode ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  Approved blogs, notes, PDFs, links, and guides from the DSA
+                  Quest community.
+                </p>
+              </div>
+              <Link
+                href="/resources/submit"
+                className={`inline-flex items-center justify-center gap-2 rounded-xl border-2 px-4 py-3 font-black ${
+                  darkMode
+                    ? "border-white bg-gray-900 text-white"
+                    : "border-black bg-white text-black"
+                } cartoon-shadow-hover`}
+              >
+                <PlusCircle className="h-5 w-5" />
+                Submit
+              </Link>
+            </div>
+
+            {resourcesLoading ? (
+              <div
+                className={`rounded-3xl border-4 p-6 font-black ${
+                  darkMode
+                    ? "border-white bg-gray-900 text-white"
+                    : "border-black bg-white text-black"
+                } cartoon-shadow`}
+              >
+                Loading community resources...
+              </div>
+            ) : communityResources.length === 0 ? (
+              <div
+                className={`rounded-3xl border-4 border-dashed p-6 ${
+                  darkMode
+                    ? "border-gray-700 bg-gray-900 text-gray-400"
+                    : "border-gray-300 bg-white text-gray-600"
+                }`}
+              >
+                <p className="font-bold">
+                  No approved community resources yet. Be the first to submit
+                  something useful for other students.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {communityResources.map((resource) => (
+                  <Link
+                    key={resource.id}
+                    href={`/resources/${resource.slug}`}
+                    className={`block rounded-3xl border-4 p-6 transition-transform hover:-translate-y-1 ${
+                      darkMode
+                        ? "border-white bg-gray-900"
+                        : "border-black bg-white"
+                    } cartoon-shadow`}
+                  >
+                    <div className="mb-4 flex flex-wrap gap-2">
+                      <span className="rounded-full border-2 border-black bg-blue-200 px-3 py-1 text-xs font-black text-black">
+                        {resource.resourceType}
+                      </span>
+                      <span className="rounded-full border-2 border-black bg-green-200 px-3 py-1 text-xs font-black text-black">
+                        {resource.category}
+                      </span>
+                      {resource.hasAttachment && (
+                        <span className="rounded-full border-2 border-black bg-yellow-200 px-3 py-1 text-xs font-black text-black">
+                          File
+                        </span>
+                      )}
+                    </div>
+
+                    <h3
+                      className={`mb-3 text-2xl font-black ${
+                        darkMode ? "text-white" : "text-black"
+                      }`}
+                    >
+                      {resource.title}
+                    </h3>
+                    <p
+                      className={`mb-4 line-clamp-3 font-semibold ${
+                        darkMode ? "text-gray-400" : "text-gray-600"
+                      }`}
+                    >
+                      {resource.body}
+                    </p>
+
+                    <div className="mb-4 flex flex-wrap gap-2">
+                      {resource.tags.slice(0, 5).map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-lg border-2 border-black bg-pink-100 px-2 py-1 text-xs font-black text-black"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <p
+                      className={`text-sm font-bold ${
+                        darkMode ? "text-gray-500" : "text-gray-400"
+                      }`}
+                    >
+                      Latest edition -{" "}
+                      {new Date(
+                        resource.approvedAt || resource.createdAt,
+                      ).toLocaleDateString()}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* --- Section 1: The Toolkit --- */}

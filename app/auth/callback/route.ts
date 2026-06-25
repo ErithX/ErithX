@@ -98,12 +98,17 @@ export async function GET(request: Request) {
       }
 
       const forwardedHost = request.headers.get('x-forwarded-host')
-      const isLocalEnv = process.env.NODE_ENV === 'development'
+      const forwardedProto = request.headers.get('x-forwarded-proto') || 'https'
       
-      if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`)
+      const isLocal = origin.includes('localhost') || 
+                      (forwardedHost && forwardedHost.includes('localhost')) ||
+                      process.env.NODE_ENV === 'development'
+      
+      if (isLocal) {
+        const host = forwardedHost || new URL(origin).host
+        return NextResponse.redirect(`http://${host}${next}`)
       } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
+        return NextResponse.redirect(`${forwardedProto}://${forwardedHost}${next}`)
       } else {
         return NextResponse.redirect(`${origin}${next}`)
       }
