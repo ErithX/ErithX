@@ -1,753 +1,546 @@
 "use client";
-import { User } from "@supabase/supabase-js";
 
+import React, { useState, useEffect } from 'react';
+import { 
+  Zap, Bell, LogIn, Trophy, BellRing, RefreshCw, ChevronsDown, 
+  MousePointerClick, CalendarCheck, BookOpen, Route, Check, Target, Award,
+  Mail, ShieldCheck, Clock, XCircle, Twitter, Github, Linkedin, Flame
+} from 'lucide-react';
+import DsaContestCard, { Contest } from '@/components/DsaContestCard';
+import AuthModal from '@/components/AuthModal';
 
-import SignInPrompt from "./components/SignInPrompt";
-import { useState, useEffect } from "react";
-import Navbar from "./components/Navbar";
-import {
-  Calendar,
-  Clock,
-  ExternalLink,
-  RefreshCw,
-  Trophy,
-  DollarSign,
-  Briefcase,
-  AlertCircle,
-  Flame,
-} from "lucide-react";
-import { createClient } from "./lib/supabase/client";
-import InlineSignInBanner from "./components/InlineSignInBanner";
+const INITIAL_CONTEST_DATA: Contest[] = [
+  {
+    id: 1, platform: 'hackerrank', platformColor: '#22c55e', platformBg: 'rgba(34,197,94,0.1)', platformBorder: 'rgba(34,197,94,0.2)',
+    title: 'ProjectEuler+', status: 'live', statusLabel: 'LIVE NOW!',
+    date: 'Jul 7, 2014', time: '9:08 PM IST', duration: '4776d 13h remaining',
+    hot: false, participants: '12.4K'
+  },
+  {
+    id: 2, platform: 'hackerearth', platformColor: '#3b82f6', platformBg: 'rgba(59,130,246,0.1)', platformBorder: 'rgba(59,130,246,0.2)',
+    title: 'Turing Hiring Challenge 2026', status: 'live', statusLabel: 'LIVE NOW!',
+    date: 'Jun 9, 2026', time: '6:31 PM IST', duration: '40d 3h remaining',
+    hot: false, participants: '8.7K'
+  },
+  {
+    id: 3, platform: 'codechef', platformColor: '#f97316', platformBg: 'rgba(249,115,22,0.1)', platformBorder: 'rgba(249,115,22,0.2)',
+    title: 'Starters 244', status: 'today', statusLabel: 'TODAY!',
+    date: 'Jun 24, 2026', time: '8:00 PM IST', duration: 'Starts in 2h 0m',
+    hot: true, participants: '23.1K'
+  },
+  {
+    id: 4, platform: 'leetcode', platformColor: '#eab308', platformBg: 'rgba(234,179,8,0.1)', platformBorder: 'rgba(234,179,8,0.2)',
+    title: 'Weekly Contest 447', status: 'upcoming', statusLabel: 'UPCOMING',
+    date: 'Jun 29, 2026', time: '8:00 AM IST', duration: 'Starts in 5d 4h',
+    hot: false, participants: '—'
+  },
+  {
+    id: 5, platform: 'codeforces', platformColor: '#ef4444', platformBg: 'rgba(239,68,68,0.1)', platformBorder: 'rgba(239,68,68,0.2)',
+    title: 'Round 1023 (Div. 2)', status: 'upcoming', statusLabel: 'UPCOMING',
+    date: 'Jun 27, 2026', time: '8:35 PM IST', duration: 'Starts in 3d 8h',
+    hot: true, participants: '—'
+  },
+  {
+    id: 6, platform: 'leetcode', platformColor: '#eab308', platformBg: 'rgba(234,179,8,0.1)', platformBorder: 'rgba(234,179,8,0.2)',
+    title: 'Biweekly Contest 152', status: 'upcoming', statusLabel: 'UPCOMING',
+    date: 'Jul 5, 2026', time: '10:30 PM IST', duration: 'Starts in 11d 2h',
+    hot: false, participants: '—'
+  }
+];
 
-interface Contest {
-  id: string;
-  platform: string;
-  title: string;
-  url: string;
-  start_time: string;
-  duration: number;
-}
-
-
-export default function ContestTracker() {
-  const [user, setUser] = useState<User | null>(null);
-  const supabase = createClient();
+export default function HomePage() {
+  const [activePlatform, setActivePlatform] = useState('all');
+  const [contests, setContests] = useState<Contest[]>(INITIAL_CONTEST_DATA);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-  }, []);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
 
-  const handleSignIn = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+  const openAuth = () => {
+    setIsAuthOpen(true);
   };
 
-  const [contests, setContests] = useState<Contest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [darkMode, setDarkMode] = useState(false);
+  useEffect(() => {
+    const fetchContests = async () => {
+      try {
+        const res = await fetch('https://kontests.net/api/v1/all');
+        if (!res.ok) throw new Error('API failed');
+        const data = await res.json();
+        
+        const mapped = data.slice(0, 12).map((c: any, index: number) => {
+          let platformColor = '#3b82f6';
+          let platformBg = 'rgba(59,130,246,0.1)';
+          let platformBorder = 'rgba(59,130,246,0.2)';
+          let platform = c.site.toLowerCase();
+          
+          if (platform.includes('codechef')) { platformColor = '#f97316'; platformBg = 'rgba(249,115,22,0.1)'; platformBorder = 'rgba(249,115,22,0.2)'; }
+          else if (platform.includes('codeforces')) { platformColor = '#ef4444'; platformBg = 'rgba(239,68,68,0.1)'; platformBorder = 'rgba(239,68,68,0.2)'; }
+          else if (platform.includes('leetcode')) { platformColor = '#eab308'; platformBg = 'rgba(234,179,8,0.1)'; platformBorder = 'rgba(234,179,8,0.2)'; }
+          else if (platform.includes('hackerrank')) { platformColor = '#22c55e'; platformBg = 'rgba(34,197,94,0.1)'; platformBorder = 'rgba(34,197,94,0.2)'; }
 
-  const platforms = [
-    "all",
-    "LeetCode",
-    "Codeforces",
-    "CodeChef",
-    "AtCoder",
-    "HackerRank",
-    "GeeksforGeeks",
-    "HackerEarth",
-    "SPOJ",
-  ];
-
-  const fetchContests = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/contests");
-      const data = await res.json();
-      if (data.success) {
-        const sortedContests = data.contests.sort((a: Contest, b: Contest) => {
-          const now = new Date();
-          const startA = new Date(a.start_time);
-          const startB = new Date(b.start_time);
-          const endA = new Date(startA.getTime() + a.duration * 1000);
-          const endB = new Date(startB.getTime() + b.duration * 1000);
-
-          const hoursUntilA =
-            (startA.getTime() - now.getTime()) / (1000 * 60 * 60);
-          const hoursUntilB =
-            (startB.getTime() - now.getTime()) / (1000 * 60 * 60);
-
-          const isLiveA = now >= startA && now <= endA;
-          const isLiveB = now >= startB && now <= endB;
-          const isHotA = isLiveA || (hoursUntilA >= 0 && hoursUntilA <= 24);
-          const isHotB = isLiveB || (hoursUntilB >= 0 && hoursUntilB <= 24);
-
-          const isPriorityPlatformA =
-            a.platform === "LeetCode" || a.platform === "Codeforces";
-          const isPriorityPlatformB =
-            b.platform === "LeetCode" || b.platform === "Codeforces";
-
-          const majorPlatforms = [
-            "CodeChef",
-            "AtCoder",
-            "TopCoder",
-            "GeeksforGeeks",
-            "HackerEarth",
-            "SPOJ",
-          ];
-          const isMajorA = majorPlatforms.includes(a.platform);
-          const isMajorB = majorPlatforms.includes(b.platform);
-
-          const isHackerRankA = a.platform === "HackerRank";
-          const isHackerRankB = b.platform === "HackerRank";
-
-          const isWithin48hA = hoursUntilA >= 0 && hoursUntilA <= 48;
-          const isWithin48hB = hoursUntilB >= 0 && hoursUntilB <= 48;
-          const isWithin72hA = hoursUntilA >= 0 && hoursUntilA <= 72;
-          const isWithin72hB = hoursUntilB >= 0 && hoursUntilB <= 72;
-
-          const getPriority = (
-            contest: Contest,
-            isHot: boolean,
-            isPriority: boolean,
-            isMajor: boolean,
-            isHR: boolean,
-            within48h: boolean,
-            within72h: boolean,
-          ) => {
-            if (isHot) return 1;
-            if (isPriority && within48h) return 2;
-            if (isMajor && within72h) return 3;
-            if (isHR) return 4;
-            return 5;
+          const status = c.status === 'CODING' ? 'live' : c.in_24_hours === 'Yes' ? 'today' : 'upcoming';
+          const statusLabel = status === 'live' ? 'LIVE NOW!' : status === 'today' ? 'TODAY!' : 'UPCOMING';
+          
+          const sDate = new Date(c.start_time);
+          const dateStr = sDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+          const timeStr = sDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+          
+          return {
+            id: index + 100,
+            platform: c.site,
+            platformColor,
+            platformBg,
+            platformBorder,
+            title: c.name,
+            status,
+            statusLabel,
+            date: dateStr,
+            time: timeStr,
+            duration: c.duration ? `${Math.round(c.duration / 3600)}h` : 'Unknown',
+            hot: status === 'live' || status === 'today',
+            participants: '—'
           };
-
-          const priorityA = getPriority(
-            a,
-            isHotA,
-            isPriorityPlatformA,
-            isMajorA,
-            isHackerRankA,
-            isWithin48hA,
-            isWithin72hA,
-          );
-          const priorityB = getPriority(
-            b,
-            isHotB,
-            isPriorityPlatformB,
-            isMajorB,
-            isHackerRankB,
-            isWithin48hB,
-            isWithin72hB,
-          );
-
-          if (priorityA !== priorityB) {
-            return priorityA - priorityB;
-          }
-
-          return startA.getTime() - startB.getTime();
         });
-
-        setContests(sortedContests);
-        setLastUpdated(new Date(data.lastUpdated));
-      } else {
-        setError(data.error || "Failed to fetch contests");
+        setContests(mapped);
+      } catch (err) {
+        console.error("Failed to fetch contests, using fallback.", err);
       }
-    } catch (err) {
-      console.error(err);
-      setError("Network error. Please check your connection.");
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
+    };
     fetchContests();
-    const interval = setInterval(fetchContests, 5 * 60 * 1000);
-    return () => clearInterval(interval);
   }, []);
 
-  const formatDuration = (seconds: number) => {
-    const days = Math.floor(seconds / 86400);
-    const hours = Math.floor((seconds % 86400) / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    if (days > 0) return `${days}d ${hours}h`;
-    if (hours > 0) return `${hours}h ${mins}m`;
-    return `${mins}m`;
-  };
-
-  const isHotContest = (startTime: string) => {
-    const now = new Date();
-    const start = new Date(startTime);
-    const diff = start.getTime() - now.getTime();
-    const hoursUntilStart = diff / (1000 * 60 * 60);
-    return hoursUntilStart >= 0 && hoursUntilStart <= 24;
-  };
-
-  const getStatus = (startTime: string, duration: number) => {
-    const now = new Date();
-    const start = new Date(startTime);
-    const end = new Date(start.getTime() + duration * 1000);
-
-    if (now >= start && now <= end)
-      return {
-        text: "LIVE NOW!",
-        color: darkMode ? "bg-green-500" : "bg-green-400",
-      };
-    const diff = start.getTime() - now.getTime();
-    if (diff < 86400000)
-      return {
-        text: "Today!",
-        color: darkMode ? "bg-yellow-500" : "bg-yellow-400",
-      };
-    if (diff < 604800000)
-      return {
-        text: "This Week",
-        color: darkMode ? "bg-blue-400" : "bg-blue-300",
-      };
-    return {
-      text: "Upcoming",
-      color: darkMode ? "bg-gray-600" : "bg-gray-200",
-    };
-  };
-
-  const getPlatformStyle = (platform: string) => {
-    if (darkMode) {
-      const darkStyles: Record<string, string> = {
-        LeetCode: "bg-yellow-900/50 text-yellow-300 border-yellow-500",
-        Codeforces: "bg-blue-900/50 text-blue-300 border-blue-500",
-        CodeChef: "bg-orange-900/50 text-orange-300 border-orange-500",
-        AtCoder: "bg-red-900/50 text-red-300 border-red-500",
-        HackerRank: "bg-green-900/50 text-green-300 border-green-500",
-        TopCoder: "bg-indigo-900/50 text-indigo-300 border-indigo-500",
-        GeeksforGeeks: "bg-emerald-900/50 text-emerald-300 border-emerald-500",
-        HackerEarth: "bg-purple-900/50 text-purple-300 border-purple-500",
-        SPOJ: "bg-teal-900/50 text-teal-300 border-teal-500",
-        CodeSignal: "bg-pink-900/50 text-pink-300 border-pink-500",
-        TechGig: "bg-cyan-900/50 text-cyan-300 border-cyan-500",
-      };
-      return (
-        darkStyles[platform] || "bg-gray-700/50 text-gray-300 border-gray-500"
-      );
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get('auth') === 'signin') {
+      setIsAuthOpen(true);
+      // Clean up the URL query parameter without refreshing
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
     }
+  }, []);
 
-    const lightStyles: Record<string, string> = {
-      LeetCode: "bg-yellow-200 text-yellow-900 border-yellow-900",
-      Codeforces: "bg-blue-200 text-blue-900 border-blue-900",
-      CodeChef: "bg-orange-200 text-orange-900 border-orange-900",
-      AtCoder: "bg-red-200 text-red-900 border-red-900",
-      HackerRank: "bg-green-200 text-green-900 border-green-900",
-      TopCoder: "bg-indigo-200 text-indigo-900 border-indigo-900",
-      GeeksforGeeks: "bg-emerald-200 text-emerald-900 border-emerald-900",
-      HackerEarth: "bg-purple-200 text-purple-900 border-purple-900",
-      SPOJ: "bg-teal-200 text-teal-900 border-teal-900",
-      CodeSignal: "bg-pink-200 text-pink-900 border-pink-900",
-      TechGig: "bg-cyan-200 text-cyan-900 border-cyan-900",
-    };
-    return lightStyles[platform] || "bg-gray-200 text-gray-900 border-gray-900";
+  const filterPlatform = (platform: string) => {
+    setActivePlatform(platform);
+    if (platform === 'all') {
+      setContests(INITIAL_CONTEST_DATA);
+    } else {
+      setContests(INITIAL_CONTEST_DATA.filter(c => c.platform.toLowerCase().includes(platform)));
+    }
   };
 
-  const filteredContests =
-    filter === "all" ? contests : contests.filter((c) => c.platform === filter);
+  const refreshContests = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+      alert('Contest list refreshed! 🔄');
+    }, 600);
+  };
+
+  const handleEmailSignup = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const email = (e.currentTarget.elements.namedItem('emailInput') as HTMLInputElement).value;
+    alert(`Alerts activated for ${email}! 📬`);
+    (e.currentTarget.elements.namedItem('emailInput') as HTMLInputElement).value = '';
+  };
 
   return (
-    <>
-      <style jsx global>{`
-        @import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap");
-
-        body {
-          font-family: "Fredoka", sans-serif;
-          background-color: ${darkMode ? "#0a0a0a" : "#ffffff"};
-          transition: background-color 0.3s ease;
-        }
-
-        .cartoon-shadow {
-          box-shadow: 4px 4px 0px 0px
-            ${darkMode ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 1)"};
-        }
-        .cartoon-shadow-lg {
-          box-shadow: 8px 8px 0px 0px
-            ${darkMode ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 1)"};
-        }
-        .cartoon-shadow-hover:hover {
-          transform: translate(2px, 2px);
-          box-shadow: 2px 2px 0px 0px
-            ${darkMode ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 1)"};
-        }
-
-        @keyframes float {
-          0% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-10px) rotate(2deg);
-          }
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-        }
-        .dream-company {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes pulse-glow {
-          0%,
-          100% {
-            box-shadow:
-              0 0 20px rgba(255, 100, 0, 0.5),
-              0 0 40px rgba(255, 100, 0, 0.3);
-          }
-          50% {
-            box-shadow:
-              0 0 30px rgba(255, 100, 0, 0.8),
-              0 0 60px rgba(255, 100, 0, 0.5);
-          }
-        }
-        .hot-glow {
-          animation: pulse-glow 2s ease-in-out infinite;
-        }
-
-        @keyframes flicker {
-          0%,
-          100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.8;
-          }
-        }
-        .flame-flicker {
-          animation: flicker 1.5s ease-in-out infinite;
-        }
-      `}</style>
-
-      <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
-
-      <div className="min-h-screen relative overflow-x-hidden pb-20">
-        {/* Background Company Logos */}
-
-        <div className="fixed inset-0 pointer-events-none z-0 select-none overflow-hidden">
-       
-          {[
-            { src: "/google-1.png", top: "8%", left: "6%" },
-            { src: "/google-2.png", bottom: "5%", right: "3%" },
-            { src: "/amazon.png", top: "18%", right: "8%" },
-            { src: "/meta.jpg", bottom: "12%", left: "5%" },
-            { src: "/microsoft.png", bottom: "20%", right: "6%" },
-            { src: "/netflix.jpg", top: "42%", left: "2%" },
-            { src: "/oracle.png", top: "35%", right: "3%" },
-            { src: "/flipkart.png", bottom: "60%", left: "10%" },
-            { src: "/zomato.png", top: "10%", right: "3%" },
-          ].map((logo, i) => (
-            <div
-              key={i}
-              className="absolute w-28 md:w-36 dream-company"
-              style={{
-                ...logo,
-                opacity: darkMode ? 0.08 : 0.12,
-                filter: darkMode
-                  ? "saturate(0.3) brightness(0.8) invert(1)"
-                  : "saturate(0.6) brightness(1.05)",
-                transform: "rotate(-12deg)",
-                animationDelay: `${i * 0.6}s`,
-              }}
-            >
-              <img
-                src={logo.src}
-                alt=""
-                className="w-full h-auto object-contain"
-                draggable={false}
-              />
+    <div className="min-h-screen">
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
+      {/* NAVBAR */}
+      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#09090b]/85 backdrop-blur-[12px]">
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <a href="/" className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                <Zap className="w-4 h-4 text-emerald-400" />
+              </div>
+              <span className="font-semibold text-sm tracking-tight">DSA Quest</span>
+            </a>
+            <div className="hidden md:flex items-center gap-1">
+              <a href="#contests" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Contests</a>
+              <a href="/dashboard" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Dashboard</a>
+              <a href="/resources" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Resources</a>
             </div>
-          ))}
+          </div>
+          <div className="flex items-center gap-3">
+            <button onClick={openAuth} className="px-3 py-1.5 rounded-lg border border-transparent text-zinc-300 text-xs font-medium hover:bg-white/5 transition-all">
+              Sign In
+            </button>
+            <button onClick={openAuth} className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">
+              <LogIn className="w-3.5 h-3.5" />
+              Sign Up Free
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* HERO SECTION */}
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden grid-bg">
+        <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at top, rgba(6,78,59,0.25), #09090b 60%)'}}></div>
+        <div className="absolute top-0 left-1/3 w-[600px] h-[600px] rounded-full opacity-[0.07]" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(80px)'}}></div>
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{background: 'radial-gradient(circle, #06b6d4, transparent 70%)', filter: 'blur(60px)'}}></div>
+
+        <div className="absolute top-32 right-20 float-anim hidden lg:block">
+          <div className="glass rounded-xl p-3 flex items-center gap-2 opacity-60">
+            <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+            <span className="text-[10px] text-zinc-400 font-mono">contest_live = true</span>
+          </div>
+        </div>
+        <div className="absolute bottom-40 left-16 float-anim-delay hidden lg:block">
+          <div className="glass rounded-xl p-3 flex items-center gap-2 opacity-40">
+            <Trophy className="w-3.5 h-3.5 text-yellow-500" />
+            <span className="text-[10px] text-zinc-400">Streak: 30 days 🔥</span>
+          </div>
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 pt-12">
-          <div className="text-center mb-12 space-y-4">
-            <div
-              className={`inline-block ${darkMode ? "bg-yellow-500" : "bg-yellow-300"} border-4 ${darkMode ? "border-white" : "border-black"} px-6 py-2 rounded-full cartoon-shadow transform -rotate-2 mb-4`}
-            >
-              <span
-                className={`flex items-center gap-2 font-bold ${darkMode ? "text-white" : "text-black"} text-lg`}
-              >
-                <DollarSign className="w-5 h-5" /> Track your favorite contests!
+        <div className="max-w-6xl mx-auto px-6 relative z-10 pt-20">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-8">
+              <span className="relative flex h-2 w-2">
+                <span className="live-pulse absolute inline-flex h-full w-full rounded-full bg-red-500"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
               </span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">3 Contests Live Now</span>
             </div>
-            <h1
-              className={`text-5xl md:text-7xl font-black ${darkMode ? "text-white" : "text-black"} drop-shadow-sm tracking-tight leading-tight`}
-            >
-              DSA{" "}
-              <span className={darkMode ? "text-blue-400" : "text-blue-500"}>
-                {darkMode ? "NIGHT" : "QUEST"}
-              </span>{" "}
-              <br className="md:hidden" /> {darkMode ? "GRIND" : "BOARD"}
+
+            <h1 className="text-5xl md:text-7xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.1]">
+              Never Miss a<br/>Contest Again
             </h1>
-            <p
-              className={`text-xl md:text-2xl ${darkMode ? "text-gray-400" : "text-gray-600"} font-semibold max-w-2xl mx-auto`}
-            >
-            Get Contest Alerts Before Others Do!
+            <p className="text-lg text-zinc-400 leading-relaxed mb-4 max-w-xl mx-auto">
+              Track every coding contest, hackathon, and interview sprint across 
+              <span className="text-white font-medium"> 10+ platforms</span> — with alerts that reach your inbox 
+              <span className="text-emerald-400 font-medium"> before anyone else</span>.
             </p>
-          </div>
+            <p className="text-sm text-zinc-500 mb-10">
+              Join 2,000+ students who never miss an opportunity.
+            </p>
 
-          <div
-            className={`${darkMode ? "bg-gray-900 border-white" : "bg-white border-black"} border-4 rounded-3xl p-6 mb-10 cartoon-shadow-lg`}
-          >
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-              <div className="flex flex-wrap justify-center gap-3">
-                {platforms.map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setFilter(p)}
-                    className={`px-4 py-2 rounded-xl font-bold border-2 ${darkMode ? "border-white" : "border-black"} transition-all cartoon-shadow-hover ${
-                      filter === p
-                        ? darkMode
-                          ? "bg-white text-black"
-                          : "bg-black text-white"
-                        : darkMode
-                          ? "bg-gray-800 text-white hover:bg-gray-700"
-                          : "bg-white text-black hover:bg-gray-100"
-                    }`}
-                  >
-                    {p === "all" ? "All" : p}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={fetchContests}
-                disabled={loading}
-                className={`flex items-center gap-2 px-6 py-3 ${darkMode ? "bg-pink-500 hover:bg-pink-600" : "bg-pink-400 hover:bg-pink-500"} ${darkMode ? "text-white" : "text-black"} border-2 ${darkMode ? "border-white" : "border-black"} rounded-xl font-bold cartoon-shadow-hover disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                <RefreshCw
-                  className={`w-5 h-5 ${loading ? "animate-spin" : ""}`}
-                />
-                {loading ? "Loading..." : "Refresh List"}
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              <a href="#contests" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5">
+                <Trophy className="w-4 h-4" />
+                View Live Contests
+              </a>
+              <button onClick={() => alert('Alert system activated! 📬')} className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white/5 transition-all">
+                <BellRing className="w-4 h-4" />
+                Get Email Alerts
               </button>
             </div>
 
-            {lastUpdated && (
-              <div
-                className={`text-center mt-4 text-sm font-bold ${darkMode ? "text-gray-500" : "text-gray-400"}`}
-              >
-                Last updated: {lastUpdated.toLocaleTimeString()}
-              </div>
-            )}
-          </div>
-
-          {error && (
-            <div
-              className={`${darkMode ? "bg-red-900/30 border-red-500" : "bg-red-100 border-red-500"} border-4 rounded-3xl p-6 mb-10 cartoon-shadow flex items-center gap-4`}
-            >
-              <AlertCircle
-                className={`w-8 h-8 ${darkMode ? "text-red-400" : "text-red-500"} flex-shrink-0`}
-              />
-              <div>
-                <h3
-                  className={`font-bold text-xl ${darkMode ? "text-red-300" : "text-red-900"} mb-1`}
-                >
-                  Oops! Something went wrong
-                </h3>
-                <p className={darkMode ? "text-red-400" : "text-red-700"}>
-                  {error}
-                </p>
-              </div>
+            <div className="mt-16 flex items-center justify-center gap-6 flex-wrap opacity-30">
+              <span className="text-[10px] uppercase tracking-widest text-zinc-500">Tracking</span>
+              <div className="w-px h-4 bg-zinc-700"></div>
+              <span className="text-xs font-medium text-zinc-400">LeetCode</span>
+              <span className="text-xs font-medium text-zinc-400">Codeforces</span>
+              <span className="text-xs font-medium text-zinc-400">CodeChef</span>
+              <span className="text-xs font-medium text-zinc-400">HackerRank</span>
+              <span className="text-xs font-medium text-zinc-400">HackerEarth</span>
+              <span className="text-xs font-medium text-zinc-400">AtCoder</span>
+              <span className="text-xs font-medium text-zinc-400 hidden sm:inline">GFG</span>
+              <span className="text-xs font-medium text-zinc-400 hidden sm:inline">Kick Start</span>
             </div>
-          )}
-
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-20 space-y-4">
-              <div
-                className={`w-20 h-20 border-8 ${darkMode ? "border-white border-t-blue-400" : "border-black border-t-blue-500"} rounded-full animate-spin`}
-              ></div>
-              <p
-                className={`text-2xl font-bold animate-pulse ${darkMode ? "text-white" : "text-black"}`}
-              >
-                Fetching opportunities...
-              </p>
-            </div>
-          ) : filteredContests.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 space-y-6">
-              <div
-                className={`${darkMode ? "bg-purple-900/30 border-white" : "bg-purple-100 border-black"} border-4 rounded-full p-8 cartoon-shadow-lg`}
-              >
-                <Trophy
-                  className={`w-24 h-24 ${darkMode ? "text-purple-400" : "text-purple-500"}`}
-                />
-              </div>
-              <h2
-                className={`text-4xl font-black ${darkMode ? "text-white" : "text-black"}`}
-              >
-                No Contests Found!
-              </h2>
-              <p
-                className={`text-xl ${darkMode ? "text-gray-400" : "text-gray-600"} font-semibold max-w-md text-center`}
-              >
-                {filter === "all"
-                  ? "No upcoming contests at the moment. Time to practice your skills! 💪"
-                  : `No upcoming contests on ${filter}. Try checking other platforms!`}
-              </p>
-              {filter !== "all" && (
-                <button
-                  onClick={() => setFilter("all")}
-                  className={`px-8 py-4 ${darkMode ? "bg-yellow-500 hover:bg-yellow-600" : "bg-yellow-300 hover:bg-yellow-400"} ${darkMode ? "text-white" : "text-black"} border-4 ${darkMode ? "border-white" : "border-black"} rounded-2xl font-bold text-lg cartoon-shadow-hover`}
-                >
-                  View All Platforms
-                </button>
-              )}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-transparent">
-              {filteredContests.map((contest) => {
-                const status = getStatus(contest.start_time, contest.duration);
-                const start = new Date(contest.start_time);
-                const platformStyle = getPlatformStyle(contest.platform);
-                const isHot = isHotContest(contest.start_time);
-
-                return (
-                  <div
-                    key={contest.id}
-                    className={`border-4 ${darkMode ? "border-white bg-gray-900" : "border-black bg-white"} rounded-3xl p-5 cartoon-shadow hover:-translate-y-2 transition-transform duration-300 flex flex-col justify-between h-full relative overflow-hidden ${isHot ? "hot-glow" : ""}`}
-                  >
-                    {isHot && (
-                      <div className="absolute top-3 right-3 z-10">
-                        <div
-                          className={`flex items-center gap-1 px-3 py-1 ${darkMode ? "bg-orange-500" : "bg-orange-400"} text-white rounded-full border-2 ${darkMode ? "border-white" : "border-black"} font-black text-xs uppercase cartoon-shadow`}
-                        >
-                          <Flame className="w-4 h-4 flame-flicker" />
-                          HOT
-                        </div>
-                      </div>
-                    )}
-
-                    <div>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm font-bold border-2 ${platformStyle}`}
-                        >
-                          {contest.platform}
-                        </span>
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm font-bold ${darkMode ? "text-white" : "text-black"} border-2 ${darkMode ? "border-white" : "border-black"} ${status.color}`}
-                        >
-                          {status.text}
-                        </span>
-                      </div>
-
-                      <h3
-                        className={`text-2xl font-black ${darkMode ? "text-white" : "text-black"} mb-4 leading-tight`}
-                      >
-                        {contest.title}
-                      </h3>
-
-                      <div className="space-y-3 mb-6">
-                        <div
-                          className={`flex items-center gap-3 p-2 ${darkMode ? "bg-gray-800" : "bg-gray-50"} rounded-xl border-2 ${darkMode ? "border-gray-700" : "border-gray-100"}`}
-                        >
-                          <div
-                            className={`p-2 ${darkMode ? "bg-purple-500" : "bg-purple-200"} rounded-lg border-2 ${darkMode ? "border-white" : "border-black"}`}
-                          >
-                            <Calendar
-                              className={`w-4 h-4 ${darkMode ? "text-white" : "text-black"}`}
-                            />
-                          </div>
-                          <div>
-                            <p
-                              className={`text-xs font-bold ${darkMode ? "text-gray-500" : "text-gray-400"} uppercase`}
-                            >
-                              Start Date
-                            </p>
-                            <p
-                              className={`font-bold ${darkMode ? "text-white" : "text-black"}`}
-                            >
-                              {start.toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div
-                          className={`flex items-center gap-3 p-2 ${darkMode ? "bg-gray-800" : "bg-gray-50"} rounded-xl border-2 ${darkMode ? "border-gray-700" : "border-gray-100"}`}
-                        >
-                          <div
-                            className={`p-2 ${darkMode ? "bg-blue-500" : "bg-blue-200"} rounded-lg border-2 ${darkMode ? "border-white" : "border-black"}`}
-                          >
-                            <Clock
-                              className={`w-4 h-4 ${darkMode ? "text-white" : "text-black"}`}
-                            />
-                          </div>
-                          <div>
-                            <p
-                              className={`text-xs font-bold ${darkMode ? "text-gray-500" : "text-gray-400"} uppercase`}
-                            >
-                              Time & Duration
-                            </p>
-                            <p
-                              className={`font-bold ${darkMode ? "text-white" : "text-black"}`}
-                            >
-                              {start.toLocaleTimeString()} •{" "}
-                              {formatDuration(contest.duration)}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <a
-                      href={contest.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`group flex items-center justify-center gap-2 w-full py-4 ${darkMode ? "bg-yellow-500 hover:bg-green-500" : "bg-yellow-300 hover:bg-green-500"} ${darkMode ? "text-white hover:text-white" : "text-black hover:text-black"} rounded-2xl font-bold text-lg border-2 border-transparent ${darkMode ? "hover:border-white" : "hover:border-black"} transition-all`}
-                    >
-                      <span className="group-hover:hidden">Crack this!</span>
-                      <span className="hidden group-hover:inline-block">
-                        View
-                      </span>
-                      <ExternalLink className="w-5 h-5 group-hover:rotate-45 transition-transform" />
-                    </a>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {!loading && filteredContests.length > 0 && (
-            <div className="mt-16 text-center pb-10">
-              <div
-                className={`inline-block p-6 ${darkMode ? "bg-red-900/30 border-white" : "bg-red-100 border-black"} border-4 border-dashed rounded-3xl`}
-              >
-                <p
-                  className={`text-xl font-bold flex items-center gap-2 justify-center ${darkMode ? "text-pink-400" : "text-pink-500"}`}
-                >
-                  <Briefcase className="w-6 h-6" />
-                  Every problem you solve brings you closer to that Offer
-                  Letter!
-                  <Trophy
-                    className={`w-6 h-6 ${darkMode ? "text-yellow-400" : "text-yellow-500"}`}
-                  />
-                </p>
-              </div>
-            </div>
-          )}
-
-          <div
-            className={`text-center py-12 border-t-4 border-dashed ${
-              darkMode ? "border-gray-800" : "border-gray-300"
-            }`}
-          >
-            {/* Inspirational Quote */}
-            <p
-              className={`text-lg font-bold mb-2 ${
-                darkMode ? "text-gray-400" : "text-gray-500"
-              }`}
-            >
-              "The best time to plant a tree was 20 years ago. The second best
-              time is now."
-            </p>
-
-            {/* Feedback Call-to-Action */}
-            <p
-              className={`text-sm font-semibold mb-6 max-w-2xl mx-auto ${
-                darkMode ? "text-gray-500" : "text-gray-600"
-              }`}
-            >
-              Found a bug 🐞, have an idea 💡, or want a new feature 🚀?
-              <br />
-              Your feedback helps make DSA Quest better for everyone!
-            </p>
-
-            {/* Feedback Form */}
-            <form
-              action="https://formsubmit.co/debjyoti2409@gmail.com"
-              method="POST"
-              className="max-w-2xl mx-auto mb-8"
-            >
-              {/* Hidden fields for FormSubmit configuration */}
-              <input
-                type="hidden"
-                name="_subject"
-                value="New Feedback on DSA Quest!"
-              />
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_template" value="table" />
-
-              {/* Feedback Type */}
-              <select
-                name="feedback_type"
-                required
-                className={`w-full px-4 py-3 rounded-xl border-2 font-bold mb-4 ${
-                  darkMode
-                    ? "border-white bg-gray-800 text-white"
-                    : "border-black bg-white text-black"
-                } cartoon-shadow focus:outline-none focus:ring-2 focus:ring-purple-500`}
-              >
-                <option value="">Select Feedback Type</option>
-                <option value="🐞 Bug Report">🐞 Bug Report</option>
-                <option value="💡 Improvement">💡 Improvement</option>
-                <option value="🚀 Feature Request">🚀 Feature Request</option>
-                <option value="💬 General Feedback">💬 General Feedback</option>
-              </select>
-
-              {/* User Email (optional) */}
-              <input
-                type="email"
-                name="user_email"
-                placeholder="Your email (optional, if you want a reply)"
-                className={`w-full px-4 py-3 rounded-xl border-2 font-semibold mb-4 ${
-                  darkMode
-                    ? "border-white bg-gray-800 text-white placeholder-gray-500"
-                    : "border-black bg-white text-black placeholder-gray-400"
-                } cartoon-shadow focus:outline-none focus:ring-2 focus:ring-purple-500`}
-              />
-
-              {/* Feedback Message */}
-              <textarea
-                name="message"
-                required
-                rows={5}
-                placeholder="Share your thoughts here... 💭"
-                className={`w-full px-4 py-3 rounded-xl border-2 font-semibold mb-4 resize-none ${
-                  darkMode
-                    ? "border-white bg-gray-800 text-white placeholder-gray-500"
-                    : "border-black bg-white text-black placeholder-gray-400"
-                } cartoon-shadow focus:outline-none focus:ring-2 focus:ring-purple-500`}
-              />
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className={`inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-black text-lg border-4 transition-all cartoon-shadow-hover ${
-                  darkMode
-                    ? "bg-purple-500 hover:bg-purple-600 text-white border-white"
-                    : "bg-purple-400 hover:bg-purple-500 text-black border-black"
-                }`}
-              >
-                📧 Send Feedback
-              </button>
-            </form>
-
-            {/* Credit/Copyright */}
-            <p
-              className={`text-xs font-semibold mt-8 ${
-                darkMode ? "text-gray-600" : "text-gray-400"
-              }`}
-            >
-              Made with 💜 for competitive programmers
-            </p>
           </div>
         </div>
-        <SignInPrompt
-          darkMode={darkMode}
-          onSignIn={handleSignIn}
-          isAuthenticated={!!user}
-        />
-      </div>
-    </>
+
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+          <span className="text-[9px] uppercase tracking-widest text-zinc-600">Scroll to explore</span>
+          <div className="w-5 h-8 rounded-full border border-zinc-700 flex items-start justify-center p-1">
+            <div className="w-1 h-2 rounded-full bg-zinc-500 countdown-tick"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* LIVE CONTESTS SECTION */}
+      <section id="contests" className="py-24 px-6 relative">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="relative flex h-2 w-2">
+                  <span className="live-pulse absolute inline-flex h-full w-full rounded-full bg-red-500"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-red-400">Live & Upcoming</span>
+              </div>
+              <h2 className="text-3xl font-medium tracking-tight">Contest Board</h2>
+              <p className="text-sm text-zinc-500 mt-1">Get contest alerts before others do!</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <button 
+                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent ${activePlatform === 'all' ? 'active' : ''}`}
+                  onClick={() => filterPlatform('all')}
+                >
+                  All
+                </button>
+                <button 
+                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent flex items-center gap-1 ${activePlatform === 'leetcode' ? 'active' : ''}`}
+                  onClick={() => filterPlatform('leetcode')}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>LeetCode
+                </button>
+                <button 
+                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent flex items-center gap-1 ${activePlatform === 'codeforces' ? 'active' : ''}`}
+                  onClick={() => filterPlatform('codeforces')}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>Codeforces
+                </button>
+                <button 
+                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent flex items-center gap-1 ${activePlatform === 'codechef' ? 'active' : ''}`}
+                  onClick={() => filterPlatform('codechef')}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>CodeChef
+                </button>
+                <button 
+                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent flex items-center gap-1 hidden sm:flex ${activePlatform === 'hackerrank' ? 'active' : ''}`}
+                  onClick={() => filterPlatform('hackerrank')}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>HackerRank
+                </button>
+                <button 
+                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent flex items-center gap-1 hidden sm:flex ${activePlatform === 'hackerearth' ? 'active' : ''}`}
+                  onClick={() => filterPlatform('hackerearth')}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>HackerEarth
+                </button>
+              </div>
+              <button 
+                onClick={refreshContests} 
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg glass text-xs font-medium text-zinc-400 hover:text-white transition-all"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {contests.map((contest, index) => (
+              <DsaContestCard key={contest.id} contest={contest} index={index} />
+            ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <button onClick={() => alert('Loading more contests...')} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 text-zinc-400 text-xs font-medium hover:bg-white/5 hover:text-white transition-all">
+              <ChevronsDown className="w-4 h-4" />
+              View All Upcoming Contests
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section id="how-it-works" className="py-24 px-6 relative">
+        <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at center, rgba(24,24,27,0.5), #09090b)'}}></div>
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">Simple & Powerful</span>
+            <h2 className="text-3xl font-medium tracking-tight mb-3">How DSA Quest Works</h2>
+            <p className="text-sm text-zinc-500 max-w-md mx-auto">Three steps to never missing an opportunity again. No complicated setup, no spam — just timely alerts.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 relative">
+            <div className="hidden md:block absolute top-12 left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent"></div>
+
+            <div className="text-center relative">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5 relative z-10" style={{background: 'rgba(16,185,129,0.1)', borderColor: 'rgba(16,185,129,0.2)'}}>
+                <MousePointerClick className="w-5 h-5 text-emerald-400" />
+              </div>
+              <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-2">Step 1</div>
+              <h3 className="text-lg font-medium mb-2">One-Click Sign Up</h3>
+              <p className="text-xs text-zinc-500 leading-relaxed">Just enter your email. No account creation, no passwords to remember. One click and you're in.</p>
+            </div>
+
+            <div className="text-center relative">
+              <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mx-auto mb-5 relative z-10">
+                <CalendarCheck className="w-5 h-5 text-cyan-400" />
+              </div>
+              <div className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest mb-2">Step 2</div>
+              <h3 className="text-lg font-medium mb-2">Pick Your Platforms</h3>
+              <p className="text-xs text-zinc-500 leading-relaxed">Select which platforms and contest types you care about. We track 10+ platforms so you don't have to.</p>
+            </div>
+
+            <div className="text-center relative">
+              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mx-auto mb-5 relative z-10">
+                <BellRing className="w-5 h-5 text-purple-400" />
+              </div>
+              <div className="text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-2">Step 3</div>
+              <h3 className="text-lg font-medium mb-2">Get Alerts Instantly</h3>
+              <p className="text-xs text-zinc-500 leading-relaxed">Receive email reminders before contests begin. Never miss a deadline or timezone mix-up again.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURES / VISION SECTION */}
+      <section id="features" className="py-24 px-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.04]" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(80px)'}}></div>
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The Grand Vision</span>
+            <h2 className="text-3xl font-medium tracking-tight mb-3">More Than a Reminder</h2>
+            <p className="text-sm text-zinc-500 max-w-lg mx-auto">DSA Quest is evolving from a simple contest tracker into the definitive starter pack for every tech student — completely free, ad-free, forever.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="feature-card glass rounded-2xl p-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.04]" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)'}}></div>
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4">
+                <BookOpen className="w-5 h-5 text-emerald-400" />
+              </div>
+              <h3 className="text-lg font-medium mb-2">Expert Knowledge Hub</h3>
+              <p className="text-xs text-zinc-500 leading-relaxed mb-4">Curated resources by verified industry professionals — real interview experiences, career playbooks, and study materials from SDEs at top companies.</p>
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  <img src="https://picsum.photos/seed/exp1/32/32.jpg" className="w-6 h-6 rounded-full border-2 border-zinc-950 object-cover" alt="expert" />
+                  <img src="https://picsum.photos/seed/exp2/32/32.jpg" className="w-6 h-6 rounded-full border-2 border-zinc-950 object-cover" alt="expert" />
+                  <img src="https://picsum.photos/seed/exp3/32/32.jpg" className="w-6 h-6 rounded-full border-2 border-zinc-950 object-cover" alt="expert" />
+                </div>
+                <span className="text-[10px] text-zinc-500">89 verified pros</span>
+              </div>
+            </div>
+
+            <div className="feature-card glass rounded-2xl p-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.04]" style={{background: 'radial-gradient(circle, #06b6d4, transparent 70%)'}}></div>
+              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
+                <Route className="w-5 h-5 text-cyan-400" />
+              </div>
+              <h3 className="text-lg font-medium mb-2">Personalized Guidance</h3>
+              <p className="text-xs text-zinc-500 leading-relaxed mb-4">No generic roadmaps — every journey is different. Share your profiles and get custom weekly progress check-ins with focused study suggestions.</p>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 px-2 py-1 rounded bg-cyan-500/10 border border-cyan-500/20">
+                  <Check className="w-3 h-3 text-cyan-400" />
+                  <span className="text-[10px] text-cyan-400 font-medium">Weekly Review</span>
+                </div>
+                <div className="flex items-center gap-1 px-2 py-1 rounded bg-white/5 border border-white/5">
+                  <Target className="w-3 h-3 text-zinc-400" />
+                  <span className="text-[10px] text-zinc-400 font-medium">Custom Path</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="feature-card glass rounded-2xl p-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.04]" style={{background: 'radial-gradient(circle, #a855f7, transparent 70%)'}}></div>
+              <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-4">
+                <Award className="w-5 h-5 text-purple-400" />
+              </div>
+              <h3 className="text-lg font-medium mb-2">Milestone Cards</h3>
+              <p className="text-xs text-zinc-500 leading-relaxed mb-4">Hit a streak? Crush a coding round? Get a beautifully designed digital card — share verifiable proof of your hustle directly to LinkedIn.</p>
+              <div className="milestone-card rounded-lg p-3 border border-emerald-500/10">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center">
+                    <Flame className="w-4 h-4 text-yellow-500" />
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-semibold">30-Day Streak 🔥</div>
+                    <div className="text-[9px] text-zinc-500">Share to LinkedIn &rarr;</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* EMAIL SIGNUP SECTION */}
+      <section id="community" className="py-24 px-6 relative">
+        <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at bottom, rgba(6,78,59,0.15), #09090b 60%)'}}></div>
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="max-w-2xl mx-auto">
+            <div className="glass rounded-2xl p-8 md:p-12 text-center relative overflow-hidden">
+              <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-[0.06]" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)'}}></div>
+
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
+                <BellRing className="w-6 h-6 text-emerald-400" />
+              </div>
+
+              <h2 className="text-2xl md:text-3xl font-medium tracking-tight mb-3">Get Alerts Before Others Do</h2>
+              <p className="text-sm text-zinc-500 mb-8 max-w-md mx-auto">One email per day. Zero spam. Unsubscribe anytime. Join 2,000+ students who never miss a contest.</p>
+
+              <form onSubmit={handleEmailSignup} className="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto">
+                <div className="relative flex-1 w-full">
+                  <Mail className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input type="email" name="emailInput" required placeholder="your@email.com" className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors" />
+                </div>
+                <button type="submit" className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all whitespace-nowrap">
+                  <Zap className="w-4 h-4" />
+                  Activate Alerts
+                </button>
+              </form>
+
+              <div className="flex items-center justify-center gap-4 mt-6">
+                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                  No spam, ever
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+                  <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                  Alerts 30min before
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+                  <XCircle className="w-3.5 h-3.5 text-emerald-500" />
+                  Unsubscribe anytime
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-white/5 py-12 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 mb-10">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-7 h-7 rounded bg-zinc-800 flex items-center justify-center">
+                  <Zap className="w-3.5 h-3.5 text-emerald-400" />
+                </div>
+                <span className="font-semibold text-sm">DSA Quest</span>
+              </div>
+              <p className="text-xs text-zinc-500 leading-relaxed">The definitive starter pack for every tech student. Free, ad-free, forever.</p>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">Platform</h4>
+              <div className="space-y-2">
+                <a href="#contests" className="block text-xs text-zinc-400 hover:text-white transition-colors">Contest Board</a>
+                <a href="#features" className="block text-xs text-zinc-400 hover:text-white transition-colors">Features</a>
+                <a href="#community" className="block text-xs text-zinc-400 hover:text-white transition-colors">Community Hub</a>
+                <a href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">Milestone Cards</a>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">Platforms Tracked</h4>
+              <div className="space-y-2">
+                <a href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">LeetCode</a>
+                <a href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">Codeforces</a>
+                <a href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">CodeChef</a>
+                <a href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">HackerRank</a>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">Connect</h4>
+              <div className="flex items-center gap-3 mb-4">
+                <a href="#" className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all">
+                  <Twitter className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all">
+                  <Github className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all">
+                  <Linkedin className="w-4 h-4" />
+                </a>
+              </div>
+              <a href="#" className="text-xs text-zinc-400 hover:text-white transition-colors">hello@dsaquest.com</a>
+            </div>
+          </div>
+          <div className="pt-6 border-t border-white/5 flex items-center justify-between flex-wrap gap-4">
+            <div className="text-[10px] text-zinc-600">© 2025 DSA Quest. Built with ❤️ for students everywhere.</div>
+            <div className="flex items-center gap-4">
+              <a href="#" className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Privacy</a>
+              <a href="#" className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Terms</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }

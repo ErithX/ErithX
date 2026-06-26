@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — DSA Quest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *{font-family:'Inter',sans-serif}
+    body{background:#09090b;color:#fff}
+    ::selection{background-color:rgb(6,78,59);color:white}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:#09090b}
+    ::-webkit-scrollbar-thumb{background:#27272a;border-radius:4px}
+    .glass{background:rgba(255,255,255,0.03);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08)}
+    .mono{font-family:'JetBrains Mono',monospace}
+
+    /* Card level themes */
+    .card-bronze{background:linear-gradient(145deg,#1a120a,#0d0906,#1a1410);border:1px solid rgba(180,130,80,0.3)}
+    .card-bronze .card-glow{background:radial-gradient(ellipse at 25% 15%,rgba(180,130,80,0.18),transparent 55%)}
+    .card-bronze .card-accent{color:#cd7f32}
+    .card-bronze .card-accent-dim{color:rgba(205,127,50,0.5)}
+
+    .card-silver{background:linear-gradient(145deg,#141416,#0d0d10,#1a1a1e);border:1px solid rgba(192,192,192,0.3)}
+    .card-silver .card-glow{background:radial-gradient(ellipse at 25% 15%,rgba(192,192,192,0.18),transparent 55%)}
+    .card-silver .card-accent{color:#c0c0c0}
+    .card-silver .card-accent-dim{color:rgba(192,192,192,0.5)}
+
+    .card-gold{background:linear-gradient(145deg,#1a170a,#0d0b06,#1a1608);border:1px solid rgba(255,215,0,0.35)}
+    .card-gold .card-glow{background:radial-gradient(ellipse at 25% 15%,rgba(255,215,0,0.2),transparent 55%)}
+    .card-gold .card-accent{color:#ffd700}
+    .card-gold .card-accent-dim{color:rgba(255,215,0,0.5)}
+
+    .card-platinum{background:linear-gradient(145deg,#0a1a1a,#060d0d,#0a1418);border:1px solid rgba(0,206,209,0.35)}
+    .card-platinum .card-glow{background:radial-gradient(ellipse at 25% 15%,rgba(0,206,209,0.2),transparent 55%)}
+    .card-platinum .card-accent{color:#00ced1}
+    .card-platinum .card-accent-dim{color:rgba(0,206,209,0.5)}
+
+    .card-diamond{background:linear-gradient(145deg,#140a1a,#0d0614,#180a20);border:1px solid rgba(168,85,247,0.35)}
+    .card-diamond .card-glow{background:radial-gradient(ellipse at 25% 15%,rgba(168,85,247,0.2),transparent 55%)}
+    .card-diamond .card-accent{color:#a855f7}
+    .card-diamond .card-accent-dim{color:rgba(168,85,247,0.5)}
+
+    .card-legendary{background:linear-gradient(145deg,#1a0a0a,#140606,#200a0a);border:1px solid rgba(255,80,80,0.35)}
+    .card-legendary .card-glow{background:radial-gradient(ellipse at 25% 15%,rgba(255,80,80,0.2),transparent 55%)}
+    .card-legendary .card-accent{color:#ef4444}
+    .card-legendary .card-accent-dim{color:rgba(239,68,68,0.5)}
+
+    .card-locked{background:linear-gradient(145deg,#0d0d0f,#08080a);border:1px dashed rgba(255,255,255,0.06);opacity:0.4}
+
+    /* Hex badge */
+    .hex{clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)}
+    .hex-bronze{background:linear-gradient(135deg,#cd7f32,#8b5a2b)}
+    .hex-silver{background:linear-gradient(135deg,#c0c0c0,#808080)}
+    .hex-gold{background:linear-gradient(135deg,#ffd700,#daa520)}
+    .hex-platinum{background:linear-gradient(135deg,#00ced1,#008b8b)}
+    .hex-diamond{background:linear-gradient(135deg,#a855f7,#7c3aed)}
+    .hex-legendary{background:linear-gradient(135deg,#ef4444,#b91c1c)}
+
+    /* Card shine */
+    .card-shine{position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent);transform:skewX(-20deg);transition:left 700ms ease}
+    .ach-card:hover .card-shine{left:160%}
+    .ach-card{transition:transform 300ms ease,box-shadow 300ms ease;cursor:pointer;position:relative;overflow:hidden;border-radius:20px}
+    .ach-card:hover{transform:translateY(-3px)}
+
+    /* Streak glow */
+    @keyframes fireGlow{0%,100%{filter:brightness(1) drop-shadow(0 0 4px rgba(251,146,60,0.4))}50%{filter:brightness(1.3) drop-shadow(0 0 14px rgba(251,146,60,0.7))}}
+    .streak-fire{animation:fireGlow 2s ease-in-out infinite}
+
+    /* Progress fill */
+    @keyframes progFill{from{height:0}}
+    .prog-animated{animation:progFill 0.8s ease-out}
+
+    /* Tab active */
+    .type-tab.active{background:rgba(255,255,255,0.08);color:#fff;border-color:rgba(255,255,255,0.1)}
+
+    /* Level dot */
+    .level-dot{transition:all 200ms ease;cursor:pointer}
+    .level-dot.active{transform:scale(1.4)}
+
+    /* Toast */
+    .toast{animation:toastIn 0.3s ease,toastOut 0.3s ease 2.7s forwards}
+    @keyframes toastIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+    @keyframes toastOut{from{opacity:1}to{opacity:0}}
+
+    /* Contribution empty state */
+    .contribute-btn{transition:all 200ms ease}
+    .contribute-btn:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15)}
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- Toast -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2"></div>
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 w-full z-50 border-b border-white/5" style="background:rgba(9,9,11,0.88);backdrop-filter:blur(12px)">
+    <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="#" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center"><i data-lucide="zap" class="w-4 h-4 text-emerald-500"></i></div>
+          <span class="font-semibold text-sm tracking-tight">DSA Quest</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="#" class="px-3 py-1.5 text-xs font-medium text-white bg-white/5 rounded">Dashboard</a>
+          <a href="#" class="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Contests</a>
+          <a href="#" class="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Community</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="p-2 rounded-lg hover:bg-white/5 transition-colors text-zinc-400 relative">
+          <i data-lucide="bell" class="w-4 h-4"></i>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500"></span>
+        </button>
+        <div class="flex items-center gap-2 cursor-pointer">
+          <img src="https://picsum.photos/seed/arjun-dash/32/32.jpg" class="w-7 h-7 rounded-full object-cover">
+          <span class="text-xs font-medium hidden sm:inline">Arjun M.</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="pt-20 pb-16 px-6">
+    <div class="max-w-7xl mx-auto">
+
+      <!-- Greeting -->
+      <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
+        <div>
+          <h1 class="text-2xl font-semibold tracking-tight">Welcome back, Arjun</h1>
+          <p class="text-sm text-zinc-500 mt-0.5">Your next milestone is closer than you think.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 px-4 py-2 rounded-xl glass">
+            <span class="text-xl streak-fire">🔥</span>
+            <div>
+              <div class="text-lg font-bold leading-none mono">23</div>
+              <div class="text-[9px] uppercase tracking-widest text-zinc-500">Day Streak</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 px-4 py-2 rounded-xl glass">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+              <i data-lucide="clock" class="w-4 h-4 text-emerald-400"></i>
+            </div>
+            <div>
+              <div class="text-lg font-bold leading-none mono">2h 14m</div>
+              <div class="text-[9px] uppercase tracking-widest text-zinc-500">Next Contest</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Achievement Card Section -->
+      <div class="mb-10">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+            <i data-lucide="trophy" class="w-3.5 h-3.5"></i> Achievement Card
+          </h2>
+          <span class="text-[10px] text-zinc-600 mono">dsaquest.io/v/arjun-m</span>
+        </div>
+
+        <!-- Card Type Tabs -->
+        <div class="flex items-center gap-2 mb-5 flex-wrap">
+          <button class="type-tab active px-3 py-1.5 rounded-lg text-[10px] font-semibold uppercase tracking-wider text-zinc-400 border border-transparent hover:text-white transition-all" data-type="transformation" onclick="switchCardType('transformation',this)">Transformation</button>
+          <button class="type-tab px-3 py-1.5 rounded-lg text-[10px] font-semibold uppercase tracking-wider text-zinc-400 border border-transparent hover:text-white transition-all" data-type="consistency" onclick="switchCardType('consistency',this)">Consistency</button>
+          <button class="type-tab px-3 py-1.5 rounded-lg text-[10px] font-semibold uppercase tracking-wider text-zinc-400 border border-transparent hover:text-white transition-all" data-type="crossplatform" onclick="switchCardType('crossplatform',this)">Cross-Platform</button>
+          <button class="type-tab px-3 py-1.5 rounded-lg text-[10px] font-semibold uppercase tracking-wider text-zinc-400 border border-transparent hover:text-white transition-all" data-type="skillmap" onclick="switchCardType('skillmap',this)">Skill Map</button>
+          <button class="type-tab px-3 py-1.5 rounded-lg text-[10px] font-semibold uppercase tracking-wider text-zinc-400 border border-transparent hover:text-white transition-all" data-type="milestone" onclick="switchCardType('milestone',this)">Milestone</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <!-- Featured Card -->
+          <div class="lg:col-span-3">
+            <div id="featuredCard" class="ach-card p-6" onclick="cycleCardLevel()">
+              <!-- Filled by JS -->
+            </div>
+            <p class="text-[10px] text-zinc-600 mt-2 text-center">Click card to cycle through levels</p>
+          </div>
+
+          <!-- Level Selector + Card Collection -->
+          <div class="lg:col-span-2 space-y-4">
+            <!-- Level Dots -->
+            <div class="glass rounded-2xl p-5">
+              <div class="text-[9px] uppercase tracking-widest text-zinc-600 mb-3">Card Level</div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="level-dot active flex flex-col items-center gap-1" data-level="bronze" onclick="setCardLevel('bronze')">
+                  <div class="w-10 h-10 hex hex-bronze flex items-center justify-center text-lg">🟤</div>
+                  <span class="text-[8px] font-bold uppercase tracking-wider text-amber-600">Bronze</span>
+                </div>
+                <div class="level-dot flex flex-col items-center gap-1" data-level="silver" onclick="setCardLevel('silver')">
+                  <div class="w-10 h-10 hex hex-silver flex items-center justify-center text-lg">🥈</div>
+                  <span class="text-[8px] font-bold uppercase tracking-wider text-gray-400">Silver</span>
+                </div>
+                <div class="level-dot flex flex-col items-center gap-1" data-level="gold" onclick="setCardLevel('gold')">
+                  <div class="w-10 h-10 hex hex-gold flex items-center justify-center text-lg">🥇</div>
+                  <span class="text-[8px] font-bold uppercase tracking-wider text-yellow-500">Gold</span>
+                </div>
+                <div class="level-dot flex flex-col items-center gap-1" data-level="platinum" onclick="setCardLevel('platinum')">
+                  <div class="w-10 h-10 hex hex-platinum flex items-center justify-center text-lg">💎</div>
+                  <span class="text-[8px] font-bold uppercase tracking-wider text-cyan-400">Platinum</span>
+                </div>
+                <div class="level-dot flex flex-col items-center gap-1" data-level="diamond" onclick="setCardLevel('diamond')">
+                  <div class="w-10 h-10 hex hex-diamond flex items-center justify-center text-lg">💠</div>
+                  <span class="text-[8px] font-bold uppercase tracking-wider text-purple-400">Diamond</span>
+                </div>
+                <div class="level-dot flex flex-col items-center gap-1" data-level="legendary" onclick="setCardLevel('legendary')">
+                  <div class="w-10 h-10 hex hex-legendary flex items-center justify-center text-lg">🏆</div>
+                  <span class="text-[8px] font-bold uppercase tracking-wider text-red-400">Legend</span>
+                </div>
+              </div>
+              <div id="levelDescription" class="text-[11px] text-zinc-500 leading-relaxed"></div>
+            </div>
+
+            <!-- Unlock Progress -->
+            <div class="glass rounded-2xl p-5">
+              <div class="text-[9px] uppercase tracking-widest text-zinc-600 mb-3">Next Unlock: 💎 Platinum</div>
+              <div class="space-y-3">
+                <div>
+                  <div class="flex justify-between mb-1"><span class="text-[10px] text-zinc-500">60-Day Streak</span><span class="text-[10px] mono text-zinc-400">23/60</span></div>
+                  <div class="w-full h-1 rounded-full bg-zinc-800"><div class="h-full rounded-full bg-orange-500" style="width:38%"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1"><span class="text-[10px] text-zinc-500">30 Contests</span><span class="text-[10px] mono text-emerald-400">18/30 ✓</span></div>
+                  <div class="w-full h-1 rounded-full bg-zinc-800"><div class="h-full rounded-full bg-emerald-500" style="width:60%"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1"><span class="text-[10px] text-zinc-500">Top 10% Finish</span><span class="text-[10px] mono text-zinc-600">—</span></div>
+                  <div class="w-full h-1 rounded-full bg-zinc-800"><div class="h-full rounded-full bg-zinc-700" style="width:0%"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1"><span class="text-[10px] text-zinc-500">3+ Platforms</span><span class="text-[10px] mono text-emerald-400">3/3 ✓</span></div>
+                  <div class="w-full h-1 rounded-full bg-zinc-800"><div class="h-full rounded-full bg-emerald-500" style="width:100%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Column -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Left 2/3 -->
+        <div class="lg:col-span-2 space-y-6">
+
+          <!-- Profile + Contributions -->
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-start gap-4 mb-6">
+              <img src="https://picsum.photos/seed/arjun-dash/80/80.jpg" class="w-14 h-14 rounded-2xl object-cover border border-white/10">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg font-semibold">Arjun Mishra</span>
+                  <span class="text-[8px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded font-bold">🥇 GOLD</span>
+                </div>
+                <div class="text-xs text-zinc-500 mt-0.5">III Year, NIT Trichy • CSE</div>
+                <div class="text-[10px] text-zinc-600 mono mt-1">dsaquest.io/v/arjun-m</div>
+              </div>
+            </div>
+
+            <!-- Contribution Stats — The Empty State -->
+            <div class="grid grid-cols-3 gap-3 mb-5">
+              <div class="text-center p-4 rounded-xl bg-white/[0.02] border border-dashed border-white/5">
+                <div class="text-2xl font-bold mono text-zinc-600">0</div>
+                <div class="text-[9px] uppercase tracking-widest text-zinc-600 mt-1">Blogs Written</div>
+              </div>
+              <div class="text-center p-4 rounded-xl bg-white/[0.02] border border-dashed border-white/5">
+                <div class="text-2xl font-bold mono text-zinc-600">0</div>
+                <div class="text-[9px] uppercase tracking-widest text-zinc-600 mt-1">Resources Shared</div>
+              </div>
+              <div class="text-center p-4 rounded-xl bg-white/[0.02] border border-dashed border-white/5">
+                <div class="text-2xl font-bold mono text-zinc-600">0</div>
+                <div class="text-[9px] uppercase tracking-widest text-zinc-600 mt-1">Diagrams Created</div>
+              </div>
+            </div>
+
+            <!-- Contribution CTAs -->
+            <div class="space-y-2">
+              <button class="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/8 text-left group">
+                <div class="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="pen-line" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Share your project story</div>
+                  <div class="text-[10px] text-zinc-600">How you built it, what you learned, what went wrong — your struggle helps others.</div>
+                </div>
+                <i data-lucide="plus" class="w-4 h-4 text-zinc-600 group-hover:text-emerald-400 transition-colors flex-shrink-0"></i>
+              </button>
+
+              <button class="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/8 text-left group">
+                <div class="w-9 h-9 rounded-lg bg-orange-500/10 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="file-text" class="w-4 h-4 text-orange-400"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Upload your study notes</div>
+                  <div class="text-[10px] text-zinc-600">That cheat sheet you made before exams? Someone else needs it right now.</div>
+                </div>
+                <i data-lucide="plus" class="w-4 h-4 text-zinc-600 group-hover:text-orange-400 transition-colors flex-shrink-0"></i>
+              </button>
+
+              <button class="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/8 text-left group">
+                <div class="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="share-2" class="w-4 h-4 text-purple-400"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Found a great resource? Pass it on.</div>
+                  <div class="text-[10px] text-zinc-600">That tutorial that finally made DP click — share the link so others click too.</div>
+                </div>
+                <i data-lucide="plus" class="w-4 h-4 text-zinc-600 group-hover:text-purple-400 transition-colors flex-shrink-0"></i>
+              </button>
+
+              <button class="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/8 text-left group">
+                <div class="w-9 h-9 rounded-lg bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="image" class="w-4 h-4 text-cyan-400"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Draw a diagram or flowchart</div>
+                  <div class="text-[10px] text-zinc-600">Your rough BST traversal sketch? It's clearer than any textbook paragraph.</div>
+                </div>
+                <i data-lucide="plus" class="w-4 h-4 text-zinc-600 group-hover:text-cyan-400 transition-colors flex-shrink-0"></i>
+              </button>
+            </div>
+
+            <div class="mt-4 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10 flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+              <span class="text-[10px] text-emerald-400">Share 3 resources to unlock the <strong>Contributor</strong> badge on your card</span>
+            </div>
+          </div>
+
+          <!-- Connected Profiles -->
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                <i data-lucide="link" class="w-3.5 h-3.5"></i> Connected Profiles
+              </h2>
+              <button class="text-[10px] text-emerald-400 hover:text-emerald-300 transition-colors font-medium flex items-center gap-1">
+                <i data-lucide="plus" class="w-3 h-3"></i> Add
+              </button>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                <div class="flex items-center gap-3">
+                  <span class="text-base">🟠</span>
+                  <div><div class="text-xs font-medium">LeetCode <span class="text-[8px] bg-emerald-500/20 text-emerald-400 px-1 py-0.5 rounded font-bold ml-1">SYNCED</span></div><div class="text-[10px] text-zinc-500">arjun_mishra • 487 solved</div></div>
+                </div>
+                <div class="text-right"><div class="text-xs mono font-semibold text-orange-400">1,847</div><div class="text-[9px] text-zinc-500">Rating</div></div>
+              </div>
+              <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                <div class="flex items-center gap-3">
+                  <span class="text-base">🔴</span>
+                  <div><div class="text-xs font-medium">Codeforces <span class="text-[8px] bg-emerald-500/20 text-emerald-400 px-1 py-0.5 rounded font-bold ml-1">SYNCED</span></div><div class="text-[10px] text-zinc-500">arjun_mishra • Specialist</div></div>
+                </div>
+                <div class="text-right"><div class="text-xs mono font-semibold text-red-400">1,560</div><div class="text-[9px] text-zinc-500">Rating</div></div>
+              </div>
+              <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                <div class="flex items-center gap-3">
+                  <span class="text-base">🟢</span>
+                  <div><div class="text-xs font-medium">CodeChef <span class="text-[8px] bg-emerald-500/20 text-emerald-400 px-1 py-0.5 rounded font-bold ml-1">SYNCED</span></div><div class="text-[10px] text-zinc-500">arjun_mishra • 4★</div></div>
+                </div>
+                <div class="text-right"><div class="text-xs mono font-semibold text-green-400">1,823</div><div class="text-[9px] text-zinc-500">Rating</div></div>
+              </div>
+              <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="github" class="w-5 h-5 text-white"></i>
+                  <div><div class="text-xs font-medium">GitHub <span class="text-[8px] bg-yellow-500/20 text-yellow-400 px-1 py-0.5 rounded font-bold ml-1">SYNCING</span></div><div class="text-[10px] text-zinc-500">arjunmishra • 142 contrib</div></div>
+                </div>
+                <div class="text-right"><div class="text-xs mono font-semibold text-zinc-300">142</div><div class="text-[9px] text-zinc-500">Contribs</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weekly Review -->
+          <div class="glass rounded-2xl p-6">
+            <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2 mb-4">
+              <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i> Weekly Review
+            </h2>
+            <div class="grid grid-cols-4 gap-3 mb-5">
+              <div class="text-center p-3 rounded-xl bg-white/[0.02] border border-white/5"><div class="text-xl font-bold mono text-emerald-400">12</div><div class="text-[9px] uppercase tracking-wider text-zinc-500">Problems</div></div>
+              <div class="text-center p-3 rounded-xl bg-white/[0.02] border border-white/5"><div class="text-xl font-bold mono text-cyan-400">3</div><div class="text-[9px] uppercase tracking-wider text-zinc-500">Contests</div></div>
+              <div class="text-center p-3 rounded-xl bg-white/[0.02] border border-white/5"><div class="text-xl font-bold mono text-purple-400">+87</div><div class="text-[9px] uppercase tracking-wider text-zinc-500">Rating Δ</div></div>
+              <div class="text-center p-3 rounded-xl bg-white/[0.02] border border-white/5"><div class="text-xl font-bold mono text-orange-400">7/7</div><div class="text-[9px] uppercase tracking-wider text-zinc-500">Streak</div></div>
+            </div>
+            <div class="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10 flex items-start gap-3">
+              <div class="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0 mt-0.5"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-400"></i></div>
+              <p class="text-xs text-zinc-400 leading-relaxed">Graph accuracy dropped to 42%. Focus on BFS/DFS — try <span class="text-emerald-400">LC 200</span> and <span class="text-emerald-400">CF 1833D</span>. Your DP is strong (78%) — maintain it while you level up graphs.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 1/3 -->
+        <div class="space-y-6">
+
+          <!-- Skill Map — Vertical Bars -->
+          <div class="glass rounded-2xl p-5">
+            <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2 mb-5">
+              <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Skill Map
+            </h2>
+            <div class="flex items-end justify-between gap-2 h-40 mb-2">
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-full rounded-t-md bg-emerald-500/80 prog-animated" style="height:90%"></div>
+                <span class="text-[8px] text-zinc-500">DP</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-full rounded-t-md bg-emerald-500/60 prog-animated" style="height:78%"></div>
+                <span class="text-[8px] text-zinc-500">Str</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-full rounded-t-md bg-emerald-500/50 prog-animated" style="height:75%"></div>
+                <span class="text-[8px] text-zinc-500">Tree</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-full rounded-t-md bg-yellow-500/50 prog-animated" style="height:65%"></div>
+                <span class="text-[8px] text-zinc-500">Grph</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-full rounded-t-md bg-yellow-500/40 prog-animated" style="height:50%"></div>
+                <span class="text-[8px] text-zinc-500">Grdy</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-full rounded-t-md bg-red-500/40 prog-animated" style="height:35%"></div>
+                <span class="text-[8px] text-zinc-500">Math</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-[9px] text-zinc-600">
+              <span>8/10 categories</span>
+              <span class="text-emerald-400">Well-rounded</span>
+            </div>
+          </div>
+
+          <!-- Upcoming Contests -->
+          <div class="glass rounded-2xl p-5">
+            <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2 mb-4">
+              <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Upcoming
+            </h2>
+            <div class="space-y-2">
+              <div class="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
+                <div class="flex items-center justify-between mb-1"><span class="text-xs font-medium">CC Starters 245</span><span class="text-[8px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">TODAY</span></div>
+                <div class="text-[10px] text-zinc-500">8:00 PM IST</div>
+              </div>
+              <div class="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                <div class="flex items-center justify-between mb-1"><span class="text-xs font-medium">LC Weekly 432</span><span class="text-[8px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded font-bold">TOMORROW</span></div>
+                <div class="text-[10px] text-zinc-500">8:00 AM IST</div>
+              </div>
+              <div class="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                <div class="flex items-center justify-between mb-1"><span class="text-xs font-medium">CF Round 1024</span><span class="text-[8px] bg-white/5 text-zinc-400 px-1.5 py-0.5 rounded font-bold">JUN 26</span></div>
+                <div class="text-[10px] text-zinc-500">9:35 PM IST</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity -->
+          <div class="glass rounded-2xl p-5">
+            <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2 mb-4">
+              <i data-lucide="activity" class="w-3.5 h-3.5"></i> Recent
+            </h2>
+            <div class="space-y-3">
+              <div class="flex items-start gap-2.5">
+                <div class="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0 mt-0.5"><i data-lucide="check-circle" class="w-3 h-3 text-emerald-400"></i></div>
+                <div><div class="text-[11px] font-medium">Completed CC Starters 244</div><div class="text-[9px] text-zinc-600">4/6 solved • +32 rating • 2h ago</div></div>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <div class="w-6 h-6 rounded-full bg-orange-500/10 flex items-center justify-center flex-shrink-0 mt-0.5"><i data-lucide="flame" class="w-3 h-3 text-orange-400"></i></div>
+                <div><div class="text-[11px] font-medium">20-day streak!</div><div class="text-[9px] text-zinc-600">67% to Platinum • 5h ago</div></div>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <div class="w-6 h-6 rounded-full bg-cyan-500/10 flex items-center justify-center flex-shrink-0 mt-0.5"><i data-lucide="trophy" class="w-3 h-3 text-cyan-400"></i></div>
+                <div><div class="text-[11px] font-medium">Top 15% in LC Weekly 431</div><div class="text-[9px] text-zinc-600">Almost top-10% for Platinum! • Yesterday</div></div>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <div class="w-6 h-6 rounded-full bg-yellow-500/10 flex items-center justify-center flex-shrink-0 mt-0.5"><i data-lucide="medal" class="w-3 h-3 text-yellow-400"></i></div>
+                <div><div class="text-[11px] font-medium">🥇 Gold Card Unlocked</div><div class="text-[9px] text-zinc-600">Committed Learner • 3 days ago</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-white/5 py-6 px-6">
+    <div class="max-w-7xl mx-auto text-center text-[10px] text-zinc-600">© 2025 DSA Quest. Built for students, backed by pros.</div>
+  </footer>
+
+<script>
+lucide.createIcons();
+
+// ============= CARD SYSTEM =============
+const levels = ['bronze','silver','gold','platinum','diamond','legendary'];
+const levelNames = {bronze:'Bronze — Initiate',silver:'Silver — Consistent',gold:'Gold — Committed',platinum:'Platinum — Warrior',diamond:'Diamond — Elite',legendary:'Legendary — Master'};
+const levelDescs = {
+  bronze:'The journey begins. 1 contest + 1 platform connected + 3-day streak.',
+  silver:'Not a one-day wonder. 7-day streak + 5 contests + 2 platforms.',
+  gold:'Genuine discipline. 30-day streak + 15 contests + 3 platforms + positive velocity.',
+  platinum:'Competitive performer. 60-day streak + 30 contests + top-10% finish + 3 platforms.',
+  diamond:'Top-tier + well-rounded. 100-day streak + Expert rating + 8/10 breadth + 4 platforms.',
+  legendary:'Exceptional. 365-day streak + mentoring 3 students + 10/10 breadth.'
+};
+
+let currentLevel = 'gold';
+let currentType = 'transformation';
+
+const cardConfigs = {
+  bronze:  {emoji:'🟤',accent:'#cd7f32',rating:'847',streak:'3',contests:'1',delta:'+120',pct:'Top 68%',cls:'card-bronze'},
+  silver:  {emoji:'🥈',accent:'#c0c0c0',rating:'1,203',streak:'12',contests:'8',delta:'+310',pct:'Top 42%',cls:'card-silver'},
+  gold:    {emoji:'🥇',accent:'#ffd700',rating:'1,743',streak:'23',contests:'18',delta:'+340',pct:'Top 12%',cls:'card-gold'},
+  platinum:{emoji:'💎',accent:'#00ced1',rating:'2,104',streak:'67',contests:'34',delta:'+580',pct:'Top 5%',cls:'card-platinum'},
+  diamond: {emoji:'💠',accent:'#a855f7',rating:'2,489',streak:'112',contests:'58',delta:'+940',pct:'Top 2%',cls:'card-diamond'},
+  legendary:{emoji:'🏆',accent:'#ef4444',rating:'3,102',streak:'389',contests:'94',delta:'+1,847',pct:'Top 0.3%',cls:'card-legendary'}
+};
+
+function renderCard(type, level) {
+  const c = cardConfigs[level];
+  const container = document.getElementById('featuredCard');
+  container.className = `ach-card ${c.cls} p-6`;
+
+  let content = '';
+
+  // Common header
+  const header = `
+    <div class="card-glow absolute inset-0 pointer-events-none"></div>
+    <div class="card-shine"></div>
+    <div class="relative z-10">
+      <div class="flex items-start justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 hex hex-${level} flex items-center justify-center"><span class="text-xl">${c.emoji}</span></div>
+          <div>
+            <div class="text-[9px] uppercase tracking-[0.2em] font-bold card-accent-dim">${levelNames[level].split('—')[0].trim()}</div>
+            <div class="text-lg font-bold card-accent">${levelNames[level].split('—')[1]?.trim()||''}</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="event.stopPropagation();shareCard()" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors" title="Share"><i data-lucide="share-2" class="w-3.5 h-3.5 card-accent"></i></button>
+          <button onclick="event.stopPropagation();downloadCard()" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors" title="Download"><i data-lucide="download" class="w-3.5 h-3.5 card-accent"></i></button>
+        </div>
+      </div>`;
+
+  // Common footer
+  const footer = `
+      <div class="flex items-center justify-between pt-4 border-t border-white/5 mt-5">
+        <div class="flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="text-[9px] text-zinc-500">Verified by DSA Quest</span>
+        </div>
+        <span class="text-[9px] mono text-zinc-600">dsaquest.io/v/arjun-m</span>
+      </div>
+    </div>`;
+
+  if (type === 'transformation') {
+    content = `
+      ${header}
+      <div class="text-[10px] uppercase tracking-widest text-zinc-500 mb-3">6-Month Transformation</div>
+      <div class="flex items-center justify-between mb-5">
+        <div class="text-center">
+          <div class="text-2xl font-bold mono" style="color:${c.accent}">${level==='bronze'?'—':level==='silver'?'847':'847'}</div>
+          <div class="text-[9px] text-zinc-500">Start</div>
+        </div>
+        <div class="flex-1 mx-4 flex items-center">
+          <div class="w-full h-px bg-white/10 relative">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2 py-0.5 rounded text-[9px] font-bold" style="background:${c.accent}20;color:${c.accent}">${c.delta}</div>
+          </div>
+          <i data-lucide="arrow-right" class="w-4 h-4 flex-shrink-0" style="color:${c.accent}"></i>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold mono" style="color:${c.accent}">${c.rating}</div>
+          <div class="text-[9px] text-zinc-500">Current</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <div class="text-center p-2.5 rounded-lg bg-black/20 border border-white/5">
+          <div class="text-sm font-bold mono" style="color:${c.accent}">${c.streak}d</div>
+          <div class="text-[8px] uppercase tracking-wider text-zinc-500">Streak</div>
+        </div>
+        <div class="text-center p-2.5 rounded-lg bg-black/20 border border-white/5">
+          <div class="text-sm font-bold mono" style="color:${c.accent}">${c.contests}</div>
+          <div class="text-[8px] uppercase tracking-wider text-zinc-500">Contests</div>
+        </div>
+        <div class="text-center p-2.5 rounded-lg bg-black/20 border border-white/5">
+          <div class="text-sm font-bold mono" style="color:${c.accent}">${c.pct}</div>
+          <div class="text-[8px] uppercase tracking-wider text-zinc-500">Velocity</div>
+        </div>
+      </div>
+      ${footer}`;
+  }
+  else if (type === 'consistency') {
+    content = `
+      ${header}
+      <div class="text-[10px] uppercase tracking-widest text-zinc-500 mb-4">Reliability Verified</div>
+      <div class="flex items-center justify-center mb-5">
+        <div class="relative w-28 h-28">
+          <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="6"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="${c.accent}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${0.82*264} ${264}" opacity="0.8"/>
+          </svg>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center"><div class="text-xl font-bold mono" style="color:${c.accent}">82%</div><div class="text-[7px] uppercase tracking-wider text-zinc-500">Attendance</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="text-center p-2.5 rounded-lg bg-black/20 border border-white/5">
+          <div class="text-sm font-bold mono" style="color:${c.accent}">18/22</div>
+          <div class="text-[8px] uppercase tracking-wider text-zinc-500">Contests</div>
+        </div>
+        <div class="text-center p-2.5 rounded-lg bg-black/20 border border-white/5">
+          <div class="text-sm font-bold mono" style="color:${c.accent}">${c.streak}d</div>
+          <div class="text-[8px] uppercase tracking-wider text-zinc-500">Streak</div>
+        </div>
+      </div>
+      <div class="mt-3 text-[10px] text-zinc-500 text-center">Never missed a weekend contest in 3 months</div>
+      ${footer}`;
+  }
+  else if (type === 'crossplatform') {
+    content = `
+      ${header}
+      <div class="text-[10px] uppercase tracking-widest text-zinc-500 mb-4">Multi-Platform Profile</div>
+      <div class="space-y-3 mb-5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2"><span class="text-sm">🟠</span><span class="text-xs text-zinc-300">LeetCode</span></div>
+          <div class="flex items-center gap-2"><div class="w-24 h-1.5 rounded-full bg-zinc-800"><div class="h-full rounded-full bg-orange-400" style="width:74%"></div></div><span class="text-[10px] mono text-zinc-400 w-12 text-right">1,847</span></div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2"><span class="text-sm">🔴</span><span class="text-xs text-zinc-300">Codeforces</span></div>
+          <div class="flex items-center gap-2"><div class="w-24 h-1.5 rounded-full bg-zinc-800"><div class="h-full rounded-full bg-red-400" style="width:62%"></div></div><span class="text-[10px] mono text-zinc-400 w-12 text-right">1,560</span></div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2"><span class="text-sm">🟢</span><span class="text-xs text-zinc-300">CodeChef</span></div>
+          <div class="flex items-center gap-2"><div class="w-24 h-1.5 rounded-full bg-zinc-800"><div class="h-full rounded-full bg-green-400" style="width:73%"></div></div><span class="text-[10px] mono text-zinc-400 w-12 text-right">1,823</span></div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2"><i data-lucide="github" class="w-4 h-4 text-white"></i><span class="text-xs text-zinc-300">GitHub</span></div>
+          <div class="flex items-center gap-2"><div class="w-24 h-1.5 rounded-full bg-zinc-800"><div class="h-full rounded-full bg-zinc-400" style="width:18%"></div></div><span class="text-[10px] mono text-zinc-400 w-12 text-right">142</span></div>
+        </div>
+      </div>
+      <div class="text-center p-3 rounded-lg bg-black/20 border border-white/5">
+        <div class="text-[9px] uppercase tracking-widest text-zinc-500 mb-1">Composite Score</div>
+        <div class="text-2xl font-bold mono" style="color:${c.accent}">${c.rating}</div>
+        <div class="text-[10px] text-zinc-500">${c.pct} on DSA Quest</div>
+      </div>
+      ${footer}`;
+  }
+  else if (type === 'skillmap') {
+    content = `
+      ${header}
+      <div class="text-[10px] uppercase tracking-widest text-zinc-500 mb-4">Skill Profile Verified</div>
+      <div class="flex items-end justify-between gap-1.5 h-32 mb-3">
+        <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t bg-emerald-500/80 prog-animated" style="height:90%"></div><span class="text-[7px] text-zinc-500">DP</span></div>
+        <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t bg-emerald-500/60 prog-animated" style="height:78%"></div><span class="text-[7px] text-zinc-500">Str</span></div>
+        <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t bg-emerald-500/50 prog-animated" style="height:75%"></div><span class="text-[7px] text-zinc-500">Tree</span></div>
+        <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t bg-yellow-500/50 prog-animated" style="height:65%"></div><span class="text-[7px] text-zinc-500">Grph</span></div>
+        <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t bg-yellow-500/40 prog-animated" style="height:50%"></div><span class="text-[7px] text-zinc-500">Grdy</span></div>
+        <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t bg-red-500/40 prog-animated" style="height:35%"></div><span class="text-[7px] text-zinc-500">Math</span></div>
+        <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t bg-emerald-500/70 prog-animated" style="height:82%"></div><span class="text-[7px] text-zinc-500">BSearch</span></div>
+        <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t bg-yellow-500/40 prog-animated" style="height:45%"></div><span class="text-[7px] text-zinc-500">Stack</span></div>
+      </div>
+      <div class="text-center p-2.5 rounded-lg bg-black/20 border border-white/5">
+        <div class="text-sm font-bold" style="color:${c.accent}">8/10 categories covered</div>
+        <div class="text-[9px] text-zinc-500">Well-rounded problem solver</div>
+      </div>
+      ${footer}`;
+  }
+  else if (type === 'milestone') {
+    content = `
+      ${header}
+      <div class="text-center my-2">
+        <div class="text-4xl mb-2">${c.emoji}</div>
+        <div class="text-[10px] uppercase tracking-[0.15em] font-bold" style="color:${c.accent}50">Milestone Unlocked</div>
+        <div class="text-xl font-bold mt-1" style="color:${c.accent}">Top 10% Finish</div>
+        <div class="text-xs text-zinc-400 mt-1">CodeChef Starters 244</div>
+      </div>
+      <div class="grid grid-cols-2 gap-2 my-4">
+        <div class="text-center p-2.5 rounded-lg bg-black/20 border border-white/5">
+          <div class="text-sm font-bold mono" style="color:${c.accent}">412</div>
+          <div class="text-[8px] uppercase tracking-wider text-zinc-500">Rank</div>
+        </div>
+        <div class="text-center p-2.5 rounded-lg bg-black/20 border border-white/5">
+          <div class="text-sm font-bold mono" style="color:${c.accent}">23,100</div>
+          <div class="text-[8px] uppercase tracking-wider text-zinc-500">Participants</div>
+        </div>
+      </div>
+      <div class="text-center p-2.5 rounded-lg bg-black/20 border border-white/5">
+        <div class="text-sm font-bold" style="color:${c.accent}">Top 1.8%</div>
+        <div class="text-[9px] text-zinc-500">After ${c.contests} contests of grinding</div>
+      </div>
+      ${footer}`;
+  }
+
+  container.innerHTML = content;
+  lucide.createIcons();
+}
+
+function cycleCardLevel() {
+  const idx = levels.indexOf(currentLevel);
+  currentLevel = levels[(idx + 1) % levels.length];
+  updateLevelDots();
+  renderCard(currentType, currentLevel);
+}
+
+function setCardLevel(level) {
+  currentLevel = level;
+  updateLevelDots();
+  renderCard(currentType, currentLevel);
+}
+
+function switchCardType(type, btn) {
+  currentType = type;
+  document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderCard(currentType, currentLevel);
+}
+
+function updateLevelDots() {
+  document.querySelectorAll('.level-dot').forEach(d => {
+    d.classList.toggle('active', d.dataset.level === currentLevel);
+  });
+  document.getElementById('levelDescription').textContent = levelDescs[currentLevel];
+}
+
+function shareCard() { showToast('Opening share dialog... 🎯','success'); }
+function downloadCard() { showToast('Card image saved! 📄','success'); }
+
+// ============= TOAST =============
+function showToast(msg, type='success') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  const s = type==='success'?{bg:'rgba(16,185,129,0.1)',b:'rgba(16,185,129,0.2)',c:'#34d399',i:'check-circle'}:{bg:'rgba(249,115,22,0.1)',b:'rgba(249,115,22,0.2)',c:'#fb923c',i:'alert-circle'};
+  t.innerHTML=`<div class="px-4 py-3 rounded-xl backdrop-blur-md text-xs font-medium flex items-center gap-2" style="background:${s.bg};border:1px solid ${s.b};color:${s.c}"><i data-lucide="${s.i}" class="w-4 h-4"></i>${msg}</div>`;
+  c.appendChild(t); lucide.createIcons(); setTimeout(()=>t.remove(),3000);
+}
+
+// ============= INIT =============
+updateLevelDots();
+renderCard(currentType, currentLevel);
+</script>
+</body>
+</html>
