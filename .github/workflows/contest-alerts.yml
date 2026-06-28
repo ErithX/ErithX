@@ -1,0 +1,37 @@
+# .github/workflows/contest-alerts.yml
+# Triggers the contest-alerts API every 5 minutes via GitHub Actions
+# This avoids needing multiple Vercel cron jobs (Hobby plan only allows 1)
+
+name: Contest Start Alerts
+
+on:
+  schedule:
+    # Runs every 5 minutes (GitHub Actions minimum granularity)
+    - cron: '*/5 * * * *'
+
+  # Allow manual trigger from GitHub UI for testing
+  workflow_dispatch:
+
+jobs:
+  send-contest-alerts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Contest Alert Cron
+        run: |
+          RESPONSE=$(curl -s -o /tmp/response.json -w "%{http_code}" \
+            -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            https://contest-tracker-zms3.vercel.app/api/cron/contest-alerts)
+
+          echo "HTTP Status: $RESPONSE"
+          echo "Response body:"
+          cat /tmp/response.json
+
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "❌ Contest alert cron failed with status $RESPONSE"
+            exit 1
+          fi
+
+          echo "✅ Contest alerts processed at $(date)"
