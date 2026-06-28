@@ -1,4 +1,6 @@
 // app/api/user/profile/route.ts
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
 import { createClient } from '@/app/lib/supabase/server';
 
@@ -73,6 +75,24 @@ export async function PATCH(request: Request) {
     if (body.full_name !== undefined) updates.full_name = body.full_name;
     if (body.email_notifications !== undefined)
       updates.email_notifications = body.email_notifications;
+    if (body.contest_alerts_enabled !== undefined)
+      updates.contest_alerts_enabled = body.contest_alerts_enabled;
+    if (body.alert_minutes_before !== undefined) {
+      // null can arrive for existing users whose row pre-dates the migration;
+      // treat it as the default (30 min) so the save is never rejected.
+      if (body.alert_minutes_before === null) {
+        updates.alert_minutes_before = 30;
+      } else {
+        const minutes = Number(body.alert_minutes_before);
+        if (!Number.isInteger(minutes) || minutes < 5 || minutes > 120) {
+          return NextResponse.json(
+            { error: 'alert_minutes_before must be an integer between 5 and 120' },
+            { status: 400 }
+          );
+        }
+        updates.alert_minutes_before = minutes;
+      }
+    }
 
     // Validate platform URLs
     for (const [key, regex] of Object.entries(urlValidation)) {
