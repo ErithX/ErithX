@@ -26,6 +26,7 @@ interface AdminUser {
   createdAt: string;
   lastSignInAt: string | null;
   provider: string | null;
+  lastSeen: string | null;
 }
 
 interface AdminResource {
