@@ -14,6 +14,7 @@ import {
   XCircle,
 } from "lucide-react";
 import Navbar from "@/app/components/Navbar";
+import { formatLastSeen } from "@/app/lib/lastSeenUtils";
 
 type Tab = "users" | "pending" | "approved" | "create";
 
@@ -228,16 +229,14 @@ export default function SuperadminPage() {
           <header className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
               <p
-                className={`mb-2 text-sm font-black uppercase ${
-                  darkMode ? "text-blue-300" : "text-blue-600"
-                }`}
+                className={`mb-2 text-sm font-black uppercase ${darkMode ? "text-blue-300" : "text-blue-600"
+                  }`}
               >
                 DSA Quest control room
               </p>
               <h1
-                className={`text-4xl font-black md:text-6xl ${
-                  darkMode ? "text-white" : "text-black"
-                }`}
+                className={`text-4xl font-black md:text-6xl ${darkMode ? "text-white" : "text-black"
+                  }`}
               >
                 Superadmin
               </h1>
@@ -245,11 +244,10 @@ export default function SuperadminPage() {
 
             <Link
               href="/resources"
-              className={`inline-flex items-center gap-2 rounded-xl border-2 px-4 py-3 font-black ${
-                darkMode
+              className={`inline-flex items-center gap-2 rounded-xl border-2 px-4 py-3 font-black ${darkMode
                   ? "border-white bg-gray-900 text-white"
                   : "border-black bg-white text-black"
-              } cartoon-shadow`}
+                } cartoon-shadow`}
             >
               Open resources
               <ExternalLink className="h-4 w-4" />
@@ -261,13 +259,12 @@ export default function SuperadminPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`rounded-xl border-2 px-4 py-3 font-black ${
-                  activeTab === tab.id
+                className={`rounded-xl border-2 px-4 py-3 font-black ${activeTab === tab.id
                     ? "border-black bg-yellow-300 text-black"
                     : darkMode
                       ? "border-white bg-gray-900 text-white"
                       : "border-black bg-white text-black"
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>
@@ -289,11 +286,10 @@ export default function SuperadminPage() {
 
           {loading ? (
             <div
-              className={`rounded-3xl border-4 p-8 ${
-                darkMode
+              className={`rounded-3xl border-4 p-8 ${darkMode
                   ? "border-white bg-gray-900 text-white"
                   : "border-black bg-white text-black"
-              } cartoon-shadow`}
+                } cartoon-shadow`}
             >
               <Loader2 className="mb-3 h-8 w-8 animate-spin" />
               <p className="text-xl font-black">Loading admin data...</p>
@@ -302,11 +298,10 @@ export default function SuperadminPage() {
             <>
               {activeTab === "users" && (
                 <section
-                  className={`rounded-3xl border-4 p-5 ${
-                    darkMode
+                  className={`rounded-3xl border-4 p-5 ${darkMode
                       ? "border-white bg-gray-900 text-white"
                       : "border-black bg-white text-black"
-                  } cartoon-shadow`}
+                    } cartoon-shadow`}
                 >
                   <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-center">
                     <div className="flex items-center gap-3">
@@ -329,15 +324,10 @@ export default function SuperadminPage() {
                         <tr className={darkMode ? "bg-gray-800" : "bg-gray-100"}>
                           <th className="border-2 border-black p-3">User</th>
                           <th className="border-2 border-black p-3">Email</th>
-                          <th className="border-2 border-black p-3">
-                            Signed up
-                          </th>
-                          <th className="border-2 border-black p-3">
-                            Last login
-                          </th>
-                          <th className="border-2 border-black p-3">
-                            Provider
-                          </th>
+                          <th className="border-2 border-black p-3">Signed up</th>
+                          <th className="border-2 border-black p-3">Last login</th>
+                          <th className="border-2 border-black p-3">Last seen</th>
+                          <th className="border-2 border-black p-3">Provider</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -356,7 +346,20 @@ export default function SuperadminPage() {
                               {formatDate(user.lastSignInAt)}
                             </td>
                             <td className="border-2 border-black p-3">
-                              {user.provider || "unknown"}
+                              {formatLastSeen(user.lastSeen)}
+                            </td>
+                            <td className="border-2 border-black p-3">
+                              <span
+                                className={`rounded-full px-2 py-1 text-xs font-bold ${
+                                  user.provider === "google"
+                                    ? "bg-red-200 text-red-900"
+                                    : user.provider === "github"
+                                      ? "bg-gray-300 text-gray-900"
+                                      : "bg-blue-200 text-blue-900"
+                                }`}
+                              >
+                                {user.provider || "unknown"}
+                              </span>
                             </td>
                           </tr>
                         ))}
@@ -415,11 +418,10 @@ function ResourceList({
 }) {
   return (
     <section
-      className={`rounded-3xl border-4 p-5 ${
-        darkMode
+      className={`rounded-3xl border-4 p-5 ${darkMode
           ? "border-white bg-gray-900 text-white"
           : "border-black bg-white text-black"
-      } cartoon-shadow`}
+        } cartoon-shadow`}
     >
       <div className="mb-5 flex items-center gap-3">
         <FileText className="h-7 w-7" />
@@ -435,11 +437,10 @@ function ResourceList({
           {resources.map((resource) => (
             <article
               key={resource.id}
-              className={`rounded-2xl border-2 p-5 ${
-                darkMode
+              className={`rounded-2xl border-2 p-5 ${darkMode
                   ? "border-white bg-gray-800"
                   : "border-black bg-zinc-50"
-              }`}
+                }`}
             >
               <div className="mb-3 flex flex-wrap gap-2">
                 <span className="rounded-full border-2 border-black bg-blue-200 px-3 py-1 text-xs font-black text-black">
@@ -455,9 +456,8 @@ function ResourceList({
 
               <h3 className="mb-2 text-2xl font-black">{resource.title}</h3>
               <p
-                className={`mb-3 whitespace-pre-wrap font-semibold ${
-                  darkMode ? "text-gray-300" : "text-gray-700"
-                }`}
+                className={`mb-3 whitespace-pre-wrap font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"
+                  }`}
               >
                 {resource.body}
               </p>
@@ -474,9 +474,8 @@ function ResourceList({
               </div>
 
               <div
-                className={`mb-4 text-sm font-bold ${
-                  darkMode ? "text-gray-400" : "text-gray-500"
-                }`}
+                className={`mb-4 text-sm font-bold ${darkMode ? "text-gray-400" : "text-gray-500"
+                  }`}
               >
                 Submitted by {resource.submittedBy?.email || "admin"} on{" "}
                 {formatDate(resource.createdAt)}
@@ -555,19 +554,17 @@ function CreateResourceForm({
   darkMode: boolean;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
-  const inputClass = `w-full rounded-xl border-2 px-4 py-3 font-semibold outline-none ${
-    darkMode
+  const inputClass = `w-full rounded-xl border-2 px-4 py-3 font-semibold outline-none ${darkMode
       ? "border-white bg-gray-800 text-white"
       : "border-black bg-white text-black"
-  }`;
+    }`;
 
   return (
     <section
-      className={`rounded-3xl border-4 p-5 ${
-        darkMode
+      className={`rounded-3xl border-4 p-5 ${darkMode
           ? "border-white bg-gray-900 text-white"
           : "border-black bg-white text-black"
-      } cartoon-shadow`}
+        } cartoon-shadow`}
     >
       <h2 className="mb-5 text-2xl font-black">Create and publish resource</h2>
 
