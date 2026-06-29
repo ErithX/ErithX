@@ -12,16 +12,25 @@ export async function GET() {
     }
 
     const supabaseAdmin = getSupabaseAdminClient();
-    const { data, error } = await supabaseAdmin.auth.admin.listUsers({
+    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.listUsers({
       page: 1,
       perPage: 1000,
     });
 
-    if (error) {
-      throw error;
+    if (authError) {
+      throw authError;
     }
 
-    const users = data.users
+    // Fetch profile data (including last_seen)
+    const { data: profileData, error: profileError } = await supabaseAdmin
+      .from('user_profiles')
+      .select('id, last_seen');
+      
+    if (profileError) throw profileError;
+
+    const profileMap = new Map(profileData?.map((p: any) => [p.id, p.last_seen]) || []);
+
+    const users = authData.users
       .map((user) => ({
         id: user.id,
         email: user.email,
@@ -31,6 +40,7 @@ export async function GET() {
         createdAt: user.created_at,
         lastSignInAt: user.last_sign_in_at,
         provider: user.app_metadata?.provider || null,
+        lastSeen: profileMap.get(user.id) || null,
       }))
       .sort(
         (a, b) =>
