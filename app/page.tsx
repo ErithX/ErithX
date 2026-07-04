@@ -1,111 +1,102 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Zap, Bell, LogIn, Trophy, BellRing, RefreshCw, ChevronsDown, 
   MousePointerClick, CalendarCheck, BookOpen, Route, Check, Target, Award,
-  Mail, ShieldCheck, Clock, XCircle, Twitter, Github, Linkedin, Flame
+  Mail, ShieldCheck, Clock, XCircle, Twitter, Github, Linkedin, Flame, LogOut
 } from 'lucide-react';
 import DsaContestCard, { Contest } from '@/components/DsaContestCard';
 import AuthModal from '@/components/AuthModal';
+import { contestFetch } from '@/app/utils/contestFetch';
+import { createClient } from '@/app/lib/supabase/client';
+import type { User } from '@supabase/supabase-js';
 
 const INITIAL_CONTEST_DATA: Contest[] = [
   {
     id: 1, platform: 'hackerrank', platformColor: '#22c55e', platformBg: 'rgba(34,197,94,0.1)', platformBorder: 'rgba(34,197,94,0.2)',
     title: 'ProjectEuler+', status: 'live', statusLabel: 'LIVE NOW!',
     date: 'Jul 7, 2014', time: '9:08 PM IST', duration: '4776d 13h remaining',
-    hot: false, participants: '12.4K'
+    hot: false, participants: '12.4K', category: 'Competitive Programming', priority: 'Hot', difficulty: 'Beginner', isNonEnglish: false
   },
   {
     id: 2, platform: 'hackerearth', platformColor: '#3b82f6', platformBg: 'rgba(59,130,246,0.1)', platformBorder: 'rgba(59,130,246,0.2)',
     title: 'Turing Hiring Challenge 2026', status: 'live', statusLabel: 'LIVE NOW!',
     date: 'Jun 9, 2026', time: '6:31 PM IST', duration: '40d 3h remaining',
-    hot: false, participants: '8.7K'
+    hot: false, participants: '8.7K', category: 'Hiring Challenges', priority: 'Recommended', difficulty: 'Intermediate', isNonEnglish: false
   },
   {
     id: 3, platform: 'codechef', platformColor: '#f97316', platformBg: 'rgba(249,115,22,0.1)', platformBorder: 'rgba(249,115,22,0.2)',
     title: 'Starters 244', status: 'today', statusLabel: 'TODAY!',
     date: 'Jun 24, 2026', time: '8:00 PM IST', duration: 'Starts in 2h 0m',
-    hot: true, participants: '23.1K'
+    hot: true, participants: '23.1K', category: 'Competitive Programming', priority: 'Recommended', difficulty: 'Beginner', isNonEnglish: false
   },
   {
     id: 4, platform: 'leetcode', platformColor: '#eab308', platformBg: 'rgba(234,179,8,0.1)', platformBorder: 'rgba(234,179,8,0.2)',
     title: 'Weekly Contest 447', status: 'upcoming', statusLabel: 'UPCOMING',
     date: 'Jun 29, 2026', time: '8:00 AM IST', duration: 'Starts in 5d 4h',
-    hot: false, participants: '—'
+    hot: false, participants: '—', category: 'Competitive Programming', priority: 'Hot', difficulty: 'Intermediate', isNonEnglish: false
   },
   {
     id: 5, platform: 'codeforces', platformColor: '#ef4444', platformBg: 'rgba(239,68,68,0.1)', platformBorder: 'rgba(239,68,68,0.2)',
     title: 'Round 1023 (Div. 2)', status: 'upcoming', statusLabel: 'UPCOMING',
     date: 'Jun 27, 2026', time: '8:35 PM IST', duration: 'Starts in 3d 8h',
-    hot: true, participants: '—'
+    hot: true, participants: '—', category: 'Competitive Programming', priority: 'Hot', difficulty: 'Intermediate', isNonEnglish: false
   },
   {
     id: 6, platform: 'leetcode', platformColor: '#eab308', platformBg: 'rgba(234,179,8,0.1)', platformBorder: 'rgba(234,179,8,0.2)',
     title: 'Biweekly Contest 152', status: 'upcoming', statusLabel: 'UPCOMING',
     date: 'Jul 5, 2026', time: '10:30 PM IST', duration: 'Starts in 11d 2h',
-    hot: false, participants: '—'
+    hot: false, participants: '—', category: 'Competitive Programming', priority: 'Hot', difficulty: 'Intermediate', isNonEnglish: false
   }
 ];
 
 export default function HomePage() {
   const [activePlatform, setActivePlatform] = useState('all');
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeDifficulty, setActiveDifficulty] = useState('All');
+  
+  const [allContests, setAllContests] = useState<Contest[]>(INITIAL_CONTEST_DATA);
   const [contests, setContests] = useState<Contest[]>(INITIAL_CONTEST_DATA);
+  const [visibleCount, setVisibleCount] = useState(12);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [subscribedMessage, setSubscribedMessage] = useState('');
+  const [showAllPlatforms, setShowAllPlatforms] = useState(false);
   
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isDifficultyOpen, setIsDifficultyOpen] = useState(false);
+  const difficultyRef = useRef<HTMLDivElement>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+      if (difficultyRef.current && !difficultyRef.current.contains(event.target as Node)) {
+        setIsDifficultyOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const openAuth = () => {
     setIsAuthOpen(true);
   };
 
   useEffect(() => {
-    const fetchContests = async () => {
-      try {
-        const res = await fetch('https://kontests.net/api/v1/all');
-        if (!res.ok) throw new Error('API failed');
-        const data = await res.json();
-        
-        const mapped = data.slice(0, 12).map((c: any, index: number) => {
-          let platformColor = '#3b82f6';
-          let platformBg = 'rgba(59,130,246,0.1)';
-          let platformBorder = 'rgba(59,130,246,0.2)';
-          let platform = c.site.toLowerCase();
-          
-          if (platform.includes('codechef')) { platformColor = '#f97316'; platformBg = 'rgba(249,115,22,0.1)'; platformBorder = 'rgba(249,115,22,0.2)'; }
-          else if (platform.includes('codeforces')) { platformColor = '#ef4444'; platformBg = 'rgba(239,68,68,0.1)'; platformBorder = 'rgba(239,68,68,0.2)'; }
-          else if (platform.includes('leetcode')) { platformColor = '#eab308'; platformBg = 'rgba(234,179,8,0.1)'; platformBorder = 'rgba(234,179,8,0.2)'; }
-          else if (platform.includes('hackerrank')) { platformColor = '#22c55e'; platformBg = 'rgba(34,197,94,0.1)'; platformBorder = 'rgba(34,197,94,0.2)'; }
-
-          const status = c.status === 'CODING' ? 'live' : c.in_24_hours === 'Yes' ? 'today' : 'upcoming';
-          const statusLabel = status === 'live' ? 'LIVE NOW!' : status === 'today' ? 'TODAY!' : 'UPCOMING';
-          
-          const sDate = new Date(c.start_time);
-          const dateStr = sDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-          const timeStr = sDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
-          
-          return {
-            id: index + 100,
-            platform: c.site,
-            platformColor,
-            platformBg,
-            platformBorder,
-            title: c.name,
-            status,
-            statusLabel,
-            date: dateStr,
-            time: timeStr,
-            duration: c.duration ? `${Math.round(c.duration / 3600)}h` : 'Unknown',
-            hot: status === 'live' || status === 'today',
-            participants: '—'
-          };
-        });
+    const loadContests = async () => {
+      const mapped = await contestFetch();
+      if (mapped) {
+        setAllContests(mapped);
         setContests(mapped);
-      } catch (err) {
-        console.error("Failed to fetch contests, using fallback.", err);
       }
     };
-    fetchContests();
+    loadContests();
   }, []);
 
   useEffect(() => {
@@ -116,31 +107,98 @@ export default function HomePage() {
       const newUrl = window.location.pathname;
       window.history.replaceState({}, document.title, newUrl);
     }
-  }, []);
+    
+    // Auth Listener
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    fetchUser();
 
-  const filterPlatform = (platform: string) => {
-    setActivePlatform(platform);
-    if (platform === 'all') {
-      setContests(INITIAL_CONTEST_DATA);
-    } else {
-      setContests(INITIAL_CONTEST_DATA.filter(c => c.platform.toLowerCase().includes(platform)));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      if (event === 'SIGNED_IN') setIsAuthOpen(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase.auth]);
+
+  const applyFilters = (platform = activePlatform, category = activeCategory, difficulty = activeDifficulty) => {
+    // Check if platform belongs to new category
+    if (category !== 'All' && platform !== 'all') {
+      const platformContest = allContests.find(c => c.platform === platform);
+      if (platformContest && platformContest.category !== category) {
+        platform = 'all';
+      }
     }
+
+    setActivePlatform(platform);
+    setActiveCategory(category);
+    setActiveDifficulty(difficulty);
+
+    const filtered = allContests.filter(c => {
+      const matchPlatform = platform === 'all' || c.platform.toLowerCase() === platform.toLowerCase();
+      const matchCategory = category === 'All' || c.category === category;
+      const matchDifficulty = difficulty === 'All' || c.difficulty === difficulty;
+      return matchPlatform && matchCategory && matchDifficulty;
+    });
+
+    setContests(filtered);
+    setVisibleCount(12);
   };
 
-  const refreshContests = () => {
+  const refreshContests = async () => {
     setIsRefreshing(true);
-    setTimeout(() => {
-      setIsRefreshing(false);
-      alert('Contest list refreshed! 🔄');
-    }, 600);
+    const mapped = await contestFetch();
+    if (mapped) {
+      setAllContests(mapped);
+      setContests(mapped);
+    }
+    setIsRefreshing(false);
   };
 
   const handleEmailSignup = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const email = (e.currentTarget.elements.namedItem('emailInput') as HTMLInputElement).value;
-    alert(`Alerts activated for ${email}! 📬`);
+    setSubscribedMessage(`Alerts activated for ${email}! 📬`);
     (e.currentTarget.elements.namedItem('emailInput') as HTMLInputElement).value = '';
+    setTimeout(() => setSubscribedMessage(''), 5000);
   };
+
+  let categoryFilteredPlatforms = Array.from(new Set(allContests.map(c => c.platform))).filter(Boolean);
+  if (activeCategory !== 'All') {
+    categoryFilteredPlatforms = categoryFilteredPlatforms.filter(p => {
+      const config = allContests.find(c => c.platform === p);
+      return config && config.category === activeCategory;
+    });
+  }
+  
+  const sortedPlatforms = categoryFilteredPlatforms.sort((a, b) => {
+      const pA = allContests.find(c => c.platform === a)?.priority;
+      const pB = allContests.find(c => c.platform === b)?.priority;
+      const weight = { 'Hot': 3, 'Recommended': 2, 'More': 1 };
+      return (weight[pB as keyof typeof weight] || 0) - (weight[pA as keyof typeof weight] || 0);
+  });
+
+  const visiblePlatforms = showAllPlatforms ? sortedPlatforms : sortedPlatforms.slice(0, 6);
+
+  const platformButtons = visiblePlatforms.map(platform => {
+    const sampleContest = allContests.find(c => c.platform === platform);
+    return (
+      <button 
+        key={platform}
+        className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent flex items-center gap-1 ${activePlatform === platform ? 'active' : ''}`}
+        onClick={() => applyFilters(platform, activeCategory, activeDifficulty)}
+      >
+        <span className="w-1.5 h-1.5 rounded-full" style={{ background: sampleContest?.platformColor || '#a1a1aa' }}></span>
+        {platform}
+      </button>
+    );
+  });
+
+  const liveCount = allContests.filter(c => c.status.toLowerCase() === 'live').length;
 
   return (
     <div className="min-h-screen">
@@ -161,14 +219,51 @@ export default function HomePage() {
               <a href="/resources" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Resources</a>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button onClick={openAuth} className="px-3 py-1.5 rounded-lg border border-transparent text-zinc-300 text-xs font-medium hover:bg-white/5 transition-all">
-              Sign In
-            </button>
-            <button onClick={openAuth} className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">
-              <LogIn className="w-3.5 h-3.5" />
-              Sign Up Free
-            </button>
+          <div className="flex items-center gap-3 relative">
+            {user ? (
+              <div className="relative" ref={dropdownRef}>
+                <button 
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)} 
+                  className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full hover:bg-white/5 transition-all focus:outline-none"
+                >
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 overflow-hidden shrink-0">
+                    {user.user_metadata?.avatar_url ? (
+                      <img src={user.user_metadata.avatar_url} alt="Profile" className="w-full h-full rounded-full object-cover" />
+                    ) : (
+                      <span className="text-xs font-bold">{user.email?.charAt(0).toUpperCase() || 'U'}</span>
+                    )}
+                  </div>
+                  <span className="text-sm font-medium text-zinc-300">
+                    Hi, {user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'User'}
+                  </span>
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-[#09090b] border border-white/10 rounded-xl shadow-2xl py-1 z-50 animate-in fade-in slide-in-from-top-2">
+                    <div className="px-4 py-3 border-b border-white/10">
+                      <p className="text-xs text-white font-medium truncate mb-0.5">{user.user_metadata?.full_name || 'User'}</p>
+                      <p className="text-[10px] text-zinc-400 truncate">{user.email}</p>
+                    </div>
+                    <div className="p-1">
+                      <button 
+                        onClick={async () => {
+                          await supabase.auth.signOut();
+                          setIsDropdownOpen(false);
+                          window.location.reload();
+                        }} 
+                        className="w-full text-left px-3 py-2 text-xs text-red-400 hover:bg-red-500/10 rounded-lg transition-colors flex items-center gap-2"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button onClick={openAuth} className="px-3 py-1.5 rounded-lg border border-transparent text-zinc-300 text-xs font-medium hover:bg-white/5 transition-all">
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </nav>
@@ -179,27 +274,16 @@ export default function HomePage() {
         <div className="absolute top-0 left-1/3 w-[600px] h-[600px] rounded-full opacity-[0.07]" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(80px)'}}></div>
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{background: 'radial-gradient(circle, #06b6d4, transparent 70%)', filter: 'blur(60px)'}}></div>
 
-        <div className="absolute top-32 right-20 float-anim hidden lg:block">
-          <div className="glass rounded-xl p-3 flex items-center gap-2 opacity-60">
-            <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-            <span className="text-[10px] text-zinc-400 font-mono">contest_live = true</span>
-          </div>
-        </div>
-        <div className="absolute bottom-40 left-16 float-anim-delay hidden lg:block">
-          <div className="glass rounded-xl p-3 flex items-center gap-2 opacity-40">
-            <Trophy className="w-3.5 h-3.5 text-yellow-500" />
-            <span className="text-[10px] text-zinc-400">Streak: 30 days 🔥</span>
-          </div>
-        </div>
 
-        <div className="max-w-6xl mx-auto px-6 relative z-10 pt-20">
+
+        <div className="max-w-6xl mx-auto px-6 relative z-10 pt-20 pb-28">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-8">
               <span className="relative flex h-2 w-2">
                 <span className="live-pulse absolute inline-flex h-full w-full rounded-full bg-red-500"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
               </span>
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">3 Contests Live Now</span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">{liveCount} Contests Live Now</span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.1]">
@@ -219,23 +303,53 @@ export default function HomePage() {
                 <Trophy className="w-4 h-4" />
                 View Live Contests
               </a>
-              <button onClick={() => alert('Alert system activated! 📬')} className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white/5 transition-all">
+              <a href="#community" className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white/5 transition-all">
                 <BellRing className="w-4 h-4" />
                 Get Email Alerts
-              </button>
+              </a>
             </div>
 
-            <div className="mt-16 flex items-center justify-center gap-6 flex-wrap opacity-30">
-              <span className="text-[10px] uppercase tracking-widest text-zinc-500">Tracking</span>
-              <div className="w-px h-4 bg-zinc-700"></div>
-              <span className="text-xs font-medium text-zinc-400">LeetCode</span>
-              <span className="text-xs font-medium text-zinc-400">Codeforces</span>
-              <span className="text-xs font-medium text-zinc-400">CodeChef</span>
-              <span className="text-xs font-medium text-zinc-400">HackerRank</span>
-              <span className="text-xs font-medium text-zinc-400">HackerEarth</span>
-              <span className="text-xs font-medium text-zinc-400">AtCoder</span>
-              <span className="text-xs font-medium text-zinc-400 hidden sm:inline">GFG</span>
-              <span className="text-xs font-medium text-zinc-400 hidden sm:inline">Kick Start</span>
+            <div className="mt-5 opacity-70 hover:opacity-100 transition-opacity overflow-hidden relative w-full mask-edges">
+              <div className="flex items-center gap-12 animate-marquee py-2">
+                <span className="text-[10px] uppercase tracking-widest text-zinc-500 mr-4 font-bold shrink-0">TRACKING</span>
+                {['leetcode', 'codeforces', 'codechef', 'hackerrank', 'hackerearth', 'atcoder', 'geeksforgeeks', 'topcoder', 'kaggle', 'google', 'meta', 'apple'].map((platform, i) => (
+                  <img 
+                    key={i} 
+                    src={`https://cdn.simpleicons.org/${platform}`} 
+                    alt={platform} 
+                    className="h-6 w-auto shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]" 
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
+                ))}
+                {/* Duplicate for infinite effect */}
+                {['leetcode', 'codeforces', 'codechef', 'hackerrank', 'hackerearth', 'atcoder', 'geeksforgeeks', 'topcoder', 'kaggle', 'google', 'meta', 'apple'].map((platform, i) => (
+                  <img 
+                    key={i + 'dup'} 
+                    src={`https://cdn.simpleicons.org/${platform}`} 
+                    alt={platform} 
+                    className="h-6 w-auto shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]" 
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
+                ))}
+              </div>
+              <style>{`
+                .mask-edges {
+                  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+                  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+                }
+                @keyframes marquee {
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(-50%); }
+                }
+                .animate-marquee {
+                  display: flex;
+                  width: max-content;
+                  animation: marquee 25s linear infinite;
+                }
+                .animate-marquee:hover {
+                  animation-play-state: paused;
+                }
+              `}</style>
             </div>
           </div>
         </div>
@@ -252,7 +366,7 @@ export default function HomePage() {
       <section id="contests" className="py-24 px-6 relative">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
-            <div>
+            <div className="w-full">
               <div className="flex items-center gap-2 mb-3">
                 <span className="relative flex h-2 w-2">
                   <span className="live-pulse absolute inline-flex h-full w-full rounded-full bg-red-500"></span>
@@ -260,69 +374,95 @@ export default function HomePage() {
                 </span>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-red-400">Live & Upcoming</span>
               </div>
-              <h2 className="text-3xl font-medium tracking-tight">Contest Board</h2>
-              <p className="text-sm text-zinc-500 mt-1">Get contest alerts before others do!</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <button 
-                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent ${activePlatform === 'all' ? 'active' : ''}`}
-                  onClick={() => filterPlatform('all')}
-                >
-                  All
-                </button>
-                <button 
-                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent flex items-center gap-1 ${activePlatform === 'leetcode' ? 'active' : ''}`}
-                  onClick={() => filterPlatform('leetcode')}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>LeetCode
-                </button>
-                <button 
-                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent flex items-center gap-1 ${activePlatform === 'codeforces' ? 'active' : ''}`}
-                  onClick={() => filterPlatform('codeforces')}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>Codeforces
-                </button>
-                <button 
-                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent flex items-center gap-1 ${activePlatform === 'codechef' ? 'active' : ''}`}
-                  onClick={() => filterPlatform('codechef')}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>CodeChef
-                </button>
-                <button 
-                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent flex items-center gap-1 hidden sm:flex ${activePlatform === 'hackerrank' ? 'active' : ''}`}
-                  onClick={() => filterPlatform('hackerrank')}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>HackerRank
-                </button>
-                <button 
-                  className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent flex items-center gap-1 hidden sm:flex ${activePlatform === 'hackerearth' ? 'active' : ''}`}
-                  onClick={() => filterPlatform('hackerearth')}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>HackerEarth
+              <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
+                <h2 className="text-3xl font-medium tracking-tight">Contest Board</h2>
+                <button onClick={refreshContests} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg glass text-xs font-medium text-zinc-400 hover:text-white transition-all">
+                  <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  Refresh
                 </button>
               </div>
-              <button 
-                onClick={refreshContests} 
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg glass text-xs font-medium text-zinc-400 hover:text-white transition-all"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
-                Refresh
-              </button>
+
+              {/* Advanced Filter Bar */}
+              <div className="flex flex-col gap-5 mb-8 bg-transparent p-5">
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <span className="text-xs text-zinc-500 block mb-2 font-medium uppercase tracking-wider">Category</span>
+                    <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                      {['All', 'Competitive Programming', 'Hackathons', 'AI / ML', 'Cyber Security / CTF', 'Hiring Challenges'].map(cat => (
+                        <button key={cat} onClick={() => applyFilters(activePlatform, cat, activeDifficulty)} className={`px-4 py-2 rounded-xl text-xs font-semibold border whitespace-nowrap transition-all ${activeCategory === cat ? 'bg-emerald-500 text-zinc-950 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white'}`}>
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-zinc-500 font-medium min-w-[70px] uppercase tracking-wider">Difficulty</span>
+                    <div className="relative" ref={difficultyRef}>
+                      <button
+                        onClick={() => setIsDifficultyOpen(!isDifficultyOpen)}
+                        className="bg-transparent border border-white/10 text-zinc-200 text-xs rounded-lg pl-3 pr-8 py-2 outline-none focus:border-emerald-500/50 min-w-[150px] cursor-pointer text-left relative flex items-center justify-between hover:bg-white/5 transition-colors"
+                      >
+                        <span>
+                          {activeDifficulty === 'Beginner' ? '🟢 Beginner' : 
+                           activeDifficulty === 'Intermediate' ? '🟡 Intermediate' : 'All Difficulties'}
+                        </span>
+                        <div className="text-zinc-500 text-[10px]">▼</div>
+                      </button>
+                      
+                      {isDifficultyOpen && (
+                        <div className="absolute top-full left-0 mt-1 w-full bg-[#09090b]/40 backdrop-blur-md border border-white/10 rounded-lg overflow-hidden shadow-2xl z-20 animate-in fade-in zoom-in-95">
+                          {['All', 'Beginner', 'Intermediate'].map((diff) => (
+                            <button
+                              key={diff}
+                              onClick={() => {
+                                applyFilters(activePlatform, activeCategory, diff);
+                                setIsDifficultyOpen(false);
+                              }}
+                              className={`w-full text-left px-3 py-2 text-xs transition-colors ${activeDifficulty === diff ? 'bg-emerald-500/20 text-emerald-400' : 'text-zinc-300 hover:bg-emerald-500/10 hover:text-emerald-400'}`}
+                            >
+                              {diff === 'Beginner' ? '🟢 Beginner' : diff === 'Intermediate' ? '🟡 Intermediate' : 'All Difficulties'}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-xs text-zinc-500 min-w-[70px] mt-1.5">Platform</span>
+                  <div className="flex flex-wrap gap-1.5 flex-1">
+                    <button className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent ${activePlatform === 'all' ? 'active' : ''}`} onClick={() => applyFilters('all', activeCategory, activeDifficulty)}>All</button>
+                    {platformButtons}
+                    {!showAllPlatforms && sortedPlatforms.length > 6 && (
+                      <button onClick={() => setShowAllPlatforms(true)} className="px-2.5 py-1 rounded-md text-[10px] font-medium text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors border border-emerald-500/20">
+                        Discover More ({sortedPlatforms.length - 6}+)
+                      </button>
+                    )}
+                    {showAllPlatforms && (
+                      <button onClick={() => setShowAllPlatforms(false)} className="px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-colors border border-transparent">
+                        Show Less
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {contests.map((contest, index) => (
+            {contests.slice(0, visibleCount).map((contest, index) => (
               <DsaContestCard key={contest.id} contest={contest} index={index} />
             ))}
           </div>
 
           <div className="text-center mt-10">
-            <button onClick={() => alert('Loading more contests...')} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 text-zinc-400 text-xs font-medium hover:bg-white/5 hover:text-white transition-all">
-              <ChevronsDown className="w-4 h-4" />
-              View All Upcoming Contests
-            </button>
+            {visibleCount < contests.length && (
+              <button onClick={() => setVisibleCount(prev => prev + 12)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 text-zinc-400 text-xs font-medium hover:bg-white/5 hover:text-white transition-all">
+                <ChevronsDown className="w-4 h-4" />
+                View More Contests
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -465,6 +605,13 @@ export default function HomePage() {
                   Activate Alerts
                 </button>
               </form>
+
+              {subscribedMessage && (
+                <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                  <Check className="w-3.5 h-3.5" />
+                  {subscribedMessage}
+                </div>
+              )}
 
               <div className="flex items-center justify-center gap-4 mt-6">
                 <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">

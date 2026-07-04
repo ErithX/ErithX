@@ -65,12 +65,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // 2. Redirect logged-in users away from landing page to their dashboard
-  if (pathname === '/' && user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/dashboard'
-    return NextResponse.redirect(url)
-  }
+
 
   return response
 }
