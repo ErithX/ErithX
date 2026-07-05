@@ -1,5 +1,6 @@
 import React from 'react';
 import { Users, Calendar, Clock, Timer, AlarmClock, Hourglass, Flame, Swords } from 'lucide-react';
+import { getFakeParticipantCount } from '@/app/utils/participants/generator';
 
 export interface Contest {
   id: number;
@@ -103,7 +104,7 @@ export default function DsaContestCard({ contest, index }: { contest: Contest, i
           </div>
           <div className="flex items-center gap-1 text-[10px] text-zinc-600 ml-2 shrink-0">
             <Users className="w-3 h-3" />
-            {contest.participants}
+            {(!contest.participants || contest.participants === '—') ? getFakeParticipantCount(contest.id || contest.title) : contest.participants}
           </div>
         </div>
 

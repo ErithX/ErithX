@@ -186,6 +186,18 @@ export default function HomePage() {
 
   const platformButtons = visiblePlatforms.map(platform => {
     const sampleContest = allContests.find(c => c.platform === platform);
+    
+    let displayName = platform.replace(/\.(com|org|net|jp|io)(\/.*)?$/, '');
+    if (displayName.toLowerCase().includes('leetcode')) displayName = 'LeetCode';
+    else if (displayName.toLowerCase().includes('codeforces')) displayName = 'Codeforces';
+    else if (displayName.toLowerCase().includes('codechef')) displayName = 'CodeChef';
+    else if (displayName.toLowerCase().includes('hackerrank')) displayName = 'HackerRank';
+    else if (displayName.toLowerCase().includes('hackerearth')) displayName = 'HackerEarth';
+    else if (displayName.toLowerCase().includes('atcoder')) displayName = 'AtCoder';
+    else if (displayName.toLowerCase().includes('geeksforgeeks')) displayName = 'GeeksforGeeks';
+    else if (displayName.toLowerCase().includes('topcoder')) displayName = 'TopCoder';
+    else displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+
     return (
       <button 
         key={platform}
@@ -193,7 +205,7 @@ export default function HomePage() {
         onClick={() => applyFilters(platform, activeCategory, activeDifficulty)}
       >
         <span className="w-1.5 h-1.5 rounded-full" style={{ background: sampleContest?.platformColor || '#a1a1aa' }}></span>
-        {platform}
+        {displayName}
       </button>
     );
   });
@@ -313,23 +325,37 @@ export default function HomePage() {
               <div className="flex items-center gap-12 animate-marquee py-2">
                 <span className="text-[10px] uppercase tracking-widest text-zinc-500 mr-4 font-bold shrink-0">TRACKING</span>
                 {['leetcode', 'codeforces', 'codechef', 'hackerrank', 'hackerearth', 'atcoder', 'geeksforgeeks', 'topcoder', 'kaggle', 'google', 'meta', 'apple'].map((platform, i) => (
-                  <img 
-                    key={i} 
-                    src={`https://cdn.simpleicons.org/${platform}`} 
-                    alt={platform} 
-                    className="h-6 w-auto shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]" 
-                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                  />
+                  platform === 'atcoder' ? (
+                    <div key={i} className="flex items-center gap-1.5 shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]">
+                      
+                      <span className="font-bold text-zinc-300 text-sm tracking-tight">AtCoder</span>
+                    </div>
+                  ) : (
+                    <img 
+                      key={i} 
+                      src={`https://cdn.simpleicons.org/${platform}`} 
+                      alt={platform} 
+                      className="h-6 w-auto shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]" 
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                  )
                 ))}
                 {/* Duplicate for infinite effect */}
                 {['leetcode', 'codeforces', 'codechef', 'hackerrank', 'hackerearth', 'atcoder', 'geeksforgeeks', 'topcoder', 'kaggle', 'google', 'meta', 'apple'].map((platform, i) => (
-                  <img 
-                    key={i + 'dup'} 
-                    src={`https://cdn.simpleicons.org/${platform}`} 
-                    alt={platform} 
-                    className="h-6 w-auto shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]" 
-                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                  />
+                  platform === 'atcoder' ? (
+                    <div key={i + 'dup'} className="flex items-center gap-1.5 shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]">
+                      <div className="bg-zinc-800 border border-zinc-700 text-white text-[10px] font-black px-1.5 py-0.5 rounded-sm">AC</div>
+                      <span className="font-bold text-zinc-300 text-sm tracking-tight">AtCoder</span>
+                    </div>
+                  ) : (
+                    <img 
+                      key={i + 'dup'} 
+                      src={`https://cdn.simpleicons.org/${platform}`} 
+                      alt={platform} 
+                      className="h-6 w-auto shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]" 
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                  )
                 ))}
               </div>
               <style>{`
@@ -383,19 +409,23 @@ export default function HomePage() {
               </div>
 
               {/* Advanced Filter Bar */}
-              <div className="flex flex-col gap-5 mb-8 bg-transparent p-5">
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <span className="text-xs text-zinc-500 block mb-2 font-medium uppercase tracking-wider">Category</span>
-                    <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                      {['All', 'Competitive Programming', 'Hackathons', 'AI / ML', 'Cyber Security / CTF', 'Hiring Challenges'].map(cat => (
-                        <button key={cat} onClick={() => applyFilters(activePlatform, cat, activeDifficulty)} className={`px-4 py-2 rounded-xl text-xs font-semibold border whitespace-nowrap transition-all ${activeCategory === cat ? 'bg-emerald-500 text-zinc-950 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white'}`}>
-                          {cat}
-                        </button>
-                      ))}
-                    </div>
+              <div className="flex flex-col gap-4 mb-6 bg-transparent">
+                
+                {/* Row 1: Category */}
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-zinc-500 font-medium min-w-[70px] uppercase tracking-wider">Category</span>
+                  <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide w-full">
+                    {['All', 'Competitive Programming', 'Hackathons', 'AI / ML', 'Cyber Security / CTF', 'Hiring Challenges'].map(cat => (
+                      <button key={cat} onClick={() => applyFilters(activePlatform, cat, activeDifficulty)} className={`px-4 py-2 rounded-xl text-xs font-semibold border whitespace-nowrap transition-all ${activeCategory === cat ? 'bg-emerald-500 text-zinc-950 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white'}`}>
+                        {cat}
+                      </button>
+                    ))}
                   </div>
+                </div>
 
+                {/* Row 2: Difficulty & Platform */}
+                <div className="flex flex-wrap items-center justify-between gap-4 mt-2">
+                  {/* Difficulty (Left Side) */}
                   <div className="flex items-center gap-3">
                     <span className="text-xs text-zinc-500 font-medium min-w-[70px] uppercase tracking-wider">Difficulty</span>
                     <div className="relative" ref={difficultyRef}>
@@ -428,10 +458,9 @@ export default function HomePage() {
                       )}
                     </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-xs text-zinc-500 min-w-[70px] mt-1.5">Platform</span>
-                  <div className="flex flex-wrap gap-1.5 flex-1">
+
+                  {/* Platform (Right Side) */}
+                  <div className="flex flex-wrap gap-1.5 justify-end">
                     <button className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent ${activePlatform === 'all' ? 'active' : ''}`} onClick={() => applyFilters('all', activeCategory, activeDifficulty)}>All</button>
                     {platformButtons}
                     {!showAllPlatforms && sortedPlatforms.length > 6 && (
@@ -446,6 +475,7 @@ export default function HomePage() {
                     )}
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
