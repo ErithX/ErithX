@@ -1,5 +1,5 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { Type, Heading1, Heading2, List, ListOrdered, Quote, Code, Image as ImageIcon } from 'lucide-react';
+import { Type, Heading1, Heading2, List, ListOrdered, Quote, Code, Image as ImageIcon, Info } from 'lucide-react';
 import { Editor, Range } from '@tiptap/core';
 
 export interface CommandItem {
@@ -60,24 +60,87 @@ export const getSuggestionItems = ({ query }: { query: string }): CommandItem[] 
       },
     },
     {
+      title: 'Callout',
+      description: 'Highlight important information.',
+      icon: <Info className="w-4 h-4" />,
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
+        editor.chain().focus().deleteRange(range).insertContent('<div data-type="callout"></div>').run();
+      },
+    },
+    {
       title: 'Code Block',
       description: 'Add a snippet of code.',
       icon: <Code className="w-4 h-4" />,
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        editor.chain().focus().deleteRange(range).toggleCodeBlock().run();
+        editor.chain().focus().deleteRange(range).setCodeBlock().run();
       },
     },
     {
       title: 'Image',
-      description: 'Embed an image from a URL.',
+      description: 'Upload an image from your device.',
       icon: <ImageIcon className="w-4 h-4" />,
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        const url = window.prompt('Enter Image URL:');
-        if (url) {
-          editor.chain().focus().deleteRange(range).setImage({ src: url }).run();
-        } else {
-          editor.chain().focus().deleteRange(range).run();
-        }
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e: any) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            editor.chain().focus().deleteRange(range).insertContent({
+              type: 'resizableImage',
+              attrs: { isUploading: true }
+            }).run();
+            
+            setTimeout(() => {
+              const objectUrl = URL.createObjectURL(file);
+              const { state, view } = editor as any;
+              const { selection } = state;
+              // Safely find the uploading image node and update it
+              editor.commands.command(({ tr }) => {
+                tr.doc.descendants((node, pos) => {
+                  if (node.type.name === 'resizableImage' && node.attrs.isUploading === true) {
+                    tr.setNodeMarkup(pos, undefined, { src: objectUrl, isUploading: false });
+                  }
+                });
+                return true;
+              });
+            }, 2000);
+          }
+        };
+        input.click();
+      },
+    },
+    {
+      title: 'PDF Document',
+      description: 'Upload and embed a PDF file.',
+      icon: <Type className="w-4 h-4" />,
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/pdf';
+        input.onchange = (e: any) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            editor.chain().focus().deleteRange(range).insertContent({
+              type: 'pdfBlock',
+              attrs: { isUploading: true, filename: file.name }
+            }).run();
+            
+            setTimeout(() => {
+              const objectUrl = URL.createObjectURL(file);
+              // Safely find the uploading pdf node and update it
+              editor.commands.command(({ tr }) => {
+                tr.doc.descendants((node, pos) => {
+                  if (node.type.name === 'pdfBlock' && node.attrs.isUploading === true) {
+                    tr.setNodeMarkup(pos, undefined, { src: objectUrl, isUploading: false, filename: file.name });
+                  }
+                });
+                return true;
+              });
+            }, 2000);
+          }
+        };
+        input.click();
       },
     },
   ].filter(item => item.title.toLowerCase().includes(query.toLowerCase()));
