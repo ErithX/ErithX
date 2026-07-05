@@ -17,7 +17,15 @@
     "next": "^16.1.2",
     "nodemailer": "^7.0.12",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "@tiptap/react": "^2.11.2",
+    "@tiptap/pm": "^2.11.2",
+    "@tiptap/starter-kit": "^2.11.2",
+    "@tiptap/extension-image": "^2.11.2",
+    "@tiptap/extension-link": "^2.11.2",
+    "@tiptap/suggestion": "^2.11.2",
+    "tippy.js": "^6.3.7",
+    "@tailwindcss/typography": "^0.5.16"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",

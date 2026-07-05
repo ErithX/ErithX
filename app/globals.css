@@ -129,3 +129,15 @@ body {
 .masonry-span-all { column-span: all; }
 @media (max-width: 1024px) { .masonry { columns: 2; } }
 @media (max-width: 640px) { .masonry { columns: 1; } }
+
+/* Basic Editor Prose Styles (Fallback since Typography plugin conflicts with Turbopack) */
+.prose p { margin-bottom: 1em; line-height: 1.7; }
+.prose h1 { font-size: 2.25em; font-weight: 700; margin-top: 1.5em; margin-bottom: 0.5em; }
+.prose h2 { font-size: 1.5em; font-weight: 600; margin-top: 1.5em; margin-bottom: 0.5em; }
+.prose h3 { font-size: 1.25em; font-weight: 600; margin-top: 1em; margin-bottom: 0.5em; }
+.prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; }
+.prose ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 1em; }
+.prose li { margin-bottom: 0.25em; }
+.prose blockquote { border-left: 4px solid rgba(16,185,129,0.5); padding-left: 1em; font-style: italic; color: #a1a1aa; margin-bottom: 1em; }
+.prose strong { font-weight: 700; color: #fff; }
+.prose em { font-style: italic; }
