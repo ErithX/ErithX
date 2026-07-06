@@ -94,15 +94,31 @@ export default function TiptapEditor({ content = '', onChange }: TiptapEditorPro
             const transaction = view.state.tr.insert(coordinates.pos, node);
             view.dispatch(transaction);
             
-            // 2. Simulate network delay then swap to real uploaded file
-            setTimeout(() => {
-              const objectUrl = URL.createObjectURL(file);
-              view.dispatch(view.state.tr.setNodeMarkup(coordinates.pos, undefined, { 
-                src: objectUrl, 
-                isUploading: false,
-                ...(isPdf ? { filename: file.name } : {})
-              }));
-            }, 2000);
+            // 2. Upload file to Supabase Storage via API
+            const uploadFile = async () => {
+              const formData = new FormData();
+              formData.append('file', file);
+              try {
+                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.url) {
+                  const tr = view.state.tr;
+                  tr.doc.descendants((node, pos) => {
+                    if (node.type.name === nodeType.name && node.attrs.isUploading === true) {
+                      tr.setNodeMarkup(pos, undefined, { 
+                        src: data.url, 
+                        isUploading: false,
+                        ...(isPdf ? { filename: file.name } : {})
+                      });
+                    }
+                  });
+                  view.dispatch(tr);
+                }
+              } catch (e) {
+                console.error("Upload failed", e);
+              }
+            };
+            uploadFile();
             
             return true;
           }
@@ -112,7 +128,10 @@ export default function TiptapEditor({ content = '', onChange }: TiptapEditorPro
     },
     onUpdate: ({ editor }) => {
       if (onChange) {
-        onChange(editor.getHTML());
+        // Defer state update to avoid React flushSync warning during Tiptap render lifecycle
+        queueMicrotask(() => {
+          onChange(editor.getHTML());
+        });
       }
     },
   });

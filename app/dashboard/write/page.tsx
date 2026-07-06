@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 export default function WritePage() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [documentId, setDocumentId] = useState<string | null>(null);
   const supabase = createClient();
   const router = useRouter();
 
@@ -21,10 +22,20 @@ export default function WritePage() {
   const [showModal, setShowModal] = useState(false);
   const [tags, setTags] = useState('');
   const [category, setCategory] = useState('blog');
+  const [coverUrl, setCoverUrl] = useState('');
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
+      if (user) {
+        fetch('/api/documents', { method: 'POST' })
+          .then(res => res.json())
+          .then(data => {
+            if (data._id) setDocumentId(data._id);
+          });
+      }
       setLoading(false);
     });
   }, []);
@@ -37,12 +48,22 @@ export default function WritePage() {
     const count = fullText ? fullText.split(/\s+/).length : 0;
     setWordCount(count);
 
-    // Mock auto-save
-    const timer = setTimeout(() => {
-      setIsSaved(true);
-    }, 1500);
+    if (!documentId) return;
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/documents/${documentId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content, wordCount: count })
+        });
+        if (res.ok) setIsSaved(true);
+      } catch (e) {
+        console.error("Auto-save failed", e);
+      }
+    }, 2000);
     return () => clearTimeout(timer);
-  }, [title, content]);
+  }, [title, content, documentId]);
 
   // Ctrl + Enter to Submit
   useEffect(() => {
@@ -56,11 +77,59 @@ export default function WritePage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const handleFinalSubmit = (e: React.FormEvent) => {
+  const handleFinalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`Published Successfully!\nCategory: ${category}\nTags: ${tags}`);
-    setShowModal(false);
-    router.push('/resources');
+    if (!documentId) return;
+    
+    setIsPublishing(true);
+    try {
+      const res = await fetch(`/api/documents/${documentId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          status: 'pending', 
+          category, 
+          tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+          coverImage: coverUrl
+        })
+      });
+
+      if (res.ok) {
+        setShowModal(false);
+        router.push('/resources');
+      } else {
+        alert("Failed to submit document");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error submitting document");
+    } finally {
+      setIsPublishing(false);
+    }
+  };
+
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingCover(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.url) {
+        setCoverUrl(data.url);
+      }
+    } catch (error) {
+      console.error("Cover upload failed", error);
+    } finally {
+      setIsUploadingCover(false);
+    }
   };
 
   return (
@@ -137,9 +206,18 @@ export default function WritePage() {
               {/* Cover Image */}
               <div>
                 <label className="block text-xs font-medium text-zinc-400 mb-2 uppercase tracking-wider">Cover Image</label>
-                <div className="w-full h-32 border-2 border-dashed border-white/10 rounded-xl flex flex-col items-center justify-center text-zinc-500 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all cursor-pointer">
-                  <UploadCloud className="w-6 h-6 mb-2" />
-                  <span className="text-xs font-medium">Click to upload cover image</span>
+                <div className="relative w-full h-32 border-2 border-dashed border-white/10 rounded-xl flex flex-col items-center justify-center text-zinc-500 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all overflow-hidden">
+                  <input type="file" accept="image/*" onChange={handleCoverUpload} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
+                  {isUploadingCover ? (
+                    <span className="text-xs font-medium">Uploading...</span>
+                  ) : coverUrl ? (
+                    <img src={coverUrl} alt="Cover" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                  ) : (
+                    <>
+                      <UploadCloud className="w-6 h-6 mb-2" />
+                      <span className="text-xs font-medium">Click to upload cover image</span>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -169,13 +247,13 @@ export default function WritePage() {
                 />
               </div>
 
-              {/* Submit Action */}
-              <div className="pt-4">
-                <button
-                  type="submit"
-                  className="w-full py-2.5 rounded-xl bg-emerald-500 text-white font-medium hover:bg-emerald-400 transition-colors shadow-[0_0_15px_rgba(16,185,129,0.2)]"
-                >
-                  Publish Now
+              {/* Submit Actions */}
+              <div className="flex gap-3 pt-4 border-t border-white/10">
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors">
+                  Cancel
+                </button>
+                <button type="submit" disabled={isPublishing} className="flex-1 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50">
+                  {isPublishing ? 'Submitting...' : 'Submit for Approval'}
                 </button>
               </div>
             </form>
