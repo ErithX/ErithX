@@ -1,6 +1,7 @@
 import React from 'react';
 import { Node, mergeAttributes } from '@tiptap/core';
 import { ReactNodeViewRenderer, NodeViewWrapper, NodeViewContent } from '@tiptap/react';
+import { Info, CheckCircle2, AlertTriangle, OctagonAlert } from 'lucide-react';
 
 export const Callout = Node.create({
   name: 'callout',
@@ -37,25 +38,25 @@ const CalloutComponent = ({ node, updateAttributes }: any) => {
 
   const intents = {
     info: {
-      emoji: '💡',
+      icon: <Info className="w-5 h-5 text-blue-400" />,
       bg: 'bg-blue-500/10',
       border: 'border-blue-500/20',
       text: 'text-blue-50',
     },
     success: {
-      emoji: '✅',
+      icon: <CheckCircle2 className="w-5 h-5 text-emerald-400" />,
       bg: 'bg-emerald-500/10',
       border: 'border-emerald-500/20',
       text: 'text-emerald-50',
     },
     warning: {
-      emoji: '⚠️',
+      icon: <AlertTriangle className="w-5 h-5 text-amber-400" />,
       bg: 'bg-amber-500/10',
       border: 'border-amber-500/20',
       text: 'text-amber-50',
     },
     danger: {
-      emoji: '🛑',
+      icon: <OctagonAlert className="w-5 h-5 text-rose-400" />,
       bg: 'bg-rose-500/10',
       border: 'border-rose-500/20',
       text: 'text-rose-50',
@@ -81,13 +82,13 @@ const CalloutComponent = ({ node, updateAttributes }: any) => {
             className={`w-7 h-7 flex items-center justify-center rounded text-sm hover:bg-white/10 transition-colors ${intent === key ? 'bg-white/10 ring-1 ring-white/20' : ''}`}
             title={key}
           >
-            {intents[key].emoji}
+            {React.cloneElement(intents[key].icon as React.ReactElement, { className: 'w-3.5 h-3.5' })}
           </button>
         ))}
       </div>
 
-      <div className="flex-shrink-0 mt-0.5 text-xl select-none">
-        {current.emoji}
+      <div className="flex-shrink-0 mt-0.5 select-none">
+        {current.icon}
       </div>
       <NodeViewContent className={`flex-1 min-w-0 font-medium leading-relaxed outline-none ${current.text}`} />
     </NodeViewWrapper>

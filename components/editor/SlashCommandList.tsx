@@ -161,6 +161,13 @@ export const SlashCommandList = forwardRef<any, { items: CommandItem[], command:
     setSelectedIndex(0);
   }, [props.items]);
 
+  useEffect(() => {
+    const el = document.getElementById(`slash-item-${selectedIndex}`);
+    if (el) {
+      el.scrollIntoView({ block: 'nearest' });
+    }
+  }, [selectedIndex]);
+
   const selectItem = (index: number) => {
     const item = props.items[index];
     if (item) {
@@ -200,14 +207,14 @@ export const SlashCommandList = forwardRef<any, { items: CommandItem[], command:
 
   if (props.items.length === 0) {
     return (
-      <div className="glass rounded-xl border border-white/10 p-4 w-64 shadow-2xl overflow-hidden bg-[#09090b]/95">
+      <div className="rounded-xl border border-white/10 p-4 w-64 shadow-2xl overflow-hidden bg-[#09090b]/60 backdrop-blur-xl">
         <p className="text-sm text-zinc-500 text-center">No results</p>
       </div>
     );
   }
 
   return (
-    <div className="glass rounded-xl border border-white/10 w-64 shadow-2xl overflow-hidden bg-[#09090b]/95 max-h-80 flex flex-col">
+    <div className="rounded-xl border border-white/10 w-64 shadow-2xl overflow-hidden bg-[#09090b]/30 backdrop-blur-xl max-h-80 flex flex-col">
       <div className="px-3 py-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider bg-white/[0.02] border-b border-white/5">
         Basic Blocks
       </div>
@@ -215,6 +222,7 @@ export const SlashCommandList = forwardRef<any, { items: CommandItem[], command:
         {props.items.map((item, index) => (
           <button
             key={index}
+            id={`slash-item-${index}`}
             className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${index === selectedIndex
                 ? 'bg-emerald-500/20 text-white'
                 : 'text-zinc-300 hover:bg-white/5'
