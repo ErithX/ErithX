@@ -21,10 +21,130 @@
   pointer-events: none;
 }
 
+/* Tiptap Table Styles */
+.tiptap table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.tiptap table td,
+.tiptap table th {
+  min-width: 1em;
+  padding: 8px;
+  vertical-align: top;
+  box-sizing: border-box;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.tiptap table th {
+  font-weight: bold;
+  text-align: left;
+}
+.tiptap table .selectedCell:after {
+  z-index: 2;
+  position: absolute;
+  content: "";
+  left: 0; right: 0; top: 0; bottom: 0;
+  background: rgba(16, 185, 129, 0.1);
+  pointer-events: none;
+}
+.tiptap table .column-resize-handle {
+  position: absolute;
+  right: -1px;
+  top: 0;
+  bottom: -2px;
+  width: 2px;
+  background-color: #10b981;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeInResizeHandle 0.2s forwards;
+  animation-delay: 0.25s; /* Prevents blinking on fast cursor movement */
+}
+
+@keyframes fadeInResizeHandle {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
+  overflow-x: hidden;
   font-family: 'Inter', sans-serif;
+}
+
+/* The Ambient "Ava" Green Light */
+.ambient-glow {
+  position: fixed;
+  bottom: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1200px;
+  height: 800px;
+  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.03) 40%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(40px);
+}
+
+/* Subtle dot grid overlay for texture */
+.grid-texture {
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Editor typography overrides for the title */
+.editor-title-input::placeholder {
+  color: #52525b;
+}
+
+/* Typography inside editor */
+.editor-content, .tiptap { font-size: 20px; line-height: 1.7; color: #d4d4d8; letter-spacing: -0.01em; }
+.editor-content h1, .tiptap h1 { font-size: 48px; line-height: 1.1; font-weight: 700; color: #fff; margin-top: 2rem; margin-bottom: 1rem; letter-spacing: -0.03em; }
+.editor-content h2, .tiptap h2 { font-size: 32px; line-height: 1.2; font-weight: 600; color: #fff; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+.editor-content h3, .tiptap h3 { font-size: 24px; line-height: 1.3; font-weight: 600; color: #e4e4e7; margin-top: 2rem; margin-bottom: 0.8rem; }
+.editor-content p, .tiptap p { margin-bottom: 1.5rem; }
+.editor-content blockquote, .tiptap blockquote { 
+  border-left: 3px solid rgba(16, 185, 129, 0.5); 
+  padding-left: 1.5rem; 
+  margin: 2rem 0; 
+  font-style: italic; 
+  color: #a1a1aa; 
+}
+.editor-content pre, .tiptap pre {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: #34d399;
+  overflow-x: auto;
+  margin: 2rem 0;
+}
+.editor-content code, .tiptap code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  background: rgba(255,255,255,0.06);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  color: #34d399;
+}
+
+/* Blinking cursor for terminal vibe */
+@keyframes blink { 
+  0%, 100% { opacity: 1; } 
+  50% { opacity: 0; } 
+}
+.cursor-blink { 
+  animation: blink 1s step-end infinite; 
 }
 
 ::selection { background-color: rgb(6, 78, 59); color: white; }

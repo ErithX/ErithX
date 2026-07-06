@@ -1,5 +1,5 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { Type, Heading1, Heading2, List, ListOrdered, Quote, Code, Image as ImageIcon, Info } from 'lucide-react';
+import { Type, Heading1, Heading2, List, ListOrdered, Quote, Code, Image as ImageIcon, Info, LayoutGrid } from 'lucide-react';
 import { Editor, Range } from '@tiptap/core';
 
 export interface CommandItem {
@@ -64,7 +64,15 @@ export const getSuggestionItems = ({ query }: { query: string }): CommandItem[] 
       description: 'Highlight important information.',
       icon: <Info className="w-4 h-4" />,
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        editor.chain().focus().deleteRange(range).insertContent('<div data-type="callout"></div>').run();
+        editor.chain().focus().deleteRange(range).insertContent('<div data-type="callout" data-intent="info"></div>').run();
+      },
+    },
+    {
+      title: 'Table',
+      description: 'Insert a customizable table.',
+      icon: <LayoutGrid className="w-4 h-4" />,
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
+        editor.chain().focus().deleteRange(range).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
       },
     },
     {
@@ -90,7 +98,7 @@ export const getSuggestionItems = ({ query }: { query: string }): CommandItem[] 
               type: 'resizableImage',
               attrs: { isUploading: true }
             }).run();
-            
+
             setTimeout(() => {
               const objectUrl = URL.createObjectURL(file);
               const { state, view } = editor as any;
@@ -125,7 +133,7 @@ export const getSuggestionItems = ({ query }: { query: string }): CommandItem[] 
               type: 'pdfBlock',
               attrs: { isUploading: true, filename: file.name }
             }).run();
-            
+
             setTimeout(() => {
               const objectUrl = URL.createObjectURL(file);
               // Safely find the uploading pdf node and update it
@@ -207,11 +215,10 @@ export const SlashCommandList = forwardRef<any, { items: CommandItem[], command:
         {props.items.map((item, index) => (
           <button
             key={index}
-            className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-              index === selectedIndex 
-                ? 'bg-emerald-500/20 text-white' 
+            className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${index === selectedIndex
+                ? 'bg-emerald-500/20 text-white'
                 : 'text-zinc-300 hover:bg-white/5'
-            }`}
+              }`}
             onClick={() => selectItem(index)}
           >
             <div className={`flex items-center justify-center p-2 rounded-md ${index === selectedIndex ? 'bg-emerald-500/30' : 'bg-white/5'}`}>

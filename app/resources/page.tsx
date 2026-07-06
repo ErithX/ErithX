@@ -143,7 +143,7 @@ export default function ResourcesPage() {
               <Search className="w-3.5 h-3.5 text-zinc-500" />
               <input type="text" placeholder="Search resources..." className="bg-transparent text-xs text-zinc-300 placeholder:text-zinc-600 outline-none w-40" />
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">
+            <button onClick={() => router.push('/dashboard/write')} className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">
               <Plus className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Upload</span>
             </button>
@@ -173,7 +173,7 @@ export default function ResourcesPage() {
                 Explore Feed
                 <ArrowDown className="w-3.5 h-3.5" />
               </a>
-              <button className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/10 text-zinc-300 text-xs font-medium hover:bg-white/5 transition-all">
+              <button onClick={() => router.push('/dashboard/write')} className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/10 text-zinc-300 text-xs font-medium hover:bg-white/5 transition-all">
                 <Upload className="w-3.5 h-3.5" />
                 Contribute
               </button>

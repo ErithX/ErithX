@@ -5,7 +5,7 @@ import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { 
   Bold, Italic, Strikethrough, Heading1, Heading2, 
-  List, ListOrdered, Quote, Undo, Redo, Image as ImageIcon, Link as LinkIcon, FileText
+  List, ListOrdered, Quote, Undo, Redo, Image as ImageIcon, Link as LinkIcon, FileText, Trash2
 } from 'lucide-react';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -14,6 +14,11 @@ import { Callout } from './extensions/CalloutNode';
 import { CustomCodeBlock } from './extensions/CodeBlockNode';
 import { ResizableImage } from './extensions/ResizableImageNode';
 import { PdfBlock } from './extensions/PdfBlockNode';
+import Table from '@tiptap/extension-table';
+import TableRow from '@tiptap/extension-table-row';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
+import { TableBubbleMenu } from './TableBubbleMenu';
 
 interface TiptapEditorProps {
   content?: string;
@@ -26,6 +31,27 @@ export default function TiptapEditor({ content = '', onChange }: TiptapEditorPro
       StarterKit,
       ResizableImage,
       PdfBlock,
+      Table.configure({
+        resizable: true,
+        HTMLAttributes: {
+          class: 'min-w-full border-collapse table-auto w-full my-8 border-t border-white/10',
+        },
+      }),
+      TableRow.configure({
+        HTMLAttributes: {
+          class: 'border-b border-white/10 hover:bg-white/[0.02] transition-colors',
+        },
+      }),
+      TableHeader.configure({
+        HTMLAttributes: {
+          class: 'border-b-2 border-emerald-500/50 p-3 text-left font-semibold text-zinc-300 bg-black/40',
+        },
+      }),
+      TableCell.configure({
+        HTMLAttributes: {
+          class: 'p-3 border-r border-white/5 last:border-r-0 text-zinc-300 align-top',
+        },
+      }),
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
@@ -43,8 +69,8 @@ export default function TiptapEditor({ content = '', onChange }: TiptapEditorPro
     immediatelyRender: false,
     editorProps: {
       attributes: {
-        // Tailwind Typography classes adjusted for our dark theme
-        class: 'prose prose-invert prose-emerald max-w-none focus:outline-none min-h-[400px]',
+        // Removed aggressive Tailwind Typography (prose) to allow our custom globals.css to perfectly style the editor
+        class: 'focus:outline-none min-h-[400px]',
       },
       handleDrop: (view, event, slice, moved) => {
         if (!moved && event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0]) {
@@ -194,41 +220,22 @@ export default function TiptapEditor({ content = '', onChange }: TiptapEditorPro
   );
 
   return (
-    <div className="border border-white/10 rounded-xl overflow-hidden bg-black/40 backdrop-blur-md flex flex-col">
-      {/* Formatting Toolbar */}
-      <div className="flex flex-wrap items-center gap-1 p-2 border-b border-white/10 bg-white/[0.02]">
-        <div className="flex items-center gap-1 pr-2 border-r border-white/10">
-          <ToolbarButton onClick={undo} disabled={!editor.can().undo()}><Undo className="w-4 h-4" /></ToolbarButton>
-          <ToolbarButton onClick={redo} disabled={!editor.can().redo()}><Redo className="w-4 h-4" /></ToolbarButton>
-        </div>
-        
-        <div className="flex items-center gap-1 px-2 border-r border-white/10">
-          <ToolbarButton onClick={toggleH1} isActive={editor.isActive('heading', { level: 1 })}><Heading1 className="w-4 h-4" /></ToolbarButton>
-          <ToolbarButton onClick={toggleH2} isActive={editor.isActive('heading', { level: 2 })}><Heading2 className="w-4 h-4" /></ToolbarButton>
-        </div>
+    <div className="flex flex-col w-full">
+      {/* Notion-Style Table Menus */}
+      <TableBubbleMenu editor={editor} />
 
-        <div className="flex items-center gap-1 px-2 border-r border-white/10">
-          <ToolbarButton onClick={toggleBold} isActive={editor.isActive('bold')}><Bold className="w-4 h-4" /></ToolbarButton>
-          <ToolbarButton onClick={toggleItalic} isActive={editor.isActive('italic')}><Italic className="w-4 h-4" /></ToolbarButton>
-          <ToolbarButton onClick={toggleStrike} isActive={editor.isActive('strike')}><Strikethrough className="w-4 h-4" /></ToolbarButton>
-        </div>
-
-        <div className="flex items-center gap-1 px-2 border-r border-white/10">
-          <ToolbarButton onClick={toggleBulletList} isActive={editor.isActive('bulletList')}><List className="w-4 h-4" /></ToolbarButton>
-          <ToolbarButton onClick={toggleOrderedList} isActive={editor.isActive('orderedList')}><ListOrdered className="w-4 h-4" /></ToolbarButton>
-          <ToolbarButton onClick={toggleBlockquote} isActive={editor.isActive('blockquote')}><Quote className="w-4 h-4" /></ToolbarButton>
-        </div>
-
-        <div className="flex items-center gap-1 px-2">
-          <ToolbarButton onClick={setLink} isActive={editor.isActive('link')}><LinkIcon className="w-4 h-4" /></ToolbarButton>
-          <ToolbarButton onClick={addImage}><ImageIcon className="w-4 h-4" /></ToolbarButton>
-          <ToolbarButton onClick={addPdf}><FileText className="w-4 h-4" /></ToolbarButton>
-        </div>
-      </div>
-
-      {/* Bubble Menu for context-aware formatting */}
+      {/* Bubble Menu for text formatting */}
       {editor && (
-        <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }} className="flex items-center gap-1 p-1 bg-[#18181b]/95 backdrop-blur-xl border border-white/10 rounded-lg shadow-2xl">
+        <BubbleMenu 
+          editor={editor} 
+          shouldShow={({ editor, state }) => {
+            const { selection } = state;
+            const { empty } = selection;
+            return !empty && !editor.isActive('image') && !editor.isActive('resizableImage') && !editor.isActive('table');
+          }}
+          tippyOptions={{ duration: 100 }} 
+          className="flex items-center gap-1 p-1 bg-[#18181b]/95 backdrop-blur-xl border border-white/10 rounded-lg shadow-2xl"
+        >
           <ToolbarButton onClick={toggleBold} isActive={editor.isActive('bold')}><Bold className="w-4 h-4" /></ToolbarButton>
           <ToolbarButton onClick={toggleItalic} isActive={editor.isActive('italic')}><Italic className="w-4 h-4" /></ToolbarButton>
           <ToolbarButton onClick={toggleStrike} isActive={editor.isActive('strike')}><Strikethrough className="w-4 h-4" /></ToolbarButton>
@@ -237,8 +244,11 @@ export default function TiptapEditor({ content = '', onChange }: TiptapEditorPro
         </BubbleMenu>
       )}
 
+      {/* Notion-Style Table Menus */}
+      <TableBubbleMenu editor={editor} />
+
       {/* Editor Content Canvas */}
-      <div className="p-6 cursor-text min-h-[500px]" onClick={() => editor.chain().focus().run()}>
+      <div className="cursor-text min-h-[500px]" onClick={() => editor.chain().focus().run()}>
         <EditorContent editor={editor} />
       </div>
     </div>

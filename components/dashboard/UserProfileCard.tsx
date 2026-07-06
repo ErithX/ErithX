@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { PenLine, FileText, Share2, Image as ImageIcon, Plus, Sparkles } from 'lucide-react';
 import { User } from '@supabase/supabase-js';
 
@@ -45,7 +46,7 @@ export default function UserProfileCard({ user }: UserProfileCardProps) {
 
       {/* CTAs */}
       <div className="space-y-2">
-        <button className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
+        <Link href="/dashboard/write" className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
           <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
             <PenLine className="w-4 h-4 text-emerald-400" />
           </div>
@@ -54,8 +55,8 @@ export default function UserProfileCard({ user }: UserProfileCardProps) {
             <div className="text-[10px] text-zinc-600">How you built it, what you learned, what went wrong — your struggle helps others.</div>
           </div>
           <Plus className="w-4 h-4 text-zinc-600 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
-        </button>
-        <button className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
+        </Link>
+        <Link href="/dashboard/write" className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
           <div className="w-9 h-9 rounded-lg bg-orange-500/10 flex items-center justify-center flex-shrink-0">
             <FileText className="w-4 h-4 text-orange-400" />
           </div>
@@ -64,17 +65,17 @@ export default function UserProfileCard({ user }: UserProfileCardProps) {
             <div className="text-[10px] text-zinc-600">That cheat sheet you made before exams? Someone else needs it right now.</div>
           </div>
           <Plus className="w-4 h-4 text-zinc-600 group-hover:text-orange-400 transition-colors flex-shrink-0" />
-        </button>
-        <button className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
+        </Link>
+        <Link href="/dashboard/write" className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
           <div className="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
             <Share2 className="w-4 h-4 text-purple-400" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Found a great resource? Pass it on.</div>
-            <div className="text-[10px] text-zinc-600">That tutorial that finally made DP click — share the link so others click too.</div>
+            <div className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Share a useful link</div>
+            <div className="text-[10px] text-zinc-600">Found a great visualization tool or article? Share it with the community.</div>
           </div>
           <Plus className="w-4 h-4 text-zinc-600 group-hover:text-purple-400 transition-colors flex-shrink-0" />
-        </button>
+        </Link>
         <button className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
           <div className="w-9 h-9 rounded-lg bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
             <ImageIcon className="w-4 h-4 text-cyan-400" />
