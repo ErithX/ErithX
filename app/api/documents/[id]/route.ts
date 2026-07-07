@@ -4,7 +4,7 @@ import connectToDatabase from '@/app/lib/mongodb';
 import { Resource } from '@/models/Resource';
 
 // Update a document (Auto-save / Publish)
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabaseClient = await createClient();
     const { data: { user } } = await supabaseClient.auth.getUser();

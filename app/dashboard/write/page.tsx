@@ -30,13 +30,20 @@ export default function WritePage() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
       if (user) {
-        fetch('/api/documents', { method: 'POST' })
+        fetch('/api/documents')
           .then(res => res.json())
           .then(data => {
-            if (data._id) setDocumentId(data._id);
-          });
+            if (data._id) {
+              setDocumentId(data._id);
+              if (data.title) setTitle(data.title);
+              if (data.content) setContent(data.content);
+            }
+            setLoading(false);
+          })
+          .catch(() => setLoading(false));
+      } else {
+        setLoading(false);
       }
-      setLoading(false);
     });
   }, []);
 
@@ -131,6 +138,14 @@ export default function WritePage() {
       setIsUploadingCover(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#09090b] text-zinc-500 font-mono text-sm">
+        <span className="animate-pulse">Loading editor...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen relative selection:bg-emerald-800 selection:text-white">

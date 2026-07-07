@@ -82,7 +82,7 @@ const CalloutComponent = ({ node, updateAttributes }: any) => {
             className={`w-7 h-7 flex items-center justify-center rounded text-sm hover:bg-white/10 transition-colors ${intent === key ? 'bg-white/10 ring-1 ring-white/20' : ''}`}
             title={key}
           >
-            {React.cloneElement(intents[key].icon as React.ReactElement, { className: 'w-3.5 h-3.5' })}
+            {React.cloneElement(intents[key].icon as React.ReactElement<any>, { className: 'w-3.5 h-3.5' })}
           </button>
         ))}
       </div>

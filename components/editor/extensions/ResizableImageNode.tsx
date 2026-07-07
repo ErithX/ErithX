@@ -34,17 +34,33 @@ export const ResizableImage = Node.create({
 
 const ResizableImageComponent = ({ node, updateAttributes, selected }: any) => {
   const { src, align, width, isUploading } = node.attrs;
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   let alignClass = 'mx-auto';
   if (align === 'left') alignClass = 'mr-auto ml-0';
   if (align === 'right') alignClass = 'ml-auto mr-0';
 
+  const handleMouseUp = () => {
+    if (containerRef.current) {
+      const pxWidth = containerRef.current.getBoundingClientRect().width;
+      updateAttributes({ width: pxWidth });
+    }
+  };
+
   return (
     <NodeViewWrapper className={`relative my-8 flex flex-col group ${alignClass} w-fit max-w-full`}>
       {/* Image Container with native CSS resize */}
       <div 
+        ref={containerRef}
+        onMouseUp={handleMouseUp}
         className={`relative inline-block rounded-xl overflow-hidden border ${selected ? 'border-emerald-500 ring-2 ring-emerald-500/30' : 'border-white/10'} transition-all`}
-        style={{ resize: 'horizontal', overflow: 'hidden', minWidth: '200px', maxWidth: '100%' }}
+        style={{ 
+          resize: 'horizontal', 
+          overflow: 'hidden', 
+          minWidth: '200px', 
+          maxWidth: '100%',
+          width: typeof width === 'number' ? `${width}px` : width 
+        }}
       >
         {isUploading ? (
           // Beautiful Blurhash / Skeleton Loader
