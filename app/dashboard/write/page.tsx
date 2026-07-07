@@ -21,8 +21,9 @@ export default function WritePage() {
   // Publish Modal State
   const [showModal, setShowModal] = useState(false);
   const [tags, setTags] = useState('');
-  const [category, setCategory] = useState('blog');
+  const [category, setCategory] = useState('Blogs');
   const [coverUrl, setCoverUrl] = useState('');
+  const [modalError, setModalError] = useState('');
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
 
@@ -87,7 +88,26 @@ export default function WritePage() {
   const handleFinalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!documentId) return;
+    setModalError('');
+
+    // --- Validation Rules ---
+    if (!title || title.trim().length < 3) {
+      return setModalError("Title must be at least 3 characters long.");
+    }
     
+    // Quick and dirty way to check real text length vs HTML tags
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = content;
+    const textContent = tempDiv.textContent || tempDiv.innerText || "";
+    if (textContent.trim().length < 20) {
+      return setModalError("Content must be at least 20 characters long.");
+    }
+
+    if (category === 'Career' && !coverUrl) {
+      return setModalError("A Cover Image is STRICTLY MANDATORY for the 'Career' category.");
+    }
+    // ------------------------
+
     setIsPublishing(true);
     try {
       const res = await fetch(`/api/documents/${documentId}`, {
@@ -241,12 +261,15 @@ export default function WritePage() {
                 <label className="block text-xs font-medium text-zinc-400 mb-2 uppercase tracking-wider">Category</label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    setModalError(''); // Clear error on change
+                  }}
                   className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
                 >
-                  <option value="blog">Blog Post</option>
-                  <option value="notes">Study Notes / PDF</option>
-                  <option value="diagram">Diagram / Flowchart</option>
+                  <option value="Blogs">Blogs</option>
+                  <option value="Study Materials">Study Materials</option>
+                  <option value="Career">Career</option>
                 </select>
               </div>
 
@@ -261,6 +284,14 @@ export default function WritePage() {
                   className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
                 />
               </div>
+
+              {/* Error Message */}
+              {modalError && (
+                <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm p-3 rounded-lg flex items-start gap-2">
+                  <span className="font-bold">Error:</span>
+                  <span>{modalError}</span>
+                </div>
+              )}
 
               {/* Submit Actions */}
               <div className="flex gap-3 pt-4 border-t border-white/10">

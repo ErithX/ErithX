@@ -18,8 +18,8 @@ const ResourceSchema = new mongoose.Schema({
   }],
   category: { 
     type: String, 
-    enum: ['blog', 'notes', 'diagram'],
-    default: 'blog'
+    enum: ['Blogs', 'Study Materials', 'Career'],
+    default: 'Blogs'
   },
   tags: [{ 
     type: String 
@@ -31,6 +31,10 @@ const ResourceSchema = new mongoose.Schema({
     type: String, 
     enum: ['draft', 'pending', 'published', 'rejected'],
     default: 'draft'
+  },
+  rejectionReason: {
+    type: String,
+    default: ''
   },
   wordCount: {
     type: Number,
