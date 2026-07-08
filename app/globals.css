@@ -105,38 +105,44 @@ body {
   color: #52525b;
 }
 
-/* Typography inside editor */
-.editor-content, .tiptap { font-size: 20px; line-height: 1.7; color: #d4d4d8; letter-spacing: -0.01em; }
-.editor-content h1, .tiptap h1 { font-size: 48px; line-height: 1.1; font-weight: 700; color: #fff; margin-top: 2rem; margin-bottom: 1rem; letter-spacing: -0.03em; }
-.editor-content h2, .tiptap h2 { font-size: 32px; line-height: 1.2; font-weight: 600; color: #fff; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
-.editor-content h3, .tiptap h3 { font-size: 24px; line-height: 1.3; font-weight: 600; color: #e4e4e7; margin-top: 2rem; margin-bottom: 0.8rem; }
-.editor-content p, .tiptap p { margin-bottom: 1.5rem; }
-.editor-content blockquote, .tiptap blockquote { 
-  border-left: 3px solid rgba(16, 185, 129, 0.5); 
-  padding-left: 1.5rem; 
-  margin: 2rem 0; 
-  font-style: italic; 
-  color: #a1a1aa; 
-}
-.editor-content pre, .tiptap pre {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 12px;
-  padding: 1.5rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  color: #34d399;
-  overflow-x: auto;
-  margin: 2rem 0;
-}
-.editor-content code, .tiptap code {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85em;
-  background: rgba(255,255,255,0.06);
-  padding: 0.2em 0.4em;
-  border-radius: 4px;
-  color: #34d399;
-}
+/* Typography inside editor and article body */
+.article-body, .tiptap { font-size: 17px; line-height: 1.85; color: #d4d4d8; max-width: 100%; outline: none; }
+.article-body h1, .tiptap h1 { font-size: 2em; font-weight: 600; color: #fff; margin: 2.5em 0 0.6em 0; letter-spacing: -0.02em; line-height: 1.2; }
+.article-body h2, .tiptap h2 { font-size: 1.5em; font-weight: 600; color: #fff; margin: 2em 0 0.5em 0; letter-spacing: -0.01em; line-height: 1.3; padding-bottom: 0.3em; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.article-body h3, .tiptap h3 { font-size: 1.25em; font-weight: 600; color: #e4e4e7; margin: 1.8em 0 0.4em 0; line-height: 1.4; }
+.article-body h4, .tiptap h4 { font-size: 1.1em; font-weight: 600; color: #d4d4d8; margin: 1.5em 0 0.3em 0; }
+.article-body p, .tiptap p { margin: 0 0 1.4em 0; }
+.article-body strong, .tiptap strong { color: #fff; font-weight: 600; }
+.article-body em, .tiptap em { color: #a1a1aa; font-style: italic; }
+.article-body a, .tiptap a { color: #34d399; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(52,211,153,0.3); transition: text-decoration-color 150ms; }
+.article-body a:hover, .tiptap a:hover { text-decoration-color: rgba(52,211,153,0.7); }
+
+/* Lists */
+.article-body ul, .article-body ol, .tiptap ul, .tiptap ol { margin: 0 0 1.4em 0; padding-left: 1.5em; }
+.article-body ul, .tiptap ul { list-style: none; padding-left: 0; }
+.article-body ul li, .tiptap ul li { position: relative; padding-left: 1.4em; margin-bottom: 0.5em; }
+.article-body ul li::before, .tiptap ul li::before { content: ''; position: absolute; left: 0; top: 0.7em; width: 6px; height: 6px; border-radius: 50%; background: #10b981; }
+.article-body ol, .tiptap ol { list-style: decimal; }
+.article-body ol li, .tiptap ol li { margin-bottom: 0.5em; padding-left: 0.3em; }
+.article-body ol li::marker, .tiptap ol li::marker { color: #10b981; font-weight: 600; }
+
+/* Blockquote */
+.article-body blockquote, .tiptap blockquote { border-left: 3px solid #10b981; padding: 0.8em 1.2em; margin: 1.5em 0; background: rgba(16,185,129,0.04); border-radius: 0 8px 8px 0; color: #a1a1aa; }
+.article-body blockquote p, .tiptap blockquote p { margin-bottom: 0; }
+.article-body blockquote strong, .tiptap blockquote strong { color: #34d399; }
+
+/* Code */
+.article-body code, .tiptap code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.06); padding: 0.15em 0.4em; border-radius: 4px; color: #34d399; }
+.article-body pre, .tiptap pre { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.2em 1.5em; margin: 1.5em 0; overflow-x: auto; }
+.article-body pre code, .tiptap pre code { background: none; padding: 0; font-size: 0.82em; color: #d4d4d8; line-height: 1.7; }
+
+/* Horizontal rule */
+.article-body hr, .tiptap hr { border: none; height: 1px; background: rgba(255,255,255,0.06); margin: 2.5em 0; }
+
+/* Image */
+.article-body img, .tiptap img { border-radius: 12px; margin: 1.5em 0; border: 1px solid rgba(255,255,255,0.06); max-width: 100%; }
+.article-body figure, .tiptap figure { margin: 2em 0; }
+.article-body figcaption, .tiptap figcaption { text-align: center; font-size: 0.75em; color: #71717a; margin-top: 0.6em; }
 
 /* Blinking cursor for terminal vibe */
 @keyframes blink { 

@@ -47,7 +47,13 @@ export default function BlogsCard({ item, index, onClick }: BlogsCardProps) {
         </div>
         <div className="flex items-center justify-between pt-3 border-t border-white/5">
           <div className="flex items-center gap-2">
-            <img src={`https://picsum.photos/seed/${item.authorImg}/32/32.jpg`} className="w-5 h-5 rounded-full object-cover" alt={item.author} />
+            <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold overflow-hidden shrink-0">
+              {item.authorImg && item.authorImg.startsWith('http') && !item.authorImg.includes('picsum') ? (
+                <img src={item.authorImg} className="w-full h-full object-cover" alt={item.author} />
+              ) : (
+                <span className="text-[10px]">{item.author ? item.author.charAt(0).toUpperCase() : 'A'}</span>
+              )}
+            </div>
             <span className="text-[10px] text-zinc-400">{item.author}</span>
             {item.isPro && (
               <span className="text-[8px] bg-emerald-500/20 text-emerald-400 px-1 py-0.5 rounded font-bold">PRO</span>

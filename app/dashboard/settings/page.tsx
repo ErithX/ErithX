@@ -198,7 +198,13 @@ export default function SettingsPage() {
                     <div className="text-xs text-zinc-500 mt-0.5">JPG, PNG or GIF. Max 1MB.</div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <img src={user?.user_metadata?.avatar_url || "https://picsum.photos/seed/arjun-settings/64/64.jpg"} className="w-10 h-10 rounded-full object-cover border border-white/10" alt="Avatar" />
+                    {user?.user_metadata?.avatar_url ? (
+                      <img src={user.user_metadata.avatar_url} className="w-10 h-10 rounded-full object-cover border border-white/10" alt="Avatar" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-lg overflow-hidden shrink-0">
+                        {user?.user_metadata?.full_name ? user.user_metadata.full_name.charAt(0).toUpperCase() : 'U'}
+                      </div>
+                    )}
                     <button className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-zinc-300 hover:bg-white/10 transition-all">Upload</button>
                   </div>
                 </div>

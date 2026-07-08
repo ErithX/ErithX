@@ -19,8 +19,16 @@ export async function GET(req: NextRequest) {
     let draft = await Resource.findOne({ userId: user.id, status: 'draft' }).sort({ updatedAt: -1 });
 
     if (!draft) {
+      // Extract name from user metadata (Google OAuth or manual signup)
+      const authorName = user.user_metadata?.full_name || user.user_metadata?.name || 'Anonymous';
+      const authorEmail = user.email || '';
+      const authorImg = user.user_metadata?.avatar_url || user.user_metadata?.picture || '';
+
       draft = await Resource.create({
         userId: user.id,
+        authorName,
+        authorEmail,
+        authorImg,
         status: 'draft',
         title: '',
         content: ''

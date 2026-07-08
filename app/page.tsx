@@ -560,9 +560,9 @@ export default function HomePage() {
               <p className="text-xs text-zinc-500 leading-relaxed mb-4">Curated resources by verified industry professionals — real interview experiences, career playbooks, and study materials from SDEs at top companies.</p>
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-2">
-                  <img src="https://picsum.photos/seed/exp1/32/32.jpg" className="w-6 h-6 rounded-full border-2 border-zinc-950 object-cover" alt="expert" />
-                  <img src="https://picsum.photos/seed/exp2/32/32.jpg" className="w-6 h-6 rounded-full border-2 border-zinc-950 object-cover" alt="expert" />
-                  <img src="https://picsum.photos/seed/exp3/32/32.jpg" className="w-6 h-6 rounded-full border-2 border-zinc-950 object-cover" alt="expert" />
+                  <div className="w-6 h-6 rounded-full border-2 border-zinc-950 bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[8px] font-bold">P</div>
+                  <div className="w-6 h-6 rounded-full border-2 border-zinc-950 bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[8px] font-bold">R</div>
+                  <div className="w-6 h-6 rounded-full border-2 border-zinc-950 bg-purple-500/20 text-purple-400 flex items-center justify-center text-[8px] font-bold">S</div>
                 </div>
                 <span className="text-[10px] text-zinc-500">89 verified pros</span>
               </div>

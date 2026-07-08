@@ -46,18 +46,26 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
   const tc = getTypeConfig();
 
   const renderContentPreview = () => {
-    if (item.type === 'image') {
+      if (item.type === 'image') {
       return (
-        <div className="relative overflow-hidden">
-          <img src={`https://picsum.photos/seed/${item.imageSrc}/600/400.jpg`} className="w-full h-48 object-cover" alt={item.title} />
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent"></div>
+        <div className="relative overflow-hidden w-full h-48 bg-zinc-900 flex items-center justify-center">
+          {item.imageSrc && !item.imageSrc.includes('picsum') ? (
+            <img src={item.imageSrc} className="w-full h-full object-cover" alt={item.title} />
+          ) : (
+            <ImageIcon className="w-8 h-8 text-zinc-700" />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent pointer-events-none"></div>
         </div>
       );
     } else if (item.type === 'pdf') {
       return (
-        <div className="relative overflow-hidden">
-          <img src={`https://picsum.photos/seed/${item.coverImg}/600/300.jpg`} className="w-full h-36 object-cover opacity-60" alt={item.title} />
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
+        <div className="relative overflow-hidden w-full h-36 bg-zinc-900 flex items-center justify-center">
+          {item.coverImg && !item.coverImg.includes('picsum') ? (
+            <img src={item.coverImg} className="w-full h-full object-cover opacity-60" alt={item.title} />
+          ) : (
+            <FileText className="w-8 h-8 text-zinc-700 opacity-50" />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent pointer-events-none"></div>
           <div className="absolute bottom-3 left-4 flex items-center gap-2">
             <div className="w-10 h-12 rounded bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
               <FileText className="w-5 h-5 text-orange-400" />
@@ -108,7 +116,13 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
         </div>
         <div className="flex items-center justify-between pt-3 border-t border-white/5">
           <div className="flex items-center gap-2">
-            <img src={`https://picsum.photos/seed/${item.authorImg}/32/32.jpg`} className="w-5 h-5 rounded-full object-cover" alt={item.author} />
+            <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold overflow-hidden shrink-0">
+              {item.authorImg && item.authorImg.startsWith('http') && !item.authorImg.includes('picsum') ? (
+                <img src={item.authorImg} className="w-full h-full object-cover" alt={item.author} />
+              ) : (
+                <span className="text-[10px]">{item.author ? item.author.charAt(0).toUpperCase() : 'A'}</span>
+              )}
+            </div>
             <span className="text-[10px] text-zinc-400">{item.author}</span>
             {item.isPro && (
               <span className="text-[8px] bg-emerald-500/20 text-emerald-400 px-1 py-0.5 rounded font-bold">PRO</span>

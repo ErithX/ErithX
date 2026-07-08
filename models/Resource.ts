@@ -5,6 +5,22 @@ const ResourceSchema = new mongoose.Schema({
     type: String, 
     required: true 
   },
+  authorName: {
+    type: String,
+    default: 'Anonymous'
+  },
+  authorEmail: {
+    type: String,
+    default: ''
+  },
+  authorImg: {
+    type: String,
+    default: '' // Use actual URL from user metadata
+  },
+  isPro: {
+    type: Boolean,
+    default: false
+  },
   title: { 
     type: String, 
     default: 'Untitled' 
@@ -37,6 +53,18 @@ const ResourceSchema = new mongoose.Schema({
     default: ''
   },
   wordCount: {
+    type: Number,
+    default: 0
+  },
+  upvotes: {
+    type: Number,
+    default: 0
+  },
+  upvotedBy: {
+    type: [String],
+    default: []
+  },
+  commentsCount: {
     type: Number,
     default: 0
   }

@@ -4,10 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { createClient } from '@/app/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { Check, X, Eye, FileText, AlertTriangle } from 'lucide-react';
+import TiptapEditor from '@/components/editor/TiptapEditor';
 
 interface PendingDoc {
   _id: string;
   userId: string;
+  authorName?: string;
+  authorEmail?: string;
   title: string;
   category: string;
   status: string;
@@ -145,12 +148,12 @@ export default function AdminReviewPage() {
                     </span>
                     <span className="text-xs text-zinc-500 font-mono">{new Date(doc.createdAt).toLocaleDateString()}</span>
                   </div>
-                  <h3 className="text-lg font-semibold">{doc.title}</h3>
+                  <h3 className="text-lg font-semibold">{doc.title || "Untitled Document"}</h3>
                   <div className="text-sm text-zinc-400 mt-1 flex items-center gap-2">
                     <FileText className="w-4 h-4" />
                     <span>{doc.category}</span>
                     <span className="text-zinc-700">|</span>
-                    <span className="font-mono text-xs">Author: {doc.userId}</span>
+                    <span className="font-mono text-xs">Author: {doc.authorName || 'Anonymous'} {doc.authorEmail ? `(${doc.authorEmail})` : ''}</span>
                   </div>
                 </div>
 
@@ -258,10 +261,9 @@ export default function AdminReviewPage() {
                 )}
 
                 {/* Tiptap Rendered Content */}
-                <div 
-                  className="prose prose-invert prose-emerald max-w-none tiptap"
-                  dangerouslySetInnerHTML={{ __html: previewingDoc.content }}
-                />
+                <div className="article-body tiptap mt-8">
+                  <TiptapEditor content={previewingDoc.content} readOnly />
+                </div>
               </div>
             </div>
 

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@/app/lib/supabase/client';
 import TiptapEditor from '@/components/editor/TiptapEditor';
+import TagsInput from '@/components/editor/TagsInput';
 import { Circle, X, UploadCloud } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -20,7 +21,7 @@ export default function WritePage() {
 
   // Publish Modal State
   const [showModal, setShowModal] = useState(false);
-  const [tags, setTags] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState('Blogs');
   const [coverUrl, setCoverUrl] = useState('');
   const [modalError, setModalError] = useState('');
@@ -116,8 +117,11 @@ export default function WritePage() {
         body: JSON.stringify({ 
           status: 'pending', 
           category, 
-          tags: tags.split(',').map(t => t.trim()).filter(Boolean),
-          coverImage: coverUrl
+          tags,
+          coverImage: coverUrl,
+          title,
+          content,
+          wordCount
         })
       });
 
@@ -207,7 +211,7 @@ export default function WritePage() {
           />
 
           {/* Body Content Area (Tiptap Editor) */}
-          <div className="editor-content pb-20">
+          <div className="article-body pb-20">
             <TiptapEditor content={content} onChange={setContent} />
           </div>
 
@@ -275,14 +279,8 @@ export default function WritePage() {
 
               {/* Tags */}
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-2 uppercase tracking-wider">Tags (comma separated)</label>
-                <input
-                  type="text"
-                  value={tags}
-                  onChange={(e) => setTags(e.target.value)}
-                  placeholder="e.g. dp, graph, google-interview"
-                  className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
-                />
+                <label className="block text-xs font-medium text-zinc-400 mb-2 uppercase tracking-wider">Tags</label>
+                <TagsInput tags={tags} setTags={setTags} />
               </div>
 
               {/* Error Message */}

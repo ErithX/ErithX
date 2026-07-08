@@ -7,15 +7,59 @@ import {
   Lightbulb, Info, AlertTriangle, Target, User, Twitter,
   Github, Linkedin
 } from 'lucide-react';
+import { createClient } from '@/app/lib/supabase/client';
+import TiptapEditor from '@/components/editor/TiptapEditor';
 
-export default function ResourceContentPage({ params }: { params: { id: string } }) {
+export default function ResourceContentPage({ params }: { params: Promise<{ id: string }> }) {
+  const unwrappedParams = React.use(params);
+  const resourceId = unwrappedParams.id;
+  
   const [scrollProgress, setScrollProgress] = useState(0);
   const [fontSize, setFontSize] = useState('medium');
   const [isUpvoted, setIsUpvoted] = useState(false);
-  const [upvoteCount, setUpvoteCount] = useState(521);
+  const [upvoteCount, setUpvoteCount] = useState(0);
   const [toasts, setToasts] = useState<{ id: number, message: string, type: string }[]>([]);
+  
+  const [doc, setDoc] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  
+  const [user, setUser] = useState<any>(null);
+  const [comments, setComments] = useState<any[]>([]);
+  const [newComment, setNewComment] = useState('');
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const supabase = createClient();
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+
+        const res = await fetch(`/api/resources/${resourceId}`);
+        if (!res.ok) {
+          setError('Resource not found');
+          return;
+        }
+        const data = await res.json();
+        setDoc(data);
+        setUpvoteCount(data.upvotes || 0);
+        setIsUpvoted(user ? data.upvotedBy?.includes(user.id) : false);
+
+        // Fetch comments
+        const commentsRes = await fetch(`/api/comments?resourceId=${resourceId}`);
+        if (commentsRes.ok) {
+          const commentsData = await commentsRes.json();
+          setComments(commentsData);
+        }
+      } catch (e) {
+        setError('Failed to fetch resource data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+
     const handleScroll = () => {
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -27,6 +71,79 @@ export default function ResourceContentPage({ params }: { params: { id: string }
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const [toc, setToc] = useState<{ id: string, text: string, level: number }[]>([]);
+  const [activeSection, setActiveSection] = useState('');
+  const [cleanContent, setCleanContent] = useState('');
+  const [extractedPdfs, setExtractedPdfs] = useState<{src: string, filename: string}[]>([]);
+
+  useEffect(() => {
+    if (!doc?.content) return;
+    
+    // 1. EXTRACT PDFs
+    const parser = new DOMParser();
+    const parsedDoc = parser.parseFromString(doc.content, 'text/html');
+    const pdfNodes = Array.from(parsedDoc.querySelectorAll('div[data-type="pdf-block"]'));
+    
+    const pdfs = pdfNodes.map(node => ({
+      src: node.getAttribute('src') || '',
+      filename: node.getAttribute('filename') || 'document.pdf'
+    }));
+    setExtractedPdfs(pdfs);
+    
+    // Remove PDFs from content so they don't render inside Tiptap
+    pdfNodes.forEach(node => node.remove());
+    setCleanContent(parsedDoc.body.innerHTML);
+
+    // 2. TOC EXTRACTION (Polling to wait for Tiptap DOM)
+    let attempts = 0;
+    const interval = setInterval(() => {
+      attempts++;
+      const articleBody = document.querySelector('.article-body');
+      if (articleBody) {
+        const headings = Array.from(articleBody.querySelectorAll('h2, h3'));
+        if (headings.length > 0) {
+          const newToc = headings.map((heading: any) => {
+            if (!heading.id) {
+              heading.id = heading.innerText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            }
+            return {
+              id: heading.id,
+              text: heading.innerText,
+              level: parseInt(heading.tagName.substring(1), 10)
+            };
+          });
+          setToc(newToc);
+          clearInterval(interval);
+          return;
+        }
+      }
+      if (attempts > 30) clearInterval(interval); // Give up after 3 seconds
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [doc?.content]);
+
+  useEffect(() => {
+    if (toc.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-20% 0px -80% 0px' }
+    );
+    
+    toc.forEach((item) => {
+      const el = document.getElementById(item.id);
+      if (el) observer.observe(el);
+    });
+    
+    return () => observer.disconnect();
+  }, [toc]);
+
   const showToast = (message: string, type: string = 'success') => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, message, type }]);
@@ -35,14 +152,71 @@ export default function ResourceContentPage({ params }: { params: { id: string }
     }, 3000);
   };
 
-  const handleUpvote = () => {
-    if (isUpvoted) {
-      setUpvoteCount(prev => prev - 1);
-      setIsUpvoted(false);
-    } else {
-      setUpvoteCount(prev => prev + 1);
-      setIsUpvoted(true);
-      showToast('Upvoted!', 'success');
+  const handleUpvote = async () => {
+    if (!user) {
+      showToast('Please login to upvote! 🔒', 'error');
+      return;
+    }
+    
+    // Optimistic UI update
+    const previousState = isUpvoted;
+    const previousCount = upvoteCount;
+    
+    setIsUpvoted(!isUpvoted);
+    setUpvoteCount(prev => isUpvoted ? prev - 1 : prev + 1);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(`/api/resources/${resourceId}/upvote`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`
+        }
+      });
+      
+      if (!res.ok) throw new Error();
+      if (!isUpvoted) showToast('Upvoted! 🚀', 'success');
+    } catch (e) {
+      // Revert on error
+      setIsUpvoted(previousState);
+      setUpvoteCount(previousCount);
+      showToast('Failed to upvote', 'error');
+    }
+  };
+
+  const handleSubmitComment = async () => {
+    if (!user) {
+      showToast('Please login to comment! 🔒', 'error');
+      return;
+    }
+    if (!newComment.trim()) return;
+
+    setIsSubmittingComment(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`
+        },
+        body: JSON.stringify({ resourceId, content: newComment })
+      });
+
+      if (res.ok) {
+        const comment = await res.json();
+        setComments(prev => [comment, ...prev]);
+        setNewComment('');
+        showToast('Comment posted! 💬', 'success');
+        // Update local doc state for comment count
+        setDoc((prev: any) => ({...prev, commentsCount: (prev.commentsCount || 0) + 1}));
+      } else {
+        throw new Error();
+      }
+    } catch (e) {
+      showToast('Failed to post comment', 'error');
+    } finally {
+      setIsSubmittingComment(false);
     }
   };
 
@@ -69,6 +243,28 @@ export default function ResourceContentPage({ params }: { params: { id: string }
     if (fontSize === 'large') return 'AA';
     return 'Aa';
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#09090b] text-zinc-500">
+        <span className="animate-pulse font-mono text-sm">Loading resource...</span>
+      </div>
+    );
+  }
+
+  if (error || !doc) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#09090b] text-white">
+        <AlertTriangle className="w-12 h-12 text-rose-500 mb-4 opacity-80" />
+        <h2 className="text-xl font-bold mb-2">Resource Not Found</h2>
+        <p className="text-sm text-zinc-400 mb-6">The resource you're looking for doesn't exist or isn't published yet.</p>
+        <a href="/resources" className="px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm font-medium transition-colors">Go Back to Feed</a>
+      </div>
+    );
+  }
+
+  // Calculate read time
+  const readTimeStr = `${Math.max(1, Math.ceil((doc.wordCount || 0) / 200))} min read`;
 
   return (
     <div className="min-h-screen">
@@ -133,14 +329,21 @@ export default function ResourceContentPage({ params }: { params: { id: string }
         <aside className="hidden xl:block w-56 flex-shrink-0 sticky top-14 h-[calc(100vh-56px)] overflow-y-auto py-8 pl-6">
           <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-3 px-3">On this page</div>
           <nav className="space-y-0.5 text-[13px]">
-            <a href="#what-is-dp" className="toc-link block px-3 py-1.5 text-zinc-500 hover:text-white hover:bg-white/5 rounded-r-md">What is DP?</a>
-            <a href="#two-patterns" className="toc-link block px-3 py-1.5 text-zinc-500 hover:text-white hover:bg-white/5 rounded-r-md">Two Core Patterns</a>
-            <a href="#memoization" className="toc-link block px-3 py-1.5 text-zinc-500 hover:text-white hover:bg-white/5 rounded-r-md pl-6">Memoization</a>
-            <a href="#tabulation" className="toc-link block px-3 py-1.5 text-zinc-500 hover:text-white hover:bg-white/5 rounded-r-md pl-6">Tabulation</a>
-            <a href="#state-diagram" className="toc-link block px-3 py-1.5 text-zinc-500 hover:text-white hover:bg-white/5 rounded-r-md">State Transition Diagram</a>
-            <a href="#classic-problems" className="toc-link block px-3 py-1.5 text-zinc-500 hover:text-white hover:bg-white/5 rounded-r-md">Classic Problems</a>
-            <a href="#complexity-table" className="toc-link block px-3 py-1.5 text-zinc-500 hover:text-white hover:bg-white/5 rounded-r-md">Complexity Cheat Sheet</a>
-            <a href="#practice-roadmap" className="toc-link block px-3 py-1.5 text-zinc-500 hover:text-white hover:bg-white/5 rounded-r-md">Practice Roadmap</a>
+            {toc.length > 0 ? toc.map((item) => (
+              <a 
+                key={item.id}
+                href={`#${item.id}`} 
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className={`toc-link block px-3 py-1.5 rounded-r-md transition-colors ${activeSection === item.id ? 'bg-white/10 text-white font-medium border-l-2 border-emerald-500 -ml-[2px]' : 'text-zinc-500 hover:text-white hover:bg-white/5'} ${item.level === 3 ? 'pl-6' : ''}`}
+              >
+                {item.text}
+              </a>
+            )) : (
+              <div className="text-zinc-600 px-3 py-2 italic text-xs">No sections found</div>
+            )}
           </nav>
         </aside>
 
@@ -149,35 +352,38 @@ export default function ResourceContentPage({ params }: { params: { id: string }
           <article className="max-w-3xl mx-auto px-6 py-12">
             {/* Type badge + meta */}
             <div className="flex items-center gap-3 mb-6 flex-wrap">
-              <span className="px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 bg-orange-500/10 text-orange-400 border border-orange-500/20">
-                <FileText className="w-3 h-3" /> PDF Study Material
+              <span className={`px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 ${doc.category === 'Study Materials' ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}`}>
+                <FileText className="w-3 h-3" /> {doc.category}
               </span>
               <span className="text-[10px] text-zinc-600">•</span>
               <span className="text-xs text-zinc-500 flex items-center gap-1">
-                <Clock className="w-3 h-3" /> 15 min read
+                <Clock className="w-3 h-3" /> {readTimeStr}
               </span>
               <span className="text-[10px] text-zinc-600">•</span>
-              <span className="text-xs text-zinc-500">June 24, 2026</span>
+              <span className="text-xs text-zinc-500">{new Date(doc.createdAt).toLocaleDateString()}</span>
             </div>
 
             <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] mb-5">
-              Mastering Dynamic Programming: A Visual Guide
+              {doc.title}
             </h1>
-
-            <p className="text-lg text-zinc-400 leading-relaxed mb-8 max-w-2xl">
-              Complete DP cheat sheet covering all major patterns — from Fibonacci to Matrix Chain Multiplication with state transition diagrams.
-            </p>
 
             {/* Author + Actions row */}
             <div className="flex items-center justify-between mb-10 pb-8 border-b border-white/5 flex-wrap gap-4">
               <div className="flex items-center gap-3">
-                <img src="https://picsum.photos/seed/pro1/80/80.jpg" className="w-11 h-11 rounded-full object-cover border border-white/10" alt="Author" />
+                <div className="w-11 h-11 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-lg overflow-hidden shrink-0">
+                  {doc.authorImg && doc.authorImg.startsWith('http') && !doc.authorImg.includes('picsum') ? (
+                    <img src={doc.authorImg} alt="Author" className="w-full h-full object-cover" />
+                  ) : (
+                    (doc.authorName || 'Anonymous').charAt(0).toUpperCase()
+                  )}
+                </div>
                 <div>
                   <div className="text-sm font-medium flex items-center gap-1.5">
-                    Priya Sharma
-                    <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>
+                    {doc.authorName || 'Anonymous'}
+                    {doc.isPro && (
+                      <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>
+                    )}
                   </div>
-                  <div className="text-xs text-zinc-500">SDE @ Google • 42 pages • 3.8 MB</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -198,264 +404,58 @@ export default function ResourceContentPage({ params }: { params: { id: string }
             </div>
 
             {/* Tags */}
-            <div className="flex flex-wrap gap-2 mb-10">
-              {['dp', 'cheatsheet', 'interview-prep', 'dynamic-programming', 'patterns'].map(tag => (
-                <span key={tag} className="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 border border-white/5">#{tag}</span>
-              ))}
-            </div>
-
-            {/* PDF Download Banner */}
-            <div className="flex items-center justify-between p-4 rounded-xl bg-orange-500/5 border border-orange-500/10 mb-12 flex-wrap gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-12 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center flex-shrink-0">
-                  <FileText className="w-5 h-5 text-orange-400" />
-                </div>
-                <div>
-                  <div className="text-sm font-medium">Download the full PDF</div>
-                  <div className="text-xs text-zinc-500">42 pages • 3.8 MB • Includes all diagrams & code</div>
-                </div>
+            {doc.tags && doc.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-10">
+                {doc.tags.map((tag: string) => (
+                  <span key={tag} className="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 border border-white/5">#{tag}</span>
+                ))}
               </div>
-              <button onClick={() => showToast('PDF download started! 📄', 'success')} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium hover:bg-orange-500/20 transition-all">
-                <Download className="w-3.5 h-3.5" /> Download PDF
-              </button>
-            </div>
+            )}
+
+            {/* EXTRACTED PDF BLOCKS */}
+            {extractedPdfs.map((pdf, i) => (
+              <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-orange-500/5 border border-orange-500/10 mb-8 flex-wrap gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-12 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center flex-shrink-0">
+                    <FileText className="w-5 h-5 text-orange-400" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">{pdf.filename}</div>
+                    <div className="text-xs text-zinc-500">PDF Document</div>
+                  </div>
+                </div>
+                <a 
+                  href={pdf.src}
+                  download={pdf.filename}
+                  target="_blank"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium hover:bg-orange-500/20 transition-all"
+                >
+                  <Download className="w-3.5 h-3.5" /> Download
+                </a>
+              </div>
+            ))}
 
             {/* ARTICLE BODY */}
-            <div className={`article-body ${getFontSizeClass()} leading-[1.85] text-zinc-300`}>
-              <h2 id="what-is-dp" className="text-2xl font-semibold text-white mt-10 mb-4 border-b border-white/5 pb-2">What is Dynamic Programming?</h2>
-              <p className="mb-6">Dynamic Programming (DP) is an optimization technique that solves complex problems by breaking them into <strong className="text-white">overlapping subproblems</strong> and storing their solutions to avoid redundant computation. Think of it as <em className="text-zinc-400 italic">"remembering past work so you don't repeat it."</em></p>
-              <p className="mb-6">The key insight is simple: if you've already computed the answer to a subproblem, <strong className="text-white">store it</strong>. The next time you need it, just look it up instead of computing it again.</p>
-
-              <div className="p-5 rounded-xl bg-emerald-500/5 border border-emerald-500/10 flex gap-4 mb-8">
-                <Lightbulb className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <strong className="block text-emerald-400 mb-1">Core Principle</strong>
-                  <p className="text-sm">DP applies when a problem has <strong className="text-white">Overlapping Subproblems</strong> (same subproblems solved multiple times) AND <strong className="text-white">Optimal Substructure</strong> (optimal solution can be built from optimal solutions of subproblems).</p>
-                </div>
-              </div>
-
-              <h2 id="two-patterns" className="text-2xl font-semibold text-white mt-10 mb-4 border-b border-white/5 pb-2">Two Core Patterns</h2>
-              <p className="mb-6">Every DP problem can be solved using one of two approaches. Understanding both is essential because some problems are naturally easier with one vs. the other.</p>
-
-              <h3 id="memoization" className="text-xl font-semibold text-zinc-200 mt-8 mb-3">1. Top-Down (Memoization)</h3>
-              <p className="mb-6">Start from the main problem and recursively break it down. <strong className="text-white">Cache every result</strong> before returning. This is usually the more intuitive approach — you write the natural recursive solution first, then add caching.</p>
-
-              <pre className="p-6 rounded-xl bg-white/[0.03] border border-white/5 overflow-x-auto mb-8 text-sm">
-                <code className="text-zinc-300 font-mono">
-{`# Fibonacci with Memoization
-def fib(n, memo={}):
-    if n in memo:
-        return memo[n]
-    if n <= 1:
-        return n
-    
-    memo[n] = fib(n-1, memo) + fib(n-2, memo)
-    return memo[n]
-
-print(fib(50))  # Runs instantly!`}
-                </code>
-              </pre>
-
-              <h3 id="tabulation" className="text-xl font-semibold text-zinc-200 mt-8 mb-3">2. Bottom-Up (Tabulation)</h3>
-              <p className="mb-6">Start from the smallest subproblems and build up to the final answer. Fill a table iteratively. This is often more efficient because it eliminates recursion overhead and is easier to space-optimize.</p>
-
-              <pre className="p-6 rounded-xl bg-white/[0.03] border border-white/5 overflow-x-auto mb-8 text-sm">
-                <code className="text-zinc-300 font-mono">
-{`# Fibonacci with Tabulation
-def fib(n):
-    if n <= 1:
-        return n
-    
-    dp = [0] * (n + 1)
-    dp[1] = 1
-    
-    for i in range(2, n + 1):
-        dp[i] = dp[i-1] + dp[i-2]
-    
-    return dp[n]
-
-print(fib(50))  # Also instant, O(n) space`}
-                </code>
-              </pre>
-
-              <div className="p-5 rounded-xl bg-cyan-500/5 border border-cyan-500/10 flex gap-4 mb-8">
-                <Info className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <strong className="block text-cyan-400 mb-1">Space Optimization</strong>
-                  <p className="text-sm">For Fibonacci, notice that <code className="px-1.5 py-0.5 rounded bg-white/5 text-cyan-400 font-mono text-xs">dp[i]</code> only depends on <code className="px-1.5 py-0.5 rounded bg-white/5 text-cyan-400 font-mono text-xs">dp[i-1]</code> and <code className="px-1.5 py-0.5 rounded bg-white/5 text-cyan-400 font-mono text-xs">dp[i-2]</code>. You don't need the full array — just two variables. This reduces space from <strong className="text-white">O(n)</strong> to <strong className="text-white">O(1)</strong>.</p>
-                </div>
-              </div>
-
-              <h2 id="state-diagram" className="text-2xl font-semibold text-white mt-10 mb-4 border-b border-white/5 pb-2">State Transition Diagram</h2>
-              <p className="mb-6">Understanding <strong className="text-white">state transitions</strong> is the single most important skill in DP. A "state" is a set of variables that completely defines a subproblem. The transition tells you how to move from one state to the next.</p>
-
-              <div className="p-8 rounded-2xl bg-emerald-500/[0.02] border border-emerald-500/10 text-center mb-8">
-                <svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" className="mx-auto max-w-[600px] w-full h-auto">
-                  <text x="350" y="28" textAnchor="middle" fill="#a1a1aa" fontSize="12" fontWeight="600" letterSpacing="0.1em">FIBONACCI STATE TRANSITION</text>
-                  <g>
-                    <rect x="60" y="130" width="120" height="50" rx="12" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.25)" strokeWidth="1.5"/>
-                    <text x="120" y="160" textAnchor="middle" fill="#34d399" fontSize="14" fontWeight="500">fib(n-2)</text>
-                    <rect x="290" y="130" width="120" height="50" rx="12" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.25)" strokeWidth="1.5"/>
-                    <text x="350" y="160" textAnchor="middle" fill="#34d399" fontSize="14" fontWeight="500">fib(n-1)</text>
-                    <rect x="520" y="130" width="120" height="50" rx="12" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5"/>
-                    <text x="580" y="160" textAnchor="middle" fill="#ffffff" fontSize="14" fontWeight="600">fib(n)</text>
-                  </g>
-                  <defs>
-                    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-                      <polygon points="0 0, 8 3, 0 6" fill="#10b981"/>
-                    </marker>
-                  </defs>
-                  <line x1="180" y1="155" x2="285" y2="155" stroke="#10b981" strokeWidth="1.5" markerEnd="url(#arrowhead)" strokeDasharray="6,3"/>
-                  <line x1="180" y1="145" x2="515" y2="145" stroke="#10b981" strokeWidth="1.5" markerEnd="url(#arrowhead)" opacity="0.5"/>
-                  <line x1="410" y1="155" x2="515" y2="155" stroke="#10b981" strokeWidth="1.5" markerEnd="url(#arrowhead)"/>
-                  <text x="232" y="148" textAnchor="middle" fill="#71717a" fontSize="10">store</text>
-                  <text x="462" y="148" textAnchor="middle" fill="#71717a" fontSize="10">store</text>
-                  <text x="468" y="140" textAnchor="middle" fill="#10b981" fontSize="18" fontWeight="700">+</text>
-                  <rect x="200" y="250" width="300" height="44" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-                  <text x="350" y="277" textAnchor="middle" fill="#d4d4d8" fontSize="13">dp[n] = dp[n-1] + dp[n-2]</text>
-                  <line x1="350" y1="180" x2="350" y2="248" stroke="rgba(255,255,255,0.06)" strokeWidth="1" strokeDasharray="4,4"/>
-                </svg>
-              </div>
-
-              <h2 id="classic-problems" className="text-2xl font-semibold text-white mt-10 mb-4 border-b border-white/5 pb-2">Classic DP Problems</h2>
-              
-              <h3 id="fibonacci" className="text-xl font-semibold text-zinc-200 mt-8 mb-3">Fibonacci Sequence</h3>
-              <p className="mb-6">The simplest DP problem. Each number is the sum of the two before it. Despite its simplicity, it perfectly demonstrates why memoization matters — without it, the naive recursive solution has <strong className="text-white">O(2ⁿ)</strong> time complexity.</p>
-
-              <div className="overflow-x-auto mb-8">
-                <table className="w-full text-left border-collapse text-sm">
-                  <thead>
-                    <tr>
-                      <th className="bg-white/5 p-3 border border-white/10 text-white font-medium">Approach</th>
-                      <th className="bg-white/5 p-3 border border-white/10 text-white font-medium">Time</th>
-                      <th className="bg-white/5 p-3 border border-white/10 text-white font-medium">Space</th>
-                      <th className="bg-white/5 p-3 border border-white/10 text-white font-medium">When to Use</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="p-3 border border-white/10">Naive Recursion</td>
-                      <td className="p-3 border border-white/10">O(2ⁿ)</td>
-                      <td className="p-3 border border-white/10">O(n)</td>
-                      <td className="p-3 border border-white/10">Never for large n</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 border border-white/10">Memoization</td>
-                      <td className="p-3 border border-white/10">O(n)</td>
-                      <td className="p-3 border border-white/10">O(n)</td>
-                      <td className="p-3 border border-white/10">When you think recursively</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 border border-white/10">Tabulation</td>
-                      <td className="p-3 border border-white/10">O(n)</td>
-                      <td className="p-3 border border-white/10">O(n)</td>
-                      <td className="p-3 border border-white/10">When you want iterative</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 border border-white/10">Space-Optimized</td>
-                      <td className="p-3 border border-white/10">O(n)</td>
-                      <td className="p-3 border border-white/10 font-bold text-white">O(1)</td>
-                      <td className="p-3 border border-white/10 font-bold text-white">Always preferred</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <h2 id="complexity-table" className="text-2xl font-semibold text-white mt-10 mb-4 border-b border-white/5 pb-2">Complexity Cheat Sheet</h2>
-              <div className="overflow-x-auto mb-8">
-                <table className="w-full text-left border-collapse text-sm">
-                  <thead>
-                    <tr>
-                      <th className="bg-white/5 p-3 border border-white/10 text-white font-medium">Problem</th>
-                      <th className="bg-white/5 p-3 border border-white/10 text-white font-medium">State</th>
-                      <th className="bg-white/5 p-3 border border-white/10 text-white font-medium">Transition</th>
-                      <th className="bg-white/5 p-3 border border-white/10 text-white font-medium">Time</th>
-                      <th className="bg-white/5 p-3 border border-white/10 text-white font-medium">Space</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="p-3 border border-white/10">Fibonacci</td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">dp[n]</code></td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">dp[n-1] + dp[n-2]</code></td>
-                      <td className="p-3 border border-white/10">O(n)</td>
-                      <td className="p-3 border border-white/10">O(1)</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 border border-white/10">0/1 Knapsack</td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">dp[i][w]</code></td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">max(skip, take)</code></td>
-                      <td className="p-3 border border-white/10">O(nW)</td>
-                      <td className="p-3 border border-white/10">O(nW)</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 border border-white/10">LCS</td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">dp[i][j]</code></td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">match ? +1 : max(..)</code></td>
-                      <td className="p-3 border border-white/10">O(mn)</td>
-                      <td className="p-3 border border-white/10">O(mn)</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 border border-white/10">LIS</td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">dp[i]</code></td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">max(dp[j]+1)</code></td>
-                      <td className="p-3 border border-white/10">O(n²)</td>
-                      <td className="p-3 border border-white/10">O(n)</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 border border-white/10">Matrix Chain</td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">dp[i][j]</code></td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">min over k</code></td>
-                      <td className="p-3 border border-white/10">O(n³)</td>
-                      <td className="p-3 border border-white/10">O(n²)</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 border border-white/10">Coin Change</td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">dp[amount]</code></td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">min over coins</code></td>
-                      <td className="p-3 border border-white/10">O(nW)</td>
-                      <td className="p-3 border border-white/10">O(W)</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 border border-white/10">Edit Distance</td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">dp[i][j]</code></td>
-                      <td className="p-3 border border-white/10"><code className="px-1.5 py-0.5 rounded bg-white/5 text-emerald-400 font-mono text-xs">min(insert,del,replace)</code></td>
-                      <td className="p-3 border border-white/10">O(mn)</td>
-                      <td className="p-3 border border-white/10">O(mn)</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <h2 id="practice-roadmap" className="text-2xl font-semibold text-white mt-10 mb-4 border-b border-white/5 pb-2">Practice Roadmap</h2>
-              <ol className="list-decimal pl-5 mb-8 space-y-2">
-                <li><strong className="text-white">Week 1-2: Linear DP</strong> — Fibonacci, Climbing Stairs, House Robber, Coin Change</li>
-                <li><strong className="text-white">Week 3-4: 2D DP</strong> — 0/1 Knapsack, LCS, Edit Distance, Grid Paths</li>
-                <li><strong className="text-white">Week 5-6: String DP</strong> — Palindrome Subsequence, Word Break, Regex Matching</li>
-                <li><strong className="text-white">Week 7-8: Advanced</strong> — Matrix Chain MCM, Burst Balloons, DP on Trees, DP with Bitmask</li>
-              </ol>
-
-              <div className="p-5 rounded-xl bg-emerald-500/5 border border-emerald-500/10 flex gap-4 mb-8">
-                <Target className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <strong className="block text-emerald-400 mb-1">Pro Tip</strong>
-                  <p className="text-sm">For every DP problem, follow this ritual: (1) Identify the state, (2) Write the recurrence, (3) Identify base cases, (4) Decide top-down vs bottom-up, (5) Code it. <strong className="text-white">Never memorize solutions — memorize the process.</strong></p>
-                </div>
-              </div>
-
-              <hr className="border-t border-white/5 my-10" />
-              <p className="italic text-zinc-500 text-sm">This article is part of the DSA Quest Expert Knowledge Hub — curated by verified industry professionals. Download the full 42-page PDF for all diagrams, code, and practice problems.</p>
+            <div className={`article-body tiptap ${getFontSizeClass()} mt-8`}>
+              <TiptapEditor content={cleanContent || doc.content} readOnly />
             </div>
-
             {/* Author Card */}
             <div className="mt-14 p-6 rounded-2xl glass flex items-start gap-4 flex-wrap">
-              <img src="https://picsum.photos/seed/pro1/96/96.jpg" className="w-14 h-14 rounded-full object-cover border border-white/10" alt="Author" />
+              <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-2xl overflow-hidden shrink-0">
+                {doc.authorImg && doc.authorImg.startsWith('http') && !doc.authorImg.includes('picsum') ? (
+                  <img src={doc.authorImg} alt="Author" className="w-full h-full object-cover" />
+                ) : (
+                  (doc.authorName || 'Anonymous').charAt(0).toUpperCase()
+                )}
+              </div>
               <div className="flex-1 min-w-[200px]">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-sm font-medium">Priya Sharma</span>
-                  <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>
+                  <span className="text-sm font-medium">{doc.authorName || 'Anonymous'}</span>
+                  {doc.isPro && (
+                    <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>
+                  )}
                 </div>
-                <p className="text-xs text-zinc-500 mb-3">Software Engineer at Google • 5+ years of interviewing experience • Passionate about making DSA accessible to everyone</p>
+                <p className="text-xs text-zinc-500 mb-3">{doc.authorEmail} • Contributor</p>
                 <div className="flex items-center gap-3">
                   <button className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1">
                     <Twitter className="w-3 h-3" /> Follow
@@ -479,7 +479,7 @@ print(fib(50))  # Also instant, O(n) space`}
                 </button>
                 <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-sm text-zinc-400 hover:bg-white/10 transition-all">
                   <MessageSquare className="w-4 h-4" />
-                  89 Comments
+                  {doc.commentsCount || 0} Comments
                 </button>
               </div>
               <div className="flex items-center gap-3">
@@ -494,49 +494,71 @@ print(fib(50))  # Also instant, O(n) space`}
 
             {/* Comments Section */}
             <div className="mt-10">
-              <h3 className="text-lg font-medium mb-6">Discussion (89)</h3>
+              <h3 className="text-lg font-medium mb-6">Discussion ({doc.commentsCount || 0})</h3>
               <div className="flex items-start gap-3 mb-8">
-                <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0">
-                  <User className="w-4 h-4 text-zinc-500" />
+                <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  {user ? (
+                    user.user_metadata?.avatar_url ? (
+                      <img src={user.user_metadata.avatar_url} alt="You" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-sm font-bold text-emerald-400">{(user.user_metadata?.full_name || 'U').charAt(0)}</span>
+                    )
+                  ) : (
+                    <User className="w-4 h-4 text-zinc-500" />
+                  )}
                 </div>
                 <div className="flex-1">
-                  <textarea rows={3} placeholder="Share your thoughts..." className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-sm text-zinc-300 placeholder:text-zinc-600 outline-none focus:border-emerald-500/30 transition-colors resize-none leading-relaxed"></textarea>
+                  <textarea 
+                    rows={3} 
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder={user ? "Share your thoughts..." : "Login to share your thoughts..."} 
+                    disabled={!user || isSubmittingComment}
+                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-sm text-zinc-300 placeholder:text-zinc-600 outline-none focus:border-emerald-500/30 transition-colors resize-none leading-relaxed disabled:opacity-50"
+                  />
                   <div className="flex justify-end mt-2">
-                    <button onClick={() => showToast('Comment posted! 💬', 'success')} className="px-4 py-1.5 rounded-lg bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">Post Comment</button>
+                    <button 
+                      onClick={handleSubmitComment} 
+                      disabled={!user || isSubmittingComment || !newComment.trim()}
+                      className="px-4 py-1.5 rounded-lg bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all disabled:opacity-50"
+                    >
+                      {isSubmittingComment ? 'Posting...' : 'Post Comment'}
+                    </button>
                   </div>
                 </div>
               </div>
 
-              {/* Sample comments */}
+              {/* Comments List */}
               <div className="space-y-6">
-                <div className="flex items-start gap-3">
-                  <img src="https://picsum.photos/seed/commenter1/40/40.jpg" className="w-9 h-9 rounded-full object-cover flex-shrink-0" alt="commenter" />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-medium">Arjun M.</span>
-                      <span className="text-[10px] text-zinc-600">3h ago</span>
+                {comments.length === 0 ? (
+                  <p className="text-zinc-500 text-sm italic text-center py-4">No comments yet. Be the first to start the discussion!</p>
+                ) : (
+                  comments.map((comment) => (
+                    <div key={comment._id} className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        {comment.authorImg ? (
+                          <img src={comment.authorImg} className="w-full h-full object-cover" alt={comment.authorName} />
+                        ) : (
+                          <span className="text-sm font-bold text-emerald-400">{comment.authorName.charAt(0).toUpperCase()}</span>
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-sm font-medium">{comment.authorName}</span>
+                          <span className="text-[10px] text-zinc-600">
+                            {new Date(comment.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                          </span>
+                        </div>
+                        <p className="text-sm text-zinc-400 leading-relaxed whitespace-pre-wrap">{comment.content}</p>
+                        <div className="flex items-center gap-3 mt-2">
+                          <button className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1">
+                            <ArrowUp className="w-3 h-3" />{comment.upvotes || 0}
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-sm text-zinc-400 leading-relaxed">The state transition diagram is exactly what I needed. I've been struggling to visualize how DP states connect — this makes it click. Any chance you could do one for Matrix Chain Multiplication?</p>
-                    <div className="flex items-center gap-3 mt-2">
-                      <button className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1"><ArrowUp className="w-3 h-3" />24</button>
-                      <button className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Reply</button>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <img src="https://picsum.photos/seed/commenter2/40/40.jpg" className="w-9 h-9 rounded-full object-cover flex-shrink-0" alt="commenter" />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-medium">Sneha R.</span>
-                      <span className="text-[10px] text-zinc-600">5h ago</span>
-                    </div>
-                    <p className="text-sm text-zinc-400 leading-relaxed">Downloaded the PDF — the practice roadmap at the end is gold. Week 3-4 is exactly where I'm stuck. Starting the 2D DP section today 🚀</p>
-                    <div className="flex items-center gap-3 mt-2">
-                      <button className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1"><ArrowUp className="w-3 h-3" />18</button>
-                      <button className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Reply</button>
-                    </div>
-                  </div>
-                </div>
+                  ))
+                )}
               </div>
             </div>
 
@@ -550,23 +572,23 @@ print(fib(50))  # Also instant, O(n) space`}
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-zinc-500">Type</span>
-                <span className="text-xs text-orange-400 font-medium">PDF + Article</span>
+                <span className="text-xs text-orange-400 font-medium">{doc.category}</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-zinc-500">Pages</span>
-                <span className="text-xs text-zinc-300">42</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-zinc-500">File Size</span>
-                <span className="text-xs text-zinc-300">3.8 MB</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-zinc-500">Read Time</span>
-                <span className="text-xs text-zinc-300">15 min</span>
-              </div>
+              {doc.category === 'Study Materials' && (
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-zinc-500">Read Time</span>
+                  <span className="text-xs text-zinc-300">{readTimeStr}</span>
+                </div>
+              )}
+              {doc.category !== 'Study Materials' && (
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-zinc-500">Read Time</span>
+                  <span className="text-xs text-zinc-300">{readTimeStr}</span>
+                </div>
+              )}
               <div className="flex items-center justify-between">
                 <span className="text-xs text-zinc-500">Published</span>
-                <span className="text-xs text-zinc-300">Jun 24, 2026</span>
+                <span className="text-xs text-zinc-300">{new Date(doc.createdAt).toLocaleDateString()}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-zinc-500">Views</span>
@@ -646,14 +668,16 @@ print(fib(50))  # Also instant, O(n) space`}
           </div>
 
           {/* Tags */}
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-3 px-1">Tags</div>
-            <div className="flex flex-wrap gap-1.5">
-              {['dp', 'cheatsheet', 'interview-prep', 'dynamic-programming', 'patterns', 'knapsack', 'lcs', 'fibonacci'].map(tag => (
-                <a href="#" key={tag} className="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors">#{tag}</a>
-              ))}
+          {doc.tags && doc.tags.length > 0 && (
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-3 px-1">Tags</div>
+              <div className="flex flex-wrap gap-1.5">
+                {doc.tags.map((tag: string) => (
+                  <a href="#" key={tag} className="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors">#{tag}</a>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </aside>
       </div>
 

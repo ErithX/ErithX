@@ -32,16 +32,17 @@ export const ResizableImage = Node.create({
   },
 });
 
-const ResizableImageComponent = ({ node, updateAttributes, selected }: any) => {
+const ResizableImageComponent = ({ editor, node, updateAttributes, selected }: any) => {
   const { src, align, width, isUploading } = node.attrs;
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const isEditable = editor.isEditable;
 
   let alignClass = 'mx-auto';
   if (align === 'left') alignClass = 'mr-auto ml-0';
   if (align === 'right') alignClass = 'ml-auto mr-0';
 
   const handleMouseUp = () => {
-    if (containerRef.current) {
+    if (isEditable && containerRef.current) {
       const pxWidth = containerRef.current.getBoundingClientRect().width;
       updateAttributes({ width: pxWidth });
     }
@@ -53,9 +54,9 @@ const ResizableImageComponent = ({ node, updateAttributes, selected }: any) => {
       <div 
         ref={containerRef}
         onMouseUp={handleMouseUp}
-        className={`relative inline-block rounded-xl overflow-hidden border ${selected ? 'border-emerald-500 ring-2 ring-emerald-500/30' : 'border-white/10'} transition-all`}
+        className={`relative inline-block rounded-xl overflow-hidden border ${isEditable && selected ? 'border-emerald-500 ring-2 ring-emerald-500/30' : 'border-white/10'} transition-all`}
         style={{ 
-          resize: 'horizontal', 
+          resize: isEditable ? 'horizontal' : 'none', 
           overflow: 'hidden', 
           minWidth: '200px', 
           maxWidth: '100%',
@@ -73,32 +74,34 @@ const ResizableImageComponent = ({ node, updateAttributes, selected }: any) => {
         )}
 
         {/* Hover Alignment Toolbar */}
-        <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/60 backdrop-blur-md p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity border border-white/10">
-          <button 
-            type="button"
-            onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
-            onClick={() => updateAttributes({ align: 'left' })} 
-            className={`p-1.5 rounded-md hover:bg-white/10 ${align === 'left' ? 'text-emerald-400' : 'text-white'}`}
-          >
-            <AlignLeft className="w-4 h-4" />
-          </button>
-          <button 
-            type="button"
-            onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
-            onClick={() => updateAttributes({ align: 'center' })} 
-            className={`p-1.5 rounded-md hover:bg-white/10 ${align === 'center' ? 'text-emerald-400' : 'text-white'}`}
-          >
-            <AlignCenter className="w-4 h-4" />
-          </button>
-          <button 
-            type="button"
-            onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
-            onClick={() => updateAttributes({ align: 'right' })} 
-            className={`p-1.5 rounded-md hover:bg-white/10 ${align === 'right' ? 'text-emerald-400' : 'text-white'}`}
-          >
-            <AlignRight className="w-4 h-4" />
-          </button>
-        </div>
+        {isEditable && (
+          <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/60 backdrop-blur-md p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity border border-white/10">
+            <button 
+              type="button"
+              onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              onClick={() => updateAttributes({ align: 'left' })} 
+              className={`p-1.5 rounded-md hover:bg-white/10 ${align === 'left' ? 'text-emerald-400' : 'text-white'}`}
+            >
+              <AlignLeft className="w-4 h-4" />
+            </button>
+            <button 
+              type="button"
+              onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              onClick={() => updateAttributes({ align: 'center' })} 
+              className={`p-1.5 rounded-md hover:bg-white/10 ${align === 'center' ? 'text-emerald-400' : 'text-white'}`}
+            >
+              <AlignCenter className="w-4 h-4" />
+            </button>
+            <button 
+              type="button"
+              onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              onClick={() => updateAttributes({ align: 'right' })} 
+              className={`p-1.5 rounded-md hover:bg-white/10 ${align === 'right' ? 'text-emerald-400' : 'text-white'}`}
+            >
+              <AlignRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Caption Content Area */}

@@ -23,10 +23,12 @@ import { TableBubbleMenu } from './TableBubbleMenu';
 interface TiptapEditorProps {
   content?: string;
   onChange?: (html: string) => void;
+  readOnly?: boolean;
 }
 
-export default function TiptapEditor({ content = '', onChange }: TiptapEditorProps) {
+export default function TiptapEditor({ content = '', onChange, readOnly = false }: TiptapEditorProps) {
   const editor = useEditor({
+    editable: !readOnly,
     extensions: [
       StarterKit,
       ResizableImage,
@@ -53,7 +55,7 @@ export default function TiptapEditor({ content = '', onChange }: TiptapEditorPro
         },
       }),
       Link.configure({
-        openOnClick: false,
+        openOnClick: readOnly, // Clickable in readOnly mode
         HTMLAttributes: {
           class: 'text-emerald-400 underline decoration-emerald-500/30 hover:decoration-emerald-500 transition-colors',
         },
@@ -63,14 +65,14 @@ export default function TiptapEditor({ content = '', onChange }: TiptapEditorPro
       }),
       Callout,
       CustomCodeBlock,
-      SlashCommand,
+      ...(readOnly ? [] : [SlashCommand]),
     ],
     content,
     immediatelyRender: false,
     editorProps: {
       attributes: {
         // Removed aggressive Tailwind Typography (prose) to allow our custom globals.css to perfectly style the editor
-        class: 'focus:outline-none min-h-[400px]',
+        class: readOnly ? 'focus:outline-none' : 'focus:outline-none min-h-[400px]',
       },
       handleDrop: (view, event, slice, moved) => {
         if (!moved && event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0]) {
@@ -241,10 +243,10 @@ export default function TiptapEditor({ content = '', onChange }: TiptapEditorPro
   return (
     <div className="flex flex-col w-full">
       {/* Notion-Style Table Menus */}
-      <TableBubbleMenu editor={editor} />
+      {!readOnly && <TableBubbleMenu editor={editor} />}
 
       {/* Bubble Menu for text formatting */}
-      {editor && (
+      {!readOnly && editor && (
         <BubbleMenu 
           editor={editor} 
           shouldShow={({ editor, state }) => {
@@ -263,11 +265,11 @@ export default function TiptapEditor({ content = '', onChange }: TiptapEditorPro
         </BubbleMenu>
       )}
 
-      {/* Notion-Style Table Menus */}
-      <TableBubbleMenu editor={editor} />
-
       {/* Editor Content Canvas */}
-      <div className="cursor-text min-h-[500px]" onClick={() => editor.chain().focus().run()}>
+      <div 
+        className={readOnly ? "" : "cursor-text min-h-[500px]"} 
+        onClick={() => { if (!readOnly) editor.chain().focus().run(); }}
+      >
         <EditorContent editor={editor} />
       </div>
     </div>

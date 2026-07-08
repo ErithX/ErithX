@@ -13,105 +13,84 @@ import ResourceCard, { ResourceItem } from '@/components/ResourceCard';
 
 type FeedItem = BlogItem | ResourceItem;
 
-const FEED_DATA: FeedItem[] = [
-  {
-    id: 1, type: 'blog', title: 'The Evolution of DSA Quest: The Ultimate All-in-One Tech Starter Pack',
-    excerpt: 'Every computer science student shares the same daily headache. On any given weekend, there is a major coding contest on one site...',
-    fullContent: `<p>Every computer science student and aspiring developer shares the same daily headache...</p>`,
-    author: 'DSA Quest Team', authorImg: 'team1', isPro: true,
-    tags: ['community', 'vision'], upvotes: 342, comments: 47, time: '2h ago',
-    readTime: '5 min read'
-  },
-  {
-    id: 2, type: 'pdf', title: 'Mastering Dynamic Programming: A Visual Guide',
-    excerpt: 'Complete DP cheat sheet covering all major patterns — from Fibonacci to Matrix Chain Multiplication with state transition diagrams.',
-    author: 'Priya Sharma', authorImg: 'pro1', isPro: true,
-    tags: ['dp', 'cheatsheet', 'interview-prep'], upvotes: 521, comments: 89, time: '5h ago',
-    pages: 42, size: '3.8 MB', coverImg: 'dp-cheatsheet'
-  },
-  {
-    id: 3, type: 'image', title: 'Binary Search Tree — Complete Traversal Flowchart',
-    excerpt: 'A comprehensive flowchart showing Inorder, Preorder, Postorder, and Level-order traversals with decision points.',
-    author: 'Rahul Verma', authorImg: 'pro2', isPro: true,
-    tags: ['bst', 'trees', 'flowchart'], upvotes: 287, comments: 23, time: '8h ago',
-    imageSrc: 'bst-flowchart'
-  },
-  {
-    id: 4, type: 'link', title: 'NeetCode 150 — The Ultimate Blind 75 Expansion',
-    excerpt: 'NeetCode\'s expanded list of 150 LeetCode problems organized by pattern. The gold standard for interview preparation.',
-    author: 'Ankit Gupta', authorImg: 'pro3', isPro: false,
-    tags: ['leetcode', 'neetcode', 'interview-prep'], upvotes: 198, comments: 31, time: '12h ago',
-    url: 'neetcode.io', favicon: 'neetcode'
-  },
-  {
-    id: 5, type: 'blog', title: 'How I Cracked Google SDE Interview: A Real Experience',
-    excerpt: 'From online assessment to onsite rounds — here\'s everything that was asked, how I prepared, and what I wish I knew earlier. Includes my exact 3-month study plan.',
-    author: 'Sarah Chen', authorImg: 'pro4', isPro: true,
-    tags: ['google', 'interview', 'sde'], upvotes: 891, comments: 156, time: '1d ago',
-    readTime: '12 min read'
-  },
-  {
-    id: 6, type: 'pdf', title: 'System Design Primer: Distributed Systems Notes',
-    excerpt: 'Comprehensive notes covering load balancing, caching, database sharding, message queues, and microservices architecture.',
-    author: 'Rahul Verma', authorImg: 'pro2', isPro: true,
-    tags: ['system-design', 'distributed'], upvotes: 445, comments: 67, time: '1d ago',
-    pages: 78, size: '7.2 MB', coverImg: 'sys-design'
-  },
-  {
-    id: 7, type: 'image', title: 'Sorting Algorithms Comparison Chart',
-    excerpt: 'Visual comparison of all major sorting algorithms — time complexity, space complexity, stability, and when to use which.',
-    author: 'Meera Patel', authorImg: 'user1', isPro: false,
-    tags: ['sorting', 'algorithms', 'comparison'], upvotes: 334, comments: 18, time: '2d ago',
-    imageSrc: 'sorting-compare'
-  },
-  {
-    id: 8, type: 'link', title: 'Visualgo — Algorithm Visualization Tool',
-    excerpt: 'Interactive visualization of data structures and algorithms. Perfect for understanding how BFS, DFS, Dijkstra and others actually work step by step.',
-    author: 'Priya Sharma', authorImg: 'pro1', isPro: true,
-    tags: ['visualization', 'tools', 'learning'], upvotes: 267, comments: 12, time: '2d ago',
-    url: 'visualgo.net', favicon: 'visualgo'
-  },
-  {
-    id: 9, type: 'blog', title: 'Why Graph Problems Terrify Beginners (And Shouldn\'t)',
-    excerpt: 'Most students panic at the word "graph." Here\'s a mental model that makes BFS, DFS, and Dijkstra feel natural — not scary.',
-    author: 'Ankit Gupta', authorImg: 'pro3', isPro: false,
-    tags: ['graphs', 'bfs', 'dfs'], upvotes: 178, comments: 34, time: '3d ago',
-    readTime: '8 min read'
-  },
-  {
-    id: 10, type: 'pdf', title: 'OS Concepts Cheatsheet for GATE',
-    excerpt: 'All important Operating System concepts in one place — process scheduling, deadlocks, memory management, and paging with formulas.',
-    author: 'Vikram Singh', authorImg: 'user2', isPro: false,
-    tags: ['os', 'gate', 'cheatsheet'], upvotes: 156, comments: 21, time: '3d ago',
-    pages: 24, size: '1.5 MB', coverImg: 'os-cheatsheet'
-  },
-  {
-    id: 11, type: 'image', title: 'React Component Lifecycle Diagram',
-    excerpt: 'Complete lifecycle of React class components — mounting, updating, and unmounting phases with method call order.',
-    author: 'Sarah Chen', authorImg: 'pro4', isPro: true,
-    tags: ['react', 'frontend', 'diagram'], upvotes: 223, comments: 9, time: '4d ago',
-    imageSrc: 'react-lifecycle'
-  },
-  {
-    id: 12, type: 'link', title: 'Big-O Cheat Sheet by Eric Rowell',
-    excerpt: 'The definitive Big-O complexity chart for all common data structure operations and sorting algorithms. Bookmark this.',
-    author: 'Meera Patel', authorImg: 'user1', isPro: false,
-    tags: ['big-o', 'complexity', 'reference'], upvotes: 412, comments: 5, time: '5d ago',
-    url: 'bigocheatsheet.com', favicon: 'bigo'
-  }
-];
+// We will fetch real data from the database now instead of using this mock array.
+const FEED_DATA: FeedItem[] = [];
 
 export default function ResourcesPage() {
   const router = useRouter();
   const [activeFilter, setActiveFilter] = useState('all');
-  const [items, setItems] = useState<FeedItem[]>(FEED_DATA);
+  const [items, setItems] = useState<FeedItem[]>([]);
+  const [allItems, setAllItems] = useState<FeedItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchResources = async () => {
+      try {
+        const res = await fetch('/api/resources');
+        const data = await res.json();
+        
+        const formattedData: FeedItem[] = data.map((doc: any) => {
+          // Calculate human readable time (e.g. 2h ago)
+          const diffMs = Date.now() - new Date(doc.createdAt).getTime();
+          const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+          const timeStr = diffHrs < 24 ? `${diffHrs}h ago` : `${Math.floor(diffHrs/24)}d ago`;
+          
+          // Clean HTML tags for excerpt
+          const tempDiv = document.createElement("div");
+          tempDiv.innerHTML = doc.content || '';
+          const cleanText = tempDiv.textContent || tempDiv.innerText || "";
+          const excerpt = cleanText.substring(0, 150) + (cleanText.length > 150 ? '...' : '');
+
+          const readTimeStr = `${Math.max(1, Math.ceil((doc.wordCount || 0) / 200))} min read`;
+
+          // Determine card type based on category
+          let type: any = 'blog';
+          if (doc.category === 'Study Materials') type = 'pdf';
+          if (doc.category === 'Career') type = 'blog';
+          
+          // Base structure
+          const baseItem = {
+            id: doc._id,
+            title: doc.title || 'Untitled',
+            excerpt,
+            author: doc.authorName || 'Anonymous',
+            authorImg: doc.authorImg || 'pro1', // Uses our schema default
+            isPro: doc.isPro || false, // User requested to keep this field
+            tags: doc.tags || [],
+            upvotes: doc.upvotes || 0,
+            comments: doc.commentsCount || 0,
+            time: timeStr
+          };
+
+          if (type === 'blog') {
+            return { ...baseItem, type: 'blog', readTime: readTimeStr, coverImg: doc.coverImage } as BlogItem;
+          } else {
+            return { 
+              ...baseItem, 
+              type: 'pdf', 
+              coverImg: doc.coverImage, 
+              size: readTimeStr // Displaying read time in place of PDF size
+            } as ResourceItem;
+          }
+        });
+
+        setAllItems(formattedData);
+        setItems(formattedData);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchResources();
+  }, []);
 
   const filterCards = (type: string) => {
     setActiveFilter(type);
     if (type === 'all') {
-      setItems(FEED_DATA);
+      setItems(allItems);
     } else {
-      setItems(FEED_DATA.filter(d => d.type === type));
+      setItems(allItems.filter(d => d.type === type));
     }
   };
 
@@ -285,14 +264,14 @@ export default function ResourcesPage() {
                 </h3>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <img src="https://picsum.photos/seed/pro1/40/40.jpg" className="w-8 h-8 rounded-full object-cover" alt="pro" />
+                    <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold text-xs">P</div>
                     <div className="min-w-0">
                       <div className="text-xs font-medium truncate flex items-center gap-1">Priya Sharma <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span></div>
                       <div className="text-[10px] text-zinc-500">SDE @ Google • 47 posts</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <img src="https://picsum.photos/seed/pro2/40/40.jpg" className="w-8 h-8 rounded-full object-cover" alt="pro" />
+                    <div className="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-bold text-xs">R</div>
                     <div className="min-w-0">
                       <div className="text-xs font-medium truncate flex items-center gap-1">Rahul Verma <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span></div>
                       <div className="text-[10px] text-zinc-500">Tech Lead @ MS • 32 posts</div>
