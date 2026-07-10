@@ -10,8 +10,10 @@ import {
 } from 'lucide-react';
 import BlogsCard, { BlogItem } from '@/components/BlogsCard';
 import ResourceCard, { ResourceItem } from '@/components/ResourceCard';
+import CreatorPopup from '@/components/CreatorPopup';
+import Navbar from '@/components/Navbar';
 
-type FeedItem = BlogItem | ResourceItem;
+export type FeedItem = BlogItem | ResourceItem;
 
 // We will fetch real data from the database now instead of using this mock array.
 const FEED_DATA: FeedItem[] = [];
@@ -100,38 +102,8 @@ export default function ResourcesPage() {
 
   return (
     <div className="min-h-screen">
-      {/* NAVBAR */}
-      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#09090b]/85 backdrop-blur-[12px]">
-        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <a href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center">
-                <Zap className="w-4 h-4 text-emerald-500" />
-              </div>
-              <span className="font-semibold text-sm tracking-tight">DSA Quest</span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 hidden sm:inline">Community</span>
-            </a>
-            <div className="hidden md:flex items-center gap-1">
-              <a href="/resources" className="px-3 py-1.5 text-xs font-medium text-white bg-white/5 rounded">Resources</a>
-              <a href="/" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Contests</a>
-              <a href="/dashboard" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Dashboard</a>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/5 bg-white/[0.02]">
-              <Search className="w-3.5 h-3.5 text-zinc-500" />
-              <input type="text" placeholder="Search resources..." className="bg-transparent text-xs text-zinc-300 placeholder:text-zinc-600 outline-none w-40" />
-            </div>
-            <button onClick={() => router.push('/dashboard/write')} className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">
-              <Plus className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Upload</span>
-            </button>
-            <div className="w-7 h-7 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-zinc-700 transition-colors">
-              <User className="w-3.5 h-3.5 text-zinc-400" />
-            </div>
-          </div>
-        </div>
-      </nav>
+      <CreatorPopup />
+      <Navbar />
 
       {/* HERO SECTION */}
       <section className="pt-28 pb-12 px-6 relative overflow-hidden">

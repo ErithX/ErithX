@@ -38,19 +38,28 @@ export async function GET(request: Request) {
       // Check if this is a new user (first time login)
       const { data: profile } = await supabase
         .from('user_profiles')
-        .select('created_at')
+        .select('created_at, role')
         .eq('id', data.user.id)
         .single()
 
-      // If profile was just created (within last 10 seconds), send welcome email
+      let finalRole = data.user.user_metadata?.role;
+      let finalNext = next;
+
       if (profile) {
         const createdAt = new Date(profile.created_at)
         const now = new Date()
         const secondsSinceCreation = (now.getTime() - createdAt.getTime()) / 1000
+        const isNewUser = secondsSinceCreation < 10;
 
-        // If account is less than 10 seconds old, it's a new user
-        if (secondsSinceCreation < 10) {
-          console.log('🎉 New user detected! Sending welcome email...')
+        if (isNewUser) {
+          console.log('🎉 New user detected! Setting role and sending welcome email...')
+          // It's a new user, apply the role from the URL
+          const urlRole = searchParams.get('role');
+          if (urlRole) {
+            finalRole = urlRole;
+            await supabase.auth.updateUser({ data: { role: urlRole } });
+            await supabase.from('user_profiles').update({ role: urlRole }).eq('id', data.user.id);
+          }
           
           const userEmail = data.user.email!
           const userName = data.user.user_metadata?.full_name || 'Coder'
@@ -60,8 +69,6 @@ export async function GET(request: Request) {
             .then((result) => {
               if (result.success) {
                 console.log(`✅ Welcome email sent to ${userEmail}`)
-                
-                // Log in database
                 supabase.from('email_logs').insert({
                   user_id: data.user.id,
                   email_type: 'welcome',
@@ -72,8 +79,6 @@ export async function GET(request: Request) {
                 })
               } else {
                 console.error(`❌ Failed to send welcome email to ${userEmail}`)
-                
-                // Log failure
                 supabase.from('email_logs').insert({
                   user_id: data.user.id,
                   email_type: 'welcome',
@@ -84,12 +89,19 @@ export async function GET(request: Request) {
                 })
               }
             })
-            .catch((err) => {
-              console.error('❌ Welcome email error:', err)
-            })
+            .catch((err) => console.error('❌ Welcome email error:', err))
         } else {
-          console.log('👤 Existing user logging in, no welcome email sent')
+          console.log('👤 Existing user logging in, ignoring modal role and using existing role')
+          // Existing user, use their existing role from the database/metadata
+          finalRole = profile.role || data.user.user_metadata?.role || 'student';
         }
+      }
+
+      // Determine correct navigation based on final role
+      if (finalRole === 'student') {
+        finalNext = '/contests';
+      } else if (finalRole === 'professional') {
+        finalNext = '/resources';
       }
 
       const forwardedHost = request.headers.get('x-forwarded-host')
@@ -97,11 +109,11 @@ export async function GET(request: Request) {
       const isLocalEnv = process.env.NODE_ENV === 'development' || isLocal
       
       if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`)
+        return NextResponse.redirect(`${origin}${finalNext}`)
       } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
+        return NextResponse.redirect(`https://${forwardedHost}${finalNext}`)
       } else {
-        return NextResponse.redirect(`${origin}${next}`)
+        return NextResponse.redirect(`${origin}${finalNext}`)
       }
     } else {
       console.error('Auth callback error:', error)

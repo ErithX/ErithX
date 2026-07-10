@@ -73,7 +73,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   overflow-x: hidden;
-  font-family: 'Inter', sans-serif;
 }
 
 /* The Ambient "Ava" Green Light */
@@ -283,3 +282,75 @@ body {
 .prose blockquote { border-left: 4px solid rgba(16,185,129,0.5); padding-left: 1em; font-style: italic; color: #a1a1aa; margin-bottom: 1em; }
 .prose strong { font-weight: 700; color: #fff; }
 .prose em { font-style: italic; }
+/* Custom Animations for Landing Page */
+@keyframes scroll-vertical {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+.animate-scroll-vertical {
+  animation: scroll-vertical 25s linear infinite;
+}
+.animate-scroll-vertical:hover {
+  animation-play-state: paused;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+/* Glass Variants for Landing Page */
+.glass-g { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); transition: all 200ms ease; }
+.glass-g:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.14); }
+
+/* Float Animations */
+@keyframes flt { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+@keyframes fltB { 0%,100%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(8px) rotate(.5deg);} }
+.f1 { animation: flt 4s ease-in-out infinite; }
+.f2 { animation: flt 5s ease-in-out 1.2s infinite; }
+.f3 { animation: fltB 5.5s ease-in-out 0.5s infinite; }
+.f4 { animation: flt 4.5s ease-in-out 2s infinite; }
+
+/* Slide In Sequential */
+@keyframes slideUp { from{opacity:0;transform:translateY(28px);} to{opacity:1;transform:translateY(0);} }
+.a1{animation:slideUp .6s .05s ease forwards;opacity:0;}
+.a2{animation:slideUp .6s .2s ease forwards;opacity:0;}
+.a3{animation:slideUp .6s .35s ease forwards;opacity:0;}
+.a4{animation:slideUp .6s .5s ease forwards;opacity:0;}
+.a5{animation:slideUp .6s .65s ease forwards;opacity:0;}
+
+/* Extra Util Classes from Landing */
+.ctick { animation: ctick 1s ease-in-out infinite; }
+@keyframes ctick { from{opacity:1;} to{opacity:.45;} }
+
+.lift { transition: all 240ms ease; }
+.lift:hover { transform: translateY(-4px); }
+
+.img-wrap { overflow: hidden; }
+.img-wrap img { transition: transform .5s ease; }
+.img-wrap:hover img { transform: scale(1.04); }
+
+.eyebrow { display:inline-block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#34d399; margin-bottom:14px; }
+
+.pain-card { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:20px; overflow:hidden; transition:all 260ms ease; }
+.pain-card:hover { transform:translateY(-5px); border-color:rgba(255,255,255,0.11); background:rgba(255,255,255,0.04); }
+
+.feat-img-wrap { border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,0.07); position:relative; }
+
+.blob { border-radius:50%; filter:blur(70px); position:absolute; pointer-events:none; }
+.em-pulse::before { background: rgba(16,185,129,0.5) !important; }
+
+
+/* V2 Landing Page Extensions */
+.float-anim-slow { animation: float 6s ease-in-out infinite; }
+.bento-card { transition: all 350ms ease; }
+.bento-card:hover { transform: translateY(-6px); }
+.image-mask { mask-image: linear-gradient(to bottom, black 70%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%); }
+.marquee { display: flex; animation: marquee 30s linear infinite; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.scroll-reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+

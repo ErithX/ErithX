@@ -12,9 +12,11 @@ export default function UserProfileCard({ user }: UserProfileCardProps) {
     <div className="glass rounded-2xl p-6">
       <div className="flex items-start gap-4 mb-6">
         <img 
-          src={user?.user_metadata?.avatar_url || "https://picsum.photos/seed/arjun-dash/80/80.jpg"} 
+          src={user?.user_metadata?.avatar_url || "https://api.dicebear.com/7.x/avataaars/svg?seed=fallback"} 
           className="w-14 h-14 rounded-2xl object-cover border border-white/10" 
           alt="Profile" 
+          referrerPolicy="no-referrer"
+          onError={(e) => { e.currentTarget.src = "https://api.dicebear.com/7.x/avataaars/svg?seed=fallback" }}
         />
         <div className="flex-1">
           <div className="flex items-center gap-2">
@@ -26,6 +28,26 @@ export default function UserProfileCard({ user }: UserProfileCardProps) {
           <div className="text-xs text-zinc-500 mt-0.5">III Year, NIT Trichy • CSE</div>
           <div className="text-[10px] text-zinc-600 mono mt-1">dsaquest.io/v/arjun-m</div>
         </div>
+      </div>
+
+      {/* Incomplete Profile Nudge */}
+      <div className="mb-5 p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between group cursor-pointer hover:bg-white/[0.04] transition-colors">
+        <div className="flex items-center gap-3">
+          <div className="relative w-8 h-8 flex items-center justify-center flex-shrink-0">
+            <svg className="w-8 h-8 transform -rotate-90">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="3" />
+              <circle cx="16" cy="16" r="14" fill="none" stroke="#10b981" strokeWidth="3" strokeDasharray="88" strokeDashoffset="52.8" className="transition-all duration-1000" />
+            </svg>
+            <span className="absolute text-[8px] font-bold text-white">40%</span>
+          </div>
+          <div>
+            <div className="text-xs font-semibold text-zinc-300 group-hover:text-white transition-colors">Profile Incomplete</div>
+            <div className="text-[9px] text-zinc-500">Stand out. Add your socials & bio.</div>
+          </div>
+        </div>
+        <Link href="/dashboard?tab=profile" className="text-[10px] font-medium text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity">
+          Complete →
+        </Link>
       </div>
 
       {/* Contribution Stats */}

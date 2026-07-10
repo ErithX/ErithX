@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { X, Zap, Loader2 } from 'lucide-react';
+import { X, Zap, Loader2, GraduationCap, PenTool } from 'lucide-react';
 import { createClient } from '@/app/lib/supabase/client';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialRole?: 'student' | 'professional';
 }
 
-export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose, initialRole = 'student' }: AuthModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedRole, setSelectedRole] = useState<'student' | 'professional'>(initialRole);
   const supabase = createClient();
 
   if (!isOpen) return null;
@@ -18,10 +20,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     setIsLoading(true);
     setError(null);
     try {
+      const nextUrl = selectedRole === 'professional' ? '/dashboard/pro' : '/dashboard';
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback?next=${nextUrl}&role=${selectedRole}`,
         },
       });
       if (error) throw error;
@@ -42,7 +45,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       {/* Modal Content */}
       <div className="relative w-full max-w-md bg-[#09090b]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200">
         {/* Glow effect */}
-        <div className="absolute top-0 right-0 w-64 h-64 opacity-[0.15] pointer-events-none" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)'}}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 opacity-[0.15] pointer-events-none" style={{background: selectedRole === 'student' ? 'radial-gradient(circle, #10b981, transparent 70%)' : 'radial-gradient(circle, #3b82f6, transparent 70%)'}}></div>
         
         <button 
           onClick={onClose}
@@ -62,9 +65,35 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           <h2 className="text-2xl font-medium tracking-tight mb-2 text-white">
             Welcome to DSA Quest
           </h2>
-          <p className="text-sm text-zinc-400 mb-8">
+          <p className="text-sm text-zinc-400 mb-6">
             Track your competitive programming contests and resources all in one place.
           </p>
+
+          <div className="flex items-center gap-3 mb-6">
+            <button
+              onClick={() => setSelectedRole('student')}
+              className={`flex-1 flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all ${
+                selectedRole === 'student' 
+                  ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400' 
+                  : 'bg-white/[0.02] border-white/10 text-zinc-400 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <GraduationCap className="w-5 h-5" />
+              <span className="text-xs font-semibold">I'm a Student</span>
+            </button>
+
+            <button
+              onClick={() => setSelectedRole('professional')}
+              className={`flex-1 flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all ${
+                selectedRole === 'professional' 
+                  ? 'bg-blue-500/10 border-blue-500/50 text-blue-400' 
+                  : 'bg-white/[0.02] border-white/10 text-zinc-400 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <PenTool className="w-5 h-5" />
+              <span className="text-xs font-semibold leading-tight">Continue as creator</span>
+            </button>
+          </div>
 
           {error && (
             <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-400">
@@ -112,4 +141,3 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     </div>
   );
 }
-

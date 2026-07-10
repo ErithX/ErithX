@@ -31,7 +31,28 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const { pathname } = request.nextUrl
+  const role = user?.user_metadata?.role || 'student' // default to student
+
+  // Protect /dashboard and its subroutes
+  if (pathname.startsWith('/dashboard')) {
+    if (!user) {
+      return NextResponse.redirect(new URL('/contests?auth=signin', request.url))
+    }
+
+    // Role-based routing within the dashboard
+    if (pathname === '/dashboard') {
+      if (role === 'professional') {
+        return NextResponse.redirect(new URL('/dashboard/pro', request.url))
+      }
+    } else if (pathname.startsWith('/dashboard/pro')) {
+      if (role !== 'professional') {
+        return NextResponse.redirect(new URL('/dashboard', request.url))
+      }
+    }
+  }
 
   return response
 }
