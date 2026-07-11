@@ -71,8 +71,10 @@ export async function PATCH(request: Request) {
 
     // Validate and prepare updates
     if (body.full_name !== undefined) updates.full_name = body.full_name;
-    if (body.email_notifications !== undefined)
-      updates.email_notifications = body.email_notifications;
+    if (body.email_notifications !== undefined) updates.email_notifications = body.email_notifications;
+    if (body.company !== undefined) updates.company = body.company;
+    if (body.job_title !== undefined) updates.job_title = body.job_title;
+    if (body.bio !== undefined) updates.bio = body.bio;
 
     // Validate platform URLs
     for (const [key, regex] of Object.entries(urlValidation)) {

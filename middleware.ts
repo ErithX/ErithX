@@ -34,7 +34,7 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   const pathname = request.nextUrl.pathname
 
-  // 1. Protect dashboard pages
+  // 1. Ensure user is logged in for any dashboard route
   if (pathname.startsWith('/dashboard') && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
@@ -42,7 +42,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // 2. Professionals don't need the student dashboard
+  // Redirect them directly to the Creator Studio
+  if (pathname === '/dashboard' && user?.user_metadata?.role === 'professional') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/dashboard/pro'
+    return NextResponse.redirect(url)
+  }
 
+  // NOTE: We do NOT block students from accessing /dashboard/pro
+  // because any student can enable a Creator Profile and use the Studio.
 
   return response
 }

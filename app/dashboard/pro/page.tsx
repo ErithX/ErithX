@@ -19,6 +19,16 @@ export default function ProDashboardPage() {
   const supabase = createClient();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Dynamic Data States
+  const [drafts, setDrafts] = useState<any[]>([]);
+  const [published, setPublished] = useState<any[]>([]);
+  const [profile, setProfile] = useState<any>({
+    company: '',
+    job_title: '',
+    bio: ''
+  });
+  const [isSaving, setIsSaving] = useState(false);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -32,9 +42,52 @@ export default function ProDashboardPage() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
+      if (user) {
+        // Fetch Profile
+        fetch('/api/user/profile')
+          .then(res => res.json())
+          .then(data => {
+            if (data.profile) setProfile(data.profile);
+          });
+        
+        // Fetch Drafts
+        fetch('/api/resources/user?status=draft')
+          .then(res => res.json())
+          .then(data => setDrafts(data));
+
+        // Fetch Published/Pending
+        fetch('/api/resources/user?status=published,pending')
+          .then(res => res.json())
+          .then(data => setPublished(data));
+      }
       setLoading(false);
     });
   }, [supabase]);
+
+  const handleProfileSave = async () => {
+    setIsSaving(true);
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company: profile.company,
+          job_title: profile.job_title,
+          bio: profile.bio
+        })
+      });
+      if (res.ok) {
+        showToast('Public profile updated! 🎉');
+      } else {
+        showToast('Failed to save profile. Ensure database columns exist.');
+      }
+    } catch (e) {
+      console.error(e);
+      showToast('Error saving profile');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -81,9 +134,9 @@ export default function ProDashboardPage() {
                 <p className="text-[11px] text-zinc-500 mt-0.5">Manage your impact & content.</p>
               </div>
               
-              <button className="w-full flex items-center justify-center gap-2 mb-6 px-4 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-all">
+              <Link href="/dashboard/write" className="w-full flex items-center justify-center gap-2 mb-6 px-4 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-all">
                 <PlusCircle className="w-3.5 h-3.5" /> Create Resource
-              </button>
+              </Link>
 
               <nav className="space-y-1">
                 <a href="#overview" className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-white bg-white/5 border-l-2 border-emerald-500 rounded-r-md transition-all">
@@ -114,8 +167,8 @@ export default function ProDashboardPage() {
             {/* 1. OVERVIEW SECTION */}
             <section id="overview" className="space-y-6">
               <div>
-                <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-500 mb-1">Overview</h2>
-                <p className="text-xs text-zinc-600">Your impact across the DSA Quest ecosystem.</p>
+                <h1 className="text-3xl font-bold tracking-tight text-white mb-2">Creator Studio</h1>
+                <p className="text-sm text-zinc-400">Welcome back, {user?.user_metadata?.full_name?.split(' ')[0] || 'Creator'}!</p>
               </div>
 
               {/* Impact Stats */}
@@ -163,17 +216,25 @@ export default function ProDashboardPage() {
                     <PenLine className="w-4 h-4 text-zinc-500" />
                   </div>
                   <div className="space-y-3">
-                    <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-emerald-500/20 transition-colors cursor-pointer group">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">Draft · Blog</span>
-                        <span className="text-[10px] text-zinc-600">Edited 2h ago</span>
-                      </div>
-                      <div className="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors">System Design Primer: Caching Strategies</div>
-                      <div className="mt-2 flex items-center justify-between">
-                        <span className="text-[10px] text-zinc-600 font-mono">412 words</span>
-                        <button className="text-[10px] text-emerald-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity">Resume →</button>
-                      </div>
-                    </div>
+                    {drafts.length === 0 ? (
+                      <div className="text-xs text-zinc-500 italic p-3 text-center">No drafts found. Click "Create Resource" to start writing.</div>
+                    ) : (
+                      drafts.map((draft) => (
+                        <Link href="/dashboard/write" key={draft._id} className="block p-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-emerald-500/20 transition-colors cursor-pointer group">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">Draft · {draft.category || 'Uncategorized'}</span>
+                            <span className="text-[10px] text-zinc-600">Updated {new Date(draft.updatedAt).toLocaleDateString()}</span>
+                          </div>
+                          <div className="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors">
+                            {draft.title || 'Untitled Draft'}
+                          </div>
+                          <div className="mt-2 flex items-center justify-between">
+                            <span className="text-[10px] text-zinc-600 font-mono">{draft.wordCount || 0} words</span>
+                            <span className="text-[10px] text-emerald-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity">Resume →</span>
+                          </div>
+                        </Link>
+                      ))
+                    )}
                   </div>
                 </div>
 
@@ -184,15 +245,25 @@ export default function ProDashboardPage() {
                     <TrendingUp className="w-4 h-4 text-zinc-500" />
                   </div>
                   <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-                        <span className="text-xs font-bold text-emerald-400">1</span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs font-medium text-zinc-300 truncate">Mastering Dynamic Programming</div>
-                        <div className="text-[10px] text-zinc-500 mt-0.5">4,201 views · 521 upvotes</div>
-                      </div>
-                    </div>
+                    {published.length === 0 ? (
+                      <div className="text-xs text-zinc-500 italic p-3 text-center">No published resources yet.</div>
+                    ) : (
+                      published.map((pub, index) => (
+                        <div key={pub._id} className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                            <span className="text-xs font-bold text-emerald-400">{index + 1}</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-xs font-medium text-zinc-300 truncate">{pub.title || 'Untitled'}</div>
+                            <div className="text-[10px] text-zinc-500 mt-0.5 flex items-center gap-2">
+                              <span>{pub.status === 'pending' ? 'Reviewing' : 'Published'}</span>
+                              <span>·</span>
+                              <span>{pub.upvotes || 0} upvotes</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               </div>
@@ -226,23 +297,23 @@ export default function ProDashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Current Company</label>
-                    <input type="text" defaultValue="Google" className="w-full bg-white/[0.03] border border-white/10 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 transition-all outline-none px-3 py-2 rounded-lg text-sm text-zinc-200 font-mono" />
+                    <input type="text" value={profile.company || ''} onChange={e => setProfile({...profile, company: e.target.value})} placeholder="e.g. Google" className="w-full bg-white/[0.03] border border-white/10 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 transition-all outline-none px-3 py-2 rounded-lg text-sm text-zinc-200 font-mono" />
                   </div>
                   <div>
                     <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Job Title</label>
-                    <input type="text" defaultValue="Software Engineer II" className="w-full bg-white/[0.03] border border-white/10 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 transition-all outline-none px-3 py-2 rounded-lg text-sm text-zinc-200 font-mono" />
+                    <input type="text" value={profile.job_title || ''} onChange={e => setProfile({...profile, job_title: e.target.value})} placeholder="e.g. Software Engineer II" className="w-full bg-white/[0.03] border border-white/10 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 transition-all outline-none px-3 py-2 rounded-lg text-sm text-zinc-200 font-mono" />
                   </div>
                 </div>
 
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2 block">Short Bio</label>
-                  <textarea rows={3} defaultValue="Software Engineer at Google. Passionate about making DSA accessible. Sharing real interview experiences and career playbooks." className="w-full bg-white/[0.03] border border-white/10 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 transition-all outline-none px-3 py-2 rounded-lg text-sm text-zinc-200 resize-none"></textarea>
-                  <p className="text-[10px] text-zinc-600 mt-1 text-right">126 / 160 characters</p>
+                  <textarea rows={3} value={profile.bio || ''} onChange={e => setProfile({...profile, bio: e.target.value})} placeholder="Software Engineer at Google. Passionate about making DSA accessible..." className="w-full bg-white/[0.03] border border-white/10 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 transition-all outline-none px-3 py-2 rounded-lg text-sm text-zinc-200 resize-none"></textarea>
+                  <p className="text-[10px] text-zinc-600 mt-1 text-right">{profile.bio ? profile.bio.length : 0} / 160 characters</p>
                 </div>
 
                 <div className="flex justify-end pt-4 border-t border-white/5">
-                  <button onClick={() => showToast('Public profile updated! 🎉')} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all shadow-lg">
-                    <Check className="w-4 h-4" /> Save Profile
+                  <button onClick={handleProfileSave} disabled={isSaving} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all shadow-lg disabled:opacity-50">
+                    <Check className="w-4 h-4" /> {isSaving ? 'Saving...' : 'Save Profile'}
                   </button>
                 </div>
               </div>

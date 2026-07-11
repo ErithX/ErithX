@@ -127,7 +127,7 @@ export default function WritePage() {
 
       if (res.ok) {
         setShowModal(false);
-        router.push('/resources');
+        router.push('/dashboard/write/pending?submitted=true');
       } else {
         alert("Failed to submit document");
       }

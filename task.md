@@ -3,12 +3,22 @@
 ## Phase 1 (Immediate Launch Target)
 **Goal:** Bring creators onboard, fill up the resources page, and provide a seamless core experience.
 
-- [ ] **Clean Up Professional Dashboard**
-  - Remove non-functional links and options.
-  - Simplify navigation to just Overview and Content Manager.
-- [ ] **Establish Draft / Publishing System**
-  - Create the `write` page functionality for creators.
-  - Implement save to draft, publish, and edit flows using Supabase.
+- [x] **Clean Up Professional Dashboard**
+  - [x] Remove non-functional links and options.
+  - [x] Simplify navigation to just Overview and Content Manager.
+- [x] **Establish Draft / Publishing System**
+  - [x] Create the `write` page functionality for creators.
+  - [x] Implement save to draft, publish, and edit flows using Supabase/MongoDB.
+  - [x] Create premium "Pending Approval" page.
+- [x] **Typography Fixes**
+  - [x] Update `.tiptap` and `.article-body` in `app/globals.css` to match `Editor.html`.
+- [x] **Unified Dashboard Architecture**
+  - [x] Add "Creator Studio" link in the user dropdown.
+  - [x] Rename `Professional Dashboard` to `Creator Studio` in UI.
+- [x] **Route Security**
+  - [x] Professionals redirect from `/dashboard` to `/dashboard/pro`.
+  - [x] Students can access both `/dashboard` and `/dashboard/pro`.
+  - [x] Secure `/dashboard/write/pending` page.
 - [ ] **Refine Landing Page**
   - Replace all remaining `picsum.photos` and dummy text with actual dynamic platform data or realistic static assets.
 - [ ] **Growth Hacks: Urgency & Social Proof (Fake Data for Phase 1)**
