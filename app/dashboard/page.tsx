@@ -16,13 +16,14 @@ import UpcomingContestsCard from '@/components/dashboard/UpcomingContestsCard';
 // import SkillMapCard from '@/components/dashboard/SkillMapCard';
 // import RecentActivityCard from '@/components/dashboard/RecentActivityCard';
 
+import { useAuthStore } from '@/store/authStore';
+
 export default function DashboardPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentLevel, setCurrentLevel] = useState<CardLevel>('gold');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentType, setCurrentType] = useState<CardType>('transformation');
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useAuthStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
@@ -35,13 +36,6 @@ export default function DashboardPage() {
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-      setLoading(false);
-    });
   }, []);
 
   const handleLogout = async () => {

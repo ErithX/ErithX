@@ -12,10 +12,10 @@ import { createClient } from '@/app/lib/supabase/client';
 import DashboardNavbar from '@/components/dashboard/DashboardNavbar';
 import { useRouter } from 'next/navigation';
 import { calculateEngagementScore } from '@/app/lib/algorithms/topContent';
+import { useAuthStore } from '@/store/authStore';
 
 export default function ProDashboardPage() {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useAuthStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
@@ -42,9 +42,7 @@ export default function ProDashboardPage() {
   }, []);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-      if (user) {
+    if (user) {
         // Fetch Profile
         fetch('/api/user/profile')
           .then(res => res.json())
@@ -62,9 +60,7 @@ export default function ProDashboardPage() {
           .then(res => res.json())
           .then(data => setPublished(data));
       }
-      setLoading(false);
-    });
-  }, [supabase]);
+  }, [user]);
 
   const handleProfileSave = async () => {
     setIsSaving(true);

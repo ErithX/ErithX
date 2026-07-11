@@ -12,6 +12,7 @@ import { contestFetch } from '@/app/utils/contestFetch';
 import { createClient } from '@/app/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import Navbar from '@/components/Navbar';
+import { useAuthStore } from '@/store/authStore';
 
 const INITIAL_CONTEST_DATA: Contest[] = [
   {
@@ -65,7 +66,7 @@ export default function HomePage() {
   const [showAllPlatforms, setShowAllPlatforms] = useState(false);
   
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useAuthStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDifficultyOpen, setIsDifficultyOpen] = useState(false);
@@ -108,23 +109,8 @@ export default function HomePage() {
       const newUrl = window.location.pathname;
       window.history.replaceState({}, document.title, newUrl);
     }
-    
-    // Auth Listener
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    fetchUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
-      if (event === 'SIGNED_IN') setIsAuthOpen(false);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [supabase.auth]);
+    // Auth Listener removed, using Zustand store
+  }, []);
 
   const applyFilters = (platform = activePlatform, category = activeCategory, difficulty = activeDifficulty) => {
     // Check if platform belongs to new category

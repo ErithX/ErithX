@@ -61,10 +61,7 @@ export default function DashboardNavbar({
                   </div>
                   <div className="p-1 space-y-0.5 border-b border-white/5 pb-1 mb-1">
                     <Link href="/dashboard" className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
-                      Learner Dashboard
-                    </Link>
-                    <Link href="/dashboard/pro" className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
-                      Creator Studio
+                      Back to Dashboard
                     </Link>
                   </div>
                   <div className="p-1">

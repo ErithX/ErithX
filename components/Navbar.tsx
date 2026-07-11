@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { Zap, LogOut, LogIn, Rocket } from 'lucide-react';
 import { createClient } from '@/app/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
+import { useAuthStore } from '@/store/authStore';
 import AuthModal from '@/components/AuthModal';
 
 export default function Navbar() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { user, loading } = useAuthStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
@@ -23,24 +24,6 @@ export default function Navbar() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  useEffect(() => {
-    // Auth Listener
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    fetchUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
-      if (event === 'SIGNED_IN') setIsAuthOpen(false);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [supabase.auth]);
 
   return (
     <>

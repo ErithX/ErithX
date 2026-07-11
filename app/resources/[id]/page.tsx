@@ -8,6 +8,7 @@ import {
   Github, Linkedin, Eye
 } from 'lucide-react';
 import { createClient } from '@/app/lib/supabase/client';
+import { useAuthStore } from '@/store/authStore';
 import TiptapEditor from '@/components/editor/TiptapEditor';
 
 export default function ResourceContentPage({ params }: { params: Promise<{ id: string }> }) {
@@ -24,7 +25,7 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
-  const [user, setUser] = useState<any>(null);
+  const { user } = useAuthStore();
   const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState('');
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
@@ -33,9 +34,6 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
-
         const res = await fetch(`/api/resources/${resourceId}`);
         if (!res.ok) {
           setError('Resource not found');
