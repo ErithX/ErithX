@@ -61,6 +61,7 @@ export default function ResourcesPage() {
             tags: doc.tags || [],
             upvotes: doc.upvotes || 0,
             comments: doc.commentsCount || 0,
+            views: doc.views || 0,
             time: timeStr
           };
 

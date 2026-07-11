@@ -60,6 +60,14 @@ const ResourceSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  views: {
+    type: Number,
+    default: 0
+  },
+  realViews: {
+    type: Number,
+    default: 0
+  },
   upvotedBy: {
     type: [String],
     default: []

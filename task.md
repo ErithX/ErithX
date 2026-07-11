@@ -15,6 +15,11 @@
 - [x] **Unified Dashboard Architecture**
   - [x] Add "Creator Studio" link in the user dropdown.
   - [x] Rename `Professional Dashboard` to `Creator Studio` in UI.
+- [x] **Views & Dynamic Data Cleanup**
+  - [x] Implement impression-based views algorithm.
+  - [x] Sort Top Performing by views.
+  - [x] Link to real data for Total Reach & Upvotes.
+  - [x] Hide unused features & add draft delete option.
 - [x] **Route Security**
   - [x] Professionals redirect from `/dashboard` to `/dashboard/pro`.
   - [x] Students can access both `/dashboard` and `/dashboard/pro`.

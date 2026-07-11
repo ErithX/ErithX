@@ -6,10 +6,12 @@ import {
   Zap, PenLine, PlusCircle, LayoutDashboard, FileText, UserPen,
   Repeat2, Settings, Eye, GraduationCap, ArrowUp, Layers,
   TrendingUp, Users, MoreHorizontal, Image as ImageIcon, Link as LinkIcon,
-  MessageSquare, Edit, BadgeCheck, Check, Linkedin, Twitter, Github
+  MessageSquare, Edit, BadgeCheck, Check, Linkedin, Twitter, Github, Trash2
 } from 'lucide-react';
 import { createClient } from '@/app/lib/supabase/client';
 import DashboardNavbar from '@/components/dashboard/DashboardNavbar';
+import { useRouter } from 'next/navigation';
+import { calculateEngagementScore } from '@/app/lib/algorithms/topContent';
 
 export default function ProDashboardPage() {
   const [user, setUser] = useState<any>(null);
@@ -94,10 +96,45 @@ export default function ProDashboardPage() {
     window.location.href = '/';
   };
 
+  const handleDeleteDraft = async (e: React.MouseEvent, id: string) => {
+    e.preventDefault(); // Prevent navigating to /write
+    e.stopPropagation();
+    if (!confirm('Are you sure you want to delete this draft?')) return;
+    
+    try {
+      const res = await fetch(`/api/resources/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setDrafts(drafts.filter(d => d._id !== id));
+        showToast('Draft deleted successfully');
+      } else {
+        showToast('Failed to delete draft');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Error deleting draft');
+    }
+  };
+
   const showToast = (message: string) => {
     setToastMessage(message);
     setTimeout(() => setToastMessage(null), 3000);
   };
+
+  // Split published and pending
+  const publishedPosts = published.filter(p => p.status === 'published');
+  const pendingPosts = published.filter(p => p.status === 'pending');
+
+  // Calculate stats based ONLY on fully published posts
+  const totalViews = publishedPosts.reduce((acc, curr) => acc + (curr.views || 0), 0);
+  const totalUpvotes = publishedPosts.reduce((acc, curr) => acc + (curr.upvotes || 0), 0);
+  
+  // Top performing logic: rank by engagement score, only include actually published posts
+  const topPerforming = [...publishedPosts]
+    .sort((a, b) => calculateEngagementScore(b) - calculateEngagementScore(a))
+    .slice(0, 3);
+
+  // Combine drafts and pending for the "Continue Writing / Pending" box
+  const draftsAndPending = [...drafts, ...pendingPosts];
 
   return (
     <div className="min-h-screen bg-[#09090b] text-white selection:bg-emerald-800 selection:text-white pb-16 font-sans">
@@ -142,21 +179,27 @@ export default function ProDashboardPage() {
                 <a href="#overview" className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-white bg-white/5 border-l-2 border-emerald-500 rounded-r-md transition-all">
                   <LayoutDashboard className="w-3.5 h-3.5" /> Overview
                 </a>
+                {/* 
                 <a href="#content" className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent">
                   <FileText className="w-3.5 h-3.5" /> Content Manager
-                </a>
+                </a> 
+                */}
                 <a href="#profile" className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent">
                   <UserPen className="w-3.5 h-3.5" /> Public Profile
                 </a>
                 
                 <div className="pt-4 mt-4 border-t border-white/5"></div>
                 
-                <Link href="/dashboard" className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all">
-                  <Repeat2 className="w-3.5 h-3.5" /> Switch to Student View
-                </Link>
+                {user?.user_metadata?.role !== 'professional' && (
+                  <Link href="/dashboard" className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all">
+                    <Repeat2 className="w-3.5 h-3.5" /> Switch to Student View
+                  </Link>
+                )}
+                {/*
                 <a href="#" className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all">
                   <Settings className="w-3.5 h-3.5" /> Settings
                 </a>
+                */}
               </nav>
             </div>
           </aside>
@@ -178,32 +221,32 @@ export default function ProDashboardPage() {
                     <span className="text-[10px] uppercase tracking-widest text-zinc-500">Total Reach</span>
                     <Eye className="w-3.5 h-3.5 text-zinc-600" />
                   </div>
-                  <div className="text-2xl font-bold font-mono text-white">12,847</div>
-                  <div className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1"><TrendingUp className="w-3 h-3" /> +12% this week</div>
+                  <div className="text-2xl font-bold font-mono text-white">{totalViews.toLocaleString()}</div>
+                  <div className="text-[10px] text-zinc-500 mt-1 flex items-center gap-1">Lifetime views</div>
                 </div>
                 <div className="bg-white/[0.03] backdrop-blur-md border border-white/5 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] uppercase tracking-widest text-zinc-500">Students Helped</span>
                     <GraduationCap className="w-3.5 h-3.5 text-zinc-600" />
                   </div>
-                  <div className="text-2xl font-bold font-mono text-white">3,452</div>
-                  <div className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1"><Users className="w-3 h-3" /> 89 saved your notes</div>
+                  <div className="text-2xl font-bold font-mono text-white">—</div>
+                  <div className="text-[10px] text-zinc-500 mt-1 flex items-center gap-1">Coming Soon</div>
                 </div>
                 <div className="bg-white/[0.03] backdrop-blur-md border border-white/5 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] uppercase tracking-widest text-zinc-500">Upvotes</span>
                     <ArrowUp className="w-3.5 h-3.5 text-zinc-600" />
                   </div>
-                  <div className="text-2xl font-bold font-mono text-white">1,205</div>
-                  <div className="text-[10px] text-zinc-500 mt-1">Avg 4.8 per post</div>
+                  <div className="text-2xl font-bold font-mono text-white">{totalUpvotes.toLocaleString()}</div>
+                  <div className="text-[10px] text-zinc-500 mt-1">Total upvotes received</div>
                 </div>
                 <div className="bg-white/[0.03] backdrop-blur-md border border-white/5 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] uppercase tracking-widest text-zinc-500">Resources</span>
                     <Layers className="w-3.5 h-3.5 text-zinc-600" />
                   </div>
-                  <div className="text-2xl font-bold font-mono text-white">12</div>
-                  <div className="text-[10px] text-yellow-400 mt-1">1 pending review</div>
+                  <div className="text-2xl font-bold font-mono text-white">{publishedPosts.length}</div>
+                  <div className="text-[10px] text-zinc-500 mt-1">Published Resources</div>
                 </div>
               </div>
 
@@ -212,27 +255,44 @@ export default function ProDashboardPage() {
                 {/* Pick up where you left off */}
                 <div className="bg-white/[0.03] backdrop-blur-md border border-white/5 rounded-xl p-5">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-zinc-200">Continue Writing</h3>
+                    <h3 className="text-sm font-semibold text-zinc-200">Pending & Drafts</h3>
                     <PenLine className="w-4 h-4 text-zinc-500" />
                   </div>
                   <div className="space-y-3">
-                    {drafts.length === 0 ? (
-                      <div className="text-xs text-zinc-500 italic p-3 text-center">No drafts found. Click "Create Resource" to start writing.</div>
+                    {draftsAndPending.length === 0 ? (
+                      <div className="text-xs text-zinc-500 italic p-3 text-center">No drafts or pending content found.</div>
                     ) : (
-                      drafts.map((draft) => (
-                        <Link href="/dashboard/write" key={draft._id} className="block p-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-emerald-500/20 transition-colors cursor-pointer group">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">Draft · {draft.category || 'Uncategorized'}</span>
+                      draftsAndPending.map((draft) => (
+                        <div key={draft._id} className="block p-3 rounded-lg bg-white/[0.02] border border-white/5 transition-colors group relative">
+                          {/* If pending, we don't link to write page. If draft, we link to write page. */}
+                          <Link href={draft.status === 'draft' ? `/dashboard/write?id=${draft._id}` : '#'} className="absolute inset-0 z-0"></Link>
+                          
+                          <div className="flex items-center justify-between mb-1 relative z-10 pointer-events-none">
+                            <span className={`text-[10px] font-mono uppercase tracking-wider ${draft.status === 'pending' ? 'text-orange-400' : 'text-zinc-500'}`}>
+                              {draft.status} · {draft.category || 'Uncategorized'}
+                            </span>
                             <span className="text-[10px] text-zinc-600">Updated {new Date(draft.updatedAt).toLocaleDateString()}</span>
                           </div>
-                          <div className="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors">
-                            {draft.title || 'Untitled Draft'}
+                          <div className="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors relative z-10 pointer-events-none">
+                            {draft.title || 'Untitled'}
                           </div>
-                          <div className="mt-2 flex items-center justify-between">
+                          <div className="mt-2 flex items-center justify-between relative z-10">
                             <span className="text-[10px] text-zinc-600 font-mono">{draft.wordCount || 0} words</span>
-                            <span className="text-[10px] text-emerald-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity">Resume →</span>
+                            <div className="flex items-center gap-3">
+                              {draft.status === 'draft' && (
+                                <>
+                                  <button onClick={(e) => handleDeleteDraft(e, draft._id)} className="text-zinc-500 hover:text-rose-400 transition-colors p-1" title="Delete draft">
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                  <span className="text-[10px] text-emerald-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">Resume →</span>
+                                </>
+                              )}
+                              {draft.status === 'pending' && (
+                                <span className="text-[10px] text-orange-400 font-medium italic pointer-events-none">Awaiting Approval</span>
+                              )}
+                            </div>
                           </div>
-                        </Link>
+                        </div>
                       ))
                     )}
                   </div>
@@ -245,26 +305,68 @@ export default function ProDashboardPage() {
                     <TrendingUp className="w-4 h-4 text-zinc-500" />
                   </div>
                   <div className="space-y-4">
-                    {published.length === 0 ? (
+                    {topPerforming.length === 0 ? (
                       <div className="text-xs text-zinc-500 italic p-3 text-center">No published resources yet.</div>
                     ) : (
-                      published.map((pub, index) => (
-                        <div key={pub._id} className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                      topPerforming.map((pub, index) => (
+                        <Link href={`/resources/${pub._id}`} key={pub._id} className="flex items-center gap-3 hover:bg-white/[0.02] p-2 rounded-lg transition-colors cursor-pointer group">
+                          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500/20 transition-colors">
                             <span className="text-xs font-bold text-emerald-400">{index + 1}</span>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs font-medium text-zinc-300 truncate">{pub.title || 'Untitled'}</div>
+                            <div className="text-xs font-medium text-zinc-300 truncate group-hover:text-white transition-colors">{pub.title || 'Untitled'}</div>
                             <div className="text-[10px] text-zinc-500 mt-0.5 flex items-center gap-2">
-                              <span>{pub.status === 'pending' ? 'Reviewing' : 'Published'}</span>
+                              <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {pub.views || 0}</span>
                               <span>·</span>
-                              <span>{pub.upvotes || 0} upvotes</span>
+                              <span className="flex items-center gap-1"><ArrowUp className="w-3 h-3" /> {pub.upvotes || 0}</span>
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       ))
                     )}
                   </div>
+                </div>
+              </div>
+
+              {/* Published Content List */}
+              <div className="mt-12 space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-zinc-200">Published Content</h3>
+                  <p className="text-xs text-zinc-500 mt-1">All your live resources and their performance.</p>
+                </div>
+                
+                <div className="space-y-3">
+                  {publishedPosts.length === 0 ? (
+                    <div className="text-xs text-zinc-500 italic p-4 text-center border border-white/5 rounded-xl">No published content yet.</div>
+                  ) : (
+                    publishedPosts.map((pub) => (
+                      <Link href={`/resources/${pub._id}`} key={pub._id} className="block p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer group">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-medium text-zinc-200 group-hover:text-white transition-colors truncate mb-1">
+                              {pub.title || 'Untitled'}
+                            </h4>
+                            <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed mb-3">
+                              {pub.content ? pub.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : 'No description provided.'}
+                            </p>
+                            
+                            <div className="flex items-center gap-4 text-[11px] text-zinc-500">
+                              <span className="text-emerald-400 font-mono">{new Date(pub.createdAt).toLocaleDateString()}</span>
+                              <div className="flex items-center gap-1.5"><Eye className="w-3.5 h-3.5" /> {pub.views || 0}</div>
+                              <div className="flex items-center gap-1.5"><ArrowUp className="w-3.5 h-3.5" /> {pub.upvotes || 0}</div>
+                              <div className="flex items-center gap-1.5"><MessageSquare className="w-3.5 h-3.5" /> {pub.commentsCount || 0}</div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex-shrink-0 flex items-center gap-2">
+                            <span className="px-2 py-1 rounded bg-white/5 text-[10px] font-bold text-zinc-400 group-hover:bg-emerald-500/10 group-hover:text-emerald-400 transition-colors">
+                              View →
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))
+                  )}
                 </div>
               </div>
             </section>

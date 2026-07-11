@@ -26,7 +26,15 @@ export default function UserProfileCard({ user }: UserProfileCardProps) {
             <span className="text-[8px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded font-bold">🥇 GOLD</span>
           </div>
           <div className="text-xs text-zinc-500 mt-0.5">III Year, NIT Trichy • CSE</div>
-          <div className="text-[10px] text-zinc-600 mono mt-1">dsaquest.io/v/arjun-m</div>
+          
+          {user?.user_metadata?.role === 'professional' && (
+            <Link href="/dashboard/pro" className="inline-flex mt-2 items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/20 transition-colors">
+              <Sparkles className="w-3 h-3" /> Creator Studio →
+            </Link>
+          )}
+          {user?.user_metadata?.role !== 'professional' && (
+            <div className="text-[10px] text-zinc-600 mono mt-1">dsaquest.io/v/arjun-m</div>
+          )}
         </div>
       </div>
 

@@ -5,7 +5,7 @@ import {
   Zap, ChevronRight, Bookmark, Share2, Type, 
   FileText, Clock, ArrowUp, MessageSquare, Download,
   Lightbulb, Info, AlertTriangle, Target, User, Twitter,
-  Github, Linkedin
+  Github, Linkedin, Eye
 } from 'lucide-react';
 import { createClient } from '@/app/lib/supabase/client';
 import TiptapEditor from '@/components/editor/TiptapEditor';
@@ -45,6 +45,12 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
         setDoc(data);
         setUpvoteCount(data.upvotes || 0);
         setIsUpvoted(user ? data.upvotedBy?.includes(user.id) : false);
+
+        // Real Views tracking (once per user/session)
+        if (!localStorage.getItem(`viewed_${resourceId}`)) {
+          fetch(`/api/resources/${resourceId}/view`, { method: 'POST' }).catch(console.error);
+          localStorage.setItem(`viewed_${resourceId}`, 'true');
+        }
 
         // Fetch comments
         const commentsRes = await fetch(`/api/comments?resourceId=${resourceId}`);
@@ -354,6 +360,10 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
             <div className="flex items-center gap-3 mb-6 flex-wrap">
               <span className={`px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 ${doc.category === 'Study Materials' ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}`}>
                 <FileText className="w-3 h-3" /> {doc.category}
+              </span>
+              <span className="text-[10px] text-zinc-600">•</span>
+              <span className="text-xs text-zinc-500 flex items-center gap-1">
+                <Eye className="w-3 h-3" /> {doc.views || 0} views
               </span>
               <span className="text-[10px] text-zinc-600">•</span>
               <span className="text-xs text-zinc-500 flex items-center gap-1">

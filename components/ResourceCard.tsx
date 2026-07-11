@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Link as LinkIcon, Image as ImageIcon, ArrowUp, MessageSquare, Globe } from 'lucide-react';
+import { FileText, Link as LinkIcon, Image as ImageIcon, ArrowUp, MessageSquare, Globe, Eye } from 'lucide-react';
 
 export interface ResourceItem {
   id: number;
@@ -12,6 +12,7 @@ export interface ResourceItem {
   tags: string[];
   upvotes: number;
   comments: number;
+  views: number;
   time: string;
   
   // PDF specific
@@ -120,8 +121,8 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
               {item.upvotes}
             </span>
             <span className="text-[10px] text-zinc-500 flex items-center gap-1">
-              <MessageSquare className="w-3 h-3" />
-              {item.comments}
+              <Eye className="w-3 h-3" />
+              {item.views || 0}
             </span>
           </div>
         </div>

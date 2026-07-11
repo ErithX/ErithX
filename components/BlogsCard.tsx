@@ -1,5 +1,5 @@
 import React from 'react';
-import { PenLine, Clock, ArrowUp, MessageSquare } from 'lucide-react';
+import { PenLine, Clock, ArrowUp, MessageSquare, Eye } from 'lucide-react';
 
 export interface BlogItem {
   id: number;
@@ -13,6 +13,7 @@ export interface BlogItem {
   tags: string[];
   upvotes: number;
   comments: number;
+  views: number;
   time: string;
   readTime: string;
   coverImg?: string;
@@ -73,8 +74,8 @@ export default function BlogsCard({ item, index, onClick }: BlogsCardProps) {
               {item.upvotes}
             </span>
             <span className="text-[10px] text-zinc-500 flex items-center gap-1">
-              <MessageSquare className="w-3 h-3" />
-              {item.comments}
+              <Eye className="w-3 h-3" />
+              {item.views || 0}
             </span>
           </div>
         </div>
