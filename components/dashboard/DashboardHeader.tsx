@@ -1,5 +1,6 @@
 import React from 'react';
-import { Zap } from 'lucide-react';
+import Link from 'next/link';
+import { Zap, Sparkles } from 'lucide-react';
 import { User } from '@supabase/supabase-js';
 
 interface DashboardHeaderProps {
@@ -16,7 +17,12 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
         <p className="text-sm text-zinc-500 mt-0.5">Your next milestone is closer than you think.</p>
       </div>
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 px-4 py-2 rounded-xl glass">
+        <Link href="/dashboard/pro" className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all text-emerald-400 group">
+          <Sparkles className="w-4 h-4" />
+          <span className="text-xs font-bold uppercase tracking-wider">Open Creator Dashboard</span>
+          <span className="text-lg leading-none group-hover:translate-x-1 transition-transform">→</span>
+        </Link>
+        {/* <div className="flex items-center gap-2 px-4 py-2 rounded-xl glass">
           <span className="text-xl streak-fire">🔥</span>
           <div>
             <div className="text-lg font-bold leading-none mono">23</div>
@@ -31,7 +37,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
             <div className="text-lg font-bold leading-none mono">2h 14m</div>
             <div className="text-[9px] uppercase tracking-widest text-zinc-500">Next Contest</div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

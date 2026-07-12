@@ -53,7 +53,9 @@ export default function Navbar() {
             </div>
           </div>
           <div className="flex items-center gap-3 relative">
-            {user ? (
+            {loading ? (
+              <div className="w-8 h-8 rounded-full bg-white/5 animate-pulse"></div>
+            ) : user ? (
               <div className="relative" ref={dropdownRef}>
                 <button 
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)} 

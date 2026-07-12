@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Zap, LogOut } from 'lucide-react';
+import { Zap, LogOut, Settings } from 'lucide-react';
 
 export default function DashboardNavbar({ 
   user, 
@@ -23,7 +23,7 @@ export default function DashboardNavbar({
           <div className="hidden md:flex items-center gap-1">
             {user?.user_metadata?.role === 'professional' ? (
               <>
-                <Link href="/dashboard/pro" className="px-3 py-1.5 text-xs font-medium text-white bg-white/5 rounded">Dashboard</Link>
+                <Link href="/dashboard/pro" className={`px-3 py-1.5 text-xs font-medium rounded ${pathname === '/dashboard/pro' ? 'text-white bg-white/5' : 'text-zinc-400 hover:text-white'}`}>Creator Studio</Link>
                 <Link href="/resources" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Resources</Link>
               </>
             ) : (
@@ -36,7 +36,9 @@ export default function DashboardNavbar({
         </div>
 
         <div className="flex items-center gap-4">
-          {!loading && user && (
+          {loading ? (
+            <div className="w-8 h-8 rounded-full bg-white/5 animate-pulse"></div>
+          ) : user && (
             <div className="relative" ref={dropdownRef}>
               <button 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -59,11 +61,12 @@ export default function DashboardNavbar({
                       {user.email}
                     </p>
                   </div>
-                  <div className="p-1 space-y-0.5 border-b border-white/5 pb-1 mb-1">
-                    <Link href="/dashboard" className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
-                      Back to Dashboard
+                  {/* <div className="p-1 space-y-0.5 border-b border-white/5 pb-1 mb-1">
+                    <Link href="/dashboard/settings" className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                      <Settings className="w-4 h-4" />
+                      Settings
                     </Link>
-                  </div>
+                  </div> */}
                   <div className="p-1">
                     <button 
                       onClick={handleLogout}

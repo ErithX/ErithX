@@ -23,63 +23,21 @@ export default function UserProfileCard({ user }: UserProfileCardProps) {
             <span className="text-lg font-semibold">
               {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Coder'}
             </span>
-            <span className="text-[8px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded font-bold">🥇 GOLD</span>
+            {/* Removed dummy badge for now */}
           </div>
-          <div className="text-xs text-zinc-500 mt-0.5">III Year, NIT Trichy • CSE</div>
           
-          {user?.user_metadata?.role === 'professional' ? (
-            <Link href="/dashboard/pro" className="inline-flex mt-2 items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/20 transition-colors">
-              <Sparkles className="w-3 h-3" /> Creator Studio →
-            </Link>
-          ) : (
-            <div className="mt-2 flex flex-col gap-1 items-start">
-              <div className="text-[10px] text-zinc-600 mono">dsaquest.io/v/arjun-m</div>
-              <Link href="/dashboard/pro" className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-zinc-800 text-zinc-300 border border-white/10 rounded-lg hover:bg-zinc-700 transition-colors">
-                Become a Creator →
-              </Link>
-            </div>
+          {user?.user_metadata?.college && (
+            <div className="text-xs text-zinc-500 mt-0.5">{user.user_metadata.college}</div>
           )}
-        </div>
-      </div>
-
-      {/* Incomplete Profile Nudge */}
-      <div className="mb-5 p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between group cursor-pointer hover:bg-white/[0.04] transition-colors">
-        <div className="flex items-center gap-3">
-          <div className="relative w-8 h-8 flex items-center justify-center flex-shrink-0">
-            <svg className="w-8 h-8 transform -rotate-90">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="3" />
-              <circle cx="16" cy="16" r="14" fill="none" stroke="#10b981" strokeWidth="3" strokeDasharray="88" strokeDashoffset="52.8" className="transition-all duration-1000" />
-            </svg>
-            <span className="absolute text-[8px] font-bold text-white">40%</span>
-          </div>
-          <div>
-            <div className="text-xs font-semibold text-zinc-300 group-hover:text-white transition-colors">Profile Incomplete</div>
-            <div className="text-[9px] text-zinc-500">Stand out. Add your socials & bio.</div>
-          </div>
-        </div>
-        <Link href="/dashboard?tab=profile" className="text-[10px] font-medium text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity">
-          Complete →
-        </Link>
-      </div>
-
-      {/* Contribution Stats */}
-      <div className="grid grid-cols-3 gap-3 mb-5">
-        <div className="text-center p-4 rounded-xl bg-white/[0.02] border border-dashed border-white/5">
-          <div className="text-2xl font-bold mono text-zinc-600">0</div>
-          <div className="text-[9px] uppercase tracking-widest text-zinc-600 mt-1">Blogs Written</div>
-        </div>
-        <div className="text-center p-4 rounded-xl bg-white/[0.02] border border-dashed border-white/5">
-          <div className="text-2xl font-bold mono text-zinc-600">0</div>
-          <div className="text-[9px] uppercase tracking-widest text-zinc-600 mt-1">Resources Shared</div>
-        </div>
-        <div className="text-center p-4 rounded-xl bg-white/[0.02] border border-dashed border-white/5">
-          <div className="text-2xl font-bold mono text-zinc-600">0</div>
-          <div className="text-[9px] uppercase tracking-widest text-zinc-600 mt-1">Diagrams Created</div>
+          
+          {/* URL is removed if not present */}
         </div>
       </div>
 
       {/* CTAs */}
       <div className="space-y-2">
+        <div className="text-xs font-semibold text-zinc-500 mb-2 px-1">Quick Actions</div>
+        
         <Link href="/dashboard/write" className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
           <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
             <PenLine className="w-4 h-4 text-emerald-400" />
@@ -122,10 +80,10 @@ export default function UserProfileCard({ user }: UserProfileCardProps) {
         </button>
       </div>
 
-      <div className="mt-4 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10 flex items-center gap-2">
+      {/* <div className="mt-4 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10 flex items-center gap-2">
         <Sparkles className="w-4 h-4 text-emerald-400 flex-shrink-0" />
         <span className="text-[10px] text-emerald-400">Share 3 resources to unlock the <strong>Contributor</strong> badge on your card</span>
-      </div>
+      </div> */}
     </div>
   );
 }

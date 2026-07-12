@@ -312,9 +312,9 @@ export default function ProDashboardPage() {
                           <div className="flex-1 min-w-0">
                             <div className="text-xs font-medium text-zinc-300 truncate group-hover:text-white transition-colors">{pub.title || 'Untitled'}</div>
                             <div className="text-[10px] text-zinc-500 mt-0.5 flex items-center gap-2">
-                              <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {pub.views || 0}</span>
+                              <span className="flex items-center gap-1">{pub.views || 0} views</span>
                               <span>·</span>
-                              <span className="flex items-center gap-1"><ArrowUp className="w-3 h-3" /> {pub.upvotes || 0}</span>
+                              <span className="flex items-center gap-1">{pub.upvotes || 0} upvotes</span>
                             </div>
                           </div>
                         </Link>

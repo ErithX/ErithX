@@ -109,7 +109,11 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
         </div>
         <div className="flex items-center justify-between pt-3 border-t border-white/5">
           <div className="flex items-center gap-2">
-            <img src={`https://picsum.photos/seed/${item.authorImg}/32/32.jpg`} className="w-5 h-5 rounded-full object-cover" alt={item.author} />
+            <img 
+              src={item.authorImg && item.authorImg.startsWith('http') ? item.authorImg : `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.authorImg || item.author}`} 
+              className="w-5 h-5 rounded-full object-cover bg-zinc-800" 
+              alt={item.author} 
+            />
             <span className="text-[10px] text-zinc-400">{item.author}</span>
             {item.isPro && (
               <span className="text-[8px] bg-emerald-500/20 text-emerald-400 px-1 py-0.5 rounded font-bold">PRO</span>

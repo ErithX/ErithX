@@ -10,6 +10,7 @@ import {
 import { createClient } from '@/app/lib/supabase/client';
 import { useAuthStore } from '@/store/authStore';
 import TiptapEditor from '@/components/editor/TiptapEditor';
+import RelatedResources from '@/components/RelatedResources';
 
 export default function ResourceContentPage({ params }: { params: Promise<{ id: string }> }) {
   const unwrappedParams = React.use(params);
@@ -309,7 +310,7 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
               <ChevronRight className="w-3 h-3" />
               <a href="/resources" className="hover:text-zinc-400 transition-colors">Resources</a>
               <ChevronRight className="w-3 h-3" />
-              <span className="text-zinc-400 truncate max-w-[200px]">Dynamic Programming</span>
+              <span className="text-zinc-400 truncate max-w-[200px] capitalize">{doc.category || 'Article'}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -600,80 +601,12 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-zinc-500">Views</span>
-                <span className="text-xs text-zinc-300">3,247</span>
+                <span className="text-xs text-zinc-300">{doc.views || 0}</span>
               </div>
             </div>
           </div>
 
-          <div className="mb-5">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-3 px-1">Related Resources</div>
-            <div className="space-y-3">
-              <a href="#" className="rec-card block p-3 rounded-xl glass">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Blog</span>
-                  <span className="text-[9px] text-zinc-600">8 min read</span>
-                </div>
-                <h4 className="text-xs font-medium leading-snug mb-1.5 line-clamp-2">Why Graph Problems Terrify Beginners (And Shouldn't)</h4>
-                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
-                  <ArrowUp className="w-3 h-3" />178
-                  <span className="text-zinc-700">•</span>
-                  <span>Ankit G.</span>
-                </div>
-              </a>
-
-              <a href="#" className="rec-card block p-3 rounded-xl glass">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-orange-500/10 text-orange-400 border border-orange-500/20">PDF</span>
-                  <span className="text-[9px] text-zinc-600">78 pages</span>
-                </div>
-                <h4 className="text-xs font-medium leading-snug mb-1.5 line-clamp-2">System Design Primer: Distributed Systems Notes</h4>
-                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
-                  <ArrowUp className="w-3 h-3" />445
-                  <span className="text-zinc-700">•</span>
-                  <span>Rahul V.</span>
-                </div>
-              </a>
-
-              <a href="#" className="rec-card block p-3 rounded-xl glass">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20">Image</span>
-                  <span className="text-[9px] text-zinc-600">Flowchart</span>
-                </div>
-                <h4 className="text-xs font-medium leading-snug mb-1.5 line-clamp-2">Sorting Algorithms Comparison Chart</h4>
-                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
-                  <ArrowUp className="w-3 h-3" />334
-                  <span className="text-zinc-700">•</span>
-                  <span>Meera P.</span>
-                </div>
-              </a>
-
-              <a href="#" className="rec-card block p-3 rounded-xl glass">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Blog</span>
-                  <span className="text-[9px] text-zinc-600">12 min read</span>
-                </div>
-                <h4 className="text-xs font-medium leading-snug mb-1.5 line-clamp-2">How I Cracked Google SDE Interview: Real Experience</h4>
-                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
-                  <ArrowUp className="w-3 h-3" />891
-                  <span className="text-zinc-700">•</span>
-                  <span>Sarah C.</span>
-                </div>
-              </a>
-
-              <a href="#" className="rec-card block p-3 rounded-xl glass">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Link</span>
-                  <span className="text-[9px] text-zinc-600">neetcode.io</span>
-                </div>
-                <h4 className="text-xs font-medium leading-snug mb-1.5 line-clamp-2">NeetCode 150 — The Ultimate Blind 75 Expansion</h4>
-                <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
-                  <ArrowUp className="w-3 h-3" />198
-                  <span className="text-zinc-700">•</span>
-                  <span>Ankit G.</span>
-                </div>
-              </a>
-            </div>
-          </div>
+          <RelatedResources currentDocId={doc._id} currentTags={doc.tags || []} />
 
           {/* Tags */}
           {doc.tags && doc.tags.length > 0 && (
