@@ -38,7 +38,7 @@ export default function Manifesto() {
 
           {/* Right: Manifesto text */}
           <div className="lg:col-span-7 scroll-reveal">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The Manifesto</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The Anti-Noise Philosophy</span>
             <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-6 leading-[1.1]">
               Not another<br/>
               <span className="gradient-text">grind-set platform.</span>

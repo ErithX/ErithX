@@ -1,5 +1,8 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Zap, LogOut, Settings } from 'lucide-react';
 
 export default function DashboardNavbar({ 
@@ -10,6 +13,7 @@ export default function DashboardNavbar({
   dropdownRef, 
   handleLogout 
 }: any) {
+  const pathname = usePathname();
   return (
     <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#09090b]/85 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
