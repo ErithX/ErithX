@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Zap, LogOut, LogIn, Rocket } from 'lucide-react';
+import { Zap, LogOut, LogIn, Rocket, Menu, X } from 'lucide-react';
 import { createClient } from '@/app/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import { useAuthStore } from '@/store/authStore';
@@ -12,6 +12,7 @@ export default function Navbar() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const { user, loading } = useAuthStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
@@ -50,6 +51,8 @@ export default function Navbar() {
                   <Link href="/resources" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Resources</Link>
                 </>
               )}
+              <Link href="/contact" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Contact Us</Link>
+              <Link href="/faq" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">FAQ</Link>
             </div>
           </div>
           <div className="flex items-center gap-3 relative">
@@ -123,8 +126,39 @@ export default function Navbar() {
                 </button>
               </>
             )}
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="md:hidden p-1.5 text-zinc-400 hover:text-white transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-14 left-0 w-full bg-[#09090b]/95 border-b border-white/5 backdrop-blur-xl animate-in slide-in-from-top-2 shadow-2xl">
+            <div className="flex flex-col p-4 gap-2">
+              {user?.user_metadata?.role === 'professional' ? (
+                <>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} href="/dashboard/pro" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Creator Dashboard</Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} href="/resources" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Resources</Link>
+                </>
+              ) : (
+                <>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} href="/contests" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Contests</Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} href={user ? "/dashboard" : "/"} className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Dashboard</Link>
+                  <Link onClick={() => setIsMobileMenuOpen(false)} href="/resources" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Resources</Link>
+                </>
+              )}
+              <div className="h-px w-full bg-white/10 my-2"></div>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/contact" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Contact Us</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/faq" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">FAQ</Link>
+            </div>
+          </div>
+        )}
       </nav>
     </>
   );

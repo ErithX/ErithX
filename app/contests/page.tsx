@@ -206,8 +206,8 @@ export default function HomePage() {
       {/* HERO SECTION */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden grid-bg">
         <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at top, rgba(6,78,59,0.25), #09090b 60%)'}}></div>
-        <div className="absolute top-0 left-1/3 w-[600px] h-[600px] rounded-full opacity-[0.07]" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(80px)'}}></div>
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.05]" style={{background: 'radial-gradient(circle, #06b6d4, transparent 70%)', filter: 'blur(60px)'}}></div>
+        <div className="absolute top-0 left-1/3 w-[300px] h-[300px] md:w-[600px] md:h-[600px] rounded-full opacity-[0.07]" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(80px)'}}></div>
+        <div className="absolute bottom-0 right-1/4 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.05]" style={{background: 'radial-gradient(circle, #06b6d4, transparent 70%)', filter: 'blur(60px)'}}></div>
 
 
 
@@ -221,10 +221,10 @@ export default function HomePage() {
               <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">{liveCount} Contests Live Now</span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.1]">
+            <h1 className="text-4xl md:text-7xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.1]">
               Never Miss a<br/>Contest Again
             </h1>
-            <p className="text-lg text-zinc-400 leading-relaxed mb-4 max-w-xl mx-auto">
+            <p className="text-base md:text-lg text-zinc-400 leading-relaxed mb-4 max-w-xl mx-auto">
               Track every coding contest, hackathon, and interview sprint across 
               <span className="text-white font-medium"> 10+ platforms</span> — with alerts that reach your inbox 
               <span className="text-emerald-400 font-medium"> before anyone else</span>.
