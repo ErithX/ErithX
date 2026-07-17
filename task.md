@@ -43,3 +43,13 @@
   - Create a redemption center.
 - [ ] **Advanced Dashboard Analytics**
   - Build out the Skill Map, Weekly Review, and Achievement Sections that were hidden in Phase 1.
+- [x] **SEO Overhaul (In Progress)**
+  - `[x]` Update `app/layout.tsx` metadata.
+  - `[x]` Add direct metadata to static pages (`app/page.tsx`, `app/contests/page.tsx`, `app/resources/page.tsx`, `about`, `faq`, `contact`, `privacy`, `terms`).
+  - `[x]` Rewrite `app/sitemap.ts`.
+  - `[x]` Rewrite `app/robots.ts`.
+  - `[x]` Create `public/llms.txt`.
+  - `[x]` Add Schema Markup (`json-ld`) to `app/page.tsx` and `app/faq/page.tsx`.
+  - `[x]` Fix H1 tags in dashboard pages.
+- [ ] **Postponed: Dynamic Resource Metadata**
+  - Create `app/resources/[id]/layout.tsx` to handle dynamic metadata for resources. (Paused pending DB schema check).

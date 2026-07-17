@@ -18,10 +18,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "DSA Quest - Competitive Programming Contest Tracker | LeetCode, Codeforces, CodeChef",
+    default: "DSA Quest — Coding Contests and Study Resources",
     template: "%s | DSA Quest"
   },
-  description: "Track upcoming coding contests from LeetCode, Codeforces, CodeChef, AtCoder, HackerRank & more. Get daily email alerts, practice DSA problems, and prepare for FAANG interviews.",
+  description: "Track upcoming coding contests and find high-quality DSA study materials. Prepare for tech interviews and placements.",
   keywords: "competitive programming, contest tracker, coding contests, leetcode, codeforces, codechef, dsa practice, FAANG preparation, algorithm practice, coding interview prep",
   authors: [{ name: "DSA Quest Team" }],
   creator: "DSA Quest",

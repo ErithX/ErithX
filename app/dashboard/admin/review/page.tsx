@@ -245,9 +245,9 @@ export default function AdminReviewPage() {
                   <img src={previewingDoc.coverImage} alt="Cover" className="w-full h-64 object-cover rounded-xl mb-8 border border-white/10" />
                 )}
                 
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">
                   {previewingDoc.title}
-                </h1>
+                </h2>
 
                 {/* Tags */}
                 {previewingDoc.tags && previewingDoc.tags.length > 0 && (

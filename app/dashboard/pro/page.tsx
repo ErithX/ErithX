@@ -163,7 +163,7 @@ export default function ProDashboardPage() {
           <aside className="md:w-60 flex-shrink-0">
             <div className="sticky top-20">
               <div className="mb-6 px-3">
-                <h1 className="text-lg font-semibold tracking-tight">Creator Studio</h1>
+                <h2 className="text-lg font-semibold tracking-tight">Creator Studio</h2>
                 <p className="text-[11px] text-zinc-500 mt-0.5">Manage your impact & content.</p>
               </div>
               
