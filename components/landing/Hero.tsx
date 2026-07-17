@@ -9,8 +9,8 @@ export default function Hero() {
     <section className="relative min-h-[calc(100vh-56px)] flex items-center overflow-hidden grid-bg pt-10 pb-16 mt-6">
       {/* Background effects */}
       <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at top left, rgba(6,78,59,0.3), #09090b 60%)' }}></div>
-      <div className="absolute top-0 right-1/4 w-[700px] h-[700px] rounded-full opacity-[0.08]" style={{ background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(100px)' }}></div>
-      <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] rounded-full opacity-[0.05]" style={{ background: 'radial-gradient(circle, #06b6d4, transparent 70%)', filter: 'blur(80px)' }}></div>
+      <div className="absolute top-0 right-1/4 w-[300px] h-[300px] md:w-[700px] md:h-[700px] rounded-full opacity-[0.08]" style={{ background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(100px)' }}></div>
+      <div className="absolute bottom-0 left-1/4 w-[250px] h-[250px] md:w-[500px] md:h-[500px] rounded-full opacity-[0.05]" style={{ background: 'radial-gradient(circle, #06b6d4, transparent 70%)', filter: 'blur(80px)' }}></div>
 
       <div className="max-w-6xl mx-auto px-6 relative z-10 w-full">
         <div className="grid lg:grid-cols-2 gap-12 items-center">

@@ -29,10 +29,10 @@ export default function Navbar() {
   return (
     <>
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
-      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#09090b]/85 backdrop-blur-[12px]">
+      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#09090b]/90 backdrop-blur-[12px] text-white">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center gap-2.5 text-white">
               <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
                 <Zap className="w-4 h-4 text-emerald-400" />
               </div>
@@ -112,14 +112,14 @@ export default function Navbar() {
                       options: { redirectTo: `${window.location.origin}/auth/callback?next=/` }
                     });
                   }} 
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-zinc-300 text-xs font-medium hover:bg-white/5 transition-all"
+                  className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-zinc-300 text-xs font-medium hover:bg-white/5 transition-all"
                 >
                   <LogIn className="w-3.5 h-3.5" />
                   Sign In
                 </button>
                 <button 
                   onClick={() => setIsAuthOpen(true)} 
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all"
+                  className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all"
                 >
                   <Rocket className="w-3.5 h-3.5" />
                   Start Free
@@ -156,6 +156,31 @@ export default function Navbar() {
               <div className="h-px w-full bg-white/10 my-2"></div>
               <Link onClick={() => setIsMobileMenuOpen(false)} href="/contact" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Contact Us</Link>
               <Link onClick={() => setIsMobileMenuOpen(false)} href="/faq" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">FAQ</Link>
+              
+              {!user && (
+                <div className="flex flex-col gap-2 mt-2 pt-2 border-t border-white/10">
+                  <button 
+                    onClick={async () => {
+                      setIsMobileMenuOpen(false);
+                      await supabase.auth.signInWithOAuth({
+                        provider: 'google',
+                        options: { redirectTo: `${window.location.origin}/auth/callback?next=/` }
+                      });
+                    }} 
+                    className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors text-left flex items-center gap-2"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    Sign In
+                  </button>
+                  <button 
+                    onClick={() => { setIsMobileMenuOpen(false); setIsAuthOpen(true); }} 
+                    className="p-3 text-sm font-medium text-zinc-900 bg-white hover:bg-zinc-200 rounded-lg transition-colors text-center flex items-center justify-center gap-2"
+                  >
+                    <Rocket className="w-4 h-4" />
+                    Start Free
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

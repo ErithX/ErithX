@@ -211,7 +211,7 @@ export default function HomePage() {
 
 
 
-        <div className="max-w-6xl mx-auto px-6 relative z-10 pt-20 pb-28">
+        <div className="max-w-6xl w-full mx-auto px-6 relative z-10 pt-20 pb-28">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-8">
               <span className="relative flex h-2 w-2">
@@ -335,11 +335,11 @@ export default function HomePage() {
               <div className="flex flex-col gap-4 mb-6 bg-transparent">
                 
                 {/* Row 1: Category */}
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-zinc-500 font-medium min-w-[70px] uppercase tracking-wider">Category</span>
-                  <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide w-full">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                  <span className="text-[10px] sm:text-xs text-zinc-500 font-medium min-w-[70px] uppercase tracking-wider">Category</span>
+                  <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide w-full pb-1 sm:pb-0">
                     {['All', 'Competitive Programming', 'Hackathons', 'AI / ML', 'Cyber Security / CTF', 'Hiring Challenges'].map(cat => (
-                      <button key={cat} onClick={() => applyFilters(activePlatform, cat, activeDifficulty)} className={`px-4 py-2 rounded-xl text-xs font-semibold border whitespace-nowrap transition-all ${activeCategory === cat ? 'bg-emerald-500 text-zinc-950 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white'}`}>
+                      <button key={cat} onClick={() => applyFilters(activePlatform, cat, activeDifficulty)} className={`px-4 py-1.5 sm:py-2 rounded-xl text-xs font-semibold border whitespace-nowrap transition-all ${activeCategory === cat ? 'bg-emerald-500 text-zinc-950 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white'}`}>
                         {cat}
                       </button>
                     ))}
@@ -347,10 +347,10 @@ export default function HomePage() {
                 </div>
 
                 {/* Row 2: Difficulty & Platform */}
-                <div className="flex flex-wrap items-center justify-between gap-4 mt-2">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-2">
                   {/* Difficulty (Left Side) */}
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-zinc-500 font-medium min-w-[70px] uppercase tracking-wider">Difficulty</span>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                    <span className="text-[10px] sm:text-xs text-zinc-500 font-medium min-w-[70px] uppercase tracking-wider">Difficulty</span>
                     <div className="relative" ref={difficultyRef}>
                       <button
                         onClick={() => setIsDifficultyOpen(!isDifficultyOpen)}
@@ -383,7 +383,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Platform (Right Side) */}
-                  <div className="flex flex-wrap gap-1.5 justify-end">
+                  <div className="flex flex-wrap gap-1.5 justify-start md:justify-end">
                     <button className={`platform-tag px-2.5 py-1 rounded-md text-[10px] font-medium text-zinc-400 border border-transparent ${activePlatform === 'all' ? 'active' : ''}`} onClick={() => applyFilters('all', activeCategory, activeDifficulty)}>All</button>
                     {platformButtons}
                     {!showAllPlatforms && sortedPlatforms.length > 6 && (
@@ -585,62 +585,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="border-t border-white/5 py-12 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-10">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-7 h-7 rounded bg-zinc-800 flex items-center justify-center">
-                  <Zap className="w-3.5 h-3.5 text-emerald-400" />
-                </div>
-                <span className="font-semibold text-sm">DSA Quest</span>
-              </div>
-              <p className="text-xs text-zinc-500 leading-relaxed">The definitive starter pack for every tech student. Free, ad-free, forever.</p>
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">Platform</h4>
-              <div className="space-y-2">
-                <a href="#contests" className="block text-xs text-zinc-400 hover:text-white transition-colors">Contest Board</a>
-                <a href="#features" className="block text-xs text-zinc-400 hover:text-white transition-colors">Features</a>
-                <a href="#community" className="block text-xs text-zinc-400 hover:text-white transition-colors">Community Hub</a>
-                <a href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">Milestone Cards</a>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">Platforms Tracked</h4>
-              <div className="space-y-2">
-                <a href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">LeetCode</a>
-                <a href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">Codeforces</a>
-                <a href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">CodeChef</a>
-                <a href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">HackerRank</a>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">Connect</h4>
-              <div className="flex items-center gap-3 mb-4">
-                <a href="#" className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all">
-                  <Twitter className="w-4 h-4" />
-                </a>
-                <a href="#" className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all">
-                  <Github className="w-4 h-4" />
-                </a>
-                <a href="#" className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all">
-                  <Linkedin className="w-4 h-4" />
-                </a>
-              </div>
-              <a href="#" className="text-xs text-zinc-400 hover:text-white transition-colors">hello@dsaquest.com</a>
-            </div>
-          </div>
-          <div className="pt-6 border-t border-white/5 flex items-center justify-between flex-wrap gap-4">
-            <div className="text-[10px] text-zinc-600">© 2025 DSA Quest. Built with ❤️ for students everywhere.</div>
-            <div className="flex items-center gap-4">
-              <a href="#" className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Privacy</a>
-              <a href="#" className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Terms</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </div>
   );

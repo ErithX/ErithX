@@ -7,7 +7,6 @@ import Journey from '@/components/landing/Journey';
 import Stats from '@/components/landing/Stats';
 import Testimonials from '@/components/landing/Testimonials';
 import CTA from '@/components/landing/CTA';
-import Footer from '@/components/landing/Footer';
 import ScrollRevealProvider from '@/components/landing/ScrollRevealProvider';
 
 export default function Home() {
@@ -25,7 +24,6 @@ export default function Home() {
           <Testimonials />
           <CTA />
         </main>
-        <Footer />
       </ScrollRevealProvider>
     </div>
   );

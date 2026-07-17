@@ -329,7 +329,7 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
       </nav>
 
       {/* MAIN LAYOUT */}
-      <div className="pt-14 flex max-w-7xl mx-auto">
+      <div className="pt-14 flex flex-col lg:flex-row max-w-7xl mx-auto">
         {/* LEFT: Table of Contents */}
         <aside className="hidden xl:block w-56 flex-shrink-0 sticky top-14 h-[calc(100vh-56px)] overflow-y-auto py-8 pl-6">
           <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-3 px-3">On this page</div>
@@ -575,7 +575,7 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
         </main>
 
         {/* RIGHT: Recommendations */}
-        <aside className="hidden lg:block w-72 flex-shrink-0 sticky top-14 h-[calc(100vh-56px)] overflow-y-auto py-8 pr-6">
+        <aside className="w-full lg:w-72 flex-shrink-0 lg:sticky lg:top-14 lg:h-[calc(100vh-56px)] lg:overflow-y-auto py-8 px-6 lg:pl-0 lg:pr-6">
           <div className="glass rounded-xl p-4 mb-5">
             <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-3">Resource Info</div>
             <div className="space-y-2.5">

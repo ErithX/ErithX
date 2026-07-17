@@ -109,7 +109,7 @@ export default function ResourcesPage() {
       {/* HERO SECTION */}
       <section className="pt-28 pb-12 px-6 relative overflow-hidden">
         <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at top, rgba(6,78,59,0.2), #09090b, #09090b)'}}></div>
-        <div className="absolute top-20 right-1/4 w-96 h-96 rounded-full opacity-10" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(60px)'}}></div>
+        <div className="absolute top-20 right-1/4 w-64 h-64 md:w-96 md:h-96 rounded-full opacity-10" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(60px)'}}></div>
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="max-w-2xl">
             <div className="flex items-center gap-2 mb-4">
@@ -283,18 +283,6 @@ export default function ResourcesPage() {
           </div>
         </div>
       </section>
-
-      {/* FOOTER */}
-      <footer className="border-t border-white/5 py-8 px-6">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="text-[10px] text-zinc-600">© 2025 DSA Quest. Built for students, backed by pros.</div>
-          <div className="flex items-center gap-4">
-            <a href="#" className="text-zinc-500 hover:text-white transition-colors"><Twitter className="w-4 h-4" /></a>
-            <a href="#" className="text-zinc-500 hover:text-white transition-colors"><Github className="w-4 h-4" /></a>
-            <a href="#" className="text-zinc-500 hover:text-white transition-colors"><Linkedin className="w-4 h-4" /></a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
