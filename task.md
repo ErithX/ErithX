@@ -51,5 +51,13 @@
   - `[x]` Create `public/llms.txt`.
   - `[x]` Add Schema Markup (`json-ld`) to `app/page.tsx` and `app/faq/page.tsx`.
   - `[x]` Fix H1 tags in dashboard pages.
-- [ ] **Postponed: Dynamic Resource Metadata**
-  - Create `app/resources/[id]/layout.tsx` to handle dynamic metadata for resources. (Paused pending DB schema check).
+- [x] **Postponed: Dynamic Resource Metadata**
+  - [x] Create `app/resources/[id]/layout.tsx` to handle dynamic metadata for resources.
+
+
+Images In ECO SYSTEM need to be placed
+Image optimization needed for SEO
+
+Pending : Email contact
+Pending : FAQ , About Us & other pages images 
+pending : Page speed and Pre fetching resources 

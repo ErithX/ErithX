@@ -80,7 +80,7 @@ export default function RelatedResources({ currentDocId, currentTags }: RelatedR
           }
           
           return (
-            <Link href={`/resources/${doc._id}`} key={doc._id} className="rec-card block p-3 rounded-xl glass hover:bg-white/[0.04] transition-colors border border-transparent hover:border-white/10">
+            <Link href={`/resources/${doc.slug || doc._id}`} key={doc._id} className="rec-card block p-3 rounded-xl glass hover:bg-white/[0.04] transition-colors border border-transparent hover:border-white/10">
               <div className="flex items-center gap-2 mb-2">
                 <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border ${typeColor}`}>
                   {typeLabel}

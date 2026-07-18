@@ -13,7 +13,7 @@ export default function Manifesto() {
           {/* Left: Image */}
           <div className="lg:col-span-5 relative scroll-reveal">
             <div className="relative rounded-2xl overflow-hidden border border-white/5">
-              <img src="https://picsum.photos/seed/manifesto/600/700.jpg" className="w-full h-[520px] object-cover" alt="Student journey" />
+              <img src="/landing/photo-1777861845854-4f35ab170680.avif" className="w-full h-[520px] object-cover" alt="Student journey" />
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent"></div>
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/20 via-transparent to-cyan-950/10"></div>
               

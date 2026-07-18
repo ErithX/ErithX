@@ -45,14 +45,16 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
         setUpvoteCount(data.upvotes || 0);
         setIsUpvoted(user ? data.upvotedBy?.includes(user.id) : false);
 
+        const actualDocId = data._id; // Use the actual DB ID, not the URL param (which could be a slug)
+
         // Real Views tracking (once per user/session)
-        if (!localStorage.getItem(`viewed_${resourceId}`)) {
-          fetch(`/api/resources/${resourceId}/view`, { method: 'POST' }).catch(console.error);
-          localStorage.setItem(`viewed_${resourceId}`, 'true');
+        if (!localStorage.getItem(`viewed_${actualDocId}`)) {
+          fetch(`/api/resources/${actualDocId}/view`, { method: 'POST' }).catch(console.error);
+          localStorage.setItem(`viewed_${actualDocId}`, 'true');
         }
 
         // Fetch comments
-        const commentsRes = await fetch(`/api/comments?resourceId=${resourceId}`);
+        const commentsRes = await fetch(`/api/comments?resourceId=${actualDocId}`);
         if (commentsRes.ok) {
           const commentsData = await commentsRes.json();
           setComments(commentsData);
@@ -172,7 +174,8 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch(`/api/resources/${resourceId}/upvote`, {
+      const actualDocId = doc?._id || resourceId;
+      const res = await fetch(`/api/resources/${actualDocId}/upvote`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${session?.access_token}`
@@ -199,13 +202,14 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
     setIsSubmittingComment(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
+      const actualDocId = doc?._id || resourceId;
       const res = await fetch('/api/comments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session?.access_token}`
         },
-        body: JSON.stringify({ resourceId, content: newComment })
+        body: JSON.stringify({ resourceId: actualDocId, content: newComment })
       });
 
       if (res.ok) {

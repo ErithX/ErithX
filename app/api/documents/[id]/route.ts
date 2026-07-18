@@ -30,6 +30,13 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const body = await req.json();
 
+    // Generate slug if it doesn't exist and we have a title
+    if (!existingDoc.slug && body.title) {
+      const baseSlug = body.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+      const randomSuffix = Math.floor(Math.random() * 10000);
+      body.slug = `${baseSlug || 'resource'}-${randomSuffix}`;
+    }
+
     const updatedDoc = await Resource.findByIdAndUpdate(
       id,
       { $set: body },

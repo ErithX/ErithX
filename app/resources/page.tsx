@@ -52,7 +52,7 @@ export default function ResourcesPage() {
           
           // Base structure
           const baseItem = {
-            id: doc._id,
+            id: doc.slug || doc._id,
             title: doc.title || 'Untitled',
             excerpt,
             author: doc.authorName || 'Anonymous',
@@ -134,19 +134,25 @@ export default function ResourcesPage() {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
             <div className="glass rounded-lg p-4">
-              <div className="text-2xl font-semibold">1,247</div>
+              <div className="text-2xl font-semibold">{allItems.length}</div>
               <div className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Resources Shared</div>
             </div>
             <div className="glass rounded-lg p-4">
-              <div className="text-2xl font-semibold text-emerald-400">89</div>
-              <div className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Pro Contributors</div>
+              <div className="text-2xl font-semibold text-emerald-400">
+                {new Set(allItems.map(i => i.author)).size}
+              </div>
+              <div className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Contributors</div>
             </div>
             <div className="glass rounded-lg p-4">
-              <div className="text-2xl font-semibold">4,831</div>
-              <div className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Community Members</div>
+              <div className="text-2xl font-semibold">
+                {allItems.reduce((sum, item) => sum + (item.views || 0), 0)}
+              </div>
+              <div className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Total Views</div>
             </div>
             <div className="glass rounded-lg p-4">
-              <div className="text-2xl font-semibold text-cyan-400">23</div>
+              <div className="text-2xl font-semibold text-cyan-400">
+                {allItems.filter(i => i.time.includes('h ago') || (i.time.includes('d ago') && parseInt(i.time) <= 7)).length}
+              </div>
               <div className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">New This Week</div>
             </div>
           </div>
@@ -222,11 +228,26 @@ export default function ResourcesPage() {
                   <TrendingUp className="w-3.5 h-3.5" /> Trending Tags
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {['dynamic-programming', 'system-design', 'interview-prep', 'graphs', 'career-playbook', 'leetcode', 'open-source', 'sql'].map(tag => (
-                    <span key={tag} className="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">
-                      #{tag}
-                    </span>
-                  ))}
+                  {(() => {
+                    const tagCounts: Record<string, number> = {};
+                    allItems.forEach(item => {
+                      (item.tags || []).forEach(tag => {
+                        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                      });
+                    });
+                    const topTags = Object.entries(tagCounts)
+                      .sort((a, b) => b[1] - a[1])
+                      .slice(0, 8)
+                      .map(entry => entry[0]);
+                    
+                    if (topTags.length === 0) return <div className="text-xs text-zinc-500">No tags yet</div>;
+                    
+                    return topTags.map(tag => (
+                      <span key={tag} className="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer" onClick={() => {}}>
+                        #{tag}
+                      </span>
+                    ));
+                  })()}
                 </div>
               </div>
 
@@ -236,49 +257,39 @@ export default function ResourcesPage() {
                   <Award className="w-3.5 h-3.5" /> Top Contributors
                 </h3>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold text-xs">P</div>
-                    <div className="min-w-0">
-                      <div className="text-xs font-medium truncate flex items-center gap-1">Priya Sharma <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span></div>
-                      <div className="text-[10px] text-zinc-500">SDE @ Google • 47 posts</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-bold text-xs">R</div>
-                    <div className="min-w-0">
-                      <div className="text-xs font-medium truncate flex items-center gap-1">Rahul Verma <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span></div>
-                      <div className="text-[10px] text-zinc-500">Tech Lead @ MS • 32 posts</div>
-                    </div>
-                  </div>
+                  {(() => {
+                    const authorCounts: Record<string, { count: number, isPro: boolean, name: string }> = {};
+                    allItems.forEach(item => {
+                      if (!authorCounts[item.author]) {
+                        authorCounts[item.author] = { count: 0, isPro: item.isPro || false, name: item.author };
+                      }
+                      authorCounts[item.author].count += 1;
+                    });
+                    
+                    const topAuthors = Object.values(authorCounts)
+                      .sort((a, b) => b.count - a.count)
+                      .slice(0, 3);
+                      
+                    if (topAuthors.length === 0) return <div className="text-xs text-zinc-500">No contributors yet</div>;
+                    
+                    return topAuthors.map((author, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-full ${idx === 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-cyan-500/10 text-cyan-400'} flex items-center justify-center font-bold text-xs`}>
+                          {author.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-xs font-medium truncate flex items-center gap-1">
+                            {author.name} 
+                            {author.isPro && <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>}
+                          </div>
+                          <div className="text-[10px] text-zinc-500">{author.count} posts</div>
+                        </div>
+                      </div>
+                    ));
+                  })()}
                 </div>
               </div>
-
-              {/* Milestone Preview */}
-              <div className="glass rounded-xl p-5">
-                <h3 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
-                  <Trophy className="w-3.5 h-3.5" /> Latest Milestones
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02] border border-white/5">
-                    <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
-                      <Flame className="w-4 h-4 text-yellow-500" />
-                    </div>
-                    <div>
-                      <div className="text-[11px] font-medium">30-Day Streak 🔥</div>
-                      <div className="text-[10px] text-zinc-500">Ankit • 2h ago</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02] border border-white/5">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-                      <Code className="w-4 h-4 text-emerald-500" />
-                    </div>
-                    <div>
-                      <div className="text-[11px] font-medium">100 Problems Solved</div>
-                      <div className="text-[10px] text-zinc-500">Meera • 5h ago</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            </div>
             </div>
           </div>
         </div>

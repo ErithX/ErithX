@@ -25,6 +25,11 @@ const ResourceSchema = new mongoose.Schema({
     type: String, 
     default: 'Untitled' 
   },
+  slug: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
   content: { 
     type: String, 
     default: '' 
@@ -75,7 +80,8 @@ const ResourceSchema = new mongoose.Schema({
   commentsCount: {
     type: Number,
     default: 0
-  }
+  },
+ 
 }, { timestamps: true });
 
 // Prevent mongoose from recompiling the model upon hot reload

@@ -5,33 +5,70 @@ import { Zap, PlayCircle, LayoutDashboard, Users, Flame, Award } from 'lucide-re
 import Link from 'next/link';
 
 export default function Hero() {
+  // Updated Organic SVG path: Narrower top, wider bottom, with soft gradient fade
+  const imageMaskStyle = {
+    WebkitMaskImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><defs><linearGradient id='grad' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='black' stop-opacity='0'/><stop offset='0.15' stop-color='black' stop-opacity='1'/></linearGradient></defs><path d='M30,0 C45,25 15,75 0,100 L100,100 L100,0 Z' fill='url(%23grad)'/></svg>")`,
+    maskImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><defs><linearGradient id='grad' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='black' stop-opacity='0'/><stop offset='0.15' stop-color='black' stop-opacity='1'/></linearGradient></defs><path d='M30,0 C45,25 15,75 0,100 L100,100 L100,0 Z' fill='url(%23grad)'/></svg>")`,
+    maskSize: '100% 100%',
+    WebkitMaskSize: '100% 100%',
+  };
+
   return (
-    <section className="relative min-h-[calc(100vh-56px)] flex items-center overflow-hidden grid-bg pt-10 pb-16 mt-6">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg pt-[56px] pb-8">
       {/* Background effects */}
       <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at top left, rgba(6,78,59,0.3), #09090b 60%)' }}></div>
       <div className="absolute top-0 right-1/4 w-[300px] h-[300px] md:w-[700px] md:h-[700px] rounded-full opacity-[0.08]" style={{ background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(100px)' }}></div>
       <div className="absolute bottom-0 left-1/4 w-[250px] h-[250px] md:w-[500px] md:h-[500px] rounded-full opacity-[0.05]" style={{ background: 'radial-gradient(circle, #06b6d4, transparent 70%)', filter: 'blur(80px)' }}></div>
 
-      <div className="max-w-6xl mx-auto px-6 relative z-10 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          
-          {/* LEFT: Text Content */}
-          <div className="animate-in text-center lg:text-left flex flex-col items-center lg:items-start">
-            {/* Live indicator */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-8 mx-auto lg:mx-0">
-              <span className="relative flex h-2 w-2">
-                <span className="live-pulse absolute inline-flex h-full w-full rounded-full bg-emerald-500"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">The Student-First Platform</span>
+      {/* ========================================= */}
+      {/* DESKTOP FULL-HEIGHT ORGANIC IMAGE (RIGHT) */}
+      {/* ========================================= */}
+      <div
+        className="absolute top-0 right-0 h-full w-1/2 hidden lg:block z-0"
+        style={imageMaskStyle}
+      >
+        <img
+          src="/landing/bg.png"
+          className="w-full h-full object-cover"
+          alt="DSA Quest Platform"
+        />
+        {/* Color overlay blending */}
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/40 via-transparent to-cyan-950/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 via-transparent to-transparent"></div>
+
+        {/* Image Label */}
+        {/* <div className="absolute bottom-10 left-10 right-10">
+          <div className="glass rounded-xl p-4 flex items-center gap-3 backdrop-blur-md">
+            <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
+              <LayoutDashboard className="w-5 h-5 text-emerald-400" />
             </div>
+            <div className="flex-1">
+              <div className="text-sm font-medium text-white">Unified Dashboard</div>
+              <div className="text-[10px] text-zinc-300">Contests, notes, projects — one view</div>
+            </div>
+            <svg className="w-4 h-4 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+          </div>
+        </div> */}
+      </div>
+
+
+
+      {/* ========================================= */}
+      {/* MAIN CONTENT GRID */}
+      {/* ========================================= */}
+      <div className="max-w-6xl mx-auto px-6 relative z-20 w-full">
+        <div className="grid lg:grid-cols-2 items-center">
+
+          {/* LEFT: Minimal Text Content */}
+          <div className="animate-in text-center lg:text-left flex flex-col items-center lg:items-start py-20 lg:py-0">
+
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.05]">
-              Your Coding<br/>Era Starts<br/>Now.
+              Your Coding<br />Era Starts<br />Now.
             </h1>
-            
+
             <p className="text-lg text-zinc-400 leading-relaxed mb-4 max-w-lg mx-auto lg:mx-0">
-              Stop hoarding 50 tabs and missing deadlines. Track every contest, steal the best notes, and flex your hustle. 
+              Stop hoarding 50 tabs and missing deadlines. Track every contest, steal the best notes, and flex your hustle.
               Built for students who actually want to win.
             </p>
             <p className="text-sm text-zinc-500 mb-10 max-w-lg mx-auto lg:mx-0">
@@ -64,15 +101,17 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* RIGHT: Image Showcase */}
-          <div className="relative animate-in" style={{ animationDelay: '0.2s' }}>
-            {/* Main image */}
+          {/* RIGHT: Empty Grid Spacer (Visual space for absolute image on desktop) & Mobile Image */}
+          <div className="hidden lg:block"></div>
+
+          {/* Mobile Image Showcase */}
+          <div className="lg:hidden mt-10 w-full">
             <div className="relative rounded-2xl overflow-hidden border border-white/10">
-              <img src="https://picsum.photos/seed/heromain/800/900.jpg" className="w-full h-[560px] object-cover" alt="DSA Quest Platform" />
+              <img src="https://picsum.photos/seed/heromain/800/900.jpg" className="w-full h-[400px] object-cover" alt="DSA Quest Platform" />
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/30 to-transparent"></div>
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/30 via-transparent to-cyan-950/20"></div>
-              
-              {/* Image label */}
+
+              {/* Mobile Image label */}
               <div className="absolute bottom-6 left-6 right-6">
                 <div className="glass rounded-xl p-4 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
@@ -82,74 +121,17 @@ export default function Hero() {
                     <div className="text-sm font-medium">Unified Dashboard</div>
                     <div className="text-[10px] text-zinc-400">Contests, notes, projects — one view</div>
                   </div>
-                  <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating Card 1: Contest tracker */}
-            <div className="absolute -top-6 -left-6 float-anim hidden md:block">
-              <div className="glass rounded-xl p-3 w-52 shadow-2xl">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="live-pulse absolute inline-flex h-full w-full rounded-full bg-red-500"></span>
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span>
-                  </span>
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-red-400">Live Now</span>
-                </div>
-                <div className="text-xs font-medium mb-1">Codeforces Round 1023</div>
-                <div className="text-[10px] text-zinc-500">Starts in 2h 14m</div>
-                <div className="mt-2 pt-2 border-t border-white/5 flex items-center gap-1.5">
-                  <Users className="w-3 h-3 text-zinc-500" />
-                  <span className="text-[10px] text-zinc-400">23.1K registered</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating Card 2: Streak */}
-            <div className="absolute -bottom-8 -right-4 float-anim-delay hidden md:block">
-              <div className="glass rounded-xl p-3 w-44 shadow-2xl">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-lg bg-yellow-500/15 border border-yellow-500/30 flex items-center justify-center">
-                    <Flame className="w-4 h-4 text-yellow-500" />
-                  </div>
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-yellow-500">Streak</div>
-                    <div className="text-sm font-semibold">47 days</div>
-                  </div>
-                </div>
-                <div className="flex gap-1">
-                  <div className="flex-1 h-1 rounded-full bg-yellow-500/60"></div>
-                  <div className="flex-1 h-1 rounded-full bg-yellow-500/60"></div>
-                  <div className="flex-1 h-1 rounded-full bg-yellow-500/60"></div>
-                  <div className="flex-1 h-1 rounded-full bg-yellow-500/60"></div>
-                  <div className="flex-1 h-1 rounded-full bg-yellow-500/30"></div>
-                  <div className="flex-1 h-1 rounded-full bg-white/5"></div>
-                  <div className="flex-1 h-1 rounded-full bg-white/5"></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating Card 3: Milestone */}
-            <div className="absolute top-1/3 -right-8 float-anim-slow hidden lg:block">
-              <div className="glass rounded-xl p-3 w-40 shadow-2xl" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.08), rgba(6,182,212,0.08))' }}>
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                    <Award className="w-4 h-4 text-emerald-400" />
-                  </div>
-                  <div>
-                    <div className="text-[10px] text-zinc-400">Milestone</div>
-                    <div className="text-xs font-semibold">100 problems</div>
-                  </div>
+                  <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7" /></svg>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 hidden md:flex">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 hidden md:flex z-20">
         <span className="text-[9px] uppercase tracking-widest text-zinc-600">Scroll to explore</span>
         <div className="w-5 h-8 rounded-full border border-zinc-700 flex items-start justify-center p-1">
           <div className="w-1 h-2 rounded-full bg-zinc-500 animate-bounce"></div>

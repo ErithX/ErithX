@@ -9,7 +9,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     const id = (await params).id;
     
     // Fetch a single published document
-    const doc = await Resource.findOne({ _id: id, status: 'published' });
+    const mongoose = require('mongoose');
+    const query = mongoose.Types.ObjectId.isValid(id) 
+      ? { _id: id, status: 'published' } 
+      : { slug: id, status: 'published' };
+      
+    const doc = await Resource.findOne(query);
     
     if (!doc) {
       return NextResponse.json({ error: 'Resource not found or not published' }, { status: 404 });

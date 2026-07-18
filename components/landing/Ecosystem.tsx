@@ -8,16 +8,16 @@ export default function Ecosystem() {
         {/* Header */}
         <div className="text-center mb-16 scroll-reveal">
           <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The Complete Resource Vault</span>
-          <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Everything in one place.<br/><span className="text-zinc-500">Zero fluff.</span></h2>
+          <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Everything in one place.<br /><span className="text-zinc-500">Zero fluff.</span></h2>
           <p className="text-sm text-zinc-500 max-w-xl mx-auto">The premier collection of contest trackers, semester study materials, engineering PDFs, and precise tech roadmaps. Built for modern engineers.</p>
         </div>
 
         {/* Bento Grid */}
         <div className="grid md:grid-cols-6 gap-5 auto-rows-[220px]">
-          
+
           {/* Card 1: Contest Tracker (Large) */}
           <div className="bento-card md:col-span-4 rounded-2xl overflow-hidden relative group border border-white/5">
-            <img src="https://picsum.photos/seed/bento1/800/400.jpg" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Contest Tracker" />
+            <img src="landing/banner1.avif" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Contest Tracker" />
             <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-transparent"></div>
             <div className="relative z-10 p-7 h-full flex flex-col justify-between">
               <div>
@@ -49,26 +49,28 @@ export default function Ecosystem() {
           </div>
 
           {/* Card 2: Milestone Cards -> High-Quality Free PDF Notes */}
-          <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.08), rgba(6,182,212,0.05))' }}>
-            <div className="p-6 h-full flex flex-col justify-between">
+          <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5">
+            <img src="landing/study notes.jpg" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Premium PDFs" />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent"></div>
+            <div className="relative z-10 p-5 h-full flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-4">
-                  <BookCopy className="w-5 h-5 text-emerald-400" />
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-2">
+                  <BookCopy className="w-4 h-4 text-emerald-400" />
                 </div>
-                <h3 className="text-lg font-medium mb-2">Premium Free PDFs</h3>
-                <p className="text-xs text-zinc-400 leading-relaxed">High-quality, meticulously structured B.Tech notes. Stop searching Google.</p>
+                <h3 className="text-[17px] font-medium mb-1">Premium Free PDFs</h3>
+                <p className="text-[11px] text-zinc-400 leading-tight">High-quality, meticulously structured B.Tech notes. Stop searching Google.</p>
               </div>
               {/* Mini preview */}
-              <div className="glass rounded-lg p-3 mt-4">
+              <div className="glass rounded-lg p-2.5 mt-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-yellow-500/20 flex items-center justify-center">
-                    <Download className="w-3.5 h-3.5 text-yellow-500" />
+                  <div className="w-6 h-6 rounded-md bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
+                    <Download className="w-3 h-3 text-yellow-500" />
                   </div>
-                  <div className="flex-1">
-                    <div className="text-[11px] font-semibold">OS & DBMS Notes</div>
-                    <div className="text-[9px] text-zinc-500">Instant PDF Access</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[10px] font-semibold truncate">OS & DBMS Notes</div>
+                    <div className="text-[8px] text-zinc-500">Instant PDF Access</div>
                   </div>
-                  <BadgeCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  <BadgeCheck className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
                 </div>
               </div>
             </div>
@@ -76,7 +78,7 @@ export default function Ecosystem() {
 
           {/* Card 3: Notes Hub (Image) */}
           <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5">
-            <img src="https://picsum.photos/seed/bento3/400/400.jpg" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-500" alt="Notes Hub" />
+            <img src="/landing/PlatformMarquee.avif" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-500" alt="Notes Hub" />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
             <div className="relative z-10 p-6 h-full flex flex-col justify-end">
               <div className="w-9 h-9 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center mb-3">
@@ -89,7 +91,7 @@ export default function Ecosystem() {
 
           {/* Card 4: Project Monitor -> Elite Project Roadmaps */}
           <div className="bento-card md:col-span-4 rounded-2xl overflow-hidden relative group border border-white/5">
-            <img src="https://picsum.photos/seed/bento4/800/400.jpg" className="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:opacity-35 transition-opacity" alt="Project Monitor" />
+            <img src="landing/ChatGPT Image Jul 18, 2026, 09_30_44 PM.png" className="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:opacity-35 transition-opacity" alt="Project Monitor" />
             <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/70 to-transparent"></div>
             <div className="relative z-10 p-7 h-full flex flex-col justify-between">
               <div>
@@ -163,30 +165,30 @@ export default function Ecosystem() {
           {/* Card 7: Personal Monitor -> Elite Study Materials */}
           <div className="bento-card md:col-span-3 rounded-2xl overflow-hidden relative group border border-white/5">
             <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at top right, rgba(168,85,247,0.1), transparent 70%)' }}></div>
-            <div className="relative z-10 p-6 h-full flex flex-col justify-between">
+            <div className="relative z-10 p-5 h-full flex flex-col justify-between">
               <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center">
                     <Layers className="w-4 h-4 text-purple-400" />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-purple-400">Resource Database</span>
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-purple-400">Resource Database</span>
                 </div>
-                <h3 className="text-xl font-medium mb-2">Everything you need.</h3>
-                <p className="text-xs text-zinc-400 leading-relaxed max-w-xs">Direct access to a vast, constantly updated repository of university notes, technical interview breakdowns, and algorithmic cheatsheets.</p>
+                <h3 className="text-lg font-medium mb-1.5">Everything you need.</h3>
+                <p className="text-[11px] text-zinc-400 leading-tight max-w-xs line-clamp-2">Direct access to a vast, constantly updated repository of university notes, technical interview breakdowns, and algorithmic cheatsheets.</p>
               </div>
               {/* Mini stats */}
-              <div className="grid grid-cols-3 gap-2">
-                <div className="glass rounded-lg p-2 text-center">
-                  <div className="text-base font-semibold text-emerald-400">100+</div>
-                  <div className="text-[9px] text-zinc-500">Free PDFs</div>
+              <div className="grid grid-cols-3 gap-1.5 mt-2">
+                <div className="glass rounded-lg p-1.5 text-center">
+                  <div className="text-sm font-semibold text-emerald-400">100+</div>
+                  <div className="text-[8px] text-zinc-500">Free PDFs</div>
                 </div>
-                <div className="glass rounded-lg p-2 text-center">
-                  <div className="text-base font-semibold text-cyan-400">20+</div>
-                  <div className="text-[9px] text-zinc-500">Roadmaps</div>
+                <div className="glass rounded-lg p-1.5 text-center">
+                  <div className="text-sm font-semibold text-cyan-400">20+</div>
+                  <div className="text-[8px] text-zinc-500">Roadmaps</div>
                 </div>
-                <div className="glass rounded-lg p-2 text-center">
-                  <div className="text-base font-semibold text-purple-400">A+</div>
-                  <div className="text-[9px] text-zinc-500">Quality Notes</div>
+                <div className="glass rounded-lg p-1.5 text-center">
+                  <div className="text-sm font-semibold text-purple-400">A+</div>
+                  <div className="text-[8px] text-zinc-500">Quality Notes</div>
                 </div>
               </div>
             </div>

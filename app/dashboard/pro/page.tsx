@@ -305,7 +305,7 @@ export default function ProDashboardPage() {
                       <div className="text-xs text-zinc-500 italic p-3 text-center">No published resources yet.</div>
                     ) : (
                       topPerforming.map((pub, index) => (
-                        <Link href={`/resources/${pub._id}`} key={pub._id} className="flex items-center gap-3 hover:bg-white/[0.02] p-2 rounded-lg transition-colors cursor-pointer group">
+                        <Link href={`/resources/${pub.slug || pub._id}`} key={pub._id} className="flex items-center gap-3 hover:bg-white/[0.02] p-2 rounded-lg transition-colors cursor-pointer group">
                           <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500/20 transition-colors">
                             <span className="text-xs font-bold text-emerald-400">{index + 1}</span>
                           </div>
@@ -336,7 +336,7 @@ export default function ProDashboardPage() {
                     <div className="text-xs text-zinc-500 italic p-4 text-center border border-white/5 rounded-xl">No published content yet.</div>
                   ) : (
                     publishedPosts.map((pub) => (
-                      <Link href={`/resources/${pub._id}`} key={pub._id} className="block p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer group">
+                      <Link href={`/resources/${pub.slug || pub._id}`} key={pub._id} className="block p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer group">
                         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                           <div className="flex-1 min-w-0">
                             <h4 className="text-sm font-medium text-zinc-200 group-hover:text-white transition-colors truncate mb-1">
