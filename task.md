@@ -61,3 +61,21 @@ Image optimization needed for SEO
 Pending : Email contact
 Pending : FAQ , About Us & other pages images 
 pending : Page speed and Pre fetching resources 
+
+## New Backend & Profile Tasks (Planned)
+- [ ] **MongoDB User Schema & API**
+  - Create `User` model (supabaseId, name, bio, social links, isPro, isVerified).
+  - Create `/api/profile` to handle fetching and updating user data.
+- [ ] **Creator Dashboard Aesthetics**
+  - Redesign settings profile page with glassmorphism and transparent fields.
+  - Add fields for Bio, X (Twitter), and LinkedIn.
+- [ ] **Global Public Profiles**
+  - Create SEO-friendly `/user/[username]` pages.
+  - Implement dynamic OpenGraph meta tags for user profiles.
+- [ ] **Verification Badge & Top Contributors**
+  - Add blue/green verified tick for official/pro accounts on Resource cards.
+  - Show actual user Bio and Social Links directly in the Top Contributors sidebar.
+- [ ] **Cold Start Seeding (Growth Hack)**
+  - Write a seed script (`seedUsers.ts` or Admin UI) to inject "Ambassador" User profiles directly into MongoDB.
+  - Setup an "Official Verified Account" (e.g. DSA Quest) for premium resources.
+  - Build logic to allow posting resources on behalf of these seeded bot accounts.

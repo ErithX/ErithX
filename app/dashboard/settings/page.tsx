@@ -6,8 +6,10 @@ import DashboardNavbar from '@/components/dashboard/DashboardNavbar';
 import { 
   User as UserIcon, Link as LinkIcon, SlidersHorizontal, Bell, 
   Shield, AlertOctagon, CheckCircle, AlertCircle, PlusCircle, X,
-  Github, Linkedin, ArrowUpRight, Check
+  Github, Linkedin, ArrowUpRight, Check, Twitter
 } from 'lucide-react';
+import ProBadge from '@/components/profile/ProBadge';
+import ProfileBanner from '@/components/profile/ProfileBanner';
 
 export default function SettingsPage() {
   const [user, setUser] = useState<any>(null);
@@ -159,9 +161,9 @@ export default function SettingsPage() {
             <div className="sticky top-24">
               <h1 className="text-xl font-semibold tracking-tight mb-6 px-3">Settings</h1>
               <nav className="space-y-1">
-                {/* <button onClick={() => scrollTo('profile')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent ${activeSection === 'profile' ? 'active' : ''}`}>
+                <button onClick={() => scrollTo('profile')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent ${activeSection === 'profile' ? 'active' : ''}`}>
                   <UserIcon className="w-3.5 h-3.5" /> Profile
-                </button> */}
+                </button>
                 <button onClick={() => scrollTo('connections')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent ${activeSection === 'connections' ? 'active' : ''}`}>
                   <LinkIcon className="w-3.5 h-3.5" /> Connections
                 </button>
@@ -185,54 +187,92 @@ export default function SettingsPage() {
           {/* RIGHT CONTENT */}
           <main className="flex-1 min-w-0 space-y-8">
 
-            {/* PROFILE SECTION (Hidden for now) */}
-            {/* 
+            {/* PROFILE SECTION */}
             <section id="profile" className="glass rounded-xl p-6 border border-white/[0.08] bg-white/[0.03]">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-500 mb-1">Profile</h2>
-              <p className="text-xs text-zinc-600 mb-6">This is how others will see you on the platform.</p>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-500 mb-1">Public Profile</h2>
+                  <p className="text-xs text-zinc-600">This is how others will see you on the platform.</p>
+                </div>
+                <ProBadge type="pro" /> {/* Example badge */}
+              </div>
               
               <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 border-b border-white/5">
-                  <div>
-                    <div className="text-sm font-medium text-zinc-200">Avatar</div>
-                    <div className="text-xs text-zinc-500 mt-0.5">JPG, PNG or GIF. Max 1MB.</div>
-                  </div>
-                  <div className="flex items-center gap-3">
+                {/* Banner Preview (Optional, just to show how it looks) */}
+                <ProfileBanner type="default">
+                  <div className="flex items-center gap-4">
                     {user?.user_metadata?.avatar_url ? (
                       <img 
                         src={user.user_metadata.avatar_url} 
-                        className="w-10 h-10 rounded-full object-cover border border-white/10" 
+                        className="w-16 h-16 rounded-full object-cover border-2 border-white/20 shadow-xl" 
                         alt="Avatar" 
                         referrerPolicy="no-referrer"
-                        onError={(e) => { e.currentTarget.src = "https://api.dicebear.com/7.x/avataaars/svg?seed=fallback" }}
                       />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-lg overflow-hidden shrink-0">
+                      <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-2xl shadow-[0_0_15px_rgba(16,185,129,0.2)] shrink-0">
                         {user?.user_metadata?.full_name ? user.user_metadata.full_name.charAt(0).toUpperCase() : 'U'}
                       </div>
                     )}
-                    <button className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-zinc-300 hover:bg-white/10 transition-all">Upload</button>
+                    <div>
+                      <div className="text-lg font-bold text-white">{user?.user_metadata?.full_name || "Coder"}</div>
+                      <div className="text-xs text-zinc-400">@{user?.user_metadata?.full_name?.toLowerCase().replace(/\s/g, '') || "coder"}</div>
+                    </div>
+                  </div>
+                  <button className="px-4 py-1.5 rounded-lg bg-white/10 border border-white/10 text-xs font-medium text-white hover:bg-white/20 transition-all backdrop-blur-md">
+                    Change Banner
+                  </button>
+                </ProfileBanner>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                  {/* Display Name */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-zinc-300">Display Name</label>
+                    <input type="text" defaultValue={user?.user_metadata?.full_name || ""} placeholder="Your Name" className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 transition-all" />
+                  </div>
+                  
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-zinc-300">Email Address <span className="text-[9px] text-zinc-500 ml-1">(Private)</span></label>
+                    <input type="email" disabled defaultValue={user?.email || ""} className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-500 bg-white/[0.01] cursor-not-allowed" />
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 border-b border-white/5">
-                  <div>
-                    <div className="text-sm font-medium text-zinc-200">Display Name</div>
-                    <div className="text-xs text-zinc-500 mt-0.5">Your public name.</div>
-                  </div>
-                  <input type="text" defaultValue={user?.user_metadata?.full_name || "Coder"} className="input-field w-full sm:w-72 px-3 py-1.5 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 mono" />
+                {/* Bio */}
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-zinc-300 flex justify-between">
+                    <span>Bio</span>
+                    <span className="text-zinc-600">Max 160 chars</span>
+                  </label>
+                  <textarea rows={3} placeholder="Software Engineer | Problem Solver | Building the future..." className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 resize-none transition-all"></textarea>
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4">
-                  <div>
-                    <div className="text-sm font-medium text-zinc-200">Email Address</div>
-                    <div className="text-xs text-zinc-500 mt-0.5">Used for alerts and weekly reviews.</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                  {/* X (Twitter) */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5"><Twitter className="w-3.5 h-3.5 text-zinc-400" /> X (Twitter) URL</label>
+                    <input type="url" placeholder="https://x.com/username" className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 transition-all" />
                   </div>
-                  <input type="email" defaultValue={user?.email || ""} className="input-field w-full sm:w-72 px-3 py-1.5 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 mono" />
+                  
+                  {/* LinkedIn */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5"><Linkedin className="w-3.5 h-3.5 text-zinc-400" /> LinkedIn URL</label>
+                    <input type="url" placeholder="https://linkedin.com/in/username" className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 transition-all" />
+                  </div>
+                </div>
+
+                <div className="flex justify-end pt-4 border-t border-white/5">
+                  <button 
+                    onClick={() => {
+                      // Backend logic will be handled by the user
+                      showToast('Profile updated successfully! ✨', 'success');
+                    }}
+                    className="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-colors"
+                  >
+                    Save Changes
+                  </button>
                 </div>
               </div>
             </section>
-            */}
 
             {/* CONNECTIONS SECTION */}
             <section id="connections" className="glass rounded-xl p-6 border border-white/[0.08] bg-white/[0.03]">

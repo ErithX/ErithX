@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import { 
   Zap, Search, Plus, User, ArrowDown, Upload, 
   LayoutGrid, List, TrendingUp, Award, Trophy,
-  PenLine, FileText, Link as LinkIcon, Image as ImageIcon,
-  Flame, Code, Twitter, Github, Linkedin
+  Flame, Code, Twitter, Linkedin
 } from 'lucide-react';
 import BlogsCard, { BlogItem } from '@/components/BlogsCard';
 import ResourceCard, { ResourceItem } from '@/components/ResourceCard';
 import CreatorPopup from '@/components/CreatorPopup';
 import Navbar from '@/components/Navbar';
+import ProBadge from '@/components/profile/ProBadge';
 
 export type FeedItem = BlogItem | ResourceItem;
 
@@ -256,12 +256,21 @@ export default function ResourcesPage() {
                 <h3 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
                   <Award className="w-3.5 h-3.5" /> Top Contributors
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {(() => {
-                    const authorCounts: Record<string, { count: number, isPro: boolean, name: string }> = {};
+                    // Note for Developer: In backend, fetch actual User documents so we have bio, twitterUrl, linkedinUrl, isPro, isVerified.
+                    const authorCounts: Record<string, { count: number, isPro: boolean, name: string, bio: string, twitter: string, linkedin: string, isVerified: boolean }> = {};
                     allItems.forEach(item => {
                       if (!authorCounts[item.author]) {
-                        authorCounts[item.author] = { count: 0, isPro: item.isPro || false, name: item.author };
+                        authorCounts[item.author] = { 
+                          count: 0, 
+                          isPro: item.isPro || false, 
+                          name: item.author,
+                          bio: "Passionate developer sharing resources.", // Fallback dummy bio
+                          twitter: "#",
+                          linkedin: "#",
+                          isVerified: false
+                        };
                       }
                       authorCounts[item.author].count += 1;
                     });
@@ -273,23 +282,35 @@ export default function ResourcesPage() {
                     if (topAuthors.length === 0) return <div className="text-xs text-zinc-500">No contributors yet</div>;
                     
                     return topAuthors.map((author, idx) => (
-                      <div key={idx} className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full ${idx === 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-cyan-500/10 text-cyan-400'} flex items-center justify-center font-bold text-xs`}>
+                      <div key={idx} className="flex gap-3 pb-4 border-b border-white/5 last:border-0 last:pb-0">
+                        <div className={`w-8 h-8 rounded-full ${idx === 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-cyan-500/10 text-cyan-400'} flex items-center justify-center font-bold text-xs shrink-0 mt-1`}>
                           {author.name.charAt(0).toUpperCase()}
                         </div>
-                        <div className="min-w-0">
-                          <div className="text-xs font-medium truncate flex items-center gap-1">
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm font-bold truncate flex items-center gap-1.5">
                             {author.name} 
-                            {author.isPro && <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>}
+                            {author.isVerified && <ProBadge type="official" />}
+                            {author.isPro && !author.isVerified && <ProBadge type="pro" />}
                           </div>
-                          <div className="text-[10px] text-zinc-500">{author.count} posts</div>
+                          <div className="text-[10px] text-zinc-400 mb-1">{author.count} resources shared</div>
+                          <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed mb-2">
+                            {/* Will be author.bio from DB */}
+                            {author.bio}
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <a href={author.twitter} target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors">
+                              <Twitter className="w-3.5 h-3.5" />
+                            </a>
+                            <a href={author.linkedin} target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors">
+                              <Linkedin className="w-3.5 h-3.5" />
+                            </a>
+                          </div>
                         </div>
                       </div>
                     ));
                   })()}
                 </div>
               </div>
-            </div>
             </div>
           </div>
         </div>

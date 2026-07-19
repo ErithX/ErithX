@@ -1,0 +1,22 @@
+Technical Challenges in Building a Global User Profile Page (Interview Discussion Points)
+
+1. Data Synchronization (Auth vs. Database):
+   - Challenge: Supabase manages authentication (emails, sessions) while MongoDB stores application data.
+   - Solution: Creating a seamless sync mechanism where a MongoDB User document is created/updated instantly via API routes when a user sets up their profile.
+   - Architectural Decision Note: Why MongoDB instead of Supabase Postgres? Since all core application data (Resources, Comments) is stored in MongoDB, storing User Profiles in Supabase would require complex, slow cross-database joins (e.g., fetching a resource from MongoDB and then making a separate API call to Supabase for the author's bio/badge). Keeping the User model in MongoDB allows for fast `populate()` queries and efficient aggregation pipelines.
+
+2. Dynamic SEO & Server-Side Rendering (SSR):
+   - Challenge: Each profile needs unique SEO tags (OpenGraph images, titles) so when shared on Twitter/LinkedIn, the preview looks correct.
+   - Solution: Using Next.js generateMetadata to fetch user data server-side before the page loads, and generating dynamic OG images for each user.
+
+3. Username Uniqueness & Routing Conflicts:
+   - Challenge: Implementing clean URLs like /user/johndoe requires ensuring usernames are globally unique and don't clash with reserved application routes (e.g., /user/settings).
+   - Solution: Writing strict regex validation and maintaining a blacklist of reserved keywords during onboarding.
+
+4. Data Privacy & Access Control:
+   - Challenge: The profile API must fetch user data, but sensitive fields (like private emails) must never be exposed to the public frontend.
+   - Solution: Implementing strict projection queries in MongoDB (e.g., .select('-email')) and verifying auth tokens for showing edit permissions.
+
+5. Aggregation Performance & Caching (Scalability):
+   - Challenge: A global profile might need to show total views and upvotes across all their resources. Running heavy DB queries per visit is slow.
+   - Solution: Using MongoDB Aggregation Pipelines to efficiently calculate total impact, and caching the page using Next.js ISR (Incremental Static Regeneration).
