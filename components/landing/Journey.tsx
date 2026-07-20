@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Sprout, Check, Trophy, FolderGit2, NotebookPen, Map, Hammer, Rocket } from 'lucide-react';
 
 export default function Journey() {
@@ -19,8 +20,8 @@ export default function Journey() {
           {/* Stage 1 */}
           <div className="grid lg:grid-cols-2 gap-12 items-center scroll-reveal">
             <div className="relative order-2 lg:order-1">
-              <div className="rounded-2xl overflow-hidden border border-white/5 relative">
-                <img src="landing/stage 1.avif" className="w-full h-[400px] object-cover" alt="First year" />
+              <div className="rounded-2xl overflow-hidden border border-white/5 relative h-[400px]">
+                <Image src="/landing/stage%201.avif" fill className="object-cover" alt="Student studying fundamental computer science concepts" />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent"></div>
                 <div className="absolute top-4 left-4">
                   <div className="glass rounded-lg px-3 py-1.5 flex items-center gap-2">
@@ -103,8 +104,8 @@ export default function Journey() {
               </div>
             </div>
             <div className="relative">
-              <div className="rounded-2xl overflow-hidden border border-white/5 relative">
-                <img src="landing/photo-1567473031096-c4961b38be9b.avif" className="w-full h-[400px] object-cover" alt="Build phase" />
+              <div className="rounded-2xl overflow-hidden border border-white/5 relative h-[400px]">
+                <Image src="/landing/photo-1567473031096-c4961b38be9b.avif" fill className="object-cover" alt="Software engineer architecting a project system design" />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent"></div>
                 <div className="absolute top-4 right-4">
                   <div className="glass rounded-lg px-3 py-1.5 flex items-center gap-2">
@@ -123,8 +124,8 @@ export default function Journey() {
           {/* Stage 3 */}
           <div className="grid lg:grid-cols-2 gap-12 items-center scroll-reveal">
             <div className="relative order-2 lg:order-1">
-              <div className="rounded-2xl overflow-hidden border border-white/5 relative">
-                <img src="landing/stage 3.avif" className="w-full h-[400px] object-cover" alt="Landing phase" />
+              <div className="rounded-2xl overflow-hidden border border-white/5 relative h-[400px]">
+                <Image src="/landing/stage%203.avif" fill className="object-cover" alt="Competitive programmer tracking and participating in coding contests" />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent"></div>
                 <div className="absolute top-4 left-4">
                   <div className="glass rounded-lg px-3 py-1.5 flex items-center gap-2">

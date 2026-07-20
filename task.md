@@ -81,3 +81,8 @@ pending : Page speed and Pre fetching resources
   - Build logic to allow posting resources on behalf of these seeded bot accounts.
 - `[ ]` Backend Image Compression
 - `[ ]` Cache Resources
+
+## Image Optimization & SEO Tasks
+- `[ ]` Convert standard `<img>` tags to Next.js `<Image>` component for main Landing Page images (Hero section, Ecosystem, Manifesto, Journey, etc.).
+- `[ ]` Add proper descriptive `alt` fallback text to all images for SEO ranking and accessibility.
+- `[ ]` Configure `next.config.mjs` with proper remote patterns (domains) to support external images in `next/image` (proper image routing).

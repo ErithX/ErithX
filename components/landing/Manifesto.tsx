@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Quote, HeartPulse, Sparkles, Target } from 'lucide-react';
 
 export default function Manifesto() {
@@ -12,8 +13,8 @@ export default function Manifesto() {
           
           {/* Left: Image */}
           <div className="lg:col-span-5 relative scroll-reveal">
-            <div className="relative rounded-2xl overflow-hidden border border-white/5">
-              <img src="/landing/photo-1777861845854-4f35ab170680.avif" className="w-full h-[520px] object-cover" alt="Student journey" />
+            <div className="relative rounded-2xl overflow-hidden border border-white/5 h-[520px]">
+              <Image src="/landing/photo-1777861845854-4f35ab170680.avif" fill className="object-cover" alt="Student journey showing a coder focusing at night" />
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent"></div>
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/20 via-transparent to-cyan-950/10"></div>
               
@@ -25,7 +26,7 @@ export default function Manifesto() {
                     Grinding without intent is just exhaustion. We built DSA Quest for the student who wants to win without losing themselves.
                   </p>
                   <div className="flex items-center gap-2">
-                    <img src="https://picsum.photos/seed/founder/32/32.jpg" className="w-6 h-6 rounded-full object-cover" alt="Founder" />
+                    <Image src="https://picsum.photos/seed/founder/32/32.jpg" width={24} height={24} className="rounded-full object-cover" alt="DSA Quest Founder profile picture" />
                     <span className="text-[10px] text-zinc-500">DSA Quest Team</span>
                   </div>
                 </div>

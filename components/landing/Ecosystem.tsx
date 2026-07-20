@@ -1,4 +1,5 @@
-﻿import React from 'react';
+import React from 'react';
+import Image from 'next/image';
 import { Bell, CalendarCheck, Filter, BookCopy, Download, BadgeCheck, Library, Users, Layers } from 'lucide-react';
 
 export default function Ecosystem() {
@@ -17,7 +18,7 @@ export default function Ecosystem() {
 
           {/* Card 1: Contest Tracker (Large) */}
           <div className="bento-card md:col-span-4 rounded-2xl overflow-hidden relative group border border-white/5">
-            <img src="landing/banner1.avif" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Contest Tracker" />
+            <Image src="/landing/banner1.avif" fill className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Ultimate Contest Calendar showing active coding competitions" />
             <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-transparent"></div>
             <div className="relative z-10 p-7 h-full flex flex-col justify-between">
               <div>
@@ -50,7 +51,7 @@ export default function Ecosystem() {
 
           {/* Card 2: Milestone Cards -> High-Quality Free PDF Notes */}
           <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5">
-            <img src="landing/study notes.jpg" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Premium PDFs" />
+            <Image src="/landing/study notes.jpg" fill className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Premium PDF Notes for B.Tech students" />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent"></div>
             <div className="relative z-10 p-5 h-full flex flex-col justify-between">
               <div>
@@ -78,7 +79,7 @@ export default function Ecosystem() {
 
           {/* Card 3: Notes Hub (Image) */}
           <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5">
-            <img src="/landing/PlatformMarquee.avif" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-500" alt="Notes Hub" />
+            <Image src="/landing/PlatformMarquee.avif" fill className="object-cover opacity-40 group-hover:scale-105 transition-transform duration-500" alt="B.Tech Previous Year Question Papers Archive" />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
             <div className="relative z-10 p-6 h-full flex flex-col justify-end">
               <div className="w-9 h-9 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center mb-3">
@@ -91,7 +92,7 @@ export default function Ecosystem() {
 
           {/* Card 4: Project Monitor -> Elite Project Roadmaps */}
           <div className="bento-card md:col-span-4 rounded-2xl overflow-hidden relative group border border-white/5">
-            <img src="landing/ChatGPT Image Jul 18, 2026, 09_30_44 PM.png" className="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:opacity-35 transition-opacity" alt="Project Monitor" />
+            <Image src="/landing/ChatGPT Image Jul 18, 2026, 09_30_44 PM.png" fill className="object-cover opacity-25 group-hover:opacity-35 transition-opacity" alt="Elite Project Architecture Guides and Roadmaps" />
             <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/70 to-transparent"></div>
             <div className="relative z-10 p-7 h-full flex flex-col justify-between">
               <div>
@@ -125,7 +126,7 @@ export default function Ecosystem() {
 
           {/* Card 5: Community */}
           <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5">
-            <img src="https://picsum.photos/seed/bento5/400/400.jpg" className="absolute inset-0 w-full h-full object-cover opacity-35 group-hover:scale-105 transition-transform duration-500" alt="Community" />
+            <Image src="https://picsum.photos/seed/bento5/400/400.jpg" fill className="object-cover opacity-35 group-hover:scale-105 transition-transform duration-500" alt="High-Intent Engineering Forum Community" />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
             <div className="relative z-10 p-6 h-full flex flex-col justify-end">
               <div className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center mb-3">
@@ -134,9 +135,9 @@ export default function Ecosystem() {
               <h3 className="text-lg font-medium mb-1">High-Intent Forum</h3>
               <p className="text-[11px] text-zinc-400 leading-relaxed mb-3">Pure engineering strategy. No low-effort lifestyle vloggers allowed.</p>
               <div className="flex -space-x-2">
-                <img src="https://picsum.photos/seed/comm1/32/32.jpg" className="w-6 h-6 rounded-full border-2 border-zinc-950 object-cover" alt="Community" />
-                <img src="https://picsum.photos/seed/comm2/32/32.jpg" className="w-6 h-6 rounded-full border-2 border-zinc-950 object-cover" alt="Community" />
-                <img src="https://picsum.photos/seed/comm3/32/32.jpg" className="w-6 h-6 rounded-full border-2 border-zinc-950 object-cover" alt="Community" />
+                <Image src="https://picsum.photos/seed/comm1/32/32.jpg" width={24} height={24} className="rounded-full border-2 border-zinc-950 object-cover" alt="Community member 1" />
+                <Image src="https://picsum.photos/seed/comm2/32/32.jpg" width={24} height={24} className="rounded-full border-2 border-zinc-950 object-cover" alt="Community member 2" />
+                <Image src="https://picsum.photos/seed/comm3/32/32.jpg" width={24} height={24} className="rounded-full border-2 border-zinc-950 object-cover" alt="Community member 3" />
                 <div className="w-6 h-6 rounded-full border-2 border-zinc-950 bg-white/5 flex items-center justify-center">
                   <span className="text-[8px] text-zinc-400 font-medium">+86</span>
                 </div>
@@ -146,7 +147,7 @@ export default function Ecosystem() {
 
           {/* Card 6: Roadmaps */}
           <div className="bento-card md:col-span-3 rounded-2xl overflow-hidden relative group border border-white/5">
-            <img src="https://picsum.photos/seed/bento6/600/400.jpg" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Roadmaps" />
+            <Image src="https://picsum.photos/seed/bento6/600/400.jpg" fill className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Tech Career Roadmaps for Software Engineers" />
             <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-950/80 to-transparent"></div>
             <div className="relative z-10 p-6 h-full flex flex-col justify-between">
               <div>
