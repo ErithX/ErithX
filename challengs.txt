@@ -20,3 +20,11 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
 5. Aggregation Performance & Caching (Scalability):
    - Challenge: A global profile might need to show total views and upvotes across all their resources. Running heavy DB queries per visit is slow.
    - Solution: Using MongoDB Aggregation Pipelines to efficiently calculate total impact, and caching the page using Next.js ISR (Incremental Static Regeneration).
+
+6. Cold Start Seeding & Fake Accounts (Growth Hack):
+   - Challenge: A new platform looks empty. We needed to post high-quality resources without creating dozens of real Supabase accounts with emails/passwords.
+   - Solution (Admin Override Logic & Debugging):
+     1. We created a Node script (`seedUsers.mjs`) to inject dummy `User` profiles (e.g. "Rahul Sharma") directly into MongoDB, bypassing Supabase auth entirely.
+     2. In the "Create Resource" frontend (`app/dashboard/write/page.tsx`), we built a hidden dropdown that only renders if the logged-in user matches `process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS`.
+     3. When the Admin selects a fake alias (e.g., "Rahul Sharma") and submits the form, the frontend passes `overrideAuthorId` in the API payload.
+     4. I manually debugged the backend logic (`/api/documents/[id]/route.ts`) to intercept this payload. I wrote the logic to fetch the fake user from DB, override `userId`, `authorName`, `isVerified`, etc. in the request body, and delete `overrideAuthorId` so it saves the resource perfectly on behalf of the alias!

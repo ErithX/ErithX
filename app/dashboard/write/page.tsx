@@ -27,6 +27,7 @@ export default function WritePage() {
   const [modalError, setModalError] = useState('');
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [overrideAuthorId, setOverrideAuthorId] = useState('');
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -121,7 +122,8 @@ export default function WritePage() {
           coverImage: coverUrl,
           title,
           content,
-          wordCount
+          wordCount,
+          overrideAuthorId
         })
       });
 
@@ -276,6 +278,27 @@ export default function WritePage() {
                   <option value="Career">Career</option>
                 </select>
               </div>
+
+              {/* ADMIN OVERRIDE DROPDOWN (Growth Hack) */}
+              {user?.email === process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS && (
+                <div className="p-3 border border-emerald-500/30 bg-emerald-500/5 rounded-lg">
+                  <label className="block text-xs font-bold text-emerald-400 mb-2 uppercase tracking-wider flex items-center justify-between">
+                    <span>Admin Override (Post As)</span>
+                    <span className="bg-emerald-500 text-black px-1.5 py-0.5 rounded text-[8px]">ADMIN ONLY</span>
+                  </label>
+                  <select
+                    value={overrideAuthorId}
+                    onChange={(e) => setOverrideAuthorId(e.target.value)}
+                    className="w-full bg-black/60 border border-emerald-500/30 rounded-lg px-3 py-2 text-sm text-emerald-300 focus:outline-none focus:border-emerald-500 transition-colors"
+                  >
+                    <option value="">Myself (Real Account)</option>
+                    <option value="official-dsa-quest-001">DSA Quest Official</option>
+                    <option value="ambassador-rahul-002">Rahul Sharma (PRO)</option>
+                    <option value="ambassador-priya-003">Priya Patel</option>
+                    <option value="ambassador-alex-004">Alex Dev</option>
+                  </select>
+                </div>
+              )}
 
               {/* Tags */}
               <div>

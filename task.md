@@ -79,3 +79,5 @@ pending : Page speed and Pre fetching resources
   - Write a seed script (`seedUsers.ts` or Admin UI) to inject "Ambassador" User profiles directly into MongoDB.
   - Setup an "Official Verified Account" (e.g. DSA Quest) for premium resources.
   - Build logic to allow posting resources on behalf of these seeded bot accounts.
+- `[ ]` Backend Image Compression
+- `[ ]` Cache Resources

@@ -10,7 +10,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const { data: { user } } = await supabase.auth.getUser();
 
     // SUPERADMIN Check
-    const superAdmins = (process.env.SUPERADMIN_EMAILS || '').split(',').map(e => e.trim());
+    const superAdmins = (process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS || '').split(',').map(e => e.trim());
     if (!user || !superAdmins.includes(user.email || '')) {
       return NextResponse.json({ error: 'Forbidden. Superadmin only.' }, { status: 403 });
     }

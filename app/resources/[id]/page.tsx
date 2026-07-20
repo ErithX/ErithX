@@ -384,7 +384,7 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
             <div className="flex items-center justify-between mb-10 pb-8 border-b border-white/5 flex-wrap gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-lg overflow-hidden shrink-0">
-                  {doc.authorImg && doc.authorImg.startsWith('http') && !doc.authorImg.includes('picsum') ? (
+                  {doc.authorImg && doc.authorImg.startsWith('http') ? (
                     <img src={doc.authorImg} alt="Author" className="w-full h-full object-cover" />
                   ) : (
                     (doc.authorName || 'Anonymous').charAt(0).toUpperCase()
@@ -393,7 +393,8 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
                 <div>
                   <div className="text-sm font-medium flex items-center gap-1.5">
                     {doc.authorName || 'Anonymous'}
-                    {doc.isPro && (
+                    {doc.isVerified && <img src="/VerifiedBadge.svg" alt="Verified" className="w-3.5 h-3.5 inline-block" />}
+                    {doc.isPro && !doc.isVerified && (
                       <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>
                     )}
                   </div>
@@ -455,7 +456,7 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
             {/* Author Card */}
             <div className="mt-14 p-6 rounded-2xl glass flex items-start gap-4 flex-wrap">
               <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-2xl overflow-hidden shrink-0">
-                {doc.authorImg && doc.authorImg.startsWith('http') && !doc.authorImg.includes('picsum') ? (
+                {doc.authorImg && doc.authorImg.startsWith('http') ? (
                   <img src={doc.authorImg} alt="Author" className="w-full h-full object-cover" />
                 ) : (
                   (doc.authorName || 'Anonymous').charAt(0).toUpperCase()
@@ -464,7 +465,8 @@ export default function ResourceContentPage({ params }: { params: Promise<{ id: 
               <div className="flex-1 min-w-[200px]">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-sm font-medium">{doc.authorName || 'Anonymous'}</span>
-                  {doc.isPro && (
+                  {doc.isVerified && <img src="/VerifiedBadge.svg" alt="Verified" className="w-4 h-4 inline-block" />}
+                  {doc.isPro && !doc.isVerified && (
                     <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>
                   )}
                 </div>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/app/lib/supabase/server';
 import connectToDatabase from '@/app/lib/mongodb';
 import { Resource } from '@/models/Resource';
-
+import {User} from '@/models/User'
 // Update a document (Auto-save / Publish)
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -27,8 +27,26 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (existingDoc.userId !== user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-
+//Admin Override logic
     const body = await req.json();
+    if(body.overrideAuthorId){
+      const superAdmins = (process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS || '').split(',').map(e => e.trim());
+      const isSuperAdmin = superAdmins.includes(user.email || '');
+      if(isSuperAdmin){
+        const fakeUser = await User.findOne({supabaseId : body.overrideAuthorId})
+
+        if(fakeUser){
+          body.userId = fakeUser.supabaseId;
+          body.authorName = fakeUser.name;
+          body.authorEmail = fakeUser.email;
+          body.authorImg = fakeUser.avatar;
+          body.isPro = fakeUser.isPro; 
+          body.isVerified = fakeUser.isVerified;
+        }   
+      }
+        delete body.overrideAuthorId;
+
+    }
 
     // Generate slug if it doesn't exist and we have a title
     if (!existingDoc.slug && body.title) {

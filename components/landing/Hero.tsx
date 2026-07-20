@@ -101,31 +101,8 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* RIGHT: Empty Grid Spacer (Visual space for absolute image on desktop) & Mobile Image */}
+          {/* RIGHT: Empty Grid Spacer (Visual space for absolute image on desktop) */}
           <div className="hidden lg:block"></div>
-
-          {/* Mobile Image Showcase */}
-          <div className="lg:hidden mt-10 w-full">
-            <div className="relative rounded-2xl overflow-hidden border border-white/10">
-              <img src="https://picsum.photos/seed/heromain/800/900.jpg" className="w-full h-[400px] object-cover" alt="DSA Quest Platform" />
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/30 to-transparent"></div>
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/30 via-transparent to-cyan-950/20"></div>
-
-              {/* Mobile Image label */}
-              <div className="absolute bottom-6 left-6 right-6">
-                <div className="glass rounded-xl p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-                    <LayoutDashboard className="w-5 h-5 text-emerald-400" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">Unified Dashboard</div>
-                    <div className="text-[10px] text-zinc-400">Contests, notes, projects — one view</div>
-                  </div>
-                  <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7" /></svg>
-                </div>
-              </div>
-            </div>
-          </div>
 
         </div>
       </div>

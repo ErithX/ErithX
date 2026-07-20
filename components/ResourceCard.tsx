@@ -9,6 +9,7 @@ export interface ResourceItem {
   author: string;
   authorImg: string;
   isPro: boolean;
+  isVerified?: boolean;
   tags: string[];
   upvotes: number;
   comments: number;
@@ -100,8 +101,8 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
           </span>
           <span className="text-[10px] text-zinc-600">{item.time}</span>
         </div>
-        <h3 className="text-sm font-medium leading-snug mb-2 line-clamp-2">{item.title}</h3>
-        <p className="text-xs text-zinc-500 leading-relaxed mb-3 line-clamp-2">{item.excerpt}</p>
+        <h3 className="text-sm font-medium leading-snug mb-2">{item.title}</h3>
+        <p className="text-xs text-zinc-500 leading-relaxed mb-3 line-clamp-3">{item.excerpt}</p>
         <div className="flex flex-wrap gap-1.5 mb-3">
           {item.tags.map(t => (
             <span key={t} className="px-1.5 py-0.5 rounded text-[9px] bg-white/5 text-zinc-500">#{t}</span>
@@ -114,8 +115,13 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
               className="w-5 h-5 rounded-full object-cover bg-zinc-800" 
               alt={item.author} 
             />
-            <span className="text-[10px] text-zinc-400">{item.author}</span>
-            {item.isPro && (
+            <span className="text-[10px] text-zinc-400 font-medium flex items-center gap-1">
+              {item.author}
+              {item.isVerified && (
+                <img src="/VerifiedBadge.svg" alt="Verified" className="w-3.5 h-3.5 inline-block" />
+              )}
+            </span>
+            {item.isPro && !item.isVerified && (
               <span className="text-[8px] bg-emerald-500/20 text-emerald-400 px-1 py-0.5 rounded font-bold">PRO</span>
             )}
           </div>

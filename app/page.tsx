@@ -11,7 +11,7 @@ import CTA from '@/components/landing/CTA';
 import ScrollRevealProvider from '@/components/landing/ScrollRevealProvider';
 
 export const metadata: Metadata = {
-  title: 'Turn Career Prep Into a Game You Love to Win',
+  title: 'DSA Quest | Turn Career Prep Into a Game You Love to Win',
   description: 'Make coding practice engaging. Track live contests from major platforms, get clear study notes, and prepare for your placement exams.',
 };
 

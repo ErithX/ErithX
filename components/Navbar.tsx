@@ -102,6 +102,16 @@ export default function Navbar() {
                       <p className="text-[10px] text-zinc-400 truncate">{user.email}</p>
                     </div>
                     <div className="p-1">
+                      {user?.email === process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS && (
+                        <Link 
+                          href="/dashboard/admin/review" 
+                          onClick={() => setIsDropdownOpen(false)}
+                          className="w-full text-left px-3 py-2 text-xs text-amber-400 hover:bg-amber-500/10 rounded-lg transition-colors flex items-center gap-2 mb-1"
+                        >
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                          Admin Review
+                        </Link>
+                      )}
                       <button 
                         onClick={async () => {
                           await supabase.auth.signOut();

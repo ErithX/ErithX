@@ -58,6 +58,7 @@ export default function ResourcesPage() {
             author: doc.authorName || 'Anonymous',
             authorImg: doc.authorImg || 'pro1', // Uses our schema default
             isPro: doc.isPro || false, // User requested to keep this field
+            isVerified: doc.isVerified || false,
             tags: doc.tags || [],
             upvotes: doc.upvotes || 0,
             comments: doc.commentsCount || 0,
@@ -259,7 +260,7 @@ export default function ResourcesPage() {
                 <div className="space-y-4">
                   {(() => {
                     // Note for Developer: In backend, fetch actual User documents so we have bio, twitterUrl, linkedinUrl, isPro, isVerified.
-                    const authorCounts: Record<string, { count: number, isPro: boolean, name: string, bio: string, twitter: string, linkedin: string, isVerified: boolean }> = {};
+                    const authorCounts: Record<string, { count: number, isPro: boolean, name: string, bio: string, twitter: string, linkedin: string, isVerified: boolean, authorImg: string }> = {};
                     allItems.forEach(item => {
                       if (!authorCounts[item.author]) {
                         authorCounts[item.author] = { 
@@ -269,7 +270,8 @@ export default function ResourcesPage() {
                           bio: "Passionate developer sharing resources.", // Fallback dummy bio
                           twitter: "#",
                           linkedin: "#",
-                          isVerified: false
+                          isVerified: item.isVerified || false,
+                          authorImg: item.authorImg || ''
                         };
                       }
                       authorCounts[item.author].count += 1;
@@ -283,14 +285,18 @@ export default function ResourcesPage() {
                     
                     return topAuthors.map((author, idx) => (
                       <div key={idx} className="flex gap-3 pb-4 border-b border-white/5 last:border-0 last:pb-0">
-                        <div className={`w-8 h-8 rounded-full ${idx === 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-cyan-500/10 text-cyan-400'} flex items-center justify-center font-bold text-xs shrink-0 mt-1`}>
-                          {author.name.charAt(0).toUpperCase()}
+                        <div className={`w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-xs shrink-0 mt-1 overflow-hidden`}>
+                          {author.authorImg ? (
+                            <img src={author.authorImg} alt={author.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className={idx === 0 ? 'text-emerald-400' : 'text-cyan-400'}>{author.name.charAt(0).toUpperCase()}</span>
+                          )}
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="text-sm font-bold truncate flex items-center gap-1.5">
                             {author.name} 
-                            {author.isVerified && <ProBadge type="official" />}
-                            {author.isPro && !author.isVerified && <ProBadge type="pro" />}
+                            {author.isVerified && <img src="/VerifiedBadge.svg" alt="Verified" className="w-3.5 h-3.5 inline-block" />}
+                            {author.isPro && !author.isVerified && <span className="text-[8px] bg-emerald-500/20 text-emerald-400 px-1 py-0.5 rounded font-bold">PRO</span>}
                           </div>
                           <div className="text-[10px] text-zinc-400 mb-1">{author.count} resources shared</div>
                           <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed mb-2">

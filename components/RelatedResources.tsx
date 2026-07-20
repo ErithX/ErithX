@@ -93,7 +93,10 @@ export default function RelatedResources({ currentDocId, currentTags }: RelatedR
               <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
                 <ArrowUp className="w-3 h-3" />{doc.upvotes || 0}
                 <span className="text-zinc-700">•</span>
-                <span>{doc.authorName || 'Anonymous'}</span>
+                <span className="flex items-center gap-1">
+                  {doc.authorName || 'Anonymous'}
+                  {doc.isVerified && <img src="/VerifiedBadge.svg" alt="Verified" className="w-3 h-3 inline-block" />}
+                </span>
               </div>
             </Link>
           );
