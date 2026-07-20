@@ -29,7 +29,7 @@ export default function Hero() {
         style={imageMaskStyle}
       >
         <Image
-          src="/Landing/bg.png"
+          src="/landing/hero-bg.png"
           fill
           className="object-cover"
           alt="DSA Quest Platform Dashboard Preview showing upcoming contests and analytics"

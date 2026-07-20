@@ -18,7 +18,7 @@ export default function Ecosystem() {
 
           {/* Card 1: Contest Tracker (Large) */}
           <div className="bento-card md:col-span-4 rounded-2xl overflow-hidden relative group border border-white/5">
-            <Image src="/Landing/banner1.avif" fill className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Ultimate Contest Calendar showing active coding competitions" />
+            <Image src="/landing/contest-tracker-banner.avif" fill className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Ultimate Contest Calendar showing active coding competitions" />
             <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-transparent"></div>
             <div className="relative z-10 p-7 h-full flex flex-col justify-between">
               <div>
@@ -51,7 +51,7 @@ export default function Ecosystem() {
 
           {/* Card 2: Milestone Cards -> High-Quality Free PDF Notes */}
           <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5">
-            <Image src="/Landing/study%20notes.jpg" fill className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Premium PDF Notes for B.Tech students" />
+            <Image src="/landing/study-notes.jpg" fill className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Premium PDF Notes for B.Tech students" />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent"></div>
             <div className="relative z-10 p-5 h-full flex flex-col justify-between">
               <div>
@@ -79,7 +79,7 @@ export default function Ecosystem() {
 
           {/* Card 3: Notes Hub (Image) */}
           <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5">
-            <Image src="/Landing/PlatformMarquee.avif" fill className="object-cover opacity-40 group-hover:scale-105 transition-transform duration-500" alt="B.Tech Previous Year Question Papers Archive" />
+            <Image src="/landing/notes-hub-marquee.avif" fill className="object-cover opacity-40 group-hover:scale-105 transition-transform duration-500" alt="B.Tech Previous Year Question Papers Archive" />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
             <div className="relative z-10 p-6 h-full flex flex-col justify-end">
               <div className="w-9 h-9 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center mb-3">
@@ -92,7 +92,7 @@ export default function Ecosystem() {
 
           {/* Card 4: Project Monitor -> Elite Project Roadmaps */}
           <div className="bento-card md:col-span-4 rounded-2xl overflow-hidden relative group border border-white/5">
-            <Image src="/Landing/ChatGPT%20Image%20Jul%2018,%202026,%2009_30_44%20PM.png" fill className="object-cover opacity-25 group-hover:opacity-35 transition-opacity" alt="Elite Project Architecture Guides and Roadmaps" />
+            <Image src="/landing/project-roadmaps.png" fill className="object-cover opacity-25 group-hover:opacity-35 transition-opacity" alt="Elite Project Architecture Guides and Roadmaps" />
             <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/70 to-transparent"></div>
             <div className="relative z-10 p-7 h-full flex flex-col justify-between">
               <div>
