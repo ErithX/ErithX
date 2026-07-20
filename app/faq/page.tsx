@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect } from 'react';
+import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
 import * as Lucide from 'lucide-react';
@@ -49,17 +50,25 @@ export default function FaqPage() {
     
     {/*  1. HERO SECTION WITH TOP IMAGE  */}
     <section className="relative w-full h-[45vh] min-h-[340px] flex items-end overflow-hidden">
-      <img src="https://picsum.photos/seed/faqhero/1600/800.jpg" className="absolute inset-0 w-full h-full object-cover" alt="Frequently Asked Questions" />
+      <Image 
+        src="/FAQ-Desktop.png" 
+        fill 
+        sizes="100vw"
+        priority
+        className="object-cover" 
+        alt="Frequently Asked Questions background showing people collaborating" 
+      />
       
-      {/*  Gradient Overlay  */}
+      {/*  Gradient Overlays for text visibility  */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/30 to-transparent"></div>
       <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent"></div>
 
       {/*  Overlay Text Content  */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 pb-12 md:pb-16 w-full">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-white/90">Support Center</span>
+        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-6 shadow-[0_0_30px_rgba(255,255,255,0.05)] text-zinc-300">
+          <Lucide.HelpCircle className="w-4 h-4 text-emerald-400" />
+          <span className="text-xs font-semibold tracking-wider uppercase">Support Center</span>
         </div>
         
         <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-medium text-white mb-4 leading-[1.05]">
