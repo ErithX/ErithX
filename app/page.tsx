@@ -25,6 +25,8 @@ export default function Home() {
   };
   return (
     <div className="min-h-screen bg-[#09090b] text-white selection:bg-emerald-500/30 selection:text-white">
+      {/* Prefetch resources API data so it's instantly available when navigating to /resources */}
+      <link rel="preload" href="/api/resources" as="fetch" crossOrigin="anonymous" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

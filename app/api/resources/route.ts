@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import connectToDatabase from '@/app/lib/mongodb';
 import { Resource } from '@/models/Resource';
 
+export const revalidate = 300; // Cache this route's response for 5 minutes
+
 export async function GET() {
   try {
     await connectToDatabase();

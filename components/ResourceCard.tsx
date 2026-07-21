@@ -47,18 +47,25 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
 
   const tc = getTypeConfig();
 
-  const renderContentPreview = () => {
-    if (item.type === 'image') {
       return (
         <div className="relative overflow-hidden">
-          <img src={`https://picsum.photos/seed/${item.imageSrc}/600/400.jpg`} className="w-full h-48 object-cover" alt={item.title} />
+          <img 
+            src={item.imageSrc?.startsWith('http') ? item.imageSrc : `https://picsum.photos/seed/${item.imageSrc || item.id}/600/400.jpg`} 
+            className="w-full h-48 object-cover" 
+            alt={item.title} 
+            onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/image/600/400.jpg" }}
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent"></div>
         </div>
       );
-    } else if (item.type === 'pdf') {
       return (
         <div className="relative overflow-hidden">
-          <img src={`https://picsum.photos/seed/${item.coverImg}/600/300.jpg`} className="w-full h-36 object-cover opacity-60" alt={item.title} />
+          <img 
+            src={item.coverImg?.startsWith('http') ? item.coverImg : `https://picsum.photos/seed/${item.coverImg || item.id}/600/300.jpg`} 
+            className="w-full h-36 object-cover opacity-60" 
+            alt={item.title} 
+            onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/pdfcover/600/300.jpg" }}
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
           <div className="absolute bottom-3 left-4 flex items-center gap-2">
             <div className="w-10 h-12 rounded bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
