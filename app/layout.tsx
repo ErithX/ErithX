@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     template: "%s | DSA Quest"
   },
   description: "Track upcoming coding contests and find high-quality DSA study materials. Prepare for tech interviews and placements.",
-  keywords: "competitive programming, contest tracker, coding contests, leetcode, codeforces, codechef, dsa practice, FAANG preparation, algorithm practice, coding interview prep",
+  keywords: "All in one software engineering platform, Computer science student ecosystem, Full stack engineering preparation platform, Complete tech career readiness hub, Next gen engineering education portal, Comprehensive coding companion website, BTech CSE complete student portal, Self taught software engineer launchpad, AI era developer training platform, College engineering to tech career gateway, DSA Quest, DSA Quest platform, DSA Quest official website, DSA Quest portal, DSA Quest roadmap",
   authors: [{ name: "DSA Quest Team" }],
   creator: "DSA Quest",
   openGraph: {

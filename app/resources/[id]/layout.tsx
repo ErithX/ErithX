@@ -36,6 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title,
       description,
+      keywords: doc.tags && doc.tags.length > 0 ? doc.tags.join(', ') : 'tech resource, programming, dsa',
       openGraph: {
         title,
         description,
