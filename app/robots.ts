@@ -14,6 +14,6 @@ export default function robots(): MetadataRoute.Robots {
         '/api/',
       ],
     },
-    sitemap: 'https://dsaquest.in/sitemap.xml',
+    sitemap: 'https://contest-tracker-zms3.vercel.app/sitemap.xml',
   };
 }

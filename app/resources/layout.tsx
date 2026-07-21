@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Discover Verified Tech Resources | DSA Quest',
     description: 'Get free computer science notes, past year university question papers (PYQs), and simple guides for interview preparation.',
-    url: 'https://dsaquest.in/resources',
+    url: 'https://contest-tracker-zms3.vercel.app/resources',
     type: 'website',
   },
   alternates: {
-    canonical: 'https://dsaquest.in/resources',
+    canonical: 'https://contest-tracker-zms3.vercel.app/resources',
   },
 };
 

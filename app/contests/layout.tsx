@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Live Coding Contests Calendar | DSA Quest',
     description: 'See all upcoming coding contests from LeetCode, Codeforces, CodeChef, and HackerRank in one simple calendar.',
-    url: 'https://dsaquest.in/contests',
+    url: 'https://contest-tracker-zms3.vercel.app/contests',
     type: 'website',
   },
   alternates: {
-    canonical: 'https://dsaquest.in/contests',
+    canonical: 'https://contest-tracker-zms3.vercel.app/contests',
   },
 };
 

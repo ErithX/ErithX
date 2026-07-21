@@ -20,7 +20,7 @@ export default function Home() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'DSA Quest',
-    url: 'https://dsaquest.in',
+    url: 'https://contest-tracker-zms3.vercel.app',
     description: 'Track upcoming coding contests and find high-quality DSA study materials.',
   };
   return (
