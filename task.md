@@ -84,5 +84,5 @@ pending : Page speed and Pre fetching resources
 
 ## Image Optimization & SEO Tasks
 - `[ ]` Convert standard `<img>` tags to Next.js `<Image>` component for main Landing Page images (Hero section, Ecosystem, Manifesto, Journey, etc.).
-- `[ ]` Add proper descriptive `alt` fallback text to all images for SEO ranking and accessibility.
+- `[ ]` **Dynamic Alt Text Implementation**: When a user uploads a cover image or resource image in the dashboard, either (A) prompt the user with a mandatory 'Alt Text' input field to describe the image manually, OR (B) use an AI API (like Google Gemini Vision) in the backend to auto-generate descriptive alt text from the image buffer before saving. Save this generated/inputted `alt_text` alongside the image URL in the MongoDB/Supabase database. Update frontend components (`<img alt={item.alt_text} />`) to render it.
 - `[ ]` Configure `next.config.mjs` with proper remote patterns (domains) to support external images in `next/image` (proper image routing).

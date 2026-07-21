@@ -49,10 +49,19 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
       if (item.type === 'image') {
       return (
         <div className="relative overflow-hidden w-full h-48 bg-zinc-900 flex items-center justify-center">
-          {item.imageSrc && !item.imageSrc.includes('picsum') ? (
-            <img src={item.imageSrc} className="w-full h-full object-cover" alt={item.title} />
+          {item.imageSrc ? (
+            <img 
+              src={item.imageSrc} 
+              className="w-full h-full object-cover" 
+              alt={item.title} 
+              onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/video/800/600.jpg" }}
+            />
           ) : (
-            <ImageIcon className="w-8 h-8 text-zinc-700" />
+            <img 
+              src="https://picsum.photos/seed/video/800/600.jpg" 
+              className="w-full h-full object-cover" 
+              alt="Default Video Thumbnail" 
+            />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent pointer-events-none"></div>
         </div>
@@ -60,10 +69,19 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
     } else if (item.type === 'pdf') {
       return (
         <div className="relative overflow-hidden w-full h-36 bg-zinc-900 flex items-center justify-center">
-          {item.coverImg && !item.coverImg.includes('picsum') ? (
-            <img src={item.coverImg} className="w-full h-full object-cover opacity-60" alt={item.title} />
+          {item.coverImg ? (
+            <img 
+              src={item.coverImg} 
+              className="w-full h-full object-cover opacity-60" 
+              alt={item.title} 
+              onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/pdfcover/800/600.jpg" }}
+            />
           ) : (
-            <FileText className="w-8 h-8 text-zinc-700 opacity-50" />
+            <img 
+              src="https://picsum.photos/seed/pdfcover/800/600.jpg" 
+              className="w-full h-full object-cover opacity-60" 
+              alt="Default PDF Cover" 
+            />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent pointer-events-none"></div>
           <div className="absolute bottom-3 left-4 flex items-center gap-2">

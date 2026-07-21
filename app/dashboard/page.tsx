@@ -38,6 +38,13 @@ export default function DashboardPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Redirect professional users to the pro dashboard
+  useEffect(() => {
+    if (!loading && user?.user_metadata?.role === 'professional') {
+      window.location.href = '/dashboard/pro';
+    }
+  }, [user, loading]);
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = '/';
