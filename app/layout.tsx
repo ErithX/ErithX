@@ -28,9 +28,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
+    url: "https://dsaquest.in",
     siteName: "DSA Quest",
     title: "DSA Quest - Track All Coding Contests in One Place",
     description: "Never miss a coding contest! Track LeetCode, Codeforces, CodeChef, AtCoder & more. Get email alerts and prepare for FAANG interviews.",
+  },
+  alternates: {
+    canonical: "https://dsaquest.in",
   },
   twitter: {
     card: "summary_large_image",
