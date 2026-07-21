@@ -46,7 +46,8 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
   };
 
   const tc = getTypeConfig();
-
+  const renderContentPreview = () => {
+    if (item.type === 'image') {
       return (
         <div className="relative overflow-hidden">
           <img 
@@ -58,6 +59,7 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent"></div>
         </div>
       );
+    } else if (item.type === 'pdf') {
       return (
         <div className="relative overflow-hidden">
           <img 
