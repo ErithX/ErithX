@@ -67,25 +67,26 @@ export default function Hero() {
 
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.05]">
+              <span className="block text-sm md:text-base text-white/90 font-medium tracking-wider mb-4 mt-4"> NEXT-GEN ENGINEERING EDUCATION PLATFORM</span>
               Your Coding<br />Era Starts<br />Now.
             </h1>
 
             <p className="text-lg text-zinc-400 leading-relaxed mb-4 max-w-lg mx-auto lg:mx-0">
-              Stop hoarding 50 tabs and missing deadlines. Track every contest, steal the best notes, and flex your hustle.
-              Built for students who actually want to win.
+              Stop hoarding 50 tabs and missing deadlines. Track every coding contest, steal the best CS notes, and flex your hustle.
+              Built for software engineering students who actually want to win.
             </p>
             <p className="text-sm text-zinc-500 mb-10 max-w-lg mx-auto lg:mx-0">
-              Preparation with intent, not burnout. One ecosystem for contests, notes, projects, and the community that gets it.
+              Preparation with intent, not burnout. One all-in-one ecosystem for contests, notes, projects, and the community that gets it.
             </p>
 
-            <div className="flex items-center justify-center lg:justify-start gap-4 flex-wrap mb-12 w-full">
+            <div className="flex items-center justify-center lg:justify-start gap-4 flex-wrap mb-8 w-full">
               <Link href="/resources" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5">
                 <Users className="w-4 h-4" />
-                Explore Community
+                Browse Study Resources
               </Link>
               <Link href="/contests" className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white/5 transition-all">
                 <LayoutDashboard className="w-4 h-4" />
-                View Contests
+                Track Coding Contests
               </Link>
             </div>
 

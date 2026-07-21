@@ -324,7 +324,7 @@ export default function HomePage() {
                 <span className="text-[10px] font-bold uppercase tracking-widest text-red-400">Live & Upcoming</span>
               </div>
               <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
-                <h2 className="text-3xl font-medium tracking-tight">Contest Board</h2>
+                <h2 className="text-3xl font-medium tracking-tight">Live & Upcoming Coding Competitions Dashboard</h2>
                 <button onClick={refreshContests} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg glass text-xs font-medium text-zinc-400 hover:text-white transition-all">
                   <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
                   Refresh
@@ -469,7 +469,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The Grand Vision</span>
-            <h2 className="text-3xl font-medium tracking-tight mb-3">More Than a Reminder</h2>
+            <h2 className="text-3xl font-medium tracking-tight mb-3">DSA Quest: The Complete Computer Science Student Portal</h2>
             <p className="text-sm text-zinc-500 max-w-lg mx-auto">DSA Quest is evolving from a simple contest tracker into the definitive starter pack for every tech student — completely free, ad-free, forever.</p>
           </div>
 
@@ -479,7 +479,7 @@ export default function HomePage() {
               <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4">
                 <BookOpen className="w-5 h-5 text-emerald-400" />
               </div>
-              <h3 className="text-lg font-medium mb-2">Expert Knowledge Hub</h3>
+              <h3 className="text-lg font-medium mb-2">Expert Engineering Resource Hub</h3>
               <p className="text-xs text-zinc-500 leading-relaxed mb-4">Curated resources by verified industry professionals — real interview experiences, career playbooks, and study materials from SDEs at top companies.</p>
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-2">

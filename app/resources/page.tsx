@@ -117,13 +117,13 @@ export default function ResourcesPage() {
               <span className="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
               <span className="text-xs font-medium text-emerald-400">2,000+ learners active now</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4 gradient-text">The Complete Student Ecosystem</h1>
+            <h1 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4 gradient-text">The Complete Software Engineering & Student Resource Hub</h1>
             <p className="text-sm text-zinc-400 leading-relaxed mb-8 max-w-lg">
-              Curated resources by verified industry professionals. Share study materials, blogs, diagrams, and links — all in one place. Built for students, backed by pros.
+              Access our all-in-one tech education platform featuring curated BTech CSE semester notes, engineering PDF downloads, technical blogs, and tech career roadmaps. Curated by verified pros, built for students.
             </p>
             <div className="flex items-center gap-4">
               <a href="#feed" className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">
-                Explore Feed
+                Browse All Resources
                 <ArrowDown className="w-3.5 h-3.5" />
               </a>
               <button onClick={() => router.push('/dashboard/write')} className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/10 text-zinc-300 text-xs font-medium hover:bg-white/5 transition-all">
@@ -225,9 +225,9 @@ export default function ResourcesPage() {
             <div className="hidden lg:block w-72 flex-shrink-0 space-y-6">
               {/* Trending Tags */}
               <div className="glass rounded-xl p-5">
-                <h3 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
-                  <TrendingUp className="w-3.5 h-3.5" /> Trending Tags
-                </h3>
+                <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
+                  <TrendingUp className="w-3.5 h-3.5" /> Trending Tech Categories
+                </h2>
                 <div className="flex flex-wrap gap-2">
                   {(() => {
                     const tagCounts: Record<string, number> = {};

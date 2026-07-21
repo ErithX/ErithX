@@ -9,7 +9,7 @@ export default function Ecosystem() {
         {/* Header */}
         <div className="text-center mb-16 scroll-reveal">
           <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The Complete Resource Vault</span>
-          <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Everything in one place.<br /><span className="text-zinc-500">Zero fluff.</span></h2>
+          <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Coding Contests & Study Resources.<br /><span className="text-zinc-500">Zero fluff.</span></h2>
           <p className="text-sm text-zinc-500 max-w-xl mx-auto">The premier collection of contest trackers, semester study materials, engineering PDFs, and precise tech roadmaps. Built for modern engineers.</p>
         </div>
 
