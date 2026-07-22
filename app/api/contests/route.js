@@ -3,6 +3,7 @@ import { getCachedData, setCachedData } from "./cache";
 
 import { fetchContests as fetchClist } from "./providers/Clist";
 import { fetchContests as fetchMultiScraper } from "./providers/MultiScraper";
+import { applyContestRules } from "./algorithm";
 
 export async function GET() {
   try {
@@ -28,10 +29,15 @@ export async function GET() {
       source = "MultiScraper";
     }
 
+    const processed = applyContestRules(contests);
+
     const response = {
       success: true,
       source,
-      contests,
+      contests: processed.contests,
+      longTermContests: processed.longTermContests,
+      categories: processed.categories,
+      filterStats: processed.filterStats,
       lastUpdated: new Date().toISOString(),
     };
 

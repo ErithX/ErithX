@@ -45,7 +45,7 @@ export async function fetchContests() {
         durationSeconds: c.duration,
         
         problemCount: null,
-        participantCount: null,
+        participantCount: c.n_statistics ?? c.n_statistic ?? c.statistics ?? null,
         
         status,
         

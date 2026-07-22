@@ -1,7 +1,9 @@
 
 
+type CachePayload = Record<string, unknown>;
+
 type CacheType = {
-  data: any;
+  data: CachePayload;
   timestamp: number;
 } | null;
 
@@ -23,7 +25,7 @@ export function getCachedData() {
   return cache.data;
 }
 
-export function setCachedData(data: any) {
+export function setCachedData(data: CachePayload) {
   cache = {
     data,
     timestamp: Date.now(),

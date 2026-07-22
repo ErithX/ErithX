@@ -14,44 +14,7 @@ import type { User } from '@supabase/supabase-js';
 import Navbar from '@/components/Navbar';
 import { useAuthStore } from '@/store/authStore';
 
-const INITIAL_CONTEST_DATA: Contest[] = [
-  {
-    id: 1, platform: 'hackerrank', platformColor: '#22c55e', platformBg: 'rgba(34,197,94,0.1)', platformBorder: 'rgba(34,197,94,0.2)',
-    title: 'ProjectEuler+', status: 'live', statusLabel: 'LIVE NOW!',
-    date: 'Jul 7, 2014', time: '9:08 PM IST', duration: '4776d 13h remaining',
-    hot: false, participants: '12.4K', category: 'Competitive Programming', priority: 'Hot', difficulty: 'Beginner', isNonEnglish: false
-  },
-  {
-    id: 2, platform: 'hackerearth', platformColor: '#3b82f6', platformBg: 'rgba(59,130,246,0.1)', platformBorder: 'rgba(59,130,246,0.2)',
-    title: 'Turing Hiring Challenge 2026', status: 'live', statusLabel: 'LIVE NOW!',
-    date: 'Jun 9, 2026', time: '6:31 PM IST', duration: '40d 3h remaining',
-    hot: false, participants: '8.7K', category: 'Hiring Challenges', priority: 'Recommended', difficulty: 'Intermediate', isNonEnglish: false
-  },
-  {
-    id: 3, platform: 'codechef', platformColor: '#f97316', platformBg: 'rgba(249,115,22,0.1)', platformBorder: 'rgba(249,115,22,0.2)',
-    title: 'Starters 244', status: 'today', statusLabel: 'TODAY!',
-    date: 'Jun 24, 2026', time: '8:00 PM IST', duration: 'Starts in 2h 0m',
-    hot: true, participants: '23.1K', category: 'Competitive Programming', priority: 'Recommended', difficulty: 'Beginner', isNonEnglish: false
-  },
-  {
-    id: 4, platform: 'leetcode', platformColor: '#eab308', platformBg: 'rgba(234,179,8,0.1)', platformBorder: 'rgba(234,179,8,0.2)',
-    title: 'Weekly Contest 447', status: 'upcoming', statusLabel: 'UPCOMING',
-    date: 'Jun 29, 2026', time: '8:00 AM IST', duration: 'Starts in 5d 4h',
-    hot: false, participants: '—', category: 'Competitive Programming', priority: 'Hot', difficulty: 'Intermediate', isNonEnglish: false
-  },
-  {
-    id: 5, platform: 'codeforces', platformColor: '#ef4444', platformBg: 'rgba(239,68,68,0.1)', platformBorder: 'rgba(239,68,68,0.2)',
-    title: 'Round 1023 (Div. 2)', status: 'upcoming', statusLabel: 'UPCOMING',
-    date: 'Jun 27, 2026', time: '8:35 PM IST', duration: 'Starts in 3d 8h',
-    hot: true, participants: '—', category: 'Competitive Programming', priority: 'Hot', difficulty: 'Intermediate', isNonEnglish: false
-  },
-  {
-    id: 6, platform: 'leetcode', platformColor: '#eab308', platformBg: 'rgba(234,179,8,0.1)', platformBorder: 'rgba(234,179,8,0.2)',
-    title: 'Biweekly Contest 152', status: 'upcoming', statusLabel: 'UPCOMING',
-    date: 'Jul 5, 2026', time: '10:30 PM IST', duration: 'Starts in 11d 2h',
-    hot: false, participants: '—', category: 'Competitive Programming', priority: 'Hot', difficulty: 'Intermediate', isNonEnglish: false
-  }
-];
+const INITIAL_CONTEST_DATA: Contest[] = [];
 
 export default function HomePage() {
   const [activePlatform, setActivePlatform] = useState('all');
@@ -104,7 +67,7 @@ export default function HomePage() {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     if (searchParams.get('auth') === 'signin') {
-      setIsAuthOpen(true);
+      window.setTimeout(() => setIsAuthOpen(true), 0);
       // Clean up the URL query parameter without refreshing
       const newUrl = window.location.pathname;
       window.history.replaceState({}, document.title, newUrl);
@@ -338,7 +301,7 @@ export default function HomePage() {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <span className="text-[10px] sm:text-xs text-zinc-500 font-medium min-w-[70px] uppercase tracking-wider">Category</span>
                   <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide w-full pb-1 sm:pb-0">
-                    {['All', 'Competitive Programming', 'Hackathons', 'AI / ML', 'Cyber Security / CTF', 'Hiring Challenges'].map(cat => (
+                    {['All', 'DSA & CP', 'AI / ML', 'Cybersecurity (CTF)'].map(cat => (
                       <button key={cat} onClick={() => applyFilters(activePlatform, cat, activeDifficulty)} className={`px-4 py-1.5 sm:py-2 rounded-xl text-xs font-semibold border whitespace-nowrap transition-all ${activeCategory === cat ? 'bg-emerald-500 text-zinc-950 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white'}`}>
                         {cat}
                       </button>
@@ -357,8 +320,8 @@ export default function HomePage() {
                         className="bg-transparent border border-white/10 text-zinc-200 text-xs rounded-lg pl-3 pr-8 py-2 outline-none focus:border-emerald-500/50 min-w-[150px] cursor-pointer text-left relative flex items-center justify-between hover:bg-white/5 transition-colors"
                       >
                         <span>
-                          {activeDifficulty === 'Beginner' ? '🟢 Beginner' : 
-                           activeDifficulty === 'Intermediate' ? '🟡 Intermediate' : 'All Difficulties'}
+                          {activeDifficulty === 'Beginner' ? 'Beginner' : 
+                           activeDifficulty === 'Intermediate' ? 'Intermediate' : 'All Difficulties'}
                         </span>
                         <div className="text-zinc-500 text-[10px]">▼</div>
                       </button>
@@ -374,7 +337,7 @@ export default function HomePage() {
                               }}
                               className={`w-full text-left px-3 py-2 text-xs transition-colors ${activeDifficulty === diff ? 'bg-emerald-500/20 text-emerald-400' : 'text-zinc-300 hover:bg-emerald-500/10 hover:text-emerald-400'}`}
                             >
-                              {diff === 'Beginner' ? '🟢 Beginner' : diff === 'Intermediate' ? '🟡 Intermediate' : 'All Difficulties'}
+                              {diff === 'Beginner' ? 'Beginner' : diff === 'Intermediate' ? 'Intermediate' : 'All Difficulties'}
                             </button>
                           ))}
                         </div>
@@ -409,6 +372,13 @@ export default function HomePage() {
             ))}
           </div>
 
+          {contests.length === 0 && (
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] px-6 py-10 text-center">
+              <p className="text-sm font-medium text-zinc-300">No contests match this filtered feed right now.</p>
+              <p className="mt-2 text-xs text-zinc-500">Try refreshing, or switch back to All categories.</p>
+            </div>
+          )}
+
           <div className="text-center mt-10">
             {visibleCount < contests.length && (
               <button onClick={() => setVisibleCount(prev => prev + 12)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 text-zinc-400 text-xs font-medium hover:bg-white/5 hover:text-white transition-all">
@@ -439,7 +409,7 @@ export default function HomePage() {
               </div>
               <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-2">Step 1</div>
               <h3 className="text-lg font-medium mb-2">One-Click Sign Up</h3>
-              <p className="text-xs text-zinc-500 leading-relaxed">Just enter your email. No account creation, no passwords to remember. One click and you're in.</p>
+              <p className="text-xs text-zinc-500 leading-relaxed">Just enter your email. No account creation, no passwords to remember. One click and you&apos;re in.</p>
             </div>
 
             <div className="text-center relative">
@@ -448,7 +418,7 @@ export default function HomePage() {
               </div>
               <div className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest mb-2">Step 2</div>
               <h3 className="text-lg font-medium mb-2">Pick Your Platforms</h3>
-              <p className="text-xs text-zinc-500 leading-relaxed">Select which platforms and contest types you care about. We track 10+ platforms so you don't have to.</p>
+              <p className="text-xs text-zinc-500 leading-relaxed">Select which platforms and contest types you care about. We track 10+ platforms so you don&apos;t have to.</p>
             </div>
 
             <div className="text-center relative">
