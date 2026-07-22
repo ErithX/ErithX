@@ -3,7 +3,12 @@ import connectToDatabase from '@/app/lib/mongodb';
 import { Resource } from '@/models/Resource';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+  const rawBaseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://contest-tracker-zms3.vercel.app');
+
+  const baseUrl = rawBaseUrl.replace(/\/+$/, '');
 
   // Static Routes
   const staticRoutes: MetadataRoute.Sitemap = [
