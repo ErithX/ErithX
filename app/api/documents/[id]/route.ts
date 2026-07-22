@@ -50,9 +50,41 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     // Generate slug if it doesn't exist and we have a title
     if (!existingDoc.slug && body.title) {
-      const baseSlug = body.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-      const randomSuffix = Math.floor(Math.random() * 10000);
-      body.slug = `${baseSlug || 'resource'}-${randomSuffix}`;
+      const stopWords = ['a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'with', 'to', 'for', 'of', 'at', 'by', 'is', 'are', 'was'];
+      
+      let cleanString = body.title.toLowerCase().replace(/[^a-z0-9\s-]/g, ' ');
+      let words = cleanString.split(/[\s-]+/).filter(Boolean);
+      let filteredWords = words.filter((word: string) => !stopWords.includes(word));
+      
+      if (filteredWords.length === 0) {
+          filteredWords = words;
+      }
+      
+      let baseSlug = '';
+      for (let i = 0; i < filteredWords.length; i++) {
+          const word = filteredWords[i];
+          if (baseSlug.length + word.length + (baseSlug.length > 0 ? 1 : 0) <= 60) {
+              baseSlug += (baseSlug.length > 0 ? '-' : '') + word;
+          } else {
+              break;
+          }
+      }
+      
+      if (!baseSlug && filteredWords.length > 0) {
+          baseSlug = filteredWords[0].substring(0, 60);
+      }
+      
+      let finalSlug = baseSlug || 'resource';
+      let slugExists = await Resource.exists({ slug: finalSlug, _id: { $ne: id } });
+      let counter = 1;
+      
+      while (slugExists) {
+          finalSlug = `${baseSlug}-${counter}`;
+          slugExists = await Resource.exists({ slug: finalSlug, _id: { $ne: id } });
+          counter++;
+      }
+      
+      body.slug = finalSlug;
     }
 
     const updatedDoc = await Resource.findByIdAndUpdate(
