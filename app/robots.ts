@@ -4,13 +4,16 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
-      allow: '/',
+      allow: [
+        '/',
+        '/api/contests',
+        '/api/resources',
+      ],
       disallow: [
         '/dashboard',
         '/dashboard/',
         '/auth',
         '/auth/',
-        '/api',
         '/api/',
       ],
     },

@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Zap, Bell, LogIn, Trophy, BellRing, RefreshCw, ChevronsDown, 
@@ -7,6 +9,7 @@ import {
   Mail, ShieldCheck, Clock, XCircle, Twitter, Github, Linkedin, Flame, LogOut
 } from 'lucide-react';
 import DsaContestCard, { Contest } from '@/components/DsaContestCard';
+import LiveContestCard from '@/components/LiveContestCard';
 import AuthModal from '@/components/AuthModal';
 import { contestFetch } from '@/app/utils/contestFetch';
 import { createClient } from '@/app/lib/supabase/client';
@@ -161,6 +164,8 @@ export default function HomePage() {
   });
 
   const liveCount = allContests.filter(c => c.status.toLowerCase() === 'live').length;
+  const liveContests = contests.filter(c => c.status === 'live');
+  const upcomingContests = contests.filter(c => c.status !== 'live');
 
   return (
     <div className="min-h-screen">
@@ -366,11 +371,49 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {contests.slice(0, visibleCount).map((contest, index) => (
-              <DsaContestCard key={contest.id} contest={contest} index={index} />
-            ))}
-          </div>
+          {/* LIVE NOW SECTION */}
+          {liveContests.length > 0 && (
+            <div className="mb-12 relative">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Flame className="w-4 h-4 text-orange-500" />
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-orange-500">Live Now</h3>
+                </div>
+                <button className="text-xs text-zinc-400 hover:text-white transition-colors flex items-center gap-1 group">
+                  View all live <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </button>
+              </div>
+              
+              <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0">
+                {liveContests.map((contest, index) => (
+                  <div key={contest.id} className="snap-start shrink-0 w-[85vw] sm:w-[480px] lg:w-[48%]">
+                    <LiveContestCard contest={contest} index={index} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* STARTING SOON SECTION */}
+          {upcomingContests.length > 0 && (
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-zinc-400" />
+                  <h3 className="text-sm font-bold text-zinc-200">Starting Soon</h3>
+                </div>
+                <button className="text-xs text-zinc-400 hover:text-white transition-colors flex items-center gap-1 group">
+                  View all starting soon <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </button>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {upcomingContests.slice(0, visibleCount).map((contest, index) => (
+                  <DsaContestCard key={contest.id} contest={contest} index={index} />
+                ))}
+              </div>
+            </div>
+          )}
 
           {contests.length === 0 && (
             <div className="rounded-xl border border-white/10 bg-white/[0.03] px-6 py-10 text-center">

@@ -28,3 +28,18 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      2. In the "Create Resource" frontend (`app/dashboard/write/page.tsx`), we built a hidden dropdown that only renders if the logged-in user matches `process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS`.
      3. When the Admin selects a fake alias (e.g., "Rahul Sharma") and submits the form, the frontend passes `overrideAuthorId` in the API payload.
      4. I manually debugged the backend logic (`/api/documents/[id]/route.ts`) to intercept this payload. I wrote the logic to fetch the fake user from DB, override `userId`, `authorName`, `isVerified`, etc. in the request body, and delete `overrideAuthorId` so it saves the resource perfectly on behalf of the alias!
+
+7. Hybrid Global Clock:
+   - Challenge: Running `setInterval` on individual contest cards for countdowns causes severe performance issues (re-rendering many components simultaneously every second) and introduces hydration mismatches between Server-Side Rendering (SSR) and Client-Side Rendering (CSR). Furthermore, if the user's system clock is out of sync, individual countdown calculations might differ or break.
+   - Solution: Implemented a **Hybrid Global Clock Architecture**.
+     - Global Clock Singleton: A single `useGlobalClock` hook acts as a central event emitter. It runs exactly ONE `setInterval` (1-second tick) for the entire application, passing the current UTC timestamp to any subscribing component.
+     - Hydration Safety: The clock initializes as `null` on the server and sets itself to `Date.now()` upon client hydration. This guarantees zero SSR hydration mismatches.
+     - Smart Refresh / Adaptive Precision: Instead of ticking every second, countdown strings are dynamically formatted based on proximity (> 24h, > 1h, < 1h, Live).
+     - Centralized Logic: `DsaContestCard.tsx` consumes the singleton clock to compute its string, falling back to a static render if the clock hasn't hydrated yet.
+
+8. Selective Googlebot API Access in robots.ts:
+   - Challenge: Google Search Console reported `Page resources 1/32 couldn't be loaded - Googlebot blocked by robots.txt` for XHR requests to `https://contest-tracker-zms3.vercel.app/api/contests` when rendering public pages like `/contests`. Because `robots.ts` previously disallowed all `/api` and `/api/` paths universally, Googlebot refused to execute client-side XHR fetches during page rendering.
+   - Solution: Configured path-specific `allow` rules in `app/robots.ts` for public data endpoints required during page rendering (`/api/contests`, `/api/resources`).
+     - Standard Googlebot robots.txt parsing evaluates the longest (most specific) matching prefix rule.
+     - `Allow: /api/contests` (length 13) takes precedence over `Disallow: /api/` (length 5) for contest fetches.
+     - Private endpoints (`/api/admin`, `/api/cron`, `/api/user`, etc.) remain disallowed and protected from crawler indexing.

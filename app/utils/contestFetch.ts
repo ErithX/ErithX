@@ -15,25 +15,6 @@ interface ApiContest {
   priorityScore?: number;
 }
 
-const formatDuration = (seconds?: number): string => {
-  if (!seconds) return 'Unknown duration';
-
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-
-  if (hours >= 24) {
-    const days = Math.floor(hours / 24);
-    const remainingHours = hours % 24;
-    return remainingHours ? `${days}d ${remainingHours}h` : `${days}d`;
-  }
-
-  if (hours > 0) {
-    return minutes ? `${hours}h ${minutes}m` : `${hours}h`;
-  }
-
-  return `${Math.max(minutes, 1)}m`;
-};
-
 const formatParticipants = (count: unknown): string => {
   const value = Number(count);
   if (!Number.isFinite(value) || value <= 0) return '-';
@@ -79,35 +60,43 @@ export const contestFetch = async (): Promise<Contest[] | void> => {
       }
 
       const statusLabel = status === 'live' ? 'LIVE NOW!' : status === 'today' ? 'TODAY!' : 'UPCOMING';
-      const dateStr = sDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       const timeStr = sDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
 
+      let level: 'Beginner' | 'Intermediate' | 'Advanced' = 'Intermediate';
+      if (c.difficulty) {
+        const diffLower = c.difficulty.toLowerCase();
+        if (diffLower.includes('beginner') || diffLower.includes('easy')) level = 'Beginner';
+        else if (diffLower.includes('advanced') || diffLower.includes('hard')) level = 'Advanced';
+      }
+
+      let domain = 'google.com';
+      if (c.contestUrl) {
+        try {
+          domain = new URL(c.contestUrl).hostname;
+        } catch (e) {}
+      } else {
+        domain = `${platformName.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
+      }
+
       return {
-        id: c.id,
+        id: parseInt(c.id) || Math.random(),
         platform: platformName,
         platformColor: config.color,
-        platformBg: config.bg,
-        platformBorder: config.border,
-        category: c.categoryTitle || config.category,
-        priority,
-        priorityScore: c.priorityScore,
-        difficulty: c.difficulty || 'Unknown',
-        isNonEnglish: false,
+        logo: `https://s2.googleusercontent.com/s2/favicons?domain=${domain}&sz=64`,
         title,
         status,
         statusLabel,
-        date: dateStr,
+        startDate: sDate.toISOString(),
         time: timeStr,
-        duration: formatDuration(c.durationSeconds),
-        rawStartTime: c.startTime,
-        rawDurationSeconds: c.durationSeconds,
-        hot: priority === 'Hot',
+        duration: Math.floor((c.durationSeconds || 0) / 60),
+        level,
+        isRecommended: priority === 'Hot' || priority === 'Recommended',
         participants: formatParticipants(c.participantCount),
-        url: c.contestUrl,
+        url: c.contestUrl || '#'
       };
     });
   } catch (err) {
-    console.log(err);
-    return;
+    console.error('Fetch error:', err);
+    return [];
   }
 };

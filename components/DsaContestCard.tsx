@@ -1,118 +1,101 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Users, Calendar as CalendarIcon, Clock, Timer, AlarmClock, Hourglass, Flame, Swords, CalendarPlus, Trophy } from 'lucide-react';
+import { Users, Clock, Swords, BookOpen, CalendarPlus, Trophy } from 'lucide-react';
 import { getFakeParticipantCount } from '@/app/utils/participants/generator';
-import { useGlobalClock } from '@/hooks/useGlobalClock';
 
 export interface Contest {
-  id: number | string;
-  platform: string;
-  platformColor: string;
-  platformBg: string;
-  platformBorder: string;
+  id: number;
+  platform: string; 
+  logo: string;     
   title: string;
   status: 'live' | 'today' | 'upcoming';
   statusLabel: string;
-  date: string;
-  time: string;
-  duration: string;
-  rawStartTime?: string;
-  rawDurationSeconds?: number;
-  hot: boolean;
+  startDate: string; 
+  time: string;      
+  duration: number;  
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  isRecommended: boolean;
   participants: string;
-  url?: string;
-  category: string;
-  priority: string;
-  priorityScore?: number;
-  difficulty: string;
-  isNonEnglish: boolean;
+  url: string;
+  platformColor?: string;
 }
 
-const getSmartCountdown = (now: number | null, startStr?: string, durSecs?: number) => {
-  if (!now || !startStr || !durSecs) return null;
-  const startMs = new Date(startStr).getTime();
-  const endMs = startMs + durSecs * 1000;
-  
-  if (now > endMs) return 'Ended';
-  
-  if (now >= startMs && now <= endMs) {
-    // Live
-    const remaining = Math.max(0, endMs - now);
-    const h = Math.floor(remaining / 3600000);
-    const m = Math.floor((remaining % 3600000) / 60000);
-    const s = Math.floor((remaining % 60000) / 1000);
-    if (h > 0) return `Ends in ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-    return `Ends in ${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-  }
-  
-  // Upcoming
-  const diff = startMs - now;
-  const days = Math.floor(diff / 86400000);
-  const hours = Math.floor((diff % 86400000) / 3600000);
-  const minutes = Math.floor((diff % 3600000) / 60000);
-  const seconds = Math.floor((diff % 60000) / 1000);
-  
-  if (days > 1) return `Starts in ${days}d ${hours}h`;
-  if (days === 1 || hours > 0) {
-    const totalHours = days * 24 + hours;
-    return `Starts in ${totalHours}h ${minutes}m`;
-  }
-  
-  // Less than 1 hour -> imminent (show seconds)
-  return `Starts in ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
-};
+const PlatformLogo = ({ url, platformName }: { url: string, platformName: string }) => {
+  const [error, setError] = useState(false);
 
-const generateGoogleCalendarUrl = (contest: Contest) => {
-  if (!contest.rawStartTime || !contest.rawDurationSeconds) return '#';
-  const start = new Date(contest.rawStartTime);
-  const end = new Date(start.getTime() + contest.rawDurationSeconds * 1000);
-  const formatTime = (d: Date) => d.toISOString().replace(/-|:|\.\d\d\d/g, '');
-  const text = encodeURIComponent(`${contest.platform} - ${contest.title}`);
-  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${formatTime(start)}/${formatTime(end)}`;
-};
-
-const PlatformLogo = ({ contest }: { contest: Contest }) => {
-  const [error, setError] = React.useState(false);
-
-  if (error) {
-    return <Trophy className="w-3.5 h-3.5 text-zinc-400" />;
-  }
-
-  let domain = 'google.com';
-  if (contest.url) {
-    try {
-      domain = new URL(contest.url).hostname;
-    } catch (e) {}
-  } else {
-    domain = `${contest.platform.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
+  if (error || !url) {
+    return <Trophy className="w-4 h-4 text-zinc-400" />;
   }
 
   return (
     <Image 
-      src={`https://s2.googleusercontent.com/s2/favicons?domain=${domain}&sz=64`} 
-      alt={`${contest.platform} Coding Contest Platform Logo - DSA Quest`}
-      title={`View ${contest.platform} Contests`}
-      width={14}
-      height={14}
-      className="object-contain rounded-sm"
+      src={url} 
+      alt={`${platformName} logo`}
+      width={16}
+      height={16}
+      className="w-full h-full object-contain"
       onError={() => setError(true)}
     />
   );
 };
 
 export default function DsaContestCard({ contest, index }: { contest: Contest, index: number }) {
-  const now = useGlobalClock();
-  const smartCountdown = getSmartCountdown(now, contest.rawStartTime, contest.rawDurationSeconds);
-  const isEnded = smartCountdown === 'Ended';
+  const timerRef = useRef<HTMLDivElement>(null);
+
+  const formatPlatformName = (host: string) => {
+    return host
+      .replace('naukri.com/', '') 
+      .replace('.com', '')
+      .replace('.org', '')
+      .replace(/\b\w/g, char => char.toUpperCase()); 
+  };
+
+  const generateGcalLink = () => {
+    const startDate = new Date(contest.startDate);
+    const endDate = new Date(startDate.getTime() + contest.duration * 60000);
+    const format = (date: Date) => date.toISOString().replace(/-|:|\.\d\d\d/g, "");
+    const text = encodeURIComponent(`${formatPlatformName(contest.platform)} ${contest.title}`);
+    const dates = `${format(startDate)}/${format(endDate)}`;
+    const details = encodeURIComponent(`Join the contest: ${contest.url}`);
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${dates}&details=${details}`;
+  };
+
+  useEffect(() => {
+    const updateTimer = () => {
+      if (!timerRef.current) return;
+
+      const now = new Date().getTime();
+      const start = new Date(contest.startDate).getTime();
+      const end = new Date(start + contest.duration * 60000).getTime();
+      
+      const targetDate = contest.status === 'live' ? end : start;
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        timerRef.current.innerText = "00:00:00";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      if (days > 0) {
+        timerRef.current.innerText = `${days}d ${String(hours).padStart(2, '0')}h`;
+      } else if (hours > 0) {
+        timerRef.current.innerText = `${String(hours).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m`;
+      } else {
+        timerRef.current.innerText = `${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`;
+      }
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [contest.startDate, contest.duration, contest.status]);
 
   const getStatusBadge = () => {
-    if (isEnded) {
-      return (
-        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-500/10 border border-zinc-500/20">
-          <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400">Ended</span>
-        </div>
-      );
-    }
     if (contest.status === 'live') {
       return (
         <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/20">
@@ -140,125 +123,110 @@ export default function DsaContestCard({ contest, index }: { contest: Contest, i
     }
   };
 
-  const getDurationIcon = () => {
-    if (contest.status === 'live') return <Timer className="w-3.5 h-3.5" />;
-    if (contest.status === 'today') return <AlarmClock className="w-3.5 h-3.5" />;
-    return <Hourglass className="w-3.5 h-3.5" />;
-  };
-
-  const getDurationColor = () => {
+  const getTimerColor = () => {
     if (contest.status === 'live') return 'text-red-400';
     if (contest.status === 'today') return 'text-emerald-400';
-    return 'text-zinc-500';
+    return 'text-cyan-400';
   };
+
+  const timerLabel = contest.status === 'live' ? 'Ends in' : 'Starts in';
+
+  const participantCount = (!contest.participants || contest.participants === '-') 
+    ? getFakeParticipantCount(contest.id || contest.title) 
+    : contest.participants;
 
   return (
     <div 
-      className={`contest-card glass rounded-xl overflow-hidden animate-in transition-all duration-300 flex flex-col h-full ${contest.priority === 'Hot' ? 'border-orange-500/30 shadow-[0_0_20px_rgba(249,115,22,0.15)] hover:shadow-[0_0_30px_rgba(249,115,22,0.25)] ring-1 ring-orange-500/20' : ''}`}
+      className="contest-card glass rounded-xl overflow-hidden animate-in relative flex flex-col h-full"
       style={{ animationDelay: `${index * 0.08}s` }}
     >
       <div className="p-5 flex-1 flex flex-col">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2 flex-wrap">
-            <div 
-              className="flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider" 
-              style={{
-                background: contest.platformBg,
-                color: contest.platformColor,
-                border: `1px solid ${contest.platformBorder}`
-              }}
-            >
-              <PlatformLogo contest={contest} />
-              {contest.platform}
+        {/* Top Row: Platform Logo & Name + Status (Left) and Recommended/Participants (Right) */}
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded bg-white/5 flex items-center justify-center overflow-hidden p-0.5">
+              <PlatformLogo url={contest.logo} platformName={formatPlatformName(contest.platform)} />
             </div>
+            <span className="text-[11px] font-medium text-zinc-300 capitalize">
+              {formatPlatformName(contest.platform)}
+            </span>
             {getStatusBadge()}
-            {contest.priority === 'Hot' && (
-              <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/20">
-                <Flame className="w-2.5 h-2.5 text-orange-400" />
-                <span className="text-[9px] font-bold uppercase tracking-wider text-orange-400">HOT</span>
-              </div>
-            )}
-            {contest.priority === 'Recommended' && (
+          </div>
+          
+          <div className="flex items-center gap-2 shrink-0">
+            {contest.isRecommended && (
               <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-yellow-500/10 border border-yellow-500/20">
                 <span className="text-[9px] font-bold uppercase tracking-wider text-yellow-400">⭐ REC</span>
               </div>
             )}
-            {contest.isNonEnglish && (
-              <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20" title="Non-English">
-                <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400">🌐 Non-EN</span>
-              </div>
-            )}
-          </div>
-          <div className="flex items-center gap-1 text-[10px] text-zinc-600 ml-2 shrink-0">
-            <Users className="w-3 h-3" />
-            {(!contest.participants || contest.participants === '-') ? getFakeParticipantCount(contest.id || contest.title) : contest.participants}
-          </div>
-        </div>
-
-        <div className="mb-2 flex items-center gap-2 text-xs text-zinc-400 font-medium">
-          <span>{contest.category}</span>
-          {contest.difficulty !== 'Unknown' && (
-            <>
-              <span className="w-1 h-1 rounded-full bg-zinc-600"></span>
-              <span className={
-                contest.difficulty === 'Beginner' ? 'text-emerald-400' :
-                contest.difficulty === 'Intermediate' ? 'text-yellow-400' : 'text-red-400'
-              }>
-                {contest.difficulty === 'Beginner' ? 'Beginner' :
-                 contest.difficulty === 'Intermediate' ? 'Intermediate' : 'Advanced'}
-              </span>
-            </>
-          )}
-        </div>
-
-        <h3 className="text-base font-medium mb-3 leading-snug flex-1">{contest.title}</h3>
-
-        <div className="space-y-2 mb-5">
-          {smartCountdown ? (
-            <div className={`flex items-center gap-2 text-xs font-bold ${contest.status === 'live' ? 'text-red-400' : 'text-emerald-400'}`}>
-              <Timer className="w-3.5 h-3.5" />
-              {smartCountdown}
+            <div className="flex items-center gap-1 text-[10px] text-zinc-600">
+              <Users className="w-3 h-3" />
+              {participantCount}
             </div>
-          ) : (
-            <>
-              <div className="flex items-center gap-2 text-xs text-zinc-400">
-                <CalendarIcon className="w-3.5 h-3.5 text-zinc-500" />
-                {contest.date}
-              </div>
-              <div className="flex items-center gap-2 text-xs text-zinc-400">
-                <Clock className="w-3.5 h-3.5 text-zinc-500" />
-                {contest.time}
-              </div>
-            </>
-          )}
-          <div className={`flex items-center gap-2 text-xs ${getDurationColor()}`}>
-            {getDurationIcon()}
-            {contest.duration}
           </div>
         </div>
 
+        {/* Old Beginner (Level) Tag */}
+        <div className="mb-2 flex items-center gap-2 text-xs text-zinc-400 font-medium">
+          <span>{formatPlatformName(contest.platform)} Contest</span>
+          <>
+            <span className="w-1 h-1 rounded-full bg-zinc-600"></span>
+            <span className={
+              contest.level === 'Beginner' ? 'text-emerald-400' :
+              contest.level === 'Intermediate' ? 'text-yellow-400' : 'text-red-400'
+            }>
+              {contest.level}
+            </span>
+          </>
+        </div>
+
+        {/* Title */}
+        <h3 className="text-base font-medium mb-4 flex-1 leading-snug">{contest.title}</h3>
+
+        {/* Large Live Timer Block */}
+        <div className="mb-4 p-3 rounded-lg bg-black/20 border border-white/5">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[9px] uppercase tracking-widest text-zinc-500">{timerLabel}</span>
+            <span className="text-[9px] text-zinc-500 flex items-center gap-1">
+              <Clock className="w-3 h-3" /> {contest.time}
+            </span>
+          </div>
+          <div 
+            ref={timerRef} 
+            className={`font-mono text-lg font-bold tabular-nums ${getTimerColor()}`}
+          >
+            --d --h --m --s
+          </div>
+        </div>
+
+        {/* Action Buttons with Tooltips */}
         <div className="flex items-center gap-2 mt-auto">
-          <button 
-            onClick={() => window.open(contest.url, '_blank')} 
-            className={`crack-btn flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border text-xs font-medium transition-all ${
-              isEnded 
-                ? 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-white' 
-                : 'bg-white/5 border-white/10 text-zinc-300 hover:bg-white hover:text-zinc-900'
-            }`}
+          <a 
+            href={contest.url} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            title="Participate in this contest"
+            className="crack-btn flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-white text-zinc-900 text-xs font-bold hover:bg-zinc-200 transition-all"
           >
             <Swords className="w-3.5 h-3.5" />
-            {isEnded ? 'View Solutions' : 'Crack this!'}
+            {contest.status === 'live' ? 'Join Now' : 'Participate'}
+          </a>
+          <a 
+            href={generateGcalLink()} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            title="Add to Google Calendar"
+            className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white transition-all"
+          >
+            <CalendarPlus className="w-4 h-4" />
+          </a>
+          <button 
+            onClick={() => alert('Solutions will be available after the contest!')} 
+            title="View Solutions & Editorials"
+            className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white transition-all"
+          >
+            <BookOpen className="w-4 h-4" />
           </button>
-          
-          {!isEnded && contest.rawStartTime && (
-            <button
-              onClick={() => window.open(generateGoogleCalendarUrl(contest), '_blank')}
-              className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white transition-all"
-              title="Add to Google Calendar"
-            >
-              <CalendarPlus className="w-4 h-4" />
-            </button>
-          )}
         </div>
       </div>
     </div>

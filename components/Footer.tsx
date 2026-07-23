@@ -18,7 +18,7 @@ export default function Footer() {
           </p>
         </div>
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 md:gap-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {/* Contests Navigation */}
           <div className="flex flex-col gap-3">
             <h3 className="font-semibold text-white text-xs uppercase tracking-wider text-emerald-400">Contests Hub</h3>
@@ -33,8 +33,16 @@ export default function Footer() {
             <Link href="/dashboard/write" className="text-sm text-zinc-400 hover:text-white transition-colors">Publish Study Notes</Link>
           </div>
 
+          {/* Top Reads (SEO Pillar Content) */}
+          <div className="flex flex-col gap-3">
+            <h3 className="font-semibold text-white text-xs uppercase tracking-wider text-emerald-400">Top Reads</h3>
+            <Link href="/resources/system-design-rag-era-vector-dbs-embeddings-new-round" className="text-sm text-zinc-400 hover:text-white transition-colors leading-snug">System Design for RAG & Vector DBs</Link>
+            <Link href="/resources/the-real-tier-3-hiring-playbook-for-2026-2842" className="text-sm text-zinc-400 hover:text-white transition-colors leading-snug">Tier 3 Software Engineering Hiring Playbook</Link>
+            <Link href="/resources/dsa-in-the-age-of-copilot-why-algorithmic-thinking-still-wins-in-2026-594" className="text-sm text-zinc-400 hover:text-white transition-colors leading-snug">DSA & Algorithmic Thinking vs AI Copilot</Link>
+          </div>
+
           {/* Legal & Trust */}
-          <div className="flex flex-col gap-3 col-span-2 sm:col-span-1">
+          <div className="flex flex-col gap-3">
             <h3 className="font-semibold text-white text-xs uppercase tracking-wider text-emerald-400">Company & Legal</h3>
             <Link href="/about" className="text-sm text-zinc-400 hover:text-white transition-colors">About Us & Team</Link>
             <Link href="/contact" className="text-sm text-zinc-400 hover:text-white transition-colors">Contact Support</Link>

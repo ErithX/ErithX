@@ -6,8 +6,8 @@ export default function Footer() {
   return (
     <footer className="border-t border-white/5 py-12 px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-4 gap-8 mb-10">
-          <div>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-10">
+          <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-7 h-7 rounded bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
                 <Zap className="w-3.5 h-3.5 text-emerald-400" />
@@ -32,6 +32,14 @@ export default function Footer() {
               <Link href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">Modern Roadmaps</Link>
               <Link href="/resources" className="block text-xs text-zinc-400 hover:text-white transition-colors">Semester Notes</Link>
               <Link href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">Project Monitor</Link>
+            </div>
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">Top Reads</h4>
+            <div className="space-y-2">
+              <Link href="/resources/system-design-rag-era-vector-dbs-embeddings-new-round" className="block text-xs text-zinc-400 hover:text-white transition-colors leading-relaxed">System Design for RAG & Vector DBs</Link>
+              <Link href="/resources/the-real-tier-3-hiring-playbook-for-2026-2842" className="block text-xs text-zinc-400 hover:text-white transition-colors leading-relaxed">Tier 3 Software Engineering Hiring Playbook</Link>
+              <Link href="/resources/dsa-in-the-age-of-copilot-why-algorithmic-thinking-still-wins-in-2026-594" className="block text-xs text-zinc-400 hover:text-white transition-colors leading-relaxed">DSA & Algorithmic Thinking vs AI Copilot</Link>
             </div>
           </div>
           <div>
