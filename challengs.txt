@@ -43,3 +43,10 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      - Standard Googlebot robots.txt parsing evaluates the longest (most specific) matching prefix rule.
      - `Allow: /api/contests` (length 13) takes precedence over `Disallow: /api/` (length 5) for contest fetches.
      - Private endpoints (`/api/admin`, `/api/cron`, `/api/user`, etc.) remain disallowed and protected from crawler indexing.
+
+9. Client-Side Rendering (CSR) Blank Loading & SEO Crawlability:
+   - Challenge: Fetching contest and resource data inside `useEffect` (CSR) caused a blank "Loading..." screen during initial page load, degrading user experience. Furthermore, search engine crawlers often fail to index dynamic content that is fetched asynchronously after the initial HTML shell is loaded, severely impacting SEO and social sharing metadata.
+   - Solution: Refactored complex, state-heavy pages (`/contests` and `/resources/[id]`) to a Next.js App Router Server-Side Rendering (SSR) architecture.
+     - Server Components (`page.tsx`) now execute the heavy data fetching directly (connecting to MongoDB or invoking web scraping logic) before HTML generation.
+     - Fetched data is passed down as `initialData` props to Client Components (`ContestBoardClient.tsx`, `ResourceClient.tsx`), which handle all local UI interactivity (e.g., active Javascript countdown timers, upvoting, filters).
+     - By injecting dynamic metadata via `generateMetadata` in the Server Component and shipping pre-populated HTML to the client, we eliminated the blank loading screen entirely and guaranteed perfect crawler indexing without sacrificing rich client-side features.

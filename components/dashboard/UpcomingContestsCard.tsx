@@ -24,7 +24,7 @@ export default function UpcomingContestsCard() {
               // In Contest object, c.date and c.time are strings.
               // It's easier if we filter based on duration or just parse the date.
               // Actually contestFetch maps `c.date` and `c.time` from `sDate`.
-              const contestDate = new Date(`${c.date} ${c.time.replace(' IST', '')}`);
+              const contestDate = new Date(c.startDate);
               return contestDate > now && contestDate <= twoDaysFromNow;
             })
             .slice(0, 4); // Limit to top 4
@@ -51,27 +51,29 @@ export default function UpcomingContestsCard() {
         ) : contests.length === 0 ? (
           <div className="text-xs text-zinc-500 italic">No contests in the next 48 hours.</div>
         ) : (
-          contests.map((c, i) => (
-            <a 
-              key={i} 
-              href={c.url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="block p-3 rounded-xl border transition-colors hover:border-emerald-500/30"
-              style={{ backgroundColor: c.platformBg, borderColor: c.platformBorder }}
-            >
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-medium text-zinc-200 truncate pr-2">{c.title}</span>
-                <span className="text-[8px] px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor: c.platformBorder, color: c.platformColor }}>
-                  {c.statusLabel}
-                </span>
-              </div>
-              <div className="text-[10px] text-zinc-500 flex justify-between">
-                <span>{c.date} • {c.time}</span>
-                <span style={{ color: c.platformColor }}>{c.platform}</span>
-              </div>
-            </a>
-          ))
+          contests.map((c, i) => {
+            const formattedDate = new Date(c.startDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+            return (
+              <a 
+                key={i} 
+                href={c.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block p-3 rounded-xl border transition-colors hover:border-emerald-500/30 bg-white/5 border-white/10"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-medium text-zinc-200 truncate pr-2">{c.title}</span>
+                  <span className="text-[8px] px-1.5 py-0.5 rounded font-bold bg-white/10" style={{ color: c.platformColor }}>
+                    {c.statusLabel}
+                  </span>
+                </div>
+                <div className="text-[10px] text-zinc-500 flex justify-between">
+                  <span>{formattedDate} • {c.time}</span>
+                  <span style={{ color: c.platformColor }}>{c.platform}</span>
+                </div>
+              </a>
+            );
+          })
         )}
       </div>
     </div>

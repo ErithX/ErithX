@@ -156,7 +156,14 @@ body {
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: #09090b; }
 ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 185, 129, 0.5) rgba(0, 0, 0, 0.2);
+}
+.thin-scrollbar::-webkit-scrollbar { height: 4px !important; }
+.thin-scrollbar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2) !important; border-radius: 4px; }
+.thin-scrollbar::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.5) !important; border-radius: 4px; }
+.thin-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.8) !important; }
 
 .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); }
 .glass:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); }

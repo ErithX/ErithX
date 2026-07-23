@@ -18,6 +18,9 @@ export interface Contest {
   participants: string;
   url: string;
   platformColor?: string;
+  category?: string;
+  difficulty?: string;
+  priority?: string;
 }
 
 const PlatformLogo = ({ url, platformName }: { url: string, platformName: string }) => {
