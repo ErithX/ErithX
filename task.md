@@ -86,3 +86,17 @@ pending : Page speed and Pre fetching resources
 - `[ ]` Convert standard `<img>` tags to Next.js `<Image>` component for main Landing Page images (Hero section, Ecosystem, Manifesto, Journey, etc.).
 - `[ ]` **Dynamic Alt Text Implementation**: When a user uploads a cover image or resource image in the dashboard, either (A) prompt the user with a mandatory 'Alt Text' input field to describe the image manually, OR (B) use an AI API (like Google Gemini Vision) in the backend to auto-generate descriptive alt text from the image buffer before saving. Save this generated/inputted `alt_text` alongside the image URL in the MongoDB/Supabase database. Update frontend components (`<img alt={item.alt_text} />`) to render it.
 - `[ ]` Configure `next.config.mjs` with proper remote patterns (domains) to support external images in `next/image` (proper image routing).
+
+## Recent UI & SSR Tweaks
+- [x] Step 1: Fix build errors (Dynamic server usage in app/contests)
+- [x] Step 2: Fix missing property errors in DsaContestCard interface
+- [x] Step 5: Refactor /resources feed to Server-Side Rendering (SSR)
+  - [x] Convert /resources feed page to SSR to solve Google grabbing footer text for snippets
+  - [x] Added OpenGraph `images` metadata support to resource[id] pages for social sharing/[id]/page.tsx`
+- [x] Step 4: UI and Functionality Tweaks
+  - [x] Remove Atcoder icon from contest page hero section
+  - [x] Modify Horizontal scrollbar in Live Now contests to be thin and green themed
+  - [x] Make 'view all contests' (for both live & upcoming) functional
+
+## Backlog (For Later Implementation)
+- `[ ]` Refactor main `/resources` feed page to Server-Side Rendering (SSR) to eliminate initial loading spinner.

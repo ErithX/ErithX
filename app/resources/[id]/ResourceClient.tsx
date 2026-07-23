@@ -218,8 +218,24 @@ export default function ResourceClient({
     }
   };
 
-  const handleShare = () => {
-    showToast('Link copied to clipboard! 🔗', 'success');
+  const handleShare = async () => {
+    const shareData = {
+      title: doc?.title || 'DSA Quest Resource',
+      text: 'Check out this awesome resource on DSA Quest!',
+      url: window.location.href
+    };
+    
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        showToast('Shared successfully! 🔗', 'success');
+      } catch (err) {
+        console.log('User cancelled share or error occurred');
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      showToast('Link copied to clipboard! 🔗', 'success');
+    }
   };
 
   const toggleFont = () => {

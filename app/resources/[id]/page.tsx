@@ -52,6 +52,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return {
     title: `${doc.title} | DSA Quest Resources`,
     description: description,
+    keywords: doc.tags || [],
     openGraph: {
       title: doc.title,
       description: description,
@@ -59,6 +60,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       publishedTime: doc.createdAt,
       authors: [doc.authorName || 'Anonymous'],
       tags: doc.tags,
+      images: doc.coverImage ? [
+        {
+          url: doc.coverImage,
+          width: 1200,
+          height: 630,
+          alt: doc.title,
+        }
+      ] : [],
     },
   };
 }
