@@ -26,7 +26,7 @@ export default async function ResourcesPage() {
 
     const readTimeStr = `${Math.max(1, Math.ceil((doc.wordCount || 0) / 200))} min read`;
 
-    let type = 'blog';
+    let type: 'blog' | 'pdf' = 'blog';
     if (doc.category === 'Study Materials') type = 'pdf';
     if (doc.category === 'Career') type = 'blog';
     
@@ -46,14 +46,14 @@ export default async function ResourcesPage() {
     };
 
     if (type === 'blog') {
-      return { ...baseItem, type: 'blog', readTime: readTimeStr, coverImg: doc.coverImage };
+      return { ...baseItem, type: 'blog', readTime: readTimeStr, coverImg: doc.coverImage } as any;
     } else {
       return { 
         ...baseItem, 
         type: 'pdf', 
         coverImg: doc.coverImage, 
         size: readTimeStr 
-      };
+      } as any;
     }
   });
 

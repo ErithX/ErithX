@@ -228,7 +228,7 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
                             <img src={author.authorImg} alt={author.name} className="w-full h-full object-cover" />
                           ) : (
                             <span className={idx === 0 ? 'text-emerald-400' : 'text-cyan-400'}>{author.name.charAt(0).toUpperCase()}</span>
-                    
+                          )}
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="text-sm font-bold truncate flex items-center gap-1.5">
