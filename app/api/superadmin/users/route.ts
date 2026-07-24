@@ -31,7 +31,7 @@ export async function GET() {
     const profileMap = new Map(profileData?.map((p: any) => [p.id, p.last_seen]) || []);
 
     const users = authData.users
-      .map((user) => ({
+      .map((user: any) => ({
         id: user.id,
         email: user.email,
         fullName:
@@ -43,7 +43,7 @@ export async function GET() {
         lastSeen: profileMap.get(user.id) || null,
       }))
       .sort(
-        (a, b) =>
+        (a: any, b: any) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
 

@@ -4,7 +4,7 @@ import type { ResourceSubmitter } from "@/app/lib/resources/types";
 
 function getSuperadminEmails() {
   return new Set(
-    (process.env.SUPERADMIN_EMAILS || "")
+    (process.env.SUPERADMIN_EMAILS || process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS || "")
       .split(",")
       .map((email) => email.trim().toLowerCase())
       .filter(Boolean),
