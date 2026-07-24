@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: 'Discover verified tech resources, guides, and study materials for your competitive programming journey.',
 };
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 export default async function ResourcesPage() {
   await connectToDatabase();
   
