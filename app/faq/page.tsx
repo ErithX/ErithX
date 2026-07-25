@@ -118,6 +118,21 @@ export default function FaqPage() {
             </div>
           </details>
 
+          {/*  Item 2.5 (Calendar Sync)  */}
+          <details className="faq-item group">
+            <summary className="flex items-center justify-between p-6 sm:p-8">
+              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Can I add contests to my personal calendar?</h2>
+              <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+              </div>
+            </summary>
+            <div className="answer-content px-6 sm:px-8">
+              <p className="text-sm text-zinc-600 leading-relaxed">
+                Yes! Every contest on our tracker comes with a 1-click 'Add to Calendar' button. You can instantly sync any LeetCode, Codeforces, or CodeChef event directly to your Google Calendar, Apple Calendar, or Outlook so you never miss a start time.
+              </p>
+            </div>
+          </details>
+
           {/*  Item 3  */}
           <details className="faq-item group">
             <summary className="flex items-center justify-between p-6 sm:p-8">

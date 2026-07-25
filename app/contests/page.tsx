@@ -8,7 +8,7 @@ import { mapApiContests } from "@/app/utils/contestFetch";
 
 export const metadata: Metadata = {
   title: 'Coding Contests Dashboard | DSA Quest',
-  description: 'Track live and upcoming coding contests across LeetCode, Codeforces, CodeChef, and more.',
+  description: 'Track live and upcoming coding contests across LeetCode, Codeforces & more. Features 1-click add-to-calendar sync.',
 };
 
 export const revalidate = 60; // Revalidate every 60 seconds

@@ -35,7 +35,7 @@ export default function Ecosystem() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
                   <Bell className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-[10px] text-zinc-400">Set your reminders</span>
+                  <span className="text-[10px] text-zinc-400">1-Click Calendar Sync</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <CalendarCheck className="w-3.5 h-3.5 text-cyan-400" />

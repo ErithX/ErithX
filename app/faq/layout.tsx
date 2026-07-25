@@ -29,6 +29,14 @@ export default function FaqLayout({
           text: 'Yes, tracking coding contests and accessing community study resources is completely free for all students.',
         },
       },
+      {
+        '@type': 'Question',
+        name: 'Can I add contests to my personal calendar?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes! Every contest on our tracker comes with a 1-click \'Add to Calendar\' button. You can instantly sync any LeetCode, Codeforces, or CodeChef event directly to your Google Calendar, Apple Calendar, or Outlook so you never miss a start time.',
+        },
+      },
     ],
   };
 

@@ -79,13 +79,13 @@ pending : Page speed and Pre fetching resources
   - Write a seed script (`seedUsers.ts` or Admin UI) to inject "Ambassador" User profiles directly into MongoDB.
   - Setup an "Official Verified Account" (e.g. DSA Quest) for premium resources.
   - Build logic to allow posting resources on behalf of these seeded bot accounts.
-- `[ ]` Backend Image Compression
-- `[ ]` Cache Resources
+- [x] Backend Image Compression
+- [x] Cache Resources
 
 ## Image Optimization & SEO Tasks
-- `[ ]` Convert standard `<img>` tags to Next.js `<Image>` component for main Landing Page images (Hero section, Ecosystem, Manifesto, Journey, etc.).
-- `[ ]` **Dynamic Alt Text Implementation**: When a user uploads a cover image or resource image in the dashboard, either (A) prompt the user with a mandatory 'Alt Text' input field to describe the image manually, OR (B) use an AI API (like Google Gemini Vision) in the backend to auto-generate descriptive alt text from the image buffer before saving. Save this generated/inputted `alt_text` alongside the image URL in the MongoDB/Supabase database. Update frontend components (`<img alt={item.alt_text} />`) to render it.
-- `[ ]` Configure `next.config.mjs` with proper remote patterns (domains) to support external images in `next/image` (proper image routing).
+- [x] Convert standard `<img>` tags to Next.js `<Image>` component for main Landing Page images (Hero section, Ecosystem, Manifesto, Journey, etc.).
+- [x] **Dynamic Alt Text Implementation**: When a user uploads a cover image or resource image in the dashboard, either (A) prompt the user with a mandatory 'Alt Text' input field to describe the image manually, OR (B) use an AI API (like Google Gemini Vision) in the backend to auto-generate descriptive alt text from the image buffer before saving. Save this generated/inputted `alt_text` alongside the image URL in the MongoDB/Supabase database. Update frontend components (`<img alt={item.alt_text} />`) to render it.
+- [x] Configure `next.config.mjs` with proper remote patterns (domains) to support external images in `next/image` (proper image routing).
 
 ## Recent UI & SSR Tweaks
 - [x] Step 1: Fix build errors (Dynamic server usage in app/contests)
@@ -100,3 +100,12 @@ pending : Page speed and Pre fetching resources
 
 ## Backlog (For Later Implementation)
 - `[ ]` Refactor main `/resources` feed page to Server-Side Rendering (SSR) to eliminate initial loading spinner.
+ [x] Add the Calender data related frontend implementation plan
+ [x] Execute the Calendar data related frontend implementation plan
+
+Remaining Vital tasks on 25/07/2026
+
+ 1.Fixing Broken security in backend & Critical internal bugs [secutity issue.md]
+ 2.Fixing Broken cron job & email infrastructure for user retention [Cron-Job report.md]
+ 3.Add hidden admin level analytics to track Views & calender adding event
+ 4. Do Nothing & Sleep
