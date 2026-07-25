@@ -21,6 +21,35 @@ export default function ContactPage() {
     return () => observer.disconnect();
   }, []);
 
+  const [status, setStatus] = React.useState('');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    
+    try {
+      const response = await fetch("https://formspree.io/f/mlgqojeq", {
+        method: "POST",
+        body: data,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        setStatus("SUCCESS");
+        form.reset();
+      } else {
+        setStatus("ERROR");
+        alert("Oops! There was a problem submitting your form.");
+      }
+    } catch (error) {
+      setStatus("ERROR");
+      alert("Oops! There was a problem submitting your form.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white text-[#18181b] selection:bg-emerald-500/30 selection:text-white relative overflow-hidden">
       <style dangerouslySetInnerHTML={{__html: `
@@ -109,59 +138,59 @@ export default function ContactPage() {
         <div className="scroll-reveal">
           <div className="bg-zinc-50 rounded-3xl p-8 sm:p-10 border border-zinc-100 shadow-sm">
             
-            {/*  Form View  */}
-            <form id="contactForm" onSubmit={(e) => e.preventDefault()} className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-6">
-                <div>
-                  <label className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">First Name</label>
-                  <input type="text" required className="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="Arjun" />
+            {status === "SUCCESS" ? (
+              <div className="flex flex-col items-center justify-center text-center py-12">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-6">
+                  <Lucide.CheckCircle2 className="w-8 h-8 text-emerald-600" />
                 </div>
-                <div>
-                  <label className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Last Name</label>
-                  <input type="text" required className="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="Mehta" />
+                <h3 className="font-display text-3xl font-medium text-zinc-900 mb-3">Message Sent!</h3>
+                <p className="text-sm text-zinc-500 max-w-xs mb-8">
+                  Thanks for reaching out. We'll get back to you within 24 hours.
+                </p>
+                <button onClick={() => setStatus('')} className="text-sm text-zinc-900 font-semibold link-underline">
+                  Send another message
+                </button>
+              </div>
+            ) : (
+              <form id="contactForm" onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">First Name</label>
+                    <input type="text" name="First Name" required className="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="Arjun" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Last Name</label>
+                    <input type="text" name="Last Name" required className="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="Mehta" />
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Email Address</label>
-                <input type="email" required className="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="you@college.edu" />
-              </div>
+                <div>
+                  <label className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Email Address</label>
+                  <input type="email" name="Email" required className="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="you@college.edu" />
+                </div>
 
-              <div>
-                <label className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">What's this about?</label>
-                <select required className="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900 appearance-none cursor-pointer" defaultValue="">
-                  <option value="" disabled >Select a topic...</option>
-                  <option>General Inquiry</option>
-                  <option>Partnership / Collaboration</option>
-                  <option>Bug Report / Feedback</option>
-                  <option>Resource Contribution</option>
-                </select>
-              </div>
+                <div>
+                  <label className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">What's this about?</label>
+                  <select name="Subject" required className="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900 appearance-none cursor-pointer" defaultValue="">
+                    <option value="" disabled >Select a topic...</option>
+                    <option>General Inquiry</option>
+                    <option>Partnership / Collaboration</option>
+                    <option>Bug Report / Feedback</option>
+                    <option>Resource Contribution</option>
+                  </select>
+                </div>
 
-              <div>
-                <label className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Message</label>
-                <textarea required rows={5} className="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900 resize-none" placeholder="Tell us what's on your mind..."></textarea>
-              </div>
+                <div>
+                  <label className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Message</label>
+                  <textarea name="Message" required rows={5} className="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900 resize-none" placeholder="Tell us what's on your mind..."></textarea>
+                </div>
 
-              <button type="submit" className="submit-btn w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-zinc-900 text-white text-sm font-semibold">
-                Send Message
-                <Lucide.ArrowRight className="w-4 h-4" />
-              </button>
-            </form>
-
-            {/*  Success View (Hidden by default)  */}
-            <div id="successView" className="hidden flex-col items-center justify-center text-center py-12">
-              <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-6">
-                <Lucide.CheckCircle2 className="w-8 h-8 text-emerald-600" />
-              </div>
-              <h3 className="font-display text-3xl font-medium text-zinc-900 mb-3">Message Sent!</h3>
-              <p className="text-sm text-zinc-500 max-w-xs mb-8">
-                Thanks for reaching out. We'll get back to you within 24 hours.
-              </p>
-              <button onClick={() => {}} className="text-sm text-zinc-900 font-semibold link-underline">
-                Send another message
-              </button>
-            </div>
+                <button type="submit" className="submit-btn w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-zinc-900 text-white text-sm font-semibold">
+                  Send Message
+                  <Lucide.ArrowRight className="w-4 h-4" />
+                </button>
+              </form>
+            )}
 
           </div>
         </div>

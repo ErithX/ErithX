@@ -40,6 +40,7 @@ export default function CTA() {
                 Join 2,400+ students who stopped grinding and started winning. Free, ad-free, forever.
               </p>
 
+              {/* Newsletter form hidden for now
               <form onSubmit={handleJoin} className="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto mb-6">
                 <div className="relative flex-1 w-full">
                   <Mail className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -57,6 +58,13 @@ export default function CTA() {
                   Begin My Quest
                 </button>
               </form>
+              */}
+
+              <a href="/contests" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all whitespace-nowrap mb-6 mx-auto">
+                <Zap className="w-4 h-4" />
+                Begin My Quest
+              </a>
+
 
               <div className="flex items-center justify-center gap-6 flex-wrap">
                 <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
