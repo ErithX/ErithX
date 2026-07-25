@@ -99,8 +99,8 @@ export default function AboutPage() {
             </div>
           </div>
           <div className="scroll-reveal">
-            <div className="relative rounded-2xl overflow-hidden border border-zinc-100 shadow-sm aspect-[4/3]">
-              <img src="https://picsum.photos/seed/problemdesk/800/600.jpg" className="w-full h-full object-cover" alt="The Problem" />
+            <div className="relative w-full aspect-[4/3]">
+              <Image src="/about-first.png" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-contain" alt="Student struggling with disorganized study materials and placement anxiety" />
             </div>
           </div>
         </div>
@@ -112,8 +112,8 @@ export default function AboutPage() {
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
           <div className="order-2 md:order-1 scroll-reveal">
-            <div className="relative rounded-2xl overflow-hidden border border-zinc-100 shadow-sm aspect-[4/3]">
-              <img src="https://picsum.photos/seed/solutionui/800/600.jpg" className="w-full h-full object-cover" alt="The Solution" />
+            <div className="relative w-full aspect-[4/3]">
+              <Image src="/about-second.png" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-contain" alt="DSA Quest structured ecosystem with live contest tracking and resource hub" />
             </div>
           </div>
           <div className="order-1 md:order-2 scroll-reveal">
