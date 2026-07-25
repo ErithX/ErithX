@@ -19,8 +19,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
+    // SECURITY: Validate file type and size before processing
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json({ error: 'Invalid file type. Only images and PDFs are allowed.' }, { status: 400 });
+    }
+
+    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+      return NextResponse.json({ error: 'File size exceeds 10MB limit.' }, { status: 400 });
+    }
+
     const buffer = Buffer.from(await file.arrayBuffer());
-    const fileExtension = file.name.split('.').pop();
+    const fileExtension = file.name.split('.').pop()?.replace(/[^a-zA-Z0-9]/g, '') || 'bin';
     // Using the 'Resources' folder in the bucket
     const uniqueFilename = `Resources/${user.id}/${crypto.randomUUID()}.${fileExtension}`;
 

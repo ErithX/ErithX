@@ -29,6 +29,16 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     }
 //Admin Override logic
     const body = await req.json();
+    
+    // SECURITY: Prevent mass-assignment by only extracting allowed fields
+    const safeBody: any = {};
+    const allowedFields = ['title', 'content', 'category', 'tags', 'coverImage', 'mediaAssets'];
+    for (const field of allowedFields) {
+      if (body[field] !== undefined) {
+        safeBody[field] = body[field];
+      }
+    }
+
     if(body.overrideAuthorId){
       const superAdmins = (process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS || '').split(',').map(e => e.trim());
       const isSuperAdmin = superAdmins.includes(user.email || '');
@@ -36,23 +46,21 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         const fakeUser = await User.findOne({supabaseId : body.overrideAuthorId})
 
         if(fakeUser){
-          body.userId = fakeUser.supabaseId;
-          body.authorName = fakeUser.name;
-          body.authorEmail = fakeUser.email;
-          body.authorImg = fakeUser.avatar;
-          body.isPro = fakeUser.isPro; 
-          body.isVerified = fakeUser.isVerified;
+          safeBody.userId = fakeUser.supabaseId;
+          safeBody.authorName = fakeUser.name;
+          safeBody.authorEmail = fakeUser.email;
+          safeBody.authorImg = fakeUser.avatar;
+          safeBody.isPro = fakeUser.isPro; 
+          safeBody.isVerified = fakeUser.isVerified;
         }   
       }
-        delete body.overrideAuthorId;
-
     }
 
     // Generate slug if it doesn't exist and we have a title
-    if (!existingDoc.slug && body.title) {
+    if (!existingDoc.slug && safeBody.title) {
       const stopWords = ['a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'with', 'to', 'for', 'of', 'at', 'by', 'is', 'are', 'was'];
       
-      let cleanString = body.title.toLowerCase().replace(/[^a-z0-9\s-]/g, ' ');
+      let cleanString = safeBody.title.toLowerCase().replace(/[^a-z0-9\s-]/g, ' ');
       let words = cleanString.split(/[\s-]+/).filter(Boolean);
       let filteredWords = words.filter((word: string) => !stopWords.includes(word));
       
@@ -84,12 +92,12 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
           counter++;
       }
       
-      body.slug = finalSlug;
+      safeBody.slug = finalSlug;
     }
 
     const updatedDoc = await Resource.findByIdAndUpdate(
       id,
-      { $set: body },
+      { $set: safeBody },
       { returnDocument: 'after' }
     );
 

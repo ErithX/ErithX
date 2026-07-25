@@ -53,12 +53,19 @@ export async function GET(request: Request) {
 
         if (isNewUser) {
           console.log('🎉 New user detected! Setting role and sending welcome email...')
-          // It's a new user, apply the role from the URL
+          // SECURITY: Validate role to prevent privilege escalation
           const urlRole = searchParams.get('role');
-          if (urlRole) {
+          const allowedRoles = ['student', 'professional'];
+          
+          if (urlRole && allowedRoles.includes(urlRole)) {
             finalRole = urlRole;
             await supabase.auth.updateUser({ data: { role: urlRole } });
             await supabase.from('user_profiles').update({ role: urlRole }).eq('id', data.user.id);
+          } else if (!finalRole) {
+            // Default to student if no valid role provided
+            finalRole = 'student';
+            await supabase.auth.updateUser({ data: { role: 'student' } });
+            await supabase.from('user_profiles').update({ role: 'student' }).eq('id', data.user.id);
           }
           
           const userEmail = data.user.email!

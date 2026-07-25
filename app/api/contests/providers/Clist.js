@@ -1,7 +1,12 @@
 export async function fetchContests() {
   try {
-    const username = process.env.CLIST_USERNAME || 'debjyoti_018';
-    const apiKey = process.env.CLIST_API_KEY || 'd951bbdbb021c2a5723761340bcf7c3788e6d7bb';
+    const username = process.env.CLIST_USERNAME;
+    const apiKey = process.env.CLIST_API_KEY;
+    
+    if (!username || !apiKey) {
+      console.warn("CLIST credentials missing from environment variables.");
+      return [];
+    }
     const url = `https://clist.by/api/v4/contest/?upcoming=true&limit=100&order_by=start&username=${username}&api_key=${apiKey}`;
     
     const controller = new AbortController();

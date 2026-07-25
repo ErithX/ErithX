@@ -105,7 +105,7 @@ pending : Page speed and Pre fetching resources
 
 Remaining Vital tasks on 25/07/2026
 
- 1.Fixing Broken security in backend & Critical internal bugs [secutity issue.md]
+ 1.[x] Fixing Broken security in backend & Critical internal bugs [secutity issue.md]
  2.Fixing Broken cron job & email infrastructure for user retention [Cron-Job report.md]
  3.Add hidden admin level analytics to track Views & calender adding event
  4. Do Nothing & Sleep

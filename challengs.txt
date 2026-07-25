@@ -50,3 +50,15 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      - Server Components (`page.tsx`) now execute the heavy data fetching directly (connecting to MongoDB or invoking web scraping logic) before HTML generation.
      - Fetched data is passed down as `initialData` props to Client Components (`ContestBoardClient.tsx`, `ResourceClient.tsx`), which handle all local UI interactivity (e.g., active Javascript countdown timers, upvoting, filters).
      - By injecting dynamic metadata via `generateMetadata` in the Server Component and shipping pre-populated HTML to the client, we eliminated the blank loading screen entirely and guaranteed perfect crawler indexing without sacrificing rich client-side features.
+
+10. Mass Assignment Vulnerability (Bypassing Admin Approval):
+   - Challenge: The document update API (`PUT /api/documents/[id]`) blindly passed the entire request body directly into MongoDB using `{ $set: body }`. An attacker could inject fields like `"status": "published"` to instantly publish their own post without admin approval.
+   - Solution: Implemented a strict allowlist of fields. The API now iterates through an array of allowed fields (`['title', 'content', 'category', 'tags', 'coverImage', 'mediaAssets']`) and constructs a new `safeBody` object before updating the database, ignoring any malicious injected fields.
+
+11. Privilege Escalation (Role Forgery via URL):
+   - Challenge: New users could sign in with Google and modify the callback URL (`/auth/callback?role=superadmin`). The backend trusted the URL parameter blindly, allowing any user to become a superadmin.
+   - Solution: Added an explicit validation check (`allowedRoles = ['student', 'professional']`) during the onboarding flow. If the role parameter doesn't match an allowed string, it defaults the user to `student` securely.
+
+12. Arbitrary File Upload (Malware Hosting):
+   - Challenge: The `/api/upload` endpoint had zero file type or size validation before storing files in the Supabase bucket. Users could upload executable malware or HTML phishing pages, using our domain to host them.
+   - Solution: Added strict server-side validation. The endpoint now enforces a 10MB size limit and checks the MIME type against an explicit allowlist (JPEG, PNG, WEBP, GIF, PDF) before buffering the file to Supabase.
