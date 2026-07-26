@@ -61,10 +61,13 @@ export default function Navbar() {
               ) : (
                 <>
                   <Link href="/contests" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Contests</Link>
-                  <Link href={user ? "/dashboard" : "/"} className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Dashboard</Link>
                   <Link href="/resources" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Resources</Link>
+                  {user && (
+                    <Link href="/dashboard" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Dashboard</Link>
+                  )}
                 </>
               )}
+              <Link href="/features" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Features</Link>
               <Link href="/contact" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Contact Us</Link>
               <Link href="/faq" className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">FAQ</Link>
             </div>
@@ -173,11 +176,14 @@ export default function Navbar() {
               ) : (
                 <>
                   <Link onClick={() => setIsMobileMenuOpen(false)} href="/contests" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Contests</Link>
-                  <Link onClick={() => setIsMobileMenuOpen(false)} href={user ? "/dashboard" : "/"} className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Dashboard</Link>
                   <Link onClick={() => setIsMobileMenuOpen(false)} href="/resources" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Resources</Link>
+                  {user && (
+                    <Link onClick={() => setIsMobileMenuOpen(false)} href="/dashboard" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Dashboard</Link>
+                  )}
                 </>
               )}
               <div className="h-px w-full bg-white/10 my-2"></div>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/features" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Features</Link>
               <Link onClick={() => setIsMobileMenuOpen(false)} href="/contact" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Contact Us</Link>
               <Link onClick={() => setIsMobileMenuOpen(false)} href="/faq" className="p-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">FAQ</Link>
               

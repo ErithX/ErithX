@@ -6,3 +6,9 @@
 
 ## Task Tracking
 - Always use the `task.md` file in the root of the workspace (`e:\projects\contest-tracker\task.md`) to track remaining jobs and record remaining tasks. This file is the source of truth for the backlog.
+
+## Platform Vibe & Brand Positioning Guidelines
+- **Core Vibe**: Clean, zero-noise, and purposeful digital sanctuary for software engineering students to master placement prep and coding contests without burnout or placement anxiety.
+- **Copy Restrictions**: NEVER mention "B.Tech", "PYQ", "Previous Year Questions", or traditional "academic" buzzwords. Frame materials around **2026+ Practical Career Readiness**, **Engineering Roadmaps**, **Project Blueprints with PDFs**, **AI-Era Developer Growth**, and **Zero-Fluff Placement Insights**.
+- **AI-Era Positioning**: Educate and empower beginner developers to thrive alongside AI — focusing on algorithmic thinking, system architecture, real-world project execution, and strategic problem-solving.
+

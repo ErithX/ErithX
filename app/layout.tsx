@@ -18,11 +18,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "DSA Quest — Coding Contests and Study Resources",
+    default: "DSA Quest — Coding Contests, 1-Click Calendar Sync & Career Readiness",
     template: "%s | DSA Quest"
   },
-  description: "Track upcoming coding contests and find high-quality DSA study materials. Prepare for tech interviews and placements.",
-  keywords: "All in one software engineering platform, Computer science student ecosystem, Full stack engineering preparation platform, Complete tech career readiness hub, Next gen engineering education portal, Comprehensive coding companion website, BTech CSE complete student portal, Self taught software engineer launchpad, AI era developer training platform, College engineering to tech career gateway, DSA Quest, DSA Quest platform, DSA Quest official website, DSA Quest portal, DSA Quest roadmap, add coding contest to google calendar, competitive programming calendar integration, sync leetcode contests to calendar, coding contest calendar, dsa contest calendar",
+  description: "The zero-noise digital sanctuary for software engineering students. Track LeetCode, Codeforces & 10+ contest platforms with 1-Click Google Calendar sync, project blueprints with PDFs, and burnout-free placement prep.",
+  keywords: "All in one software engineering platform, Computer science student ecosystem, Full stack engineering preparation platform, Complete tech career readiness hub, Next gen engineering education portal, Comprehensive coding companion website, Practical career readiness portal, Self taught software engineer launchpad, AI era developer training platform, Software engineering placement gateway, DSA Quest, DSA Quest platform, DSA Quest official website, DSA Quest portal, DSA Quest roadmap, add coding contest to google calendar, competitive programming calendar integration, sync leetcode contests to calendar, coding contest calendar, dsa contest calendar, clist alternative, codeclock alternative, 1-click google calendar sync contests, project blueprints with pdfs, burnout free coding prep",
   authors: [{ name: "DSA Quest Team" }],
   creator: "DSA Quest",
   openGraph: {
@@ -30,16 +30,16 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://contest-tracker-zms3.vercel.app",
     siteName: "DSA Quest",
-    title: "DSA Quest - Track All Coding Contests in One Place",
-    description: "Never miss a coding contest! Track LeetCode, Codeforces, CodeChef, AtCoder & more. Get email alerts and prepare for FAANG interviews.",
+    title: "DSA Quest - 1-Click Calendar Sync, Contest Tracker & Career Readiness Hub",
+    description: "Never miss a coding contest! Track LeetCode, Codeforces, CodeChef & 10+ platforms with 1-Click Google Calendar sync. Project blueprints with PDFs & zero-burnout placement prep.",
   },
   alternates: {
     canonical: "https://contest-tracker-zms3.vercel.app",
   },
   twitter: {
     card: "summary_large_image",
-    title: "DSA Quest - Competitive Programming Contest Tracker",
-    description: "Track coding contests from 10+ platforms. Get daily alerts & prepare for FAANG interviews.",
+    title: "DSA Quest - 1-Click Google Calendar Contest Sync & Placement Prep",
+    description: "Track coding contests from 10+ platforms with 1-Click Google Calendar sync. Practical career readiness & project blueprints with zero burnout.",
   },
   robots: {
     index: true,

@@ -106,6 +106,26 @@ pending : Page speed and Pre fetching resources
 Remaining Vital tasks on 25/07/2026
 
  1.[x] Fixing Broken security in backend & Critical internal bugs [secutity issue.md]
- 2.Fixing Broken cron job & email infrastructure for user retention [Cron-Job report.md]
+ 2.[x] Fixing Broken cron job & email infrastructure for user retention (added weekly_digest & product_updates fields to user_profiles and created 4 HTML preview templates: welcome, digest, alert, product) [Cron-Job report.md, Email-Fix-Solution.md]
  3.Add hidden admin level analytics to track Views & calender adding event
  4. Do Nothing & Sleep
+
+## AI Discoverability, Feature Docs, Competitor Comparisons & Brand Vibe Overhaul
+- [x] **Pillar 1: AI-Discoverability & Calendar Feature Spotlight**
+  - Updated `public/llms.txt` with 1-Click Calendar Sync specifications, timezone conversion, competitor comparison matrix (vs Clist & CodeClock), and 2026+ practical career readiness focus.
+  - Injected rich JSON-LD `WebApplication` schema markup in `app/page.tsx` with featureList and AI-discoverable metadata.
+  - Removed all academic ("B.Tech", "PYQ") references from layout metadata and `public/llms.txt`.
+- [x] **Pillar 2: Official Feature Vault (`/features`)**
+  - Built polished `app/features/page.tsx` showcasing 1-Click Calendar Sync, Contest Tracker, Project Blueprints, Email Digest, Creator Studio, and Burnout-Free Sanctuary.
+  - Linked `/features` in `Navbar.tsx`, `Footer.tsx`, and `app/sitemap.ts`.
+- [x] **Pillar 3: Competitor Comparison (UI-Free AI Ingestion)**
+  - Embedded competitive comparison matrix (DSA Quest vs Clist & CodeClock) directly into `public/llms.txt` and `schema.org` data for LLM crawlers (Perplexity, ChatGPT, Gemini, Claude).
+- [ ] **Pillar 4: Product Documentation, Changelog & Roadmap (`/docs`, `/changelog`, `/roadmap`)**
+  - Build `app/docs/page.tsx` (Platform Documentation Hub & Guides).
+  - Build `app/changelog/page.tsx` (Product Version Release Timeline).
+  - Build `app/roadmap/page.tsx` (Interactive Engineering Roadmap).
+- [ ] **Clean Navbar Architecture ("Un-messy Nav")**
+  - Refactor `Navbar.tsx` to group `Features`, `Docs`, `Changelog`, `Roadmap`, `FAQ`, and `Contact` under a sleek `Platform ▾` dropdown menu.
+- [x] **Pillar 5: Brand Vibe & Mindset Rules**
+  - Persisted platform vibe guidelines and copy restrictions in `.agents/AGENTS.md`.
+

@@ -23,6 +23,7 @@ export default function Footer() {
           <div className="flex flex-col gap-3">
             <h3 className="font-semibold text-white text-xs uppercase tracking-wider text-emerald-400">Contests Hub</h3>
             <Link href="/contests" className="text-sm text-zinc-400 hover:text-white transition-colors">Coding Contests Tracker</Link>
+            <Link href="/features" className="text-sm text-zinc-400 hover:text-white transition-colors">Features & 1-Click Calendar Sync</Link>
             <Link href="/faq" className="text-sm text-zinc-400 hover:text-white transition-colors">Platform & Contest FAQ</Link>
           </div>
 

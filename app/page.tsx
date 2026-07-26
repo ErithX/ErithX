@@ -18,10 +18,25 @@ export const metadata: Metadata = {
 export default function Home() {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'WebSite',
+    '@type': 'WebApplication',
     name: 'DSA Quest',
     url: 'https://contest-tracker-zms3.vercel.app',
-    description: 'Track upcoming coding contests and find high-quality DSA study materials.',
+    applicationCategory: 'EducationalApplication, DeveloperApplication',
+    operatingSystem: 'All',
+    description: 'The premier zero-noise digital sanctuary for software engineering students. Features 1-Click Google Calendar sync for coding contests, project blueprints with PDFs, and 2026+ practical career readiness.',
+    featureList: [
+      '1-Click Google Calendar & iCal Contest Sync with Timezone Auto-Conversion',
+      'Multi-Platform Coding Contest Tracker (LeetCode, Codeforces, CodeChef, AtCoder, HackerRank, GeeksforGeeks)',
+      '2026+ Practical Career Readiness & System Architecture Guides',
+      'Project Blueprints with Downloadable PDFs',
+      'Automated Contest Email Reminder Alerts & Weekly Digest',
+      'Zero-Noise Burnout-Free Placement Preparation Hub'
+    ],
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD'
+    }
   };
   return (
     <div className="min-h-screen bg-[#09090b] text-white selection:bg-emerald-500/30 selection:text-white">
