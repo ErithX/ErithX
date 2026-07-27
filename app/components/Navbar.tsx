@@ -19,11 +19,11 @@ import Link from "next/link";
 import { createClient } from "../lib/supabase/client";
 
 interface NavbarProps {
-  darkMode: boolean;
-  setDarkMode: (value: boolean) => void;
+  darkMode?: boolean;
+  setDarkMode?: (value: boolean) => void;
 }
 
-function Navbar({ darkMode, setDarkMode }: NavbarProps) {
+function Navbar({ darkMode = true, setDarkMode }: NavbarProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -85,7 +85,7 @@ function Navbar({ darkMode, setDarkMode }: NavbarProps) {
   };
 
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+    if (setDarkMode) setDarkMode(!darkMode);
   };
 
   return (

@@ -13,7 +13,7 @@ import {
   Users,
   XCircle,
 } from "lucide-react";
-import Navbar from "@/app/components/Navbar";
+import Navbar from "@/components/Navbar";
 import { formatLastSeen } from "@/app/lib/lastSeenUtils";
 
 type Tab = "users" | "pending" | "approved" | "create";

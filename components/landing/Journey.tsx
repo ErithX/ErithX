@@ -26,14 +26,14 @@ export default function Journey() {
                 <div className="absolute top-4 left-4">
                   <div className="glass rounded-lg px-3 py-1.5 flex items-center gap-2">
                     <Sprout className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400">Phase 01</span>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400">Step 01: Fundamentals</span>
                   </div>
                 </div>
               </div>
               {/* Floating stat */}
               <div className="absolute -bottom-6 -right-6 glass rounded-xl p-4 float-anim hidden md:block">
-                <div className="text-2xl font-semibold text-emerald-400">Day 1</div>
-                <div className="text-[10px] text-zinc-500">Nail the Basics</div>
+                <div className="text-2xl font-semibold text-emerald-400">Stage 01</div>
+                <div className="text-[10px] text-zinc-500">Core Concepts</div>
               </div>
             </div>
             <div className="order-1 lg:order-2">
@@ -110,7 +110,7 @@ export default function Journey() {
                 <div className="absolute top-4 right-4">
                   <div className="glass rounded-lg px-3 py-1.5 flex items-center gap-2">
                     <Hammer className="w-3.5 h-3.5 text-cyan-400" />
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400">Phase 02</span>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400">Step 02: Systems & Blueprints</span>
                   </div>
                 </div>
               </div>
@@ -130,7 +130,7 @@ export default function Journey() {
                 <div className="absolute top-4 left-4">
                   <div className="glass rounded-lg px-3 py-1.5 flex items-center gap-2">
                     <Rocket className="w-3.5 h-3.5 text-purple-400" />
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-purple-400">Phase 03</span>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-purple-400">Step 03: Arena Mastery</span>
                   </div>
                 </div>
               </div>

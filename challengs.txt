@@ -71,3 +71,20 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      3. Dedicated Capabilities Vault (`/features`): Created an indexed `app/features/page.tsx` page detailing all 6 core pillars.
      4. Strict Copy Guidelines: Purged all legacy "B.Tech", "PYQ", or traditional academic buzzwords from metadata and training text, reframing the platform around 2026+ Practical Career Readiness and AI-Era Developer Growth.
 
+14. Serious SaaS Navbar Mega-Dropdown Architecture:
+   - Challenge: The top navigation bar's "Platform" menu was previously a narrow single-column list with basic links, making the platform look like a simple side-project rather than a high-end Serious SaaS product.
+   - Solution: Redesigned `components/Navbar.tsx` into a multi-column, glassmorphic Mega-Dropdown (`w-[580px] bg-[#09090b]/95 border-white/10 backdrop-blur-2xl shadow-2xl`).
+     - Structured Grid: Divided navigation into **Core Capabilities** (Live Contest Board, Placement Blueprints, Platform Features, Developer Documentation) with subtext descriptions and status micro-badges (`LIVE SYNC`, `2026 READY`), and **Ecosystem** (Manifesto, Contact, FAQ).
+     - Spotlight Footer CTA: Embedded a dedicated bottom callout card promoting 1-Click Google Calendar Sync directly linking to `/contests`.
+     - Interaction Polish: Created a hit-box hover bridge to prevent cursor flicker when transitioning between trigger button and menu, and updated mobile drawers to reflect categorized sectioning.
+
+15. Next.js Dev Server Deadlock & Infinite Compilation Freeze:
+   - Challenge: The local development server (`next dev`) hung indefinitely when attempting to load `http://localhost:3000`. Memory usage ballooned to 2.6 GB, Node CPU time exceeded 300 seconds, and the server froze at `○ Compiling / ...` without outputting any runtime errors. Standard clearing attempts (deleting `.next`, clearing node_modules, PC restarts, changing ports) did not resolve the issue.
+   - Root Causes:
+     1. **Self-Referential Infinite Component Import Loop**: `components/Navbar.tsx` contained an accidental duplicate copy of a page component (`FeaturesPage`) which imported `Navbar` from `@/components/Navbar` (itself). When `app/page.tsx` or any page imported `@/components/Navbar`, Node server evaluation entered an infinite recursive loop, freezing compilation.
+     2. **Unconditional Outbound Middleware Auth Call**: `middleware.ts` executed `await supabase.auth.getUser()` on *every single request* (including the public `/` route and static assets). Network/proxy latencies on external HTTPS calls to Supabase blocked incoming localhost requests.
+     3. **Google Fonts Network Block**: `next/font/google` in `app/layout.tsx` attempted to fetch font CSS from Google Fonts during page compilation. Deleting `.next` wiped cached fonts, forcing Next.js to re-fetch from `fonts.googleapis.com` and stall when network fetches timed out.
+   - Solution & Fixes:
+     - Refactored `components/Navbar.tsx` to cleanly re-export the actual Navbar component from `app/components/Navbar.tsx` and made `darkMode` / `setDarkMode` props optional.
+     - Scoped `middleware.ts` matcher strictly to `/dashboard/:path*` so public routes bypass external auth calls.
+     - Added `display: "swap"` and system fallback font stacks (`fallback: ["system-ui", "-apple-system", "sans-serif"]`) to `app/layout.tsx` so compilation succeeds instantly even offline.

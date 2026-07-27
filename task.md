@@ -26,6 +26,7 @@
   - [x] Secure `/dashboard/write/pending` page.
 - [ ] **Refine Landing Page**
   - Replace all remaining `picsum.photos` and dummy text with actual dynamic platform data or realistic static assets.
+- [x] **Redesign Navbar Platforms Dropdown into Serious SaaS Mega-Dropdown**
 - [ ] **Growth Hacks: Urgency & Social Proof (Fake Data for Phase 1)**
   - Implement false "Expires Soon" timers on resources.
   - Implement false upload times (e.g., "Posted just now") for new users viewing content.
@@ -115,17 +116,17 @@ Remaining Vital tasks on 25/07/2026
   - Updated `public/llms.txt` with 1-Click Calendar Sync specifications, timezone conversion, competitor comparison matrix (vs Clist & CodeClock), and 2026+ practical career readiness focus.
   - Injected rich JSON-LD `WebApplication` schema markup in `app/page.tsx` with featureList and AI-discoverable metadata.
   - Removed all academic ("B.Tech", "PYQ") references from layout metadata and `public/llms.txt`.
-- [x] **Pillar 2: Official Feature Vault (`/features`)**
-  - Built polished `app/features/page.tsx` showcasing 1-Click Calendar Sync, Contest Tracker, Project Blueprints, Email Digest, Creator Studio, and Burnout-Free Sanctuary.
+- [x] **Pillar 2: Official Feature Vault (`/features`) & Typography Overhaul**
+  - Built polished `app/features/page.tsx` matched strictly to the clean typography and design system of `UI/landing.html` & `UI/Terms&condition.html`.
   - Linked `/features` in `Navbar.tsx`, `Footer.tsx`, and `app/sitemap.ts`.
 - [x] **Pillar 3: Competitor Comparison (UI-Free AI Ingestion)**
   - Embedded competitive comparison matrix (DSA Quest vs Clist & CodeClock) directly into `public/llms.txt` and `schema.org` data for LLM crawlers (Perplexity, ChatGPT, Gemini, Claude).
-- [ ] **Pillar 4: Product Documentation, Changelog & Roadmap (`/docs`, `/changelog`, `/roadmap`)**
-  - Build `app/docs/page.tsx` (Platform Documentation Hub & Guides).
-  - Build `app/changelog/page.tsx` (Product Version Release Timeline).
-  - Build `app/roadmap/page.tsx` (Interactive Engineering Roadmap).
-- [ ] **Clean Navbar Architecture ("Un-messy Nav")**
-  - Refactor `Navbar.tsx` to group `Features`, `Docs`, `Changelog`, `Roadmap`, `FAQ`, and `Contact` under a sleek `Platform ▾` dropdown menu.
+- [x] **Pillar 4: Platform Documentation Hub (`/docs`)**
+  - Built `app/docs/page.tsx` following the clean documentation layout and typography of `UI/Terms&condition.html`.
+  - Linked `/docs` in `Navbar.tsx`, `Footer.tsx`, and `app/sitemap.ts`.
+- [x] **Clean Navbar Architecture & Platform Dropdown**
+  - Refactored `Navbar.tsx` with interactive `Platform ▾` dropdown containing Features, Docs, Contact Us, About Us, and FAQ.
+  - Hidden `Dashboard` link for logged-out users; retained `FAQ` on top navbar.
 - [x] **Pillar 5: Brand Vibe & Mindset Rules**
   - Persisted platform vibe guidelines and copy restrictions in `.agents/AGENTS.md`.
 

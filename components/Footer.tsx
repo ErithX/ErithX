@@ -24,6 +24,7 @@ export default function Footer() {
             <h3 className="font-semibold text-white text-xs uppercase tracking-wider text-emerald-400">Contests Hub</h3>
             <Link href="/contests" className="text-sm text-zinc-400 hover:text-white transition-colors">Coding Contests Tracker</Link>
             <Link href="/features" className="text-sm text-zinc-400 hover:text-white transition-colors">Features & 1-Click Calendar Sync</Link>
+            <Link href="/docs" className="text-sm text-zinc-400 hover:text-white transition-colors">Platform Docs & Guides</Link>
             <Link href="/faq" className="text-sm text-zinc-400 hover:text-white transition-colors">Platform & Contest FAQ</Link>
           </div>
 
