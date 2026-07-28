@@ -14,16 +14,7 @@ export async function GET() {
       .sort({ createdAt: -1 }) // Newest first
       .limit(50);
       
-    // Impression-based views: Increment views for all fetched documents
-    const docIds = publishedDocs.map(doc => doc._id);
-    if (docIds.length > 0) {
-      // Execute without awaiting to not block the response
-      Resource.updateMany(
-        { _id: { $in: docIds } },
-        { $inc: { views: 1 } }
-      ).exec().catch(console.error);
-    }
-      
+
     return NextResponse.json(publishedDocs, { status: 200 });
   } catch (error: any) {
     console.error("Resources Fetch API Error:", error);

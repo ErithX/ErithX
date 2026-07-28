@@ -49,11 +49,16 @@ export default function ResourceClient({
   useEffect(() => {
     if (!doc) return;
     
-    // Real Views tracking (once per user/session)
+    // Real Views tracking (once per user/session per 24 hours)
     const actualDocId = doc._id;
-    if (!localStorage.getItem(`viewed_${actualDocId}`)) {
+    const viewKey = `viewed_${actualDocId}`;
+    const lastViewed = localStorage.getItem(viewKey);
+    const now = Date.now();
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+    
+    if (!lastViewed || (now - parseInt(lastViewed, 10)) > TWENTY_FOUR_HOURS) {
       fetch(`/api/resources/${actualDocId}/view`, { method: 'POST' }).catch(console.error);
-      localStorage.setItem(`viewed_${actualDocId}`, 'true');
+      localStorage.setItem(viewKey, now.toString());
     }
 
     const handleScroll = () => {
