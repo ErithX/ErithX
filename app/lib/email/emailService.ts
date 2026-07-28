@@ -5,7 +5,7 @@ interface Contest {
   platform: string;
   title: string;
   url: string;
-  start_time: string;
+  startTime: string;
   duration: number;
 }
 
@@ -13,323 +13,464 @@ interface EmailOptions {
   to: string;
   subject: string;
   html: string;
+  text?: string;
 }
 
-// Create transporter with better error handling
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const UNSUBSCRIBE_URL = `${APP_URL}/dashboard/settings`;
+const PHYSICAL_ADDRESS = 'DSA Quest, India';
+const SENDER_NAME = 'DSA Quest';
+const SENDER_EMAIL = process.env.SMTP_USER || '';
+
 function createTransporter() {
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: false, // true for 465, false for other ports
+    secure: false,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASSWORD,
     },
-    // Add these for better reliability
-    connectionTimeout: 10000, // 10 seconds
+    connectionTimeout: 15000,
     greetingTimeout: 10000,
-    socketTimeout: 10000,
-    logger: false, // Set to true for debugging
-    debug: false, // Set to true for debugging
+    socketTimeout: 15000,
+    logger: false,
+    debug: false,
   });
 }
 
-// Verify email configuration on startup
 export async function verifyEmailConfig() {
   try {
     const transporter = createTransporter();
     await transporter.verify();
-    console.log('✅ Email service is ready');
+    console.log('Email service is ready');
     return true;
   } catch (error) {
-    console.error('❌ Email service error:', error);
+    console.error('Email service error:', error);
     return false;
   }
 }
 
-// Send email with retry logic
-export async function sendEmail({ to, subject, html }: EmailOptions, retries = 3) {
+export async function sendEmail({ to, subject, html, text }: EmailOptions, retries = 3) {
   let lastError: any;
 
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const transporter = createTransporter();
-      
-      console.log(`📧 Attempt ${attempt}/${retries} - Sending email to ${to}`);
+
+      console.log(`Attempt ${attempt}/${retries} - Sending email to ${to}`);
 
       const info = await transporter.sendMail({
-        from: `"DSA Quest" <${process.env.SMTP_USER}>`,
+        from: `"${SENDER_NAME}" <${SENDER_EMAIL}>`,
         to,
         subject,
         html,
+        text: text || stripHtml(html),
+        headers: {
+          'List-Unsubscribe': `<${UNSUBSCRIBE_URL}>`,
+          'X-Mailer': 'DSAQuest',
+          'Precedence': 'bulk',
+        },
       });
 
-      console.log(`✅ Email sent successfully: ${info.messageId} to ${to}`);
-      
-      // Close transporter connection
+      console.log(`Email sent: ${info.messageId} to ${to}`);
       transporter.close();
-      
       return { success: true, messageId: info.messageId };
     } catch (error) {
       lastError = error;
-      console.error(`❌ Email send attempt ${attempt} failed:`, error);
-      
-      // Wait before retry (exponential backoff)
+      console.error(`Email attempt ${attempt} failed:`, error);
+
       if (attempt < retries) {
-        const waitTime = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
-        console.log(`⏳ Waiting ${waitTime/1000}s before retry...`);
+        const waitTime = Math.pow(2, attempt) * 1000;
         await new Promise(resolve => setTimeout(resolve, waitTime));
       }
     }
   }
 
-  console.error(`❌ All ${retries} email attempts failed for ${to}`);
+  console.error(`All ${retries} attempts failed for ${to}`);
   return { success: false, error: lastError };
 }
 
-// Format duration helper
+function stripHtml(html: string): string {
+  return html
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function formatDuration(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
-  
-  if (hours > 0 && minutes > 0) {
-    return `${hours}h ${minutes}m`;
-  } else if (hours > 0) {
-    return `${hours}h`;
-  }
+  if (hours > 0 && minutes > 0) return `${hours}h ${minutes}m`;
+  if (hours > 0) return `${hours}h`;
   return `${minutes}m`;
 }
 
-// Format date helper
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
+    weekday: 'short',
     month: 'short',
     day: 'numeric',
     year: 'numeric',
   });
 }
 
-// Format time helper
 function formatTime(dateString: string): string {
   const date = new Date(dateString);
   return date.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
+    timeZoneName: 'short',
   });
 }
 
-// Generate contest email HTML
-function generateContestEmailHTML(contests: Contest[], userName: string): string {
-  if (!contests || contests.length === 0) {
-    return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <title>No Upcoming Contests</title>
-      </head>
-      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f3f4f6; padding: 20px; margin: 0;">
-        <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <div style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); padding: 40px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 32px;">🎯 DSA Quest</h1>
-          </div>
-          <div style="padding: 40px; text-align: center;">
-            <h2 style="color: #1f2937; margin: 0 0 16px 0;">Hey ${userName}! 👋</h2>
-            <p style="color: #6b7280; font-size: 16px;">No contests starting in the next 24 hours. Take this time to practice and prepare! 💪</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
-  }
-
-  const contestRows = contests
-    .map(
-      (contest) => `
-        <div style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 16px; background: #ffffff;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-            <span style="display: inline-block; background: #3b82f6; color: white; padding: 6px 12px; border-radius: 8px; font-weight: bold; font-size: 12px;">
-              ${contest.platform}
-            </span>
-          </div>
-          
-          <h3 style="margin: 0 0 12px 0; font-size: 18px; color: #1f2937; font-weight: bold;">
-            ${contest.title}
-          </h3>
-          
-          <div style="display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
-            <div style="color: #6b7280; font-size: 14px;">
-              📅 ${formatDate(contest.start_time)}
-            </div>
-            <div style="color: #6b7280; font-size: 14px;">
-              🕐 ${formatTime(contest.start_time)}
-            </div>
-            <div style="color: #6b7280; font-size: 14px;">
-              ⏱️ ${formatDuration(contest.duration)}
-            </div>
-          </div>
-          
-          <a href="${contest.url}" 
-             style="display: inline-block; background: #10b981; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">
-            Join Contest →
-          </a>
-        </div>
-      `
-    )
-    .join('');
-
-  return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Upcoming Contests - DSA Quest</title>
-    </head>
-    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 20px;">
-      <div style="max-width: 700px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        
-        <!-- Header -->
-        <div style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); padding: 40px 20px; text-align: center;">
-          <h1 style="color: white; margin: 0; font-size: 32px; font-weight: bold;">
-            🚀 DSA Quest
-          </h1>
-          <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px;">
-            Your Daily Contest Digest
-          </p>
-        </div>
-
-        <!-- Content -->
-        <div style="padding: 32px 20px;">
-          <h2 style="color: #1f2937; font-size: 24px; margin: 0 0 8px 0; font-weight: bold;">
-            Hey ${userName}! 👋
-          </h2>
-          <p style="color: #6b7280; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
-            Here ${contests.length === 1 ? 'is' : 'are'} <strong>${contests.length} contest${contests.length > 1 ? 's' : ''}</strong> starting in the next <strong>24 hours</strong>. Time to sharpen those algorithms! 💪
-          </p>
-
-          <!-- Contests List -->
-          ${contestRows}
-
-          <!-- Tips Section -->
-          <div style="margin-top: 32px; padding: 20px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px;">
-            <h3 style="color: #92400e; margin: 0 0 12px 0; font-size: 18px; font-weight: bold;">
-              💡 Quick Tips
-            </h3>
-            <ul style="color: #78350f; margin: 0; padding-left: 20px; line-height: 1.8;">
-              <li>Review patterns you've practiced recently</li>
-              <li>Check contest rules and scoring system</li>
-              <li>Keep your editor and templates ready</li>
-              <li>Stay hydrated and take breaks between problems</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Footer -->
-        <div style="background: #f9fafb; padding: 24px; text-align: center; border-top: 2px solid #e5e7eb;">
-          <p style="color: #6b7280; font-size: 14px; margin: 0 0 16px 0;">
-            Happy Coding! May your solutions be optimal and your submissions be accepted! ✨
-          </p>
-          <div style="margin-bottom: 16px;">
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" 
-               style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-right: 8px;">
-              View Dashboard
-            </a>
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/resources" 
-               style="display: inline-block; background: #6b7280; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-              Study Resources
-            </a>
-          </div>
-          <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-            You're receiving this because you enabled contest notifications in DSA Quest.<br>
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" style="color: #3b82f6; text-decoration: none;">
-              Update preferences
-            </a>
-          </p>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
+function emailWrapper(content: string): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+</head>
+<body style="margin:0;padding:0;background-color:#f4f5f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f5f7;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#ffffff;border-radius:8px;border:1px solid #e5e7eb;overflow:hidden;">
+          ${content}
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 }
 
-// Send daily contest digest
+function emailFooter(): string {
+  return `
+    <tr>
+      <td style="padding:24px 32px;background-color:#f9fafb;border-top:1px solid #e5e7eb;">
+        <p style="margin:0 0 8px 0;font-size:12px;color:#6b7280;line-height:1.6;text-align:center;">
+          You received this because you have an account on DSA Quest.
+          <br>
+          <a href="${UNSUBSCRIBE_URL}" style="color:#3b82f6;text-decoration:underline;">Manage email preferences</a>
+          &nbsp;&middot;&nbsp;
+          <a href="${APP_URL}/about" style="color:#3b82f6;text-decoration:underline;">About DSA Quest</a>
+        </p>
+        <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.6;text-align:center;">
+          ${SENDER_NAME} &middot; ${PHYSICAL_ADDRESS}
+          <br>
+          This is a transactional email related to your account activity.
+        </p>
+      </td>
+    </tr>`;
+}
+
+// --- WELCOME EMAIL ---
+
+export async function sendWelcomeEmail(userEmail: string, userName: string) {
+  const subject = 'Welcome to DSA Quest';
+  const html = emailWrapper(`
+    <tr>
+      <td style="padding:32px 32px 24px 32px;">
+        <h1 style="margin:0 0 8px 0;font-size:22px;color:#111827;font-weight:700;">Welcome to DSA Quest</h1>
+        <p style="margin:0;font-size:14px;color:#6b7280;">Your coding contest tracker is ready.</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <p style="margin:0 0 16px 0;font-size:15px;color:#374151;line-height:1.6;">
+          Hey ${userName},
+        </p>
+        <p style="margin:0 0 16px 0;font-size:15px;color:#374151;line-height:1.6;">
+          Thanks for signing up. DSA Quest tracks upcoming coding contests from LeetCode, Codeforces, CodeChef, AtCoder, and more &mdash; all in one place.
+        </p>
+        <p style="margin:0 0 24px 0;font-size:15px;color:#374151;line-height:1.6;">
+          Here is what you can do right now:
+        </p>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin-bottom:24px;">
+          <tr>
+            <td style="padding:8px 0;font-size:14px;color:#374151;">
+              <span style="color:#10b981;font-weight:700;">1.</span>&nbsp;&nbsp;Browse upcoming contests filtered by platform and difficulty
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;font-size:14px;color:#374151;">
+              <span style="color:#10b981;font-weight:700;">2.</span>&nbsp;&nbsp;Get email alerts before contests you care about start
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;font-size:14px;color:#374151;">
+              <span style="color:#10b981;font-weight:700;">3.</span>&nbsp;&nbsp;Access curated DSA resources and roadmaps
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;font-size:14px;color:#374151;">
+              <span style="color:#10b981;font-weight:700;">4.</span>&nbsp;&nbsp;Track your progress across platforms
+            </td>
+          </tr>
+        </table>
+        <table role="presentation" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="background-color:#10b981;border-radius:6px;">
+              <a href="${APP_URL}/contests" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;">
+                Browse Contests
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
+          You can turn off email notifications anytime from your
+          <a href="${UNSUBSCRIBE_URL}" style="color:#3b82f6;text-decoration:underline;">settings page</a>.
+        </p>
+      </td>
+    </tr>
+    ${emailFooter()}
+  `);
+
+  return sendEmail({ to: userEmail, subject, html });
+}
+
+// --- DAILY CONTEST DIGEST ---
+
 export async function sendDailyContestDigest(
   userEmail: string,
   userName: string,
   contests: Contest[]
 ) {
-  console.log(`📧 Preparing email for ${userEmail} with ${contests.length} contests`);
-
   if (!contests || contests.length === 0) {
-    console.log(`⚠️ No contests for ${userEmail}, skipping email`);
+    console.log(`No contests for ${userEmail}, skipping digest`);
     return { success: true, skipped: true };
   }
 
-  const subject = `🔥 ${contests.length} Contest${contests.length > 1 ? 's' : ''} Starting Soon!`;
-  const html = generateContestEmailHTML(contests, userName);
+  const subject = `${contests.length} contest${contests.length > 1 ? 's' : ''} starting soon on DSA Quest`;
+  const html = emailWrapper(`
+    <tr>
+      <td style="padding:32px 32px 24px 32px;">
+        <h1 style="margin:0 0 8px 0;font-size:22px;color:#111827;font-weight:700;">Your Contest Digest</h1>
+        <p style="margin:0;font-size:14px;color:#6b7280;">${formatDate(new Date().toISOString())}</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <p style="margin:0 0 20px 0;font-size:15px;color:#374151;line-height:1.6;">
+          Hey ${userName}, here ${contests.length === 1 ? 'is' : 'are'} <strong>${contests.length} contest${contests.length > 1 ? 's' : ''}</strong> starting in the next 24 hours.
+        </p>
+        ${contests.map(c => `
+          <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin-bottom:12px;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;">
+            <tr>
+              <td style="padding:16px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td>
+                      <span style="display:inline-block;font-size:11px;font-weight:600;color:#374151;background-color:#f3f4f6;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px;">
+                        ${c.platform}
+                      </span>
+                    </td>
+                    <td align="right">
+                      <span style="font-size:12px;color:#6b7280;">
+                        ${formatDuration(c.duration)}
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+                <p style="margin:10px 0 8px 0;font-size:15px;color:#111827;font-weight:600;line-height:1.4;">
+                  ${c.title}
+                </p>
+                <p style="margin:0 0 12px 0;font-size:13px;color:#6b7280;">
+                  ${formatDate(c.startTime)} at ${formatTime(c.startTime)}
+                </p>
+                <a href="${c.url}" style="display:inline-block;font-size:13px;font-weight:600;color:#3b82f6;text-decoration:none;">
+                  View Contest &rarr;
+                </a>
+              </td>
+            </tr>
+          </table>
+        `).join('')}
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;background-color:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;">
+          <tr>
+            <td style="padding:16px;">
+              <p style="margin:0 0 6px 0;font-size:13px;color:#166534;font-weight:600;">Before you compete</p>
+              <p style="margin:0;font-size:13px;color:#166534;line-height:1.6;">
+                Review your recent patterns. Check the contest rules and scoring. Keep your templates ready.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <table role="presentation" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="background-color:#3b82f6;border-radius:6px;">
+              <a href="${APP_URL}/contests" style="display:inline-block;padding:10px 20px;font-size:13px;font-weight:600;color:#ffffff;text-decoration:none;">
+                View All Contests
+              </a>
+            </td>
+            <td style="width:12px;"></td>
+            <td style="background-color:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;">
+              <a href="${APP_URL}/resources" style="display:inline-block;padding:10px 20px;font-size:13px;font-weight:600;color:#374151;text-decoration:none;">
+                Study Resources
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    ${emailFooter()}
+  `);
 
-  console.log(`📤 Sending email to ${userEmail}: ${subject}`);
-  
-  const result = await sendEmail({ to: userEmail, subject, html });
-  
-  if (result.success) {
-    console.log(`✅ Email sent successfully to ${userEmail}`);
-  } else {
-    console.error(`❌ Failed to send email to ${userEmail}:`, result.error);
-  }
-  
-  return result;
+  return sendEmail({ to: userEmail, subject, html });
 }
 
-// Send welcome email
-export async function sendWelcomeEmail(userEmail: string, userName: string) {
-  const subject = "Welcome to DSA Quest! 🚀";
-  const html = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <title>Welcome to DSA Quest</title>
-    </head>
-    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f3f4f6; padding: 20px; margin: 0;">
-      <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <div style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); padding: 40px; text-align: center;">
-          <h1 style="color: white; margin: 0; font-size: 36px;">🎉 Welcome!</h1>
-        </div>
-        <div style="padding: 40px;">
-          <h2 style="color: #1f2937; margin: 0 0 16px 0;">Hey ${userName}!</h2>
-          <p style="color: #6b7280; font-size: 16px; line-height: 1.6;">
-            Welcome to <strong>DSA Quest</strong> - your ultimate platform for tracking coding contests and mastering algorithms!
-          </p>
-          <div style="margin: 32px 0; padding: 24px; background: #eff6ff; border-radius: 12px;">
-            <h3 style="color: #1e40af; margin: 0 0 16px 0;">What's Next?</h3>
-            <ul style="color: #1e3a8a; margin: 0; padding-left: 20px; line-height: 2;">
-              <li>Get daily email digests of upcoming contests</li>
-              <li>Track your favorite platforms (LeetCode, Codeforces, CodeChef)</li>
-              <li>Access curated DSA resources and roadmaps</li>
-              <li>Monitor your coding journey and progress</li>
-            </ul>
-          </div>
-          <div style="text-align: center; margin-top: 32px;">
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" 
-               style="display: inline-block; background: #3b82f6; color: white; padding: 16px 32px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px;">
-              Go to Dashboard →
-            </a>
-          </div>
-        </div>
-        <div style="background: #f9fafb; padding: 24px; text-align: center; border-top: 1px solid #e5e7eb;">
-          <p style="color: #6b7280; font-size: 14px; margin: 0;">
-            Happy Coding! 💻<br>
-            Team DSA Quest
-          </p>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
+// --- CONTEST ALERT (24h before a specific contest) ---
+
+export async function sendContestAlert(
+  userEmail: string,
+  userName: string,
+  contest: Contest
+) {
+  const subject = `Reminder: ${contest.title} starts ${formatTime(contest.startTime)}`;
+  const html = emailWrapper(`
+    <tr>
+      <td style="padding:32px 32px 24px 32px;">
+        <h1 style="margin:0 0 8px 0;font-size:22px;color:#111827;font-weight:700;">Contest Reminder</h1>
+        <p style="margin:0;font-size:14px;color:#6b7280;">Starting within 24 hours</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <p style="margin:0 0 16px 0;font-size:15px;color:#374151;line-height:1.6;">
+          Hey ${userName},
+        </p>
+        <p style="margin:0 0 20px 0;font-size:15px;color:#374151;line-height:1.6;">
+          A contest you may be interested in is starting soon:
+        </p>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;margin-bottom:20px;">
+          <tr>
+            <td style="padding:20px;">
+              <span style="display:inline-block;font-size:11px;font-weight:600;color:#374151;background-color:#f3f4f6;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px;">
+                ${contest.platform}
+              </span>
+              <p style="margin:12px 0 8px 0;font-size:17px;color:#111827;font-weight:700;line-height:1.4;">
+                ${contest.title}
+              </p>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
+                <tr>
+                  <td style="padding:4px 0;font-size:13px;color:#6b7280;">
+                    Date: <strong style="color:#374151;">${formatDate(contest.startTime)}</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:4px 0;font-size:13px;color:#6b7280;">
+                    Time: <strong style="color:#374151;">${formatTime(contest.startTime)}</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:4px 0;font-size:13px;color:#6b7280;">
+                    Duration: <strong style="color:#374151;">${formatDuration(contest.duration)}</strong>
+                  </td>
+                </tr>
+              </table>
+              <table role="presentation" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="background-color:#10b981;border-radius:6px;">
+                    <a href="${contest.url}" style="display:inline-block;padding:10px 20px;font-size:13px;font-weight:600;color:#ffffff;text-decoration:none;">
+                      Join Contest
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
+          You are receiving this because you enabled contest alerts.
+          <a href="${UNSUBSCRIBE_URL}" style="color:#3b82f6;text-decoration:underline;">Change preferences</a>
+        </p>
+      </td>
+    </tr>
+    ${emailFooter()}
+  `);
+
+  return sendEmail({ to: userEmail, subject, html });
+}
+
+// --- PRODUCT UPDATE ---
+
+export async function sendProductUpdate(
+  userEmail: string,
+  userName: string,
+  updateTitle: string,
+  updateSummary: string,
+  updateUrl?: string
+) {
+  const subject = `DSA Quest: ${updateTitle}`;
+  const html = emailWrapper(`
+    <tr>
+      <td style="padding:32px 32px 24px 32px;">
+        <h1 style="margin:0 0 8px 0;font-size:22px;color:#111827;font-weight:700;">Product Update</h1>
+        <p style="margin:0;font-size:14px;color:#6b7280;">What's new on DSA Quest</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <p style="margin:0 0 16px 0;font-size:15px;color:#374151;line-height:1.6;">
+          Hey ${userName},
+        </p>
+        <p style="margin:0 0 20px 0;font-size:15px;color:#374151;line-height:1.6;">
+          We have been working on improvements to DSA Quest. Here is the latest:
+        </p>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;margin-bottom:20px;">
+          <tr>
+            <td style="padding:20px;">
+              <h2 style="margin:0 0 10px 0;font-size:17px;color:#111827;font-weight:700;">${updateTitle}</h2>
+              <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.6;">
+                ${updateSummary}
+              </p>
+              ${updateUrl ? `
+                <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:16px;">
+                  <tr>
+                    <td style="background-color:#3b82f6;border-radius:6px;">
+                      <a href="${updateUrl}" style="display:inline-block;padding:10px 20px;font-size:13px;font-weight:600;color:#ffffff;text-decoration:none;">
+                        Learn More
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              ` : ''}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
+          You are receiving this because you enabled product updates.
+          <a href="${UNSUBSCRIBE_URL}" style="color:#3b82f6;text-decoration:underline;">Unsubscribe</a>
+        </p>
+      </td>
+    </tr>
+    ${emailFooter()}
+  `);
 
   return sendEmail({ to: userEmail, subject, html });
 }

@@ -23,7 +23,25 @@ export default function SettingsPage() {
   const [extraPlatforms, setExtraPlatforms] = useState<any[]>([]);
   const [isAddPlatformOpen, setIsAddPlatformOpen] = useState(false);
   const addPlatformRef = useRef<HTMLDivElement>(null);
-  
+
+  const [profileForm, setProfileForm] = useState({
+    full_name: '',
+    bio: '',
+    twitter_url: '',
+    linkedin_url: ''
+  });
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+
+  const [notifPrefs, setNotifPrefs] = useState({
+    contestAlerts: true,
+    weeklyDigest: true,
+    productUpdates: false,
+  });
+  const [savingNotifs, setSavingNotifs] = useState(false);
+
   const supabase = createClient();
 
   useEffect(() => {
@@ -60,6 +78,95 @@ export default function SettingsPage() {
       setLoading(false);
     });
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    fetch('/api/user/profile')
+      .then(r => r.json())
+      .then(data => {
+        if (data.profile) {
+          setNotifPrefs({
+            contestAlerts: data.profile.email_notifications !== false,
+            weeklyDigest: data.profile.weekly_digest !== false,
+            productUpdates: data.profile.product_updates === true,
+          });
+          setProfileForm({
+            full_name: data.profile.full_name || '',
+            bio: data.profile.bio || ''
+          });
+        }
+      })
+      .catch(() => {});
+  }, [user]);
+
+  const saveProfile = async () => {
+    setIsSavingProfile(true);
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: profileForm.full_name,
+          bio: profileForm.bio
+        }),
+      });
+      if (res.ok) {
+        showToast('Profile updated successfully! ✨', 'success');
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        showToast(errorData.error || 'Failed to update profile', 'error');
+      }
+    } catch {
+      showToast('Failed to update profile', 'error');
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
+  const saveNotifPrefs = async (prefs: typeof notifPrefs) => {
+    setSavingNotifs(true);
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email_notifications: prefs.contestAlerts,
+          weekly_digest: prefs.weeklyDigest,
+          product_updates: prefs.productUpdates,
+        }),
+      });
+      if (res.ok) {
+        showToast('Notification preferences saved', 'success');
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        showToast(errorData.error || 'Failed to save preferences', 'error');
+      }
+    } catch {
+      showToast('Failed to save preferences', 'error');
+    } finally {
+      setSavingNotifs(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeletingAccount(true);
+    try {
+      const res = await fetch('/api/user/delete', { method: 'DELETE' });
+      if (res.ok) {
+        showToast('Account deleted. Redirecting...', 'success');
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        showToast(errorData.error || 'Failed to delete account', 'error');
+        setIsDeletingAccount(false);
+      }
+    } catch {
+      showToast('Failed to delete account', 'error');
+      setIsDeletingAccount(false);
+    }
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -164,19 +271,19 @@ export default function SettingsPage() {
                 <button onClick={() => scrollTo('profile')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent ${activeSection === 'profile' ? 'active' : ''}`}>
                   <UserIcon className="w-3.5 h-3.5" /> Profile
                 </button>
-                <button onClick={() => scrollTo('connections')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent ${activeSection === 'connections' ? 'active' : ''}`}>
+                {/* <button onClick={() => scrollTo('connections')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent ${activeSection === 'connections' ? 'active' : ''}`}>
                   <LinkIcon className="w-3.5 h-3.5" /> Connections
-                </button>
-                <button onClick={() => scrollTo('preferences')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent ${activeSection === 'preferences' ? 'active' : ''}`}>
+                </button> */}
+                {/* <button onClick={() => scrollTo('preferences')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent ${activeSection === 'preferences' ? 'active' : ''}`}>
                   <SlidersHorizontal className="w-3.5 h-3.5" /> Preferences
-                </button>
+                </button> */}
                 <button onClick={() => scrollTo('notifications')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent ${activeSection === 'notifications' ? 'active' : ''}`}>
                   <Bell className="w-3.5 h-3.5" /> Notifications
                 </button>
                 <div className="pt-4 mt-4 border-t border-white/5"></div>
-                <button onClick={() => scrollTo('legal')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent ${activeSection === 'legal' ? 'active' : ''}`}>
+                {/* <button onClick={() => scrollTo('legal')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-md transition-all border-l-2 border-transparent ${activeSection === 'legal' ? 'active' : ''}`}>
                   <Shield className="w-3.5 h-3.5" /> Legal & Privacy
-                </button>
+                </button> */}
                 <button onClick={() => scrollTo('danger')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-red-500/80 hover:text-red-400 rounded-md transition-all border-l-2 border-transparent ${activeSection === 'danger' ? 'active' : ''}`}>
                   <AlertOctagon className="w-3.5 h-3.5" /> Danger Zone
                 </button>
@@ -198,42 +305,26 @@ export default function SettingsPage() {
               </div>
               
               <div className="space-y-6">
-                {/* Banner Preview (Optional, just to show how it looks) */}
-                <ProfileBanner type="default">
-                  <div className="flex items-center gap-4">
-                    {user?.user_metadata?.avatar_url ? (
-                      <img 
-                        src={user.user_metadata.avatar_url} 
-                        className="w-16 h-16 rounded-full object-cover border-2 border-white/20 shadow-xl" 
-                        alt="Avatar" 
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-2xl shadow-[0_0_15px_rgba(16,185,129,0.2)] shrink-0">
-                        {user?.user_metadata?.full_name ? user.user_metadata.full_name.charAt(0).toUpperCase() : 'U'}
-                      </div>
-                    )}
-                    <div>
-                      <div className="text-lg font-bold text-white">{user?.user_metadata?.full_name || "Coder"}</div>
-                      <div className="text-xs text-zinc-400">@{user?.user_metadata?.full_name?.toLowerCase().replace(/\s/g, '') || "coder"}</div>
-                    </div>
-                  </div>
-                  <button className="px-4 py-1.5 rounded-lg bg-white/10 border border-white/10 text-xs font-medium text-white hover:bg-white/20 transition-all backdrop-blur-md">
-                    Change Banner
-                  </button>
-                </ProfileBanner>
+                {/* Banner Preview (Hidden for now as requested) */}
+                {/* <ProfileBanner type="default">...</ProfileBanner> */}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                   {/* Display Name */}
                   <div className="space-y-2">
                     <label className="text-xs font-medium text-zinc-300">Display Name</label>
-                    <input type="text" defaultValue={user?.user_metadata?.full_name || ""} placeholder="Your Name" className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 transition-all" />
+                    <input 
+                      type="text" 
+                      value={profileForm.full_name} 
+                      onChange={(e) => setProfileForm({...profileForm, full_name: e.target.value})}
+                      placeholder="Your Name" 
+                      className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 transition-all" 
+                    />
                   </div>
                   
                   {/* Email */}
                   <div className="space-y-2">
                     <label className="text-xs font-medium text-zinc-300">Email Address <span className="text-[9px] text-zinc-500 ml-1">(Private)</span></label>
-                    <input type="email" disabled defaultValue={user?.email || ""} className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-500 bg-white/[0.01] cursor-not-allowed" />
+                    <input type="email" disabled value={user?.email || ""} className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-500 bg-white/[0.01] cursor-not-allowed" />
                   </div>
                 </div>
 
@@ -243,170 +334,55 @@ export default function SettingsPage() {
                     <span>Bio</span>
                     <span className="text-zinc-600">Max 160 chars</span>
                   </label>
-                  <textarea rows={3} placeholder="Software Engineer | Problem Solver | Building the future..." className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 resize-none transition-all"></textarea>
+                  <textarea 
+                    rows={3} 
+                    value={profileForm.bio}
+                    onChange={(e) => setProfileForm({...profileForm, bio: e.target.value})}
+                    placeholder="Software Engineer | Problem Solver | Building the future..." 
+                    className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 resize-none transition-all"
+                  />
                 </div>
 
+                {/* SOCIAL URLs HIDDEN FOR NOW */}
+                {/* 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-                  {/* X (Twitter) */}
                   <div className="space-y-2">
                     <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5"><Twitter className="w-3.5 h-3.5 text-zinc-400" /> X (Twitter) URL</label>
-                    <input type="url" placeholder="https://x.com/username" className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 transition-all" />
+                    <input type="url" ... />
                   </div>
                   
-                  {/* LinkedIn */}
                   <div className="space-y-2">
                     <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5"><Linkedin className="w-3.5 h-3.5 text-zinc-400" /> LinkedIn URL</label>
-                    <input type="url" placeholder="https://linkedin.com/in/username" className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 transition-all" />
+                    <input type="url" ... />
                   </div>
-                </div>
+                </div> 
+                */}
 
                 <div className="flex justify-end pt-4 border-t border-white/5">
                   <button 
-                    onClick={() => {
-                      // Backend logic will be handled by the user
-                      showToast('Profile updated successfully! ✨', 'success');
-                    }}
-                    className="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-colors"
+                    onClick={saveProfile}
+                    disabled={isSavingProfile}
+                    className="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-colors disabled:opacity-50"
                   >
-                    Save Changes
+                    {isSavingProfile ? 'Saving...' : 'Save Changes'}
                   </button>
                 </div>
               </div>
             </section>
 
-            {/* CONNECTIONS SECTION */}
+            {/* CONNECTIONS SECTION (HIDDEN FOR FUTURE) */}
+            {/* 
             <section id="connections" className="glass rounded-xl p-6 border border-white/[0.08] bg-white/[0.03]">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-500 mb-1">Connected Accounts</h2>
-              <p className="text-xs text-zinc-600 mb-6">Link your profiles to verify your achievement cards.</p>
-
-              <div className="space-y-0">
-                {/* LeetCode */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 border-b border-white/5">
-                  <div className="flex items-center gap-3">
-                    <span className="w-5 h-5 rounded-full bg-yellow-500/20 flex items-center justify-center text-[9px] text-yellow-400 font-bold">L</span>
-                    <div>
-                      <div className="text-sm font-medium text-zinc-200">LeetCode</div>
-                      <div className="text-xs text-zinc-500 mt-0.5">Sync rating and solved problems.</div>
-                    </div>
-                  </div>
-                  <input type="text" placeholder="username" className="input-field w-full sm:w-72 px-3 py-1.5 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 mono" />
-                </div>
-
-                {/* Codeforces */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 border-b border-white/5">
-                  <div className="flex items-center gap-3">
-                    <span className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] text-red-400 font-bold">C</span>
-                    <div>
-                      <div className="text-sm font-medium text-zinc-200">Codeforces</div>
-                      <div className="text-xs text-zinc-500 mt-0.5">Sync rating and contest history.</div>
-                    </div>
-                  </div>
-                  <input type="text" placeholder="username" className="input-field w-full sm:w-72 px-3 py-1.5 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 mono" />
-                </div>
-
-                {/* Dynamic CP Inputs */}
-                {extraPlatforms.map(p => (
-                  <div key={p.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 border-b border-white/5">
-                    <div className="flex items-center gap-3">
-                      <span className="w-5 h-5 rounded-full flex items-center justify-center text-[8px] text-black font-bold" style={{background: p.color}}></span>
-                      <div>
-                        <div className="text-sm font-medium text-zinc-200">{p.name}</div>
-                        <div className="text-xs text-zinc-500 mt-0.5">Sync profile data.</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 w-full sm:w-72">
-                      <input type="text" placeholder="username" className="input-field flex-1 px-3 py-1.5 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 mono" />
-                      <button onClick={() => handleRemovePlatform(p.id)} className="p-1.5 text-zinc-500 hover:text-red-400 transition-colors">
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-
-                {/* Add More Dropdown */}
-                <div className="relative pt-4 pb-6" ref={addPlatformRef}>
-                  <button onClick={() => setIsAddPlatformOpen(!isAddPlatformOpen)} className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 transition-colors">
-                    <PlusCircle className="w-3.5 h-3.5" /> Add Platform
-                  </button>
-                  
-                  {isAddPlatformOpen && (
-                    <div className="absolute z-20 w-56 mt-2 bg-[#18181b] border border-white/10 rounded-lg shadow-xl p-1.5">
-                      <button onClick={() => handleAddPlatform('CodeChef', 'codechef', '#f97316')} className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/5 text-xs text-zinc-300 transition-colors">
-                        <span className="w-2 h-2 rounded-full bg-orange-500"></span> CodeChef
-                      </button>
-                      <button onClick={() => handleAddPlatform('AtCoder', 'atcoder', '#64748b')} className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/5 text-xs text-zinc-300 transition-colors">
-                        <span className="w-2 h-2 rounded-full bg-slate-400"></span> AtCoder
-                      </button>
-                      <button onClick={() => handleAddPlatform('GeeksforGeeks', 'gfg', '#22c55e')} className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/5 text-xs text-zinc-300 transition-colors">
-                        <span className="w-2 h-2 rounded-full bg-green-500"></span> GeeksforGeeks
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {/* GitHub & LinkedIn in same horizon at the end */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-white/5">
-                  <div className="flex flex-col gap-3 p-4 rounded-xl border border-white/5 bg-white/[0.02]">
-                    <div className="flex items-center gap-2">
-                      <Github className="w-5 h-5 text-white" />
-                      <div>
-                        <div className="text-sm font-medium text-zinc-200">GitHub</div>
-                        <div className="text-[10px] text-zinc-500 mt-0.5">Track open source contributions.</div>
-                      </div>
-                    </div>
-                    <input type="text" placeholder="username" className="input-field w-full px-3 py-1.5 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 mono" />
-                  </div>
-                  
-                  <div className="flex flex-col gap-3 p-4 rounded-xl border border-white/5 bg-white/[0.02]">
-                    <div className="flex items-center gap-2">
-                      <Linkedin className="w-5 h-5 text-[#3b82f6]" />
-                      <div>
-                        <div className="text-sm font-medium text-zinc-200">LinkedIn</div>
-                        <div className="text-[10px] text-zinc-500 mt-0.5">Share milestone cards directly.</div>
-                      </div>
-                    </div>
-                    <input type="text" placeholder="username" className="input-field w-full px-3 py-1.5 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 mono" />
-                  </div>
-                </div>
-
-              </div>
+              ...
             </section>
+            */}
 
-            {/* PREFERENCES SECTION */}
+            {/* PREFERENCES SECTION (HIDDEN FOR FUTURE) */}
+            {/* 
             <section id="preferences" className="glass rounded-xl p-6 border border-white/[0.08] bg-white/[0.03]">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-500 mb-1">Contest Preferences</h2>
-              <p className="text-xs text-zinc-600 mb-6">Customize which platforms you want to track.</p>
-
-              <div className="space-y-6">
-                <div className="py-4 border-b border-white/5">
-                  <div className="mb-3">
-                    <div className="text-sm font-medium text-zinc-200">Favorite Platforms</div>
-                    <div className="text-xs text-zinc-500 mt-0.5">Only receive alerts for these platforms.</div>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
-                    {['LeetCode', 'Codeforces', 'CodeChef', 'AtCoder', 'HackerRank', 'GeeksforGeeks'].map((plat, idx) => (
-                      <label key={plat} className="flex items-center gap-2 p-2.5 rounded-lg bg-white/[0.02] border border-white/5 cursor-pointer hover:bg-white/[0.04] transition-colors">
-                        <input type="checkbox" className="w-3.5 h-3.5 rounded bg-zinc-800 border-zinc-600 text-emerald-600 focus:ring-emerald-500 focus:ring-offset-0" defaultChecked={idx < 2} />
-                        <span className="text-xs text-zinc-300">{plat}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4">
-                  <div>
-                    <div className="text-sm font-medium text-zinc-200">Default Alert Time</div>
-                    <div className="text-xs text-zinc-500 mt-0.5">When to send email alerts before a contest.</div>
-                  </div>
-                  <select className="input-field w-full sm:w-48 px-3 py-1.5 rounded-lg text-sm text-zinc-200 mono focus:border-emerald-500/50 focus:ring-0">
-                    <option>30 minutes before</option>
-                    <option>1 hour before</option>
-                    <option>2 hours before</option>
-                    <option>1 day before</option>
-                  </select>
-                </div>
-              </div>
-            </section>
+              ...
+            </section> 
+            */}
 
             {/* NOTIFICATIONS SECTION */}
             <section id="notifications" className="glass rounded-xl p-6 border border-white/[0.08] bg-white/[0.03]">
@@ -417,10 +393,20 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between py-4 border-b border-white/5">
                   <div className="pr-4">
                     <div className="text-sm font-medium text-zinc-200">Contest Alerts</div>
-                    <div className="text-xs text-zinc-500 mt-0.5">Receive an email before a contest starts.</div>
+                    <div className="text-xs text-zinc-500 mt-0.5">Receive an email when contests are starting soon.</div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="toggle-checkbox sr-only" defaultChecked />
+                    <input
+                      type="checkbox"
+                      className="toggle-checkbox sr-only"
+                      checked={notifPrefs.contestAlerts}
+                      disabled={savingNotifs}
+                      onChange={(e) => {
+                        const next = { ...notifPrefs, contestAlerts: e.target.checked };
+                        setNotifPrefs(next);
+                        saveNotifPrefs(next);
+                      }}
+                    />
                     <div className="toggle-label w-10 h-5 bg-zinc-700 rounded-full border border-white/5 transition-colors duration-200 ease-in-out"></div>
                     <span className="toggle-ball absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out"></span>
                   </label>
@@ -432,7 +418,17 @@ export default function SettingsPage() {
                     <div className="text-xs text-zinc-500 mt-0.5">Get your progress review and card updates every Sunday.</div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="toggle-checkbox sr-only" defaultChecked />
+                    <input
+                      type="checkbox"
+                      className="toggle-checkbox sr-only"
+                      checked={notifPrefs.weeklyDigest}
+                      disabled={savingNotifs}
+                      onChange={(e) => {
+                        const next = { ...notifPrefs, weeklyDigest: e.target.checked };
+                        setNotifPrefs(next);
+                        saveNotifPrefs(next);
+                      }}
+                    />
                     <div className="toggle-label w-10 h-5 bg-zinc-700 rounded-full border border-white/5 transition-colors duration-200 ease-in-out"></div>
                     <span className="toggle-ball absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out"></span>
                   </label>
@@ -444,7 +440,17 @@ export default function SettingsPage() {
                     <div className="text-xs text-zinc-500 mt-0.5">News about new features and milestones.</div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="toggle-checkbox sr-only" />
+                    <input
+                      type="checkbox"
+                      className="toggle-checkbox sr-only"
+                      checked={notifPrefs.productUpdates}
+                      disabled={savingNotifs}
+                      onChange={(e) => {
+                        const next = { ...notifPrefs, productUpdates: e.target.checked };
+                        setNotifPrefs(next);
+                        saveNotifPrefs(next);
+                      }}
+                    />
                     <div className="toggle-label w-10 h-5 bg-zinc-700 rounded-full border border-white/5 transition-colors duration-200 ease-in-out"></div>
                     <span className="toggle-ball absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out"></span>
                   </label>
@@ -452,25 +458,12 @@ export default function SettingsPage() {
               </div>
             </section>
 
-            {/* LEGAL SECTION */}
+            {/* LEGAL SECTION (HIDDEN FOR FUTURE) */}
+            {/* 
             <section id="legal" className="glass rounded-xl p-6 border border-white/[0.08] bg-white/[0.03]">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-500 mb-1">Legal & Privacy</h2>
-              <p className="text-xs text-zinc-600 mb-6">Read our policies and terms.</p>
-              <div className="space-y-2">
-                <a href="#" className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group border-b border-white/5">
-                  <span className="text-sm text-zinc-300">Privacy Policy</span>
-                  <ArrowUpRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400" />
-                </a>
-                <a href="#" className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group border-b border-white/5">
-                  <span className="text-sm text-zinc-300">Terms & Conditions</span>
-                  <ArrowUpRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400" />
-                </a>
-                <a href="#" className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group">
-                  <span className="text-sm text-zinc-300">Data Deletion Policy</span>
-                  <ArrowUpRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400" />
-                </a>
-              </div>
+              ...
             </section>
+            */}
 
             {/* DANGER ZONE */}
             <section id="danger" className="rounded-xl p-6 border border-red-500/10 bg-red-500/[0.02]">
@@ -483,7 +476,7 @@ export default function SettingsPage() {
                   <div className="text-xs text-zinc-500 mt-0.5">Permanently remove all data. This cannot be undone.</div>
                 </div>
                 <button 
-                  onClick={() => showToast('Account deletion requires confirmation', 'error')} 
+                  onClick={() => setIsDeleteModalOpen(true)} 
                   className="px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-xs font-medium text-red-400 hover:bg-red-500/20 transition-all whitespace-nowrap"
                 >
                   Delete Account
@@ -494,16 +487,52 @@ export default function SettingsPage() {
             {/* Save Bar */}
             <div className="flex justify-end pt-4">
               <button 
-                onClick={() => showToast('Settings saved successfully! 🎉', 'success')} 
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all shadow-lg"
+                onClick={saveProfile}
+                disabled={isSavingProfile}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all shadow-lg disabled:opacity-50"
               >
-                <Check className="w-4 h-4" /> Save Changes
+                <Check className="w-4 h-4" /> {isSavingProfile ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
 
           </main>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-[#18181b] border border-white/10 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+            <h3 className="text-lg font-bold text-white mb-2">Delete Account</h3>
+            <p className="text-sm text-zinc-400 mb-6">
+              Are you sure you want to permanently delete your account? This action cannot be undone and you will lose access to all your saved data. Your shared resources will remain anonymized to prevent broken links.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setIsDeleteModalOpen(false)}
+                disabled={isDeletingAccount}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleDeleteAccount}
+                disabled={isDeletingAccount}
+                className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors shadow-[0_0_15px_rgba(239,68,68,0.3)] disabled:opacity-50 flex items-center gap-2"
+              >
+                {isDeletingAccount ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  'Yes, Delete My Account'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

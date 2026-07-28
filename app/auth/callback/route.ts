@@ -49,7 +49,7 @@ export async function GET(request: Request) {
         const createdAt = new Date(profile.created_at)
         const now = new Date()
         const secondsSinceCreation = (now.getTime() - createdAt.getTime()) / 1000
-        const isNewUser = secondsSinceCreation < 10;
+        const isNewUser = secondsSinceCreation < 60;
 
         if (isNewUser) {
           console.log('🎉 New user detected! Setting role and sending welcome email...')
@@ -71,32 +71,32 @@ export async function GET(request: Request) {
           const userEmail = data.user.email!
           const userName = data.user.user_metadata?.full_name || 'Coder'
 
-          // Send welcome email (don't wait for it)
+          // Send welcome email (fire-and-forget)
           sendWelcomeEmail(userEmail, userName)
             .then((result) => {
               if (result.success) {
-                console.log(`✅ Welcome email sent to ${userEmail}`)
-                supabase.from('email_logs').insert({
+                console.log(`Welcome email sent to ${userEmail}`)
+                void supabase.from('email_logs').insert({
                   user_id: data.user.id,
                   email_type: 'welcome',
                   recipient_email: userEmail,
-                  subject: 'Welcome to DSA Quest! 🚀',
+                  subject: 'Welcome to DSA Quest',
                   status: 'sent',
                   sent_at: new Date().toISOString(),
                 })
               } else {
-                console.error(`❌ Failed to send welcome email to ${userEmail}`)
-                supabase.from('email_logs').insert({
+                console.error(`Failed to send welcome email to ${userEmail}`)
+                void supabase.from('email_logs').insert({
                   user_id: data.user.id,
                   email_type: 'welcome',
                   recipient_email: userEmail,
-                  subject: 'Welcome to DSA Quest! 🚀',
+                  subject: 'Welcome to DSA Quest',
                   status: 'failed',
                   error_message: JSON.stringify(result.error),
                 })
               }
             })
-            .catch((err) => console.error('❌ Welcome email error:', err))
+            .catch((err: any) => console.error('Welcome email error:', err))
         } else {
           console.log('👤 Existing user logging in, ignoring modal role and using existing role')
           // Existing user, use their existing role from the database/metadata

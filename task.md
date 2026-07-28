@@ -64,6 +64,10 @@ Pending : FAQ , About Us & other pages images
 pending : Page speed and Pre fetching resources 
 
 ## New Backend & Profile Tasks (Planned)
+- [ ] **Settings Page Deferred Tasks**
+  - Future: Implement Profile Picture & Banner upload in settings.
+  - Future: Implement Platform Connections (LeetCode, Codeforces, etc.) in settings.
+  - Future: Implement Contest Preferences (Favorite Platforms filtering and Custom Alert Times).
 - [ ] **MongoDB User Schema & API**
   - Create `User` model (supabaseId, name, bio, social links, isPro, isVerified).
   - Create `/api/profile` to handle fetching and updating user data.

@@ -3,10 +3,9 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendDailyContestDigest } from "@/app/lib/email/emailService";
 
-// Create Supabase client with service role (bypasses RLS)
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!, // Add this to your .env.local
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
   {
     auth: {
       autoRefreshToken: false,
@@ -17,23 +16,22 @@ const supabaseAdmin = createClient(
 
 export async function GET(request: Request) {
   try {
-    // Verify authorization (optional but recommended)
     const authHeader = request.headers.get("authorization");
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      console.log("❌ Unauthorized cron request");
+      console.log("Unauthorized cron request");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    console.log("🚀 Starting daily email cron job...");
+    console.log("Starting daily email cron job...");
 
-    // Step 1: Fetch all users with email notifications enabled
+    // Step 1: Fetch users with email notifications enabled
     const { data: users, error: usersError } = await supabaseAdmin
       .from("user_profiles")
-      .select("id, email, full_name, email_notifications")
-      .eq("email_notifications", true);
+      .select("id, email, full_name, email_notifications, weekly_digest, product_updates")
+      .or("email_notifications.eq.true,weekly_digest.eq.true");
 
     if (usersError) {
-      console.error("❌ Error fetching users:", usersError);
+      console.error("Error fetching users:", usersError);
       return NextResponse.json(
         { error: "Failed to fetch users" },
         { status: 500 },
@@ -41,7 +39,7 @@ export async function GET(request: Request) {
     }
 
     if (!users || users.length === 0) {
-      console.log("⚠️ No users with email notifications enabled");
+      console.log("No users with email notifications enabled");
       return NextResponse.json({
         success: true,
         message: "No users to send emails to",
@@ -49,38 +47,57 @@ export async function GET(request: Request) {
       });
     }
 
-    console.log(`📧 Found ${users.length} users with notifications enabled`);
+    console.log(`Found ${users.length} users with notifications enabled`);
 
-    // Step 2: Fetch upcoming contests (next 24 hours)
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const contestsResponse = await fetch(`${appUrl}/api/contests`, {
-      cache: "no-store",
-    });
+    // Step 2: Fetch contests directly (avoid self-fetching /api/contests)
+    let contests: any[] = [];
+    try {
+      const { fetchContests: fetchClist } = await import("../../contests/providers/Clist");
+      const { fetchContests: fetchMultiScraper } = await import("../../contests/providers/MultiScraper");
+      const { applyContestRules } = await import("../../contests/algorithm");
 
-    if (!contestsResponse.ok) {
-      throw new Error("Failed to fetch contests");
+      let rawContests = await fetchClist();
+      if (!rawContests || rawContests.length === 0) {
+        rawContests = await fetchMultiScraper();
+      }
+
+      if (rawContests && rawContests.length > 0) {
+        const processed = applyContestRules(rawContests);
+        contests = processed.contests || [];
+      }
+    } catch (fetchError) {
+      console.error("Failed to fetch contests directly, trying HTTP fallback:", fetchError);
+
+      // Fallback: self-fetch if direct import fails
+      try {
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        const contestsResponse = await fetch(`${appUrl}/api/contests`, {
+          cache: "no-store",
+        });
+
+        if (contestsResponse.ok) {
+          const contestsData = await contestsResponse.json();
+          if (contestsData.success) {
+            contests = contestsData.contests || [];
+          }
+        }
+      } catch (httpError) {
+        console.error("HTTP fallback also failed:", httpError);
+      }
     }
 
-    const contestsData = await contestsResponse.json();
-
-    if (!contestsData.success) {
-      throw new Error("Failed to fetch contests from API");
-    }
-
-    // Filter contests starting in next 24 hours
+    // Filter contests starting in next 24 hours (use startTime - camelCase)
     const now = new Date();
     const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
-    const upcomingContests = contestsData.contests.filter((contest: any) => {
-      const startTime = new Date(contest.start_time);
+    const upcomingContests = contests.filter((contest: any) => {
+      const startTime = new Date(contest.startTime);
       return startTime >= now && startTime <= tomorrow;
     });
 
-    console.log(
-      `🎯 Found ${upcomingContests.length} contests in next 24 hours`,
-    );
+    console.log(`Found ${upcomingContests.length} contests in next 24 hours`);
 
-    // Step 3: Send emails to all users
+    // Step 3: Send emails
     const emailResults = {
       sent: 0,
       failed: 0,
@@ -90,7 +107,11 @@ export async function GET(request: Request) {
 
     for (const user of users) {
       try {
-        console.log(`📤 Sending email to ${user.email}...`);
+        if (user.weekly_digest === false) {
+          console.log(`Skipping digest for ${user.email} - weekly_digest disabled`);
+          emailResults.skipped++;
+          continue;
+        }
 
         const result = await sendDailyContestDigest(
           user.email,
@@ -101,12 +122,11 @@ export async function GET(request: Request) {
         if (result.success) {
           emailResults.sent++;
 
-          // Log successful email
           await supabaseAdmin.from("email_logs").insert({
             user_id: user.id,
             email_type: "daily_digest",
             recipient_email: user.email,
-            subject: `🔥 ${upcomingContests.length} Contest${upcomingContests.length > 1 ? "s" : ""} Starting Soon!`,
+            subject: `${upcomingContests.length} contest${upcomingContests.length > 1 ? "s" : ""} starting soon on DSA Quest`,
             status: "sent",
             sent_at: new Date().toISOString(),
             contests_count: upcomingContests.length,
@@ -119,7 +139,6 @@ export async function GET(request: Request) {
             `${user.email}: ${JSON.stringify(result)}`,
           );
 
-          // Log failed email
           await supabaseAdmin.from("email_logs").insert({
             user_id: user.id,
             email_type: "daily_digest",
@@ -130,7 +149,7 @@ export async function GET(request: Request) {
           });
         }
       } catch (error) {
-        console.error(`❌ Error sending to ${user.email}:`, error);
+        console.error(`Error sending to ${user.email}:`, error);
         emailResults.failed++;
         emailResults.errors.push(
           `${user.email}: ${error instanceof Error ? error.message : "Unknown error"}`,
@@ -138,10 +157,7 @@ export async function GET(request: Request) {
       }
     }
 
-    console.log("✅ Email cron job completed");
-    console.log(
-      `📊 Results: ${emailResults.sent} sent, ${emailResults.failed} failed, ${emailResults.skipped} skipped`,
-    );
+    console.log(`Cron completed: ${emailResults.sent} sent, ${emailResults.failed} failed, ${emailResults.skipped} skipped`);
 
     return NextResponse.json({
       success: true,
@@ -151,7 +167,7 @@ export async function GET(request: Request) {
       results: emailResults,
     });
   } catch (error) {
-    console.error("❌ Cron job error:", error);
+    console.error("Cron job error:", error);
     return NextResponse.json(
       {
         success: false,
@@ -162,7 +178,6 @@ export async function GET(request: Request) {
   }
 }
 
-// Allow POST for manual testing
 export async function POST(request: Request) {
   return GET(request);
 }

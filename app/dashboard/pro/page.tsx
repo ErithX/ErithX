@@ -164,7 +164,12 @@ export default function ProDashboardPage() {
             <div className="sticky top-20">
               <div className="mb-6 px-3">
                 <h2 className="text-lg font-semibold tracking-tight">Creator Studio</h2>
-                <p className="text-[11px] text-zinc-500 mt-0.5">Manage your impact & content.</p>
+                <div className="flex flex-col gap-1 mt-0.5">
+                  <p className="text-[11px] text-zinc-500">Manage your impact & content.</p>
+                  <p className="text-[10px] text-zinc-500">
+                    Update profile and preferences in <Link href="/dashboard/settings" className="text-emerald-500 hover:text-emerald-400 transition-colors underline underline-offset-2">Settings</Link>.
+                  </p>
+                </div>
               </div>
               
               <Link href="/dashboard/write" className="w-full flex items-center justify-center gap-2 mb-6 px-4 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-all">

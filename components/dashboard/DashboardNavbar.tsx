@@ -65,12 +65,12 @@ export default function DashboardNavbar({
                       {user.email}
                     </p>
                   </div>
-                  {/* <div className="p-1 space-y-0.5 border-b border-white/5 pb-1 mb-1">
+                  <div className="p-1 space-y-0.5 border-b border-white/5 pb-1 mb-1">
                     <Link href="/dashboard/settings" className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
                       <Settings className="w-4 h-4" />
                       Settings
                     </Link>
-                  </div> */}
+                  </div>
                   <div className="p-1">
                     <button 
                       onClick={handleLogout}

@@ -65,6 +65,8 @@ export async function PATCH(request: Request) {
       leetcode_url: /^https?:\/\/(www\.)?leetcode\.com\/u?\/[\w-]+\/?$/,
       codeforces_url: /^https?:\/\/(www\.)?codeforces\.com\/profile\/[\w-]+\/?$/,
       codechef_url: /^https?:\/\/(www\.)?codechef\.com\/users\/[\w-]+\/?$/,
+      twitter_url: /^https?:\/\/(www\.)?(twitter|x)\.com\/[\w-]+\/?$/,
+      linkedin_url: /^https?:\/\/(www\.)?linkedin\.com\/in\/[\w-]+\/?$/,
     };
 
     const updates: any = {};
@@ -72,9 +74,13 @@ export async function PATCH(request: Request) {
     // Validate and prepare updates
     if (body.full_name !== undefined) updates.full_name = body.full_name;
     if (body.email_notifications !== undefined) updates.email_notifications = body.email_notifications;
+    if (body.weekly_digest !== undefined) updates.weekly_digest = body.weekly_digest;
+    if (body.product_updates !== undefined) updates.product_updates = body.product_updates;
     if (body.company !== undefined) updates.company = body.company;
     if (body.job_title !== undefined) updates.job_title = body.job_title;
     if (body.bio !== undefined) updates.bio = body.bio;
+    if (body.twitter_url !== undefined) updates.twitter_url = body.twitter_url;
+    if (body.linkedin_url !== undefined) updates.linkedin_url = body.linkedin_url;
 
     // Validate platform URLs
     for (const [key, regex] of Object.entries(urlValidation)) {

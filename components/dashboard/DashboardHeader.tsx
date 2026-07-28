@@ -14,7 +14,12 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
         <h1 className="text-2xl font-semibold tracking-tight">
           Welcome back, {user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Coder'}
         </h1>
-        <p className="text-sm text-zinc-500 mt-0.5">Your next milestone is closer than you think.</p>
+        <div className="flex flex-col gap-1 mt-1">
+          <p className="text-sm text-zinc-400">Your next milestone is closer than you think.</p>
+          <p className="text-xs text-zinc-500">
+            Keep your profile up to date and manage your preferences in <Link href="/dashboard/settings" className="text-emerald-500 hover:text-emerald-400 transition-colors underline underline-offset-2">Settings</Link>.
+          </p>
+        </div>
       </div>
       <div className="flex items-center gap-3">
         <Link href="/dashboard/pro" className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all text-emerald-400 group">
