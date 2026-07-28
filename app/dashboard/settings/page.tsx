@@ -26,9 +26,7 @@ export default function SettingsPage() {
 
   const [profileForm, setProfileForm] = useState({
     full_name: '',
-    bio: '',
-    twitter_url: '',
-    linkedin_url: ''
+    bio: ''
   });
   const [isSavingProfile, setIsSavingProfile] = useState(false);
 
