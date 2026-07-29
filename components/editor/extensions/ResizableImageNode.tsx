@@ -23,8 +23,15 @@ export const ResizableImage = Node.create({
     return [{ tag: 'figure[data-type="resizable-image"]' }];
   },
 
-  renderHTML({ HTMLAttributes }) {
-    return ['figure', mergeAttributes(HTMLAttributes, { 'data-type': 'resizable-image' }), 0];
+  renderHTML({ node, HTMLAttributes }) {
+    return [
+      'figure',
+      mergeAttributes(HTMLAttributes, { 'data-type': 'resizable-image' }),
+      // Render the image tag. If no explicit alt is given, use the caption text (textContent).
+      ['img', { src: node.attrs.src, alt: node.textContent || node.attrs.alt || 'Image' }],
+      // The 0 is the "hole" where the inline content (the caption text) is injected
+      ['figcaption', 0],
+    ];
   },
 
   addNodeView() {
@@ -49,12 +56,12 @@ const ResizableImageComponent = ({ editor, node, updateAttributes, selected }: a
   };
 
   return (
-    <NodeViewWrapper className={`relative my-8 flex flex-col group ${alignClass} w-fit max-w-full`}>
+    <NodeViewWrapper className={`relative my-2 flex flex-col group ${alignClass} w-fit max-w-full`}>
       {/* Image Container with native CSS resize */}
       <div 
         ref={containerRef}
         onMouseUp={handleMouseUp}
-        className={`relative inline-block rounded-xl overflow-hidden border ${isEditable && selected ? 'border-emerald-500 ring-2 ring-emerald-500/30' : 'border-white/10'} transition-all`}
+        className={`relative inline-block rounded-xl overflow-hidden ${isEditable && selected ? 'border border-emerald-500 ring-2 ring-emerald-500/30' : 'border border-transparent'} transition-all`}
         style={{ 
           resize: isEditable ? 'horizontal' : 'none', 
           overflow: 'hidden', 

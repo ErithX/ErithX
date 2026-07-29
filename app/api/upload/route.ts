@@ -29,8 +29,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'File size exceeds 10MB limit.' }, { status: 400 });
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const fileExtension = file.name.split('.').pop()?.replace(/[^a-zA-Z0-9]/g, '') || 'bin';
+    let buffer = Buffer.from(await file.arrayBuffer());
+    let fileExtension = file.name.split('.').pop()?.replace(/[^a-zA-Z0-9]/g, '') || 'bin';
+    let contentType = file.type;
+
+    // Optimize images with sharp before uploading
+    if (file.type.startsWith('image/')) {
+      // Dynamic import to avoid issues in non-Node environments if ever ran there
+      const sharp = (await import('sharp')).default;
+      buffer = await sharp(buffer)
+        .resize({ width: 1920, height: 1080, fit: 'inside', withoutEnlargement: true }) // Max 1080p
+        .webp({ quality: 80 }) // Convert to WebP with 80% quality
+        .toBuffer();
+      
+      fileExtension = 'webp';
+      contentType = 'image/webp';
+    }
+
     // Using the 'Resources' folder in the bucket
     const uniqueFilename = `Resources/${user.id}/${crypto.randomUUID()}.${fileExtension}`;
 
@@ -43,7 +58,7 @@ export async function POST(req: NextRequest) {
     let { data, error } = await supabaseAdmin.storage
       .from('editor-assets')
       .upload(uniqueFilename, buffer, {
-        contentType: file.type,
+        contentType: contentType,
         upsert: false
       });
 
@@ -59,7 +74,7 @@ export async function POST(req: NextRequest) {
         const retryResult = await supabaseAdmin.storage
           .from('editor-assets')
           .upload(uniqueFilename, buffer, {
-            contentType: file.type,
+            contentType: contentType,
             upsert: false
           });
         data = retryResult.data;

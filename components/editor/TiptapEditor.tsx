@@ -127,6 +127,62 @@ export default function TiptapEditor({ content = '', onChange, readOnly = false 
         }
         return false;
       },
+      handlePaste: (view, event, slice) => {
+        const items = event.clipboardData?.items;
+        if (!items) return false;
+
+        let handled = false;
+        for (const item of Array.from(items)) {
+          const isImage = item.type.startsWith('image/');
+          const isPdf = item.type === 'application/pdf';
+
+          if (isImage || isPdf) {
+            const file = item.getAsFile();
+            if (!file) continue;
+
+            handled = true;
+            event.preventDefault();
+            
+            const { schema } = view.state;
+            
+            const nodeType = isImage ? schema.nodes.resizableImage : schema.nodes.pdfBlock;
+            const initialAttrs = isImage 
+              ? { isUploading: true } 
+              : { isUploading: true, filename: file.name };
+              
+            const node = nodeType.create(initialAttrs);
+            const transaction = view.state.tr.replaceSelectionWith(node);
+            view.dispatch(transaction);
+            
+            const uploadFile = async () => {
+              const formData = new FormData();
+              formData.append('file', file);
+              try {
+                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.url) {
+                  const tr = view.state.tr;
+                  tr.doc.descendants((node, pos) => {
+                    if (node.type.name === nodeType.name && node.attrs.isUploading === true) {
+                      tr.setNodeMarkup(pos, undefined, { 
+                        src: data.url, 
+                        isUploading: false,
+                        ...(isPdf ? { filename: file.name } : {})
+                      });
+                    }
+                  });
+                  view.dispatch(tr);
+                }
+              } catch (e) {
+                console.error("Upload failed", e);
+              }
+            };
+            uploadFile();
+            return true;
+          }
+        }
+        return handled;
+      },
     },
     onUpdate: ({ editor }) => {
       if (onChange) {

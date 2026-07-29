@@ -32,10 +32,17 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     
     // SECURITY: Prevent mass-assignment by only extracting allowed fields
     const safeBody: any = {};
-    const allowedFields = ['title', 'content', 'category', 'tags', 'coverImage', 'mediaAssets'];
+    const allowedFields = ['title', 'content', 'category', 'tags', 'coverImage', 'mediaAssets', 'wordCount'];
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
         safeBody[field] = body[field];
+      }
+    }
+
+    // Allow status updates, but strictly enforce that users can only submit as 'pending'
+    if (body.status !== undefined) {
+      if (body.status === 'pending' || body.status === 'draft') {
+        safeBody.status = body.status;
       }
     }
 
