@@ -29,6 +29,10 @@ const ResourceSchema = new mongoose.Schema({
     type: String, 
     default: 'Untitled' 
   },
+  subtitle: {
+    type: String,
+    default: ''
+  },
   slug: {
     type: String,
     unique: true,
@@ -43,8 +47,12 @@ const ResourceSchema = new mongoose.Schema({
   }],
   category: { 
     type: String, 
-    enum: ['Blogs', 'Study Materials', 'Career'],
+    enum: ['Blogs', 'Study Materials', 'Career', 'Project Blueprints'],
     default: 'Blogs'
+  },
+  projectMeta: {
+    targetCompanies: [{ type: String }],
+    architectureType: { type: String }
   },
   tags: [{ 
     type: String 

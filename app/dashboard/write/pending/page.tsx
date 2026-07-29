@@ -40,7 +40,7 @@ function PendingContent() {
         }
       `}} />
 
-      <div className="max-w-[850px] w-full bg-white rounded-[2rem] shadow-xl overflow-hidden relative flex flex-col max-h-[95vh] md:max-h-[90vh]">
+      <div className="max-w-[850px] w-full bg-white rounded-[2rem] shadow-xl overflow-hidden relative flex flex-col my-8">
         
         {/* Top Section (White background with confetti) */}
         <div className="p-6 md:p-8 relative flex-1">

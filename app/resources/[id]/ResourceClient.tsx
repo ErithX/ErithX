@@ -386,9 +386,15 @@ export default function ResourceClient({
               <span className="text-xs text-zinc-500">{new Date(doc.createdAt).toLocaleDateString()}</span>
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] mb-5">
+            <h1 className={`text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] ${doc.subtitle ? 'mb-3' : 'mb-8'}`}>
               {doc.title}
             </h1>
+
+            {doc.subtitle && (
+              <h2 className="text-lg md:text-xl font-medium tracking-tight text-zinc-400 mb-8 leading-relaxed">
+                {doc.subtitle}
+              </h2>
+            )}
 
             {/* Author + Actions row */}
             <div className="flex items-center justify-between mb-10 pb-8 border-b border-white/5 flex-wrap gap-4">
@@ -427,6 +433,27 @@ export default function ResourceClient({
               </div>
             </div>
 
+            {/* Project Blueprints Aspirational Banner */}
+            {doc.category === 'Project Blueprints' && doc.projectMeta?.targetCompanies?.length > 0 && (
+              <div className="mb-10 p-5 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 backdrop-blur-md flex items-start gap-4 shadow-[0_0_30px_rgba(16,185,129,0.05)]">
+                <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 border border-emerald-500/30">
+                  <Target className="w-5 h-5 text-emerald-400" />
+                </div>
+                <div>
+                  <h3 className="text-emerald-400 font-bold mb-1 tracking-wide">ARCHITECTURE BLUEPRINT</h3>
+                  <p className="text-sm text-zinc-300 leading-relaxed">
+                    Mastering this design pattern prepares you for the engineering bar at{' '}
+                    {doc.projectMeta.targetCompanies.map((company: string, i: number, arr: any[]) => (
+                      <span key={company}>
+                        <strong className="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">{company}</strong>
+                        {i < arr.length - 2 ? ', ' : i === arr.length - 2 ? ' and ' : ''}
+                      </span>
+                    ))}.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Tags */}
             {doc.tags && doc.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-10">
@@ -438,23 +465,26 @@ export default function ResourceClient({
 
             {/* EXTRACTED PDF BLOCKS */}
             {extractedPdfs.map((pdf, i) => (
-              <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-orange-500/5 border border-orange-500/10 mb-8 flex-wrap gap-4">
+              <div key={i} className={`flex items-center justify-between p-4 rounded-xl border mb-8 flex-wrap gap-4 ${doc.category === 'Project Blueprints' ? 'bg-emerald-500/10 border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.05)]' : 'bg-orange-500/5 border-orange-500/10'}`}>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-12 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center flex-shrink-0">
-                    <FileText className="w-5 h-5 text-orange-400" />
+                  <div className={`w-10 h-12 rounded-lg border flex items-center justify-center flex-shrink-0 ${doc.category === 'Project Blueprints' ? 'bg-emerald-500/20 border-emerald-500/30' : 'bg-orange-500/10 border-orange-500/20'}`}>
+                    <FileText className={`w-5 h-5 ${doc.category === 'Project Blueprints' ? 'text-emerald-400' : 'text-orange-400'}`} />
                   </div>
                   <div>
                     <div className="text-sm font-medium">{pdf.filename}</div>
-                    <div className="text-xs text-zinc-500">PDF Document</div>
+                    <div className="text-xs text-zinc-500">
+                      {doc.category === 'Project Blueprints' ? 'Project Blueprint (PDF)' : 'PDF Document'}
+                    </div>
                   </div>
                 </div>
                 <a 
                   href={pdf.src}
                   download={pdf.filename}
                   target="_blank"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium hover:bg-orange-500/20 transition-all"
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg border text-xs font-medium transition-all ${doc.category === 'Project Blueprints' ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-orange-500/10 border-orange-500/20 text-orange-400 hover:bg-orange-500/20'}`}
                 >
-                  <Download className="w-3.5 h-3.5" /> Download
+                  <Download className="w-3.5 h-3.5" /> 
+                  {doc.category === 'Project Blueprints' ? 'Download Blueprint' : 'Download'}
                 </a>
               </div>
             ))}

@@ -15,6 +15,7 @@ export default function WritePage() {
   const router = useRouter();
 
   const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
   const [content, setContent] = useState('');
   const [isSaved, setIsSaved] = useState(true);
   const [wordCount, setWordCount] = useState(0);
@@ -24,6 +25,7 @@ export default function WritePage() {
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState('Blogs');
   const [coverUrl, setCoverUrl] = useState('');
+  const [targetCompanies, setTargetCompanies] = useState('');
   const [modalError, setModalError] = useState('');
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -39,6 +41,7 @@ export default function WritePage() {
             if (data._id) {
               setDocumentId(data._id);
               if (data.title) setTitle(data.title);
+              if (data.subtitle) setSubtitle(data.subtitle);
               if (data.content) setContent(data.content);
             }
             setLoading(false);
@@ -65,7 +68,7 @@ export default function WritePage() {
         const res = await fetch(`/api/documents/${documentId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, content, wordCount: count })
+          body: JSON.stringify({ title, subtitle, content, wordCount: count })
         });
         if (res.ok) setIsSaved(true);
       } catch (e) {
@@ -108,6 +111,10 @@ export default function WritePage() {
     if (category === 'Career' && !coverUrl) {
       return setModalError("A Cover Image is STRICTLY MANDATORY for the 'Career' category.");
     }
+    
+    if (category === 'Project Blueprints' && (!subtitle || subtitle.trim().length === 0)) {
+      return setModalError("Subtitle is STRICTLY MANDATORY for the 'Project Blueprints' category.");
+    }
     // ------------------------
 
     setIsPublishing(true);
@@ -121,9 +128,13 @@ export default function WritePage() {
           tags,
           coverImage: coverUrl,
           title,
+          subtitle,
           content,
           wordCount,
-          overrideAuthorId
+          overrideAuthorId,
+          projectMeta: category === 'Project Blueprints' ? {
+            targetCompanies: targetCompanies.split(',').map(c => c.trim()).filter(c => c)
+          } : undefined
         })
       });
 
@@ -209,7 +220,16 @@ export default function WritePage() {
             placeholder="Title..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="editor-title-input w-full bg-transparent text-4xl md:text-5xl font-bold tracking-tighter text-white border-none focus:outline-none focus:ring-0 mb-6 px-0"
+            className="editor-title-input w-full bg-transparent text-4xl md:text-5xl font-bold tracking-tighter text-white border-none focus:outline-none focus:ring-0 mb-4 px-0"
+          />
+
+          {/* Subtitle Area */}
+          <input
+            type="text"
+            placeholder="Add a subtitle..."
+            value={subtitle}
+            onChange={(e) => setSubtitle(e.target.value)}
+            className="editor-subtitle-input w-full bg-transparent text-xl md:text-2xl font-medium tracking-tight text-zinc-400 border-none focus:outline-none focus:ring-0 mb-8 px-0"
           />
 
           {/* Body Content Area (Tiptap Editor) */}
@@ -276,8 +296,24 @@ export default function WritePage() {
                   <option value="Blogs">Blogs</option>
                   <option value="Study Materials">Study Materials</option>
                   <option value="Career">Career</option>
+                  <option value="Project Blueprints">Project Blueprints</option>
                 </select>
               </div>
+
+              {/* Target Companies (Only for Project Blueprints) */}
+              {category === 'Project Blueprints' && (
+                <div>
+                  <label className="block text-xs font-medium text-emerald-400 mb-2 uppercase tracking-wider">Target Companies</label>
+                  <input
+                    type="text"
+                    value={targetCompanies}
+                    onChange={(e) => setTargetCompanies(e.target.value)}
+                    placeholder="e.g. Google, Stripe, Uber"
+                    className="w-full bg-black/40 border border-emerald-500/30 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                  />
+                  <p className="text-[10px] text-zinc-500 mt-1">Comma separated list of companies to display on the blueprint.</p>
+                </div>
+              )}
 
               {/* ADMIN OVERRIDE DROPDOWN (Growth Hack) */}
               {user?.email === process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS && (

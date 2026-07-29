@@ -32,7 +32,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     
     // SECURITY: Prevent mass-assignment by only extracting allowed fields
     const safeBody: any = {};
-    const allowedFields = ['title', 'content', 'category', 'tags', 'coverImage', 'mediaAssets', 'wordCount'];
+    const allowedFields = ['title', 'subtitle', 'content', 'category', 'tags', 'coverImage', 'mediaAssets', 'wordCount', 'projectMeta'];
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
         safeBody[field] = body[field];
