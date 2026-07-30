@@ -2,6 +2,9 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendDailyContestDigest } from "@/app/lib/email/emailService";
+import { Resource } from "@/models/Resource";
+import dbConnect from "@/app/lib/mongodb";
+import { DAILY_DIGEST_SUBJECTS, selectNextSubject, formatSubject } from "@/app/lib/email/emailTemplates";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,11 +27,21 @@ export async function GET(request: Request) {
 
     console.log("Starting daily email cron job...");
 
+    const { searchParams } = new URL(request.url);
+    const testEmail = searchParams.get('testEmail');
+
     // Step 1: Fetch users with email notifications enabled
-    const { data: users, error: usersError } = await supabaseAdmin
+    let userQuery = supabaseAdmin
       .from("user_profiles")
-      .select("id, email, full_name, email_notifications, weekly_digest, product_updates")
-      .or("email_notifications.eq.true,weekly_digest.eq.true");
+      .select("id, email, full_name, email_notifications, weekly_digest, product_updates, recent_resources, recent_subjects");
+      
+    if (testEmail) {
+      userQuery = userQuery.eq('email', testEmail);
+    } else {
+      userQuery = userQuery.or("email_notifications.eq.true,weekly_digest.eq.true");
+    }
+
+    const { data: users, error: usersError } = await userQuery;
 
     if (usersError) {
       console.error("Error fetching users:", usersError);
@@ -97,6 +110,14 @@ export async function GET(request: Request) {
 
     console.log(`Found ${upcomingContests.length} contests in next 24 hours`);
 
+    // Fetch top resources from MongoDB
+    await dbConnect();
+    const topResources = await Resource.find({ status: 'published' })
+      .sort({ views: -1, upvotes: -1, createdAt: -1 })
+      .limit(30)
+      .lean();
+    console.log(`Found ${topResources.length} published resources in DB`);
+
     // Step 3: Send emails
     const emailResults = {
       sent: 0,
@@ -113,10 +134,50 @@ export async function GET(request: Request) {
           continue;
         }
 
+        const recentResources: string[] = Array.isArray(user.recent_resources) ? user.recent_resources : [];
+        const recentSubjects: string[] = Array.isArray(user.recent_subjects) ? user.recent_subjects : [];
+
+        // Pick a resource they haven't seen
+        let selectedResource = null;
+        for (const res of topResources) {
+          const resId = res._id.toString();
+          if (!recentResources.includes(resId)) {
+            selectedResource = res;
+            recentResources.push(resId);
+            break;
+          }
+        }
+        
+        // Keep array small (last 7 resources)
+        if (recentResources.length > 7) {
+          recentResources.shift();
+        }
+
+        // Pick a dynamic subject line
+        const subjectTemplate = selectNextSubject(DAILY_DIGEST_SUBJECTS, recentSubjects, 18);
+        recentSubjects.push(subjectTemplate.id);
+        if (recentSubjects.length > 20) {
+          recentSubjects.shift();
+        }
+
+        const formattedSubject = formatSubject(subjectTemplate.text, {
+          first_name: user.full_name ? user.full_name.split(' ')[0] : 'Coder',
+          count: upcomingContests.length,
+          focus: 'DSA'
+        });
+
+        // Update the user arrays in Supabase
+        await supabaseAdmin
+          .from("user_profiles")
+          .update({ recent_resources: recentResources, recent_subjects: recentSubjects })
+          .eq("id", user.id);
+
         const result = await sendDailyContestDigest(
           user.email,
           user.full_name || "Coder",
           upcomingContests,
+          formattedSubject,
+          selectedResource
         );
 
         if (result.success) {
@@ -126,7 +187,7 @@ export async function GET(request: Request) {
             user_id: user.id,
             email_type: "daily_digest",
             recipient_email: user.email,
-            subject: `${upcomingContests.length} contest${upcomingContests.length > 1 ? "s" : ""} starting soon on DSA Quest`,
+            subject: formattedSubject,
             status: "sent",
             sent_at: new Date().toISOString(),
             contests_count: upcomingContests.length,

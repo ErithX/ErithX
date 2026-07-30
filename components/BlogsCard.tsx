@@ -5,7 +5,9 @@ export interface BlogItem {
   id: number;
   type: 'blog';
   title: string;
+  subtitle?: string;
   excerpt: string;
+  category?: string;
   fullContent?: string;
   author: string;
   authorImg: string;
@@ -40,18 +42,26 @@ export default function BlogsCard({ item, index, onClick }: BlogsCardProps) {
             alt={item.title} 
             className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent pointer-events-none"></div>
+          <div className="absolute bottom-3 left-4 pointer-events-none">
+            <div className="text-[10px] text-zinc-300">{item.readTime}</div>
+          </div>
         </div>
       )}
       <div className="p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="type-blog px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             <PenLine className="w-3 h-3" />
-            Blog
+            {item.category === 'Project Blueprints' ? 'Blueprint' : item.category === 'Career' ? 'Career' : 'Blog'}
           </span>
           <span className="text-[10px] text-zinc-600">{item.time}</span>
         </div>
-        <h3 className="text-sm font-medium leading-snug mb-2">{item.title}</h3>
-        <p className="text-xs text-zinc-500 leading-relaxed mb-3 line-clamp-2">{item.excerpt}</p>
+        <h3 className="text-sm font-medium leading-snug mb-1">{item.title}</h3>
+        {item.subtitle ? (
+          <p className="text-xs font-medium text-zinc-400 leading-relaxed mb-3 line-clamp-2">{item.subtitle}</p>
+        ) : (
+          <p className="text-xs text-zinc-500 leading-relaxed mb-3 line-clamp-2">{item.excerpt}</p>
+        )}
         <div className="flex flex-wrap gap-1.5 mb-3">
           {item.tags.map(t => (
             <span key={t} className="px-1.5 py-0.5 rounded text-[9px] bg-white/5 text-zinc-500">#{t}</span>

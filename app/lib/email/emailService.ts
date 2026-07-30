@@ -172,8 +172,8 @@ function emailFooter(): string {
 
 // --- WELCOME EMAIL ---
 
-export async function sendWelcomeEmail(userEmail: string, userName: string) {
-  const subject = 'Welcome to DSA Quest';
+export async function sendWelcomeEmail(userEmail: string, userName: string, upcomingContests?: Contest[], topResource?: any) {
+  const subject = 'Welcome to DSA Quest ✨';
   const html = emailWrapper(`
     <tr>
       <td style="padding:32px 32px 24px 32px;">
@@ -225,6 +225,37 @@ export async function sendWelcomeEmail(userEmail: string, userName: string) {
         </table>
       </td>
     </tr>
+    ${topResource ? `
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <p style="margin:0 0 16px 0;font-size:15px;color:#374151;font-weight:700;">Top Resource Pick for You</p>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;background-color:#fff;">
+          <tr>
+            <td style="padding:16px;">
+              ${topResource.coverImage ? `<img src="${topResource.coverImage}" alt="Cover" style="width:100%;height:140px;object-fit:cover;border-radius:6px;margin-bottom:12px;" />` : ''}
+              <p style="margin:0 0 8px 0;font-size:16px;color:#111827;font-weight:700;">${topResource.title}</p>
+              ${topResource.subtitle ? `<p style="margin:0 0 12px 0;font-size:13px;color:#6b7280;">${topResource.subtitle}</p>` : ''}
+              <a href="${APP_URL}/resources/${topResource.slug || topResource._id}" style="display:inline-block;font-size:13px;font-weight:600;color:#3b82f6;text-decoration:none;">Read Now &rarr;</a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    ` : ''}
+    ${upcomingContests && upcomingContests.length > 0 ? `
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <p style="margin:0 0 16px 0;font-size:15px;color:#374151;font-weight:700;">Upcoming Contests</p>
+        ${upcomingContests.slice(0, 3).map((c: Contest) => `
+          <div style="margin-bottom:12px;padding:12px;border:1px solid #e5e7eb;border-radius:6px;">
+            <p style="margin:0 0 4px 0;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;">${c.platform}</p>
+            <p style="margin:0 0 4px 0;font-size:14px;color:#111827;font-weight:600;">${c.title}</p>
+            <p style="margin:0;font-size:12px;color:#6b7280;">${formatDate(c.startTime)} at ${formatTime(c.startTime)}</p>
+          </div>
+        `).join('')}
+      </td>
+    </tr>
+    ` : ''}
     <tr>
       <td style="padding:0 32px 24px 32px;">
         <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
@@ -244,14 +275,16 @@ export async function sendWelcomeEmail(userEmail: string, userName: string) {
 export async function sendDailyContestDigest(
   userEmail: string,
   userName: string,
-  contests: Contest[]
+  contests: Contest[],
+  subjectLine?: string,
+  topResource?: any
 ) {
   if (!contests || contests.length === 0) {
     console.log(`No contests for ${userEmail}, skipping digest`);
     return { success: true, skipped: true };
   }
 
-  const subject = `${contests.length} contest${contests.length > 1 ? 's' : ''} starting soon on DSA Quest`;
+  const subject = subjectLine || `${contests.length} contest${contests.length > 1 ? 's' : ''} starting soon on DSA Quest`;
   const html = emailWrapper(`
     <tr>
       <td style="padding:32px 32px 24px 32px;">
@@ -311,6 +344,23 @@ export async function sendDailyContestDigest(
         </table>
       </td>
     </tr>
+    ${topResource ? `
+    <tr>
+      <td style="padding:0 32px 24px 32px;">
+        <p style="margin:0 0 16px 0;font-size:15px;color:#374151;font-weight:700;">Top Resource For You</p>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;background-color:#fff;">
+          <tr>
+            <td style="padding:16px;">
+              ${topResource.coverImage ? `<img src="${topResource.coverImage}" alt="Cover" style="width:100%;height:140px;object-fit:cover;border-radius:6px;margin-bottom:12px;" />` : ''}
+              <p style="margin:0 0 8px 0;font-size:16px;color:#111827;font-weight:700;">${topResource.title}</p>
+              ${topResource.subtitle ? `<p style="margin:0 0 12px 0;font-size:13px;color:#6b7280;">${topResource.subtitle}</p>` : ''}
+              <a href="${APP_URL}/resources/${topResource.slug || topResource._id}" style="display:inline-block;font-size:13px;font-weight:600;color:#3b82f6;text-decoration:none;">Read Now &rarr;</a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    ` : ''}
     <tr>
       <td style="padding:0 32px 24px 32px;">
         <table role="presentation" cellpadding="0" cellspacing="0">
@@ -341,9 +391,10 @@ export async function sendDailyContestDigest(
 export async function sendContestAlert(
   userEmail: string,
   userName: string,
-  contest: Contest
+  contest: Contest,
+  subjectLine?: string
 ) {
-  const subject = `Reminder: ${contest.title} starts ${formatTime(contest.startTime)}`;
+  const subject = subjectLine || `Reminder: ${contest.title} starts ${formatTime(contest.startTime)}`;
   const html = emailWrapper(`
     <tr>
       <td style="padding:32px 32px 24px 32px;">

@@ -1,10 +1,11 @@
 import React from 'react';
-import { FileText, Link as LinkIcon, Image as ImageIcon, ArrowUp, MessageSquare, Globe, Eye } from 'lucide-react';
+import { FileText, Link as LinkIcon, Image as ImageIcon, ArrowUp, MessageSquare, Globe, Eye, Clock } from 'lucide-react';
 
 export interface ResourceItem {
   id: number;
-  type: 'pdf' | 'link' | 'image';
+  type: 'pdf' | 'link' | 'image' | 'doc';
   title: string;
+  subtitle?: string;
   excerpt: string;
   author: string;
   authorImg: string;
@@ -39,6 +40,7 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
   const getTypeConfig = () => {
     switch (item.type) {
       case 'pdf': return { class: 'bg-orange-500/10 text-orange-400 border border-orange-500/20', icon: <FileText className="w-3 h-3" />, label: 'PDF' };
+      case 'doc': return { class: 'bg-blue-500/10 text-blue-400 border border-blue-500/20', icon: <FileText className="w-3 h-3" />, label: 'Notes' };
       case 'link': return { class: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20', icon: <LinkIcon className="w-3 h-3" />, label: 'Link' };
       case 'image': return { class: 'bg-purple-500/10 text-purple-400 border border-purple-500/20', icon: <ImageIcon className="w-3 h-3" />, label: 'Image' };
       default: return { class: '', icon: null, label: '' };
@@ -91,6 +93,22 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
           </div>
         </div>
       );
+    } else if (item.type === 'doc') {
+      if (!item.coverImg) return null;
+      return (
+        <div className="w-full h-32 relative overflow-hidden border-b border-white/5 bg-zinc-900/50">
+          <img 
+            src={item.coverImg?.startsWith('http') ? item.coverImg : `https://picsum.photos/seed/${item.id}/600/300.jpg`} 
+            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+            alt={item.title} 
+            onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/doccover/600/300.jpg" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent pointer-events-none"></div>
+          <div className="absolute bottom-3 left-4 pointer-events-none">
+            <div className="text-[10px] text-zinc-300">{item.size || 'Notes'}</div>
+          </div>
+        </div>
+      );
     }
     return null;
   };
@@ -110,8 +128,12 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
           </span>
           <span className="text-[10px] text-zinc-600">{item.time}</span>
         </div>
-        <h3 className="text-sm font-medium leading-snug mb-2">{item.title}</h3>
-        <p className="text-xs text-zinc-500 leading-relaxed mb-3 line-clamp-3">{item.excerpt}</p>
+        <h3 className="text-sm font-medium leading-snug mb-1">{item.title}</h3>
+        {item.subtitle ? (
+          <p className="text-xs font-medium text-zinc-400 leading-relaxed mb-3 line-clamp-3">{item.subtitle}</p>
+        ) : (
+          <p className="text-xs text-zinc-500 leading-relaxed mb-3 line-clamp-3">{item.excerpt}</p>
+        )}
         <div className="flex flex-wrap gap-1.5 mb-3">
           {item.tags.map(t => (
             <span key={t} className="px-1.5 py-0.5 rounded text-[9px] bg-white/5 text-zinc-500">#{t}</span>

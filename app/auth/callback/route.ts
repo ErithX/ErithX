@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { sendWelcomeEmail } from '@/app/lib/email/emailService'
+import dbConnect from '@/app/lib/mongodb'
+import { Resource } from '@/models/Resource'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -69,34 +71,68 @@ export async function GET(request: Request) {
           }
           
           const userEmail = data.user.email!
-          const userName = data.user.user_metadata?.full_name || 'Coder'
+          const userName = data.user.user_metadata?.full_name || 'Coder';
 
           // Send welcome email (fire-and-forget)
-          sendWelcomeEmail(userEmail, userName)
-            .then((result) => {
-              if (result.success) {
-                console.log(`Welcome email sent to ${userEmail}`)
-                void supabase.from('email_logs').insert({
-                  user_id: data.user.id,
-                  email_type: 'welcome',
-                  recipient_email: userEmail,
-                  subject: 'Welcome to DSA Quest',
-                  status: 'sent',
-                  sent_at: new Date().toISOString(),
-                })
-              } else {
-                console.error(`Failed to send welcome email to ${userEmail}`)
-                void supabase.from('email_logs').insert({
-                  user_id: data.user.id,
-                  email_type: 'welcome',
-                  recipient_email: userEmail,
-                  subject: 'Welcome to DSA Quest',
-                  status: 'failed',
-                  error_message: JSON.stringify(result.error),
-                })
+          (async () => {
+            let upcomingContests = [];
+            let topResource = null;
+            try {
+              // Fetch some upcoming contests
+              const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+              const contestsRes = await fetch(`${appUrl}/api/contests`);
+              if (contestsRes.ok) {
+                const contestsData = await contestsRes.json();
+                if (contestsData.success && contestsData.contests) {
+                  const now = new Date();
+                  const tomorrow = new Date(now.getTime() + 48 * 60 * 60 * 1000); // next 48 hours
+                  upcomingContests = contestsData.contests.filter((c: any) => {
+                    const st = new Date(c.startTime);
+                    return st >= now && st <= tomorrow;
+                  });
+                }
               }
-            })
-            .catch((err: any) => console.error('Welcome email error:', err))
+
+              // Fetch top resource
+              await dbConnect();
+              const resources = await Resource.find({ status: 'published' })
+                .sort({ views: -1, upvotes: -1, createdAt: -1 })
+                .limit(5)
+                .lean();
+              if (resources && resources.length > 0) {
+                // pick random from top 5
+                topResource = resources[Math.floor(Math.random() * resources.length)];
+              }
+            } catch (err) {
+              console.error('Error fetching data for welcome email:', err);
+            }
+
+            sendWelcomeEmail(userEmail, userName, upcomingContests, topResource)
+              .then((result) => {
+                if (result.success) {
+                  console.log(`Welcome email sent to ${userEmail}`)
+                  void supabase.from('email_logs').insert({
+                    user_id: data.user.id,
+                    email_type: 'welcome',
+                    recipient_email: userEmail,
+                    subject: 'Welcome to DSA Quest ✨',
+                    status: 'sent',
+                    sent_at: new Date().toISOString(),
+                  })
+                } else {
+                  console.error(`Failed to send welcome email to ${userEmail}`)
+                  void supabase.from('email_logs').insert({
+                    user_id: data.user.id,
+                    email_type: 'welcome',
+                    recipient_email: userEmail,
+                    subject: 'Welcome to DSA Quest ✨',
+                    status: 'failed',
+                    error_message: JSON.stringify(result.error),
+                  })
+                }
+              })
+              .catch((err: any) => console.error('Welcome email error:', err))
+          })();
         } else {
           console.log('👤 Existing user logging in, ignoring modal role and using existing role')
           // Existing user, use their existing role from the database/metadata

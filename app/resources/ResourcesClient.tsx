@@ -31,6 +31,8 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
     setActiveFilter(type);
     if (type === 'all') {
       setItems(allItems);
+    } else if (type === 'pdf') {
+      setItems(allItems.filter(d => d.type === 'pdf' || d.type === 'doc'));
     } else {
       setItems(allItems.filter(d => d.type === type));
     }
@@ -120,7 +122,7 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
                 className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5 ${activeFilter === 'pdf' ? 'active bg-white/10 text-white' : ''}`}
                 onClick={() => filterCards('pdf')}
               >
-                <span className="w-2 h-2 rounded-full bg-orange-500"></span> PDFs
+                <span className="w-2 h-2 rounded-full bg-orange-500"></span> Notes & PDFs
               </button>
               <button 
                 className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5 ${activeFilter === 'link' ? 'active bg-white/10 text-white' : ''}`}

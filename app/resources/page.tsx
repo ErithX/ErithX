@@ -28,14 +28,23 @@ export default async function ResourcesPage() {
 
     const readTimeStr = `${Math.max(1, Math.ceil((doc.wordCount || 0) / 200))} min read`;
 
-    let type: 'blog' | 'pdf' = 'blog';
-    if (doc.category === 'Study Materials') type = 'pdf';
+    let type: 'blog' | 'pdf' | 'doc' = 'blog';
+    if (doc.category === 'Study Materials') {
+      if (doc.content?.includes('data-type="pdf-block"')) {
+        type = 'pdf';
+      } else {
+        type = 'doc';
+      }
+    }
     if (doc.category === 'Career') type = 'blog';
+    if (doc.category === 'Project Blueprints') type = 'blog';
     
     const baseItem = {
       id: doc.slug || doc._id.toString(),
       title: doc.title || 'Untitled',
+      subtitle: doc.subtitle,
       excerpt,
+      category: doc.category || 'Blogs',
       author: doc.authorName || 'Anonymous',
       authorImg: doc.authorImg || 'pro1',
       isPro: doc.isPro || false,
@@ -52,7 +61,7 @@ export default async function ResourcesPage() {
     } else {
       return { 
         ...baseItem, 
-        type: 'pdf', 
+        type: type, 
         coverImg: doc.coverImage, 
         size: readTimeStr 
       } as any;
