@@ -88,3 +88,10 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      - Refactored `components/Navbar.tsx` to cleanly re-export the actual Navbar component from `app/components/Navbar.tsx` and made `darkMode` / `setDarkMode` props optional.
      - Scoped `middleware.ts` matcher strictly to `/dashboard/:path*` so public routes bypass external auth calls.
      - Added `display: "swap"` and system fallback font stacks (`fallback: ["system-ui", "-apple-system", "sans-serif"]`) to `app/layout.tsx` so compilation succeeds instantly even offline.
+
+16. Anti-Repetition Email Engine & Dynamic Subject Rotation:
+   - Challenge: Sending daily contest digests or weekly newsletters often leads to high unsubscribe rates if subject lines look identical every day or if the same promotional resource is recommended repeatedly. We needed a system to rotate psychologically engaging subject lines and ensure fresh resource discovery without over-engineering complex tracking tables in MongoDB.
+   - Solution: Designed a lightweight, stateless rotation engine using Supabase JSONB arrays.
+     - Database Arrays: Added `recent_resources` and `recent_subjects` JSONB arrays to the `user_profiles` table in Supabase.
+     - Sliding Window Algorithm: The Next.js cron job fetches the user's history and dynamically cross-references the top 30 published MongoDB resources against `recent_resources`. Once a resource is selected for the user's email, its ID is pushed to the array. The array is truncated to length 7 (a rolling 7-day memory) to keep storage minimal and query times instant.
+     - Subject Line Families: We curated 60+ subject lines categorized by engagement "families" (e.g., Direct, Curiosity, Signal-focused). The `selectNextSubject` algorithm filters out any subject used in the last 15 sends, AND explicitly avoids selecting a subject from the same "family" as the last 2 sends, preventing "FOMO fatigue" while maintaining high open rates and domain trust.

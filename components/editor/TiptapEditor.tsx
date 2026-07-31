@@ -187,9 +187,9 @@ export default function TiptapEditor({ content = '', onChange, readOnly = false 
     onUpdate: ({ editor }) => {
       if (onChange) {
         // Defer state update to avoid React flushSync warning during Tiptap render lifecycle
-        queueMicrotask(() => {
+        setTimeout(() => {
           onChange(editor.getHTML());
-        });
+        }, 0);
       }
     },
   });

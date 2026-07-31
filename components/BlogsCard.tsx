@@ -35,19 +35,7 @@ export default function BlogsCard({ item, index, onClick }: BlogsCardProps) {
       style={{ animationDelay: `${index * 0.05}s` }}
       onClick={() => onClick(item)}
     >
-      {item.coverImg && (
-        <div className="w-full h-32 relative overflow-hidden border-b border-white/5 bg-zinc-900/50">
-          <img 
-            src={item.coverImg} 
-            alt={item.title} 
-            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent pointer-events-none"></div>
-          <div className="absolute bottom-3 left-4 pointer-events-none">
-            <div className="text-[10px] text-zinc-300">{item.readTime}</div>
-          </div>
-        </div>
-      )}
+      {/* Cover Image removed completely per user request */}
       <div className="p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="type-blog px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">

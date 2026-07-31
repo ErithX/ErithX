@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/app/lib/supabase/server';
 import { createClient as createSupabaseAdmin } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import sharp from 'sharp';
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,8 +36,6 @@ export async function POST(req: NextRequest) {
 
     // Optimize images with sharp before uploading
     if (file.type.startsWith('image/')) {
-      // Dynamic import to avoid issues in non-Node environments if ever ran there
-      const sharp = (await import('sharp')).default;
       buffer = await sharp(buffer)
         .resize({ width: 1920, height: 1080, fit: 'inside', withoutEnlargement: true }) // Max 1080p
         .webp({ quality: 80 }) // Convert to WebP with 80% quality

@@ -63,13 +63,7 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
       );
     } else if (item.type === 'pdf') {
       return (
-        <div className="relative overflow-hidden">
-          <img 
-            src={item.coverImg?.startsWith('http') ? item.coverImg : `https://picsum.photos/seed/${item.coverImg || item.id}/600/300.jpg`} 
-            className="w-full h-36 object-cover opacity-60" 
-            alt={item.title} 
-            onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/pdfcover/600/300.jpg" }}
-          />
+        <div className="relative overflow-hidden bg-zinc-900 h-24">
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
           <div className="absolute bottom-3 left-4 flex items-center gap-2">
             <div className="w-10 h-12 rounded bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
@@ -96,14 +90,7 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
     } else if (item.type === 'doc') {
       if (!item.coverImg) return null;
       return (
-        <div className="w-full h-32 relative overflow-hidden border-b border-white/5 bg-zinc-900/50">
-          <img 
-            src={item.coverImg?.startsWith('http') ? item.coverImg : `https://picsum.photos/seed/${item.id}/600/300.jpg`} 
-            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
-            alt={item.title} 
-            onError={(e) => { e.currentTarget.src = "https://picsum.photos/seed/doccover/600/300.jpg" }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent pointer-events-none"></div>
+        <div className="w-full h-16 relative overflow-hidden border-b border-white/5 bg-zinc-900/50">
           <div className="absolute bottom-3 left-4 pointer-events-none">
             <div className="text-[10px] text-zinc-300">{item.size || 'Notes'}</div>
           </div>
