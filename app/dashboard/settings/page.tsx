@@ -26,7 +26,9 @@ export default function SettingsPage() {
 
   const [profileForm, setProfileForm] = useState({
     full_name: '',
-    bio: ''
+    bio: '',
+    twitter_url: '',
+    linkedin_url: ''
   });
   const [isSavingProfile, setIsSavingProfile] = useState(false);
 
@@ -90,7 +92,9 @@ export default function SettingsPage() {
           });
           setProfileForm({
             full_name: data.profile.full_name || '',
-            bio: data.profile.bio || ''
+            bio: data.profile.bio || '',
+            twitter_url: data.profile.twitter_url || '',
+            linkedin_url: data.profile.linkedin_url || ''
           });
         }
       })
@@ -105,7 +109,9 @@ export default function SettingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           full_name: profileForm.full_name,
-          bio: profileForm.bio
+          bio: profileForm.bio,
+          twitter_url: profileForm.twitter_url,
+          linkedin_url: profileForm.linkedin_url
         }),
       });
       if (res.ok) {
@@ -341,20 +347,30 @@ export default function SettingsPage() {
                   />
                 </div>
 
-                {/* SOCIAL URLs HIDDEN FOR NOW */}
-                {/* 
+                {/* SOCIAL URLs */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                   <div className="space-y-2">
                     <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5"><Twitter className="w-3.5 h-3.5 text-zinc-400" /> X (Twitter) URL</label>
-                    <input type="url" ... />
+                    <input 
+                      type="url" 
+                      value={profileForm.twitter_url}
+                      onChange={(e) => setProfileForm({...profileForm, twitter_url: e.target.value})}
+                      placeholder="https://x.com/username"
+                      className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 transition-all"
+                    />
                   </div>
                   
                   <div className="space-y-2">
                     <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5"><Linkedin className="w-3.5 h-3.5 text-zinc-400" /> LinkedIn URL</label>
-                    <input type="url" ... />
+                    <input 
+                      type="url" 
+                      value={profileForm.linkedin_url}
+                      onChange={(e) => setProfileForm({...profileForm, linkedin_url: e.target.value})}
+                      placeholder="https://linkedin.com/in/username"
+                      className="input-field w-full px-3 py-2 rounded-lg text-sm text-zinc-200 placeholder:text-zinc-600 transition-all"
+                    />
                   </div>
                 </div> 
-                */}
 
                 <div className="flex justify-end pt-4 border-t border-white/5">
                   <button 

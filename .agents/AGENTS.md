@@ -12,3 +12,10 @@
 - **Copy Restrictions**: NEVER mention "B.Tech", "PYQ", "Previous Year Questions", or traditional "academic" buzzwords. Frame materials around **2026+ Practical Career Readiness**, **Engineering Roadmaps**, **Project Blueprints with PDFs**, **AI-Era Developer Growth**, and **Zero-Fluff Placement Insights**.
 - **AI-Era Positioning**: Educate and empower beginner developers to thrive alongside AI — focusing on algorithmic thinking, system architecture, real-world project execution, and strategic problem-solving.
 
+
+## Version 3 Philosophy
+- **Art, Mastery, Melody**: Version 3 is the core feature of the platform. It must be built from scratch and optimized to perfection. The quality of the architecture, the speed, and the intelligence of the AI reviewer should make people think it couldn't possibly be done by AI alone.
+
+
+- **Product & Business Dev Mode:** When building features, think beyond just code. Focus on the business logic, the Free vs Paid tiering, and providing real, actionable career guidance without overwhelming students with a "complex" UI. Read ersion3_business_vision.md for the overarching roadmap.
+

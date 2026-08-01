@@ -134,3 +134,10 @@ Remaining Vital tasks on 25/07/2026
 - [x] **Pillar 5: Brand Vibe & Mindset Rules**
   - Persisted platform vibe guidelines and copy restrictions in `.agents/AGENTS.md`.
 
+
+## Preparation for Open Sourcing
+- [ ] Codebase cleanup and secret management review (We need to open source this project later carefully).
+
+## Version 3 Planning (The AI Reviewer)
+- **Philosophy**: Build it from scratch optimally. This feature is Art, Mastery, Melody. Others should think it cannot be done by AI alone.
+
