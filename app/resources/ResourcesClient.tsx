@@ -128,13 +128,8 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
               >
                 <span className="w-2 h-2 rounded-full bg-orange-500"></span> Notes & PDFs
               </button>
-              <button 
-                className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5 ${activeFilter === 'project' ? 'active bg-white/10 text-white' : ''}`}
-                onClick={() => filterCards('project')}
-              >
-                <span className="w-2 h-2 rounded-full bg-cyan-400"></span> Project Ideas
-              </button>
             </div>
+
             <div className="flex items-center gap-2">
               <button className="p-1.5 rounded hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="Grid view">
                 <LayoutGrid className="w-4 h-4" />
