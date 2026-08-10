@@ -378,6 +378,7 @@ export default function ResourceClient({
               <span className="text-xs text-zinc-500 flex items-center gap-1">
                 <Eye className="w-3 h-3" /> {doc.views || 0} views
               </span>
+
               <span className="text-[10px] text-zinc-600">•</span>
               <span className="text-xs text-zinc-500 flex items-center gap-1">
                 <Clock className="w-3 h-3" /> {readTimeStr}
@@ -397,15 +398,24 @@ export default function ResourceClient({
             )}
 
             {/* Author + Actions row */}
-            <div className="flex items-center justify-between mb-10 pb-8 border-b border-white/5 flex-wrap gap-4">
+            <div className="flex items-center justify-between mb-8 pb-8 border-b border-white/5 flex-wrap gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-lg overflow-hidden shrink-0">
                   {doc.authorImg && doc.authorImg.startsWith('http') ? (
-                    <img src={doc.authorImg} alt="Author" className="w-full h-full object-cover" />
+                    <img 
+                      src={doc.authorImg} 
+                      alt="Author" 
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover" 
+                      onError={(e) => {
+                        e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(doc.authorName || 'Author')}`;
+                      }}
+                    />
                   ) : (
                     (doc.authorName || 'Anonymous').charAt(0).toUpperCase()
                   )}
                 </div>
+
                 <div>
                   <div className="text-sm font-medium flex items-center gap-1.5">
                     {doc.authorName || 'Anonymous'}
@@ -432,6 +442,8 @@ export default function ResourceClient({
                 </button>
               </div>
             </div>
+
+
 
             {/* Project Blueprints Aspirational Banner */}
             {doc.category === 'Project Blueprints' && doc.projectMeta?.targetCompanies?.length > 0 && (
@@ -481,11 +493,27 @@ export default function ResourceClient({
                   href={pdf.src}
                   download={pdf.filename}
                   target="_blank"
+                  onClick={() => {
+                    try {
+                      fetch('/api/analytics/track', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                          type: 'pdf_download', 
+                          resourceId: doc._id,
+                          platform: doc.category,
+                          title: doc.title || ''
+                        })
+
+                      }).catch(() => {});
+                    } catch (e) {}
+                  }}
                   className={`flex items-center gap-1.5 px-4 py-2 rounded-lg border text-xs font-medium transition-all ${doc.category === 'Project Blueprints' ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-orange-500/10 border-orange-500/20 text-orange-400 hover:bg-orange-500/20'}`}
                 >
                   <Download className="w-3.5 h-3.5" /> 
                   {doc.category === 'Project Blueprints' ? 'Download Blueprint' : 'Download'}
                 </a>
+
               </div>
             ))}
 
@@ -497,10 +525,19 @@ export default function ResourceClient({
             <div className="mt-14 p-6 rounded-2xl glass flex items-start gap-4 flex-wrap">
               <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-2xl overflow-hidden shrink-0">
                 {doc.authorImg && doc.authorImg.startsWith('http') ? (
-                  <img src={doc.authorImg} alt="Author" className="w-full h-full object-cover" />
+                  <img 
+                    src={doc.authorImg} 
+                    alt="Author" 
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover" 
+                    onError={(e) => {
+                      e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(doc.authorName || 'Author')}`;
+                    }}
+                  />
                 ) : (
                   (doc.authorName || 'Anonymous').charAt(0).toUpperCase()
                 )}
+
               </div>
               <div className="flex-1 min-w-[200px]">
                 <div className="flex items-center gap-2 mb-1">
@@ -592,7 +629,15 @@ export default function ResourceClient({
                     <div key={comment._id} className="flex items-start gap-3">
                       <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0 overflow-hidden">
                         {comment.authorImg ? (
-                          <img src={comment.authorImg} className="w-full h-full object-cover" alt={comment.authorName} />
+                          <img 
+                            src={comment.authorImg} 
+                            referrerPolicy="no-referrer"
+                            className="w-full h-full object-cover" 
+                            alt={comment.authorName} 
+                            onError={(e) => {
+                              e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(comment.authorName || 'User')}`;
+                            }}
+                          />
                         ) : (
                           <span className="text-sm font-bold text-emerald-400">{comment.authorName.charAt(0).toUpperCase()}</span>
                         )}
@@ -649,6 +694,8 @@ export default function ResourceClient({
                 <span className="text-xs text-zinc-500">Views</span>
                 <span className="text-xs text-zinc-300">{doc.views || 0}</span>
               </div>
+
+
             </div>
           </div>
 

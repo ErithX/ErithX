@@ -35,8 +35,23 @@ export default function BlogsCard({ item, index, onClick }: BlogsCardProps) {
       style={{ animationDelay: `${index * 0.05}s` }}
       onClick={() => onClick(item)}
     >
-      {/* Cover Image removed completely per user request */}
+      {item.coverImg && (
+        <div className="w-full h-36 relative overflow-hidden border-b border-white/5 bg-zinc-900/60">
+          <img 
+            src={item.coverImg} 
+            alt={item.title} 
+            loading="lazy"
+            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+            onError={(e) => { e.currentTarget.parentElement?.remove(); }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-zinc-950/20 to-transparent pointer-events-none"></div>
+          <div className="absolute bottom-3 left-4 pointer-events-none">
+            <div className="text-[10px] text-zinc-300 font-medium px-2 py-0.5 rounded bg-black/50 backdrop-blur-sm border border-white/10 inline-block">{item.readTime}</div>
+          </div>
+        </div>
+      )}
       <div className="p-4">
+
         <div className="flex items-center justify-between mb-2">
           <span className="type-blog px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             <PenLine className="w-3 h-3" />
@@ -58,10 +73,15 @@ export default function BlogsCard({ item, index, onClick }: BlogsCardProps) {
         <div className="flex items-center justify-between pt-3 border-t border-white/5">
           <div className="flex items-center gap-2">
             <img 
-              src={item.authorImg && item.authorImg.startsWith('http') ? item.authorImg : `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.authorImg || item.author}`} 
+              src={item.authorImg && item.authorImg.startsWith('http') ? item.authorImg : `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(item.author || 'author')}`} 
+              referrerPolicy="no-referrer"
               className="w-5 h-5 rounded-full object-cover bg-zinc-800" 
               alt={item.author} 
+              onError={(e) => {
+                e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(item.author || 'author')}`;
+              }}
             />
+
             <span className="text-[10px] text-zinc-400 font-medium flex items-center gap-1">
               {item.author}
               {item.isVerified && (

@@ -28,11 +28,17 @@ export async function PUT(
     const { id } = await params;
 
     await dbConnect();
-    const resource = await Resource.findById(id);
+    const mongoose = require('mongoose');
+    const query = mongoose.Types.ObjectId.isValid(id)
+      ? { _id: id }
+      : { slug: id };
+
+    const resource = await Resource.findOne(query);
 
     if (!resource) {
       return NextResponse.json({ error: 'Resource not found' }, { status: 404 });
     }
+
 
     const userId = user.id;
     const hasUpvoted = resource.upvotedBy.includes(userId);

@@ -19,7 +19,17 @@ export async function GET(request: Request) {
     }
 
     await dbConnect();
-    const comments = await Comment.find({ resourceId }).sort({ createdAt: -1 });
+    const mongoose = require('mongoose');
+    let targetResourceId = resourceId;
+
+    if (!mongoose.Types.ObjectId.isValid(resourceId)) {
+      const doc = await Resource.findOne({ slug: resourceId });
+      if (doc) targetResourceId = doc._id.toString();
+    }
+
+    const comments = await Comment.find({ 
+      $or: [{ resourceId: targetResourceId }, { resourceId: resourceId }] 
+    }).sort({ createdAt: -1 });
 
     return NextResponse.json(comments);
   } catch (error: any) {
@@ -50,10 +60,19 @@ export async function POST(request: Request) {
     }
 
     await dbConnect();
+    const mongoose = require('mongoose');
+
+    // Polymorphic lookup to find target resource
+    const query = mongoose.Types.ObjectId.isValid(resourceId) 
+      ? { _id: resourceId } 
+      : { slug: resourceId };
+
+    const resourceDoc = await Resource.findOne(query);
+    const targetDocId = resourceDoc ? resourceDoc._id.toString() : resourceId;
 
     // Create the comment
     const newComment = await Comment.create({
-      resourceId,
+      resourceId: targetDocId,
       userId: user.id,
       authorName: user.user_metadata?.full_name || 'Anonymous',
       authorImg: user.user_metadata?.avatar_url || '',
@@ -61,13 +80,15 @@ export async function POST(request: Request) {
     });
 
     // Increment commentsCount on the resource
-    await Resource.findByIdAndUpdate(resourceId, {
-      $inc: { commentsCount: 1 }
-    });
+    if (resourceDoc) {
+      resourceDoc.commentsCount = (resourceDoc.commentsCount || 0) + 1;
+      await resourceDoc.save();
+    }
 
     return NextResponse.json(newComment);
   } catch (error: any) {
     console.error("POST /api/comments error:", error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
+

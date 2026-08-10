@@ -1,16 +1,22 @@
 import { NextResponse, NextRequest } from 'next/server';
 import connectToDatabase from '@/app/lib/mongodb';
 import { Resource } from '@/models/Resource';
+import mongoose from 'mongoose';
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectToDatabase();
     const id = (await params).id;
     
-    // Increment realViews by 1
+    // Support lookup by either MongoDB _id or string slug
+    const query = mongoose.Types.ObjectId.isValid(id)
+      ? { _id: id, status: 'published' }
+      : { slug: id, status: 'published' };
+
+    // Increment both views (general impressions) and realViews (direct reads)
     const result = await Resource.updateOne(
-      { _id: id, status: 'published' },
-      { $inc: { realViews: 1 } }
+      query,
+      { $inc: { views: 1, realViews: 1 } }
     );
     
     if (result.matchedCount === 0) {
@@ -23,3 +29,4 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+

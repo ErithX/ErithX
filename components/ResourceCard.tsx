@@ -63,15 +63,24 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
       );
     } else if (item.type === 'pdf') {
       return (
-        <div className="relative overflow-hidden bg-zinc-900 h-24">
+        <div className="relative overflow-hidden bg-zinc-900 h-28">
+          {item.coverImg && (
+            <img 
+              src={item.coverImg} 
+              alt={item.title} 
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover opacity-40 transition-transform duration-500 hover:scale-105"
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
           <div className="absolute bottom-3 left-4 flex items-center gap-2">
             <div className="w-10 h-12 rounded bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
               <FileText className="w-5 h-5 text-orange-400" />
             </div>
             <div>
-              <div className="text-[10px] text-orange-400 font-medium">{item.pages} pages</div>
-              <div className="text-[10px] text-zinc-500">{item.size}</div>
+              <div className="text-[10px] text-orange-400 font-medium">{item.pages ? `${item.pages} pages` : 'PDF Document'}</div>
+              <div className="text-[10px] text-zinc-400">{item.size || 'Notes'}</div>
             </div>
           </div>
         </div>
@@ -90,15 +99,24 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
     } else if (item.type === 'doc') {
       if (!item.coverImg) return null;
       return (
-        <div className="w-full h-16 relative overflow-hidden border-b border-white/5 bg-zinc-900/50">
+        <div className="w-full h-32 relative overflow-hidden border-b border-white/5 bg-zinc-900/50">
+          <img 
+            src={item.coverImg} 
+            alt={item.title} 
+            loading="lazy"
+            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+            onError={(e) => { e.currentTarget.parentElement?.remove(); }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-zinc-950/20 to-transparent pointer-events-none"></div>
           <div className="absolute bottom-3 left-4 pointer-events-none">
-            <div className="text-[10px] text-zinc-300">{item.size || 'Notes'}</div>
+            <div className="text-[10px] text-zinc-300 font-medium px-2 py-0.5 rounded bg-black/50 backdrop-blur-sm border border-white/10 inline-block">{item.size || 'Notes'}</div>
           </div>
         </div>
       );
     }
     return null;
   };
+
 
   return (
     <div 
@@ -129,10 +147,15 @@ export default function ResourceCard({ item, index, onClick }: ResourceCardProps
         <div className="flex items-center justify-between pt-3 border-t border-white/5">
           <div className="flex items-center gap-2">
             <img 
-              src={item.authorImg && item.authorImg.startsWith('http') ? item.authorImg : `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.authorImg || item.author}`} 
+              src={item.authorImg && item.authorImg.startsWith('http') ? item.authorImg : `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(item.author || 'author')}`} 
+              referrerPolicy="no-referrer"
               className="w-5 h-5 rounded-full object-cover bg-zinc-800" 
               alt={item.author} 
+              onError={(e) => {
+                e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(item.author || 'author')}`;
+              }}
             />
+
             <span className="text-[10px] text-zinc-400 font-medium flex items-center gap-1">
               {item.author}
               {item.isVerified && (

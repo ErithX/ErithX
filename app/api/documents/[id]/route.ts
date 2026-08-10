@@ -63,8 +63,13 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       }
     }
 
-    // Generate slug if it doesn't exist and we have a title
-    if (!existingDoc.slug && safeBody.title) {
+    // Generate or regenerate slug if title changed (for drafts/pending) or if slug is missing
+    const shouldUpdateSlug = safeBody.title && (
+      !existingDoc.slug || 
+      (existingDoc.status !== 'published' && safeBody.title !== existingDoc.title)
+    );
+
+    if (shouldUpdateSlug) {
       const stopWords = ['a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'with', 'to', 'for', 'of', 'at', 'by', 'is', 'are', 'was'];
       
       let cleanString = safeBody.title.toLowerCase().replace(/[^a-z0-9\s-]/g, ' ');
@@ -101,6 +106,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       
       safeBody.slug = finalSlug;
     }
+
 
     const updatedDoc = await Resource.findByIdAndUpdate(
       id,

@@ -123,6 +123,8 @@ export default function ProDashboardPage() {
   // Calculate stats based ONLY on fully published posts
   const totalViews = publishedPosts.reduce((acc, curr) => acc + (curr.views || 0), 0);
   const totalUpvotes = publishedPosts.reduce((acc, curr) => acc + (curr.upvotes || 0), 0);
+
+
   
   // Top performing logic: rank by engagement score, only include actually published posts
   const topPerforming = [...publishedPosts]
@@ -357,6 +359,8 @@ export default function ProDashboardPage() {
                               <div className="flex items-center gap-1.5"><ArrowUp className="w-3.5 h-3.5" /> {pub.upvotes || 0}</div>
                               <div className="flex items-center gap-1.5"><MessageSquare className="w-3.5 h-3.5" /> {pub.commentsCount || 0}</div>
                             </div>
+
+
                           </div>
                           
                           <div className="flex-shrink-0 flex items-center gap-2">

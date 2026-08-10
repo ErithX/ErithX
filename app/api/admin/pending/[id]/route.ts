@@ -28,20 +28,26 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
     }
 
+    const updateFields: any = { 
+      status, 
+      rejectionReason: status === 'rejected' ? rejectionReason : '' 
+    };
+
+    // When publishing, refresh createdAt so feed calculates relative time from the actual publish moment
+    if (status === 'published') {
+      updateFields.createdAt = new Date();
+    }
+
     const updatedDoc = await Resource.findByIdAndUpdate(
       id,
-      { 
-        $set: { 
-          status, 
-          rejectionReason: status === 'rejected' ? rejectionReason : '' 
-        } 
-      },
+      { $set: updateFields },
       { returnDocument: 'after' }
     );
 
     if (!updatedDoc) {
       return NextResponse.json({ error: 'Document not found' }, { status: 404 });
     }
+
 
     // ------------------------------------------------------------------
     // LEARNING NOTE: Triggering Notifications!
