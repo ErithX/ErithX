@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
+import UserHeartbeat from '@/components/UserHeartbeat';
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchUser = useAuthStore((state) => state.fetchUser);
@@ -13,5 +14,11 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     }
   }, [fetchUser, initialized]);
 
-  return <>{children}</>;
+  return (
+    <>
+      <UserHeartbeat />
+      {children}
+    </>
+  );
 }
+

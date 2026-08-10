@@ -83,16 +83,27 @@ export default function SuperadminPage() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [sortNewestFirst, setSortNewestFirst] = useState(true);
+  const [sortOption, setSortOption] = useState<'lastActive' | 'newestJoined' | 'oldestJoined' | 'lastLogin'>('lastActive');
   const [creating, setCreating] = useState(false);
 
   const sortedUsers = useMemo(() => {
     return [...users].sort((a, b) => {
-      const first = new Date(a.createdAt).getTime();
-      const second = new Date(b.createdAt).getTime();
-      return sortNewestFirst ? second - first : first - second;
+      if (sortOption === 'lastActive') {
+        const timeA = a.lastSeen ? new Date(a.lastSeen).getTime() : (a.lastSignInAt ? new Date(a.lastSignInAt).getTime() : 0);
+        const timeB = b.lastSeen ? new Date(b.lastSeen).getTime() : (b.lastSignInAt ? new Date(b.lastSignInAt).getTime() : 0);
+        return timeB - timeA;
+      } else if (sortOption === 'newestJoined') {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      } else if (sortOption === 'oldestJoined') {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      } else {
+        const timeA = a.lastSignInAt ? new Date(a.lastSignInAt).getTime() : 0;
+        const timeB = b.lastSignInAt ? new Date(b.lastSignInAt).getTime() : 0;
+        return timeB - timeA;
+      }
     });
-  }, [sortNewestFirst, users]);
+  }, [sortOption, users]);
+
 
   const pendingResources = resources.filter(
     (resource) => resource.status === "pending",
@@ -311,13 +322,18 @@ export default function SuperadminPage() {
                         Users ({users.length})
                       </h2>
                     </div>
-                    <button
-                      onClick={() => setSortNewestFirst((value) => !value)}
-                      className="rounded-xl border-2 border-black bg-blue-300 px-4 py-2 font-black text-black"
+                    <select
+                      value={sortOption}
+                      onChange={(e) => setSortOption(e.target.value as any)}
+                      className="rounded-xl border-2 border-black bg-blue-300 px-4 py-2 font-black text-black cursor-pointer focus:outline-none"
                     >
-                      Sort: {sortNewestFirst ? "Newest first" : "Oldest first"}
-                    </button>
+                      <option value="lastActive">Sort: Last Active</option>
+                      <option value="newestJoined">Sort: Newest Joined</option>
+                      <option value="oldestJoined">Sort: Oldest Joined</option>
+                      <option value="lastLogin">Sort: Last Login</option>
+                    </select>
                   </div>
+
 
                   <div className="overflow-x-auto">
                     <table className="w-full min-w-[780px] border-collapse text-left">

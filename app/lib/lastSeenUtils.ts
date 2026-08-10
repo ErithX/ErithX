@@ -11,10 +11,11 @@ export function formatLastSeen(lastSeenIso: string | null): string {
   const diffHours = Math.floor(diffMinutes / 60);
   const diffDays = Math.floor(diffHours / 24);
 
-  // If active in the last 60 seconds (accounting for 45s polling + buffer)
-  if (diffSeconds < 60) {
+  // If active in the last 90 seconds (accounting for 45s heartbeat + buffer)
+  if (diffSeconds < 90) {
     return '🟢 Online';
   }
+
 
   if (diffMinutes < 60) {
     return `Last seen ${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;

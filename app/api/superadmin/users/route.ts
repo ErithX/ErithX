@@ -36,7 +36,7 @@ export async function GET() {
         email: user.email,
         fullName:
           user.user_metadata?.full_name || user.user_metadata?.name || null,
-        avatarUrl: user.user_metadata?.avatar_url || null,
+        avatarUrl: user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
         createdAt: user.created_at,
         lastSignInAt: user.last_sign_in_at,
         provider: user.app_metadata?.provider || null,
