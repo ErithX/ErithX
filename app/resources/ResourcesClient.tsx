@@ -33,14 +33,17 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
       setItems(allItems);
     } else if (type === 'pdf') {
       setItems(allItems.filter(d => d.type === 'pdf' || d.type === 'doc' || d.category === 'Study Materials'));
+    } else if (type === 'career') {
+      setItems(allItems.filter(d => d.category === 'Career'));
     } else if (type === 'project') {
       setItems(allItems.filter(d => (d as any).type === 'project' || d.category === 'Project Blueprints' || d.category === 'Project Ideas'));
     } else if (type === 'blog') {
-      setItems(allItems.filter(d => (d.type === 'blog' || d.category === 'Blogs' || d.category === 'Career') && d.category !== 'Project Blueprints' && d.category !== 'Project Ideas' && d.category !== 'Study Materials'));
+      setItems(allItems.filter(d => (d.category === 'Blogs' || (!d.category && d.type === 'blog')) && d.category !== 'Career' && d.category !== 'Project Blueprints' && d.category !== 'Project Ideas' && d.category !== 'Study Materials'));
     } else {
       setItems(allItems.filter(d => d.type === type || d.category === type));
     }
   };
+
 
   const handleItemClick = (item: FeedItem) => {
     router.push(`/resources/${item.id}`);
@@ -128,7 +131,14 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
               >
                 <span className="w-2 h-2 rounded-full bg-orange-500"></span> Notes & PDFs
               </button>
+              <button 
+                className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5 ${activeFilter === 'career' ? 'active bg-white/10 text-white' : ''}`}
+                onClick={() => filterCards('career')}
+              >
+                <span className="w-2 h-2 rounded-full bg-purple-500"></span> Career
+              </button>
             </div>
+
 
             <div className="flex items-center gap-2">
               <button className="p-1.5 rounded hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="Grid view">
