@@ -133,6 +133,7 @@ export async function GET(request: Request) {
               })
               .catch((err: any) => console.error('Welcome email error:', err))
           })();
+
         } else {
           console.log('👤 Existing user logging in, ignoring modal role and using existing role')
           // Existing user, use their existing role from the database/metadata
