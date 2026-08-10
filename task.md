@@ -138,6 +138,24 @@ Remaining Vital tasks on 25/07/2026
 ## Preparation for Open Sourcing
 - [ ] Codebase cleanup and secret management review (We need to open source this project later carefully).
 
+## Critical Bug Fixes & Reliability Backlog (August 2026)
+- [x] **Email System Reliability (Gmail App Password Restored)**
+  - Updated fresh 16-character Gmail App Password in `.env`. Successfully verified SMTP authentication and delivered test emails.
+
+- [x] **Resource Card Cover Images Re-Enablement**
+  - Re-enabled cover image rendering in `BlogsCard.tsx` and `ResourceCard.tsx` with lazy loading & clean fallback.
+- [x] **Views Tracking Synchronization**
+  - Fixed `app/api/resources/[id]/view/route.ts` to increment `views` & `realViews`, handle slug lookups, and display `realViews` across all UI cards & pages.
+- [x] **Draft Date Synchronization on Publish**
+  - Updated `app/api/admin/pending/[id]/route.ts` to set `createdAt` to current time upon approval, fixing "posted 9 days ago" on fresh posts.
+- [x] **Superadmin Real-Time Presence & Heartbeat Tracking**
+  - Implemented client heartbeat (`UserHeartbeat.tsx`) + server endpoint (`/api/user/heartbeat`) + multi-dimensional sorting and live `🟢 Online` badges on Superadmin.
+- [x] **Internal Engagement Telemetry & Live User Intent Stream**
+  - Implemented `PlatformMetric` and `UserActivity` models + `/api/analytics/track` + `/api/superadmin/metrics`.
+  - Added Live Intent Stream in Superadmin displaying user avatars, names, emails, specific contest/blueprint targets, action badges, and category filtering.
+- [x] **Clean Bug Fixes & Telemetry Git Sync**
+  - Stashed, wiped hurried commit, cleanly merged and pushed bug fixes to `origin/version-3`.
+
 ## Version 3 Planning (The AI Reviewer)
 - **Philosophy**: Build it from scratch optimally. This feature is Art, Mastery, Melody. Others should think it cannot be done by AI alone.
 

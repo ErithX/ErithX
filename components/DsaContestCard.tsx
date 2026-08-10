@@ -209,6 +209,19 @@ export default function DsaContestCard({ contest, index }: { contest: Contest, i
             target="_blank" 
             rel="noopener noreferrer"
             title="Participate in this contest"
+            onClick={() => {
+              try {
+                fetch('/api/analytics/track', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ 
+                    type: 'contest_platform_click', 
+                    platform: contest.platform,
+                    title: contest.title || (contest as any).name || '' 
+                  })
+                }).catch(() => {});
+              } catch (e) {}
+            }}
             className="crack-btn flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-white text-zinc-900 text-xs font-bold hover:bg-zinc-200 transition-all"
           >
             <Swords className="w-3.5 h-3.5" />
@@ -219,10 +232,25 @@ export default function DsaContestCard({ contest, index }: { contest: Contest, i
             target="_blank" 
             rel="noopener noreferrer"
             title="Add to Google Calendar"
+            onClick={() => {
+              try {
+                fetch('/api/analytics/track', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ 
+                    type: 'contest_calendar_sync', 
+                    platform: contest.platform,
+                    title: contest.title || (contest as any).name || '' 
+                  })
+                }).catch(() => {});
+              } catch (e) {}
+            }}
+
             className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white transition-all"
           >
             <CalendarPlus className="w-4 h-4" />
           </a>
+
           <button 
             onClick={() => alert('Solutions will be available after the contest!')} 
             title="View Solutions & Editorials"

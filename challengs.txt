@@ -95,3 +95,42 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      - Database Arrays: Added `recent_resources` and `recent_subjects` JSONB arrays to the `user_profiles` table in Supabase.
      - Sliding Window Algorithm: The Next.js cron job fetches the user's history and dynamically cross-references the top 30 published MongoDB resources against `recent_resources`. Once a resource is selected for the user's email, its ID is pushed to the array. The array is truncated to length 7 (a rolling 7-day memory) to keep storage minimal and query times instant.
      - Subject Line Families: We curated 60+ subject lines categorized by engagement "families" (e.g., Direct, Curiosity, Signal-focused). The `selectNextSubject` algorithm filters out any subject used in the last 15 sends, AND explicitly avoids selecting a subject from the same "family" as the last 2 sends, preventing "FOMO fatigue" while maintaining high open rates and domain trust.
+
+17. Dynamic Draft Slug Synchronization & Title Mutation Lifecycle:
+   - Challenge: Auto-save debouncing created permanent slug locks on the very first keystrokes of a document title. If a creator later discarded their title or completely pivoted their article topic before submitting for review, the document URL remained permanently bound to the obsolete initial title because standard slug checks only verified `!existingDoc.slug`.
+   - Solution: Implemented a lifecycle-aware slug regeneration architecture in `/api/documents/[id]`. Slugs dynamically synchronize and regenerate whenever the title string changes *while the document status remains unpublished* (`draft` or `pending`). Once the document transitions to `published`, the slug becomes permanently immutable to prevent 404s and protect canonical SEO indexing.
+
+18. Polymorphic View Metric Synchronization:
+   - Challenge: The analytics engine suffered from a schema divergence where the view endpoint incremented `realViews` while frontend consumer components queried `views`, resulting in phantom 0-view states across cards. Additionally, REST endpoints expected MongoDB ObjectIds while frontend routing dispatched canonical slug strings (`/resources/your-resume-getting-ignored-reason`), causing cast errors and dropped view events.
+   - Solution: Re-architected `/api/resources/[id]/view` with polymorphic querying (`mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { slug: id }`) and atomic dual-increment (`{ $inc: { views: 1, realViews: 1 } }`), allowing seamless ingestion of both slug and ID-based read events while synchronizing impression metrics on the frontend and keeping untampered `realViews` metrics archived in the database.
+
+19. Polymorphic Engagement Routing for Upvotes & Comments:
+   - Challenge: When users visited resources via canonical SEO slugs (`/resources/[slug]`), client-side actions (upvoting, commenting, loading comment streams) sent the slug string in URL parameters. Downstream MongoDB operations calling `Resource.findById(id)` threw `CastError` exceptions, causing upvoting and commenting to silently fail for slug-based visits.
+   - Solution: Refactored `/api/resources/[id]/upvote` and `/api/comments` with polymorphic identity resolvers. The handlers test `mongoose.Types.ObjectId.isValid()` and resolve the canonical MongoDB ObjectId before executing document operations and count increments, ensuring rock-solid engagement regardless of whether frontend components pass ObjectIds or SEO slugs.
+
+20. Post-Approval Timestamp Re-anchoring for Relative Feed Cadence:
+   - Challenge: Authors often create drafts days or weeks before completing and submitting them. Because MongoDB's default `{ timestamps: true }` permanently freezes `createdAt` at draft initialization, newly approved resources displayed misleading relative ages (e.g., "Posted 9 days ago") the instant they were published.
+   - Solution: Injected an explicit timestamp refresh in `/api/admin/pending/[id]` that re-anchors `createdAt = new Date()` upon transition to `status: 'published'`. This guarantees that fresh publications appear as "Just now" or "1d ago" on feeds and social cards.
+
+21. SMTP Credential Invalidation & Automated Cron Fault Isolation:
+   - Challenge: Automated daily cron invocations failed after August 3rd with `535-5.7.8 BadCredentials`, triggering GitHub Action failure emails. Investigation revealed Google's automated security filter revoked the personal Gmail App Password due to multi-recipient programmatic delivery to 38+ registered accounts.
+   - Solution: Updated fresh 16-character SMTP credentials, verified end-to-end delivery through runtime handshake scripts, and established a transition pathway to Resend API for hardened transactional infrastructure.
+
+22. Lightweight Heartbeat Presence Architecture & Real-Time User Activity Tracking:
+   - Challenge: The Superadmin panel displayed stale `last_seen` timestamps ("Never") because no mechanism updated the `user_profiles.last_seen` column during client sessions. Furthermore, client-side OAuth session refreshes updated `last_sign_in_at` on background fetches, causing returning users to jump to the top of the user list without clear activity context.
+   - Solution: Engineered a non-blocking, throttled presence engine.
+     - Client Hook (`UserHeartbeat.tsx`): Runs inside `AuthProvider`, listening for active authenticated sessions. It dispatches a lightweight POST request immediately on tab focus and every 45 seconds while active, while pausing entirely when the browser tab is hidden (`document.hidden`).
+     - Server Endpoint (`/api/user/heartbeat`): Atomically stamps `user_profiles.last_seen = now()` using authenticated Supabase context.
+     - Multi-Dimensional Sorting & Status: Enhanced the Superadmin user dashboard with sorting dimensions (`Last Active`, `Newest Joined`, `Oldest Joined`, `Last Sign In`) and live pulse indicators (`🟢 Online` for users active within 90s).
+
+23. Zero-Overhead High-Intent Platform Engagement Telemetry:
+   - Challenge: We needed to detect critical user behavior (Contest Google Calendar Syncs, Outbound Contest Participation clicks, and Project Blueprint PDF downloads) directly within our own internal Superadmin dashboard without incurring database row bloat, table locks, or slowing client click-through speeds.
+   - Solution: Designed a lightweight, aggregate telemetry architecture.
+     - MongoDB Model (`PlatformMetric`): Stores atomic key-counter pairs with dynamic nested maps (`platformBreakdown`) for multi-platform distribution (LeetCode, Codeforces, CodeChef, etc.).
+     - Resource Model (`pdfDownloads`): Directly increments blueprint-level downloads atomically.
+     - Non-blocking Dispatcher (`/api/analytics/track`): Ingests macro events asynchronously using fire-and-forget client `fetch()` with zero UI thread blocking.
+     - Superadmin Telemetry Hub (`/api/superadmin/metrics`): Aggregates and surfaces real-time counts and platform distribution cards directly on the Superadmin dashboard.
+
+
+
+

@@ -93,8 +93,12 @@ const ResourceSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
- 
+  pdfDownloads: {
+    type: Number,
+    default: 0
+  },
 }, { timestamps: true });
+
 
 // Prevent mongoose from recompiling the model upon hot reload
 export const Resource = mongoose.models.Resource || mongoose.model('Resource', ResourceSchema);
