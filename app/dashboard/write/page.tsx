@@ -296,12 +296,13 @@ export default function WritePage() {
                   <option value="Blogs">Blogs</option>
                   <option value="Study Materials">Study Materials</option>
                   <option value="Career">Career</option>
-                  <option value="Project Blueprints">Project Blueprints</option>
+                  <option value="Project Blueprints">Project Ideas / Blueprints</option>
                 </select>
               </div>
 
-              {/* Target Companies (Only for Project Blueprints) */}
-              {category === 'Project Blueprints' && (
+              {/* Target Companies (Only for Project Blueprints / Ideas) */}
+              {(category === 'Project Blueprints' || category === 'Project Ideas') && (
+
                 <div>
                   <label className="block text-xs font-medium text-emerald-400 mb-2 uppercase tracking-wider">Target Companies</label>
                   <input

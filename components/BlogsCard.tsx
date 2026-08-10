@@ -53,12 +53,25 @@ export default function BlogsCard({ item, index, onClick }: BlogsCardProps) {
       <div className="p-4">
 
         <div className="flex items-center justify-between mb-2">
-          <span className="type-blog px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <PenLine className="w-3 h-3" />
-            {item.category === 'Project Blueprints' ? 'Blueprint' : item.category === 'Career' ? 'Career' : 'Blog'}
-          </span>
+          {item.category === 'Project Blueprints' || item.category === 'Project Ideas' ? (
+            <span className="type-project px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+              <PenLine className="w-3 h-3" />
+              Project Idea
+            </span>
+          ) : item.category === 'Career' ? (
+            <span className="type-career px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 bg-purple-500/10 text-purple-400 border border-purple-500/20">
+              <PenLine className="w-3 h-3" />
+              Career
+            </span>
+          ) : (
+            <span className="type-blog px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <PenLine className="w-3 h-3" />
+              Blog
+            </span>
+          )}
           <span className="text-[10px] text-zinc-600">{item.time}</span>
         </div>
+
         <h3 className="text-sm font-medium leading-snug mb-1">{item.title}</h3>
         {item.subtitle ? (
           <p className="text-xs font-medium text-zinc-400 leading-relaxed mb-3 line-clamp-2">{item.subtitle}</p>

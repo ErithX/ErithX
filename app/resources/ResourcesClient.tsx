@@ -32,9 +32,13 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
     if (type === 'all') {
       setItems(allItems);
     } else if (type === 'pdf') {
-      setItems(allItems.filter(d => d.type === 'pdf' || d.type === 'doc'));
+      setItems(allItems.filter(d => d.type === 'pdf' || d.type === 'doc' || d.category === 'Study Materials'));
+    } else if (type === 'project') {
+      setItems(allItems.filter(d => (d as any).type === 'project' || d.category === 'Project Blueprints' || d.category === 'Project Ideas'));
+    } else if (type === 'blog') {
+      setItems(allItems.filter(d => (d.type === 'blog' || d.category === 'Blogs' || d.category === 'Career') && d.category !== 'Project Blueprints' && d.category !== 'Project Ideas' && d.category !== 'Study Materials'));
     } else {
-      setItems(allItems.filter(d => d.type === type));
+      setItems(allItems.filter(d => d.type === type || d.category === type));
     }
   };
 
@@ -125,16 +129,10 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
                 <span className="w-2 h-2 rounded-full bg-orange-500"></span> Notes & PDFs
               </button>
               <button 
-                className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5 ${activeFilter === 'link' ? 'active bg-white/10 text-white' : ''}`}
-                onClick={() => filterCards('link')}
+                className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5 ${activeFilter === 'project' ? 'active bg-white/10 text-white' : ''}`}
+                onClick={() => filterCards('project')}
               >
-                <span className="w-2 h-2 rounded-full bg-cyan-500"></span> Links
-              </button>
-              <button 
-                className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5 ${activeFilter === 'image' ? 'active bg-white/10 text-white' : ''}`}
-                onClick={() => filterCards('image')}
-              >
-                <span className="w-2 h-2 rounded-full bg-purple-500"></span> Images
+                <span className="w-2 h-2 rounded-full bg-cyan-400"></span> Project Ideas
               </button>
             </div>
             <div className="flex items-center gap-2">
@@ -150,16 +148,36 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
           <div className="flex gap-6">
             {/* Masonry Feed */}
             <div className="flex-1 min-w-0">
-              <div className="masonry" id="feedGrid">
-                {items.map((item, i) => {
-                  if (item.type === 'blog') {
-                    return <BlogsCard key={item.id} item={item as BlogItem} index={i} onClick={handleItemClick} />;
-                  } else {
-                    return <ResourceCard key={item.id} item={item as ResourceItem} index={i} onClick={handleItemClick} />;
-                  }
-                })}
-              </div>
+              {items.length === 0 ? (
+                <div className="py-16 px-6 text-center rounded-2xl glass border border-white/5 border-dashed">
+                  <div className="w-12 h-12 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center mx-auto mb-3">
+                    <Code className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-white mb-1">
+                    {activeFilter === 'project' ? 'No Project Ideas yet' : 'No resources found'}
+                  </h3>
+                  <p className="text-xs text-zinc-500 max-w-sm mx-auto mb-4">
+                    {activeFilter === 'project' 
+                      ? 'High-signal system design blueprints & real-world engineering project ideas are being curated.'
+                      : 'Try selecting a different filter above.'}
+                  </p>
+                  <button onClick={() => router.push('/dashboard/write')} className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-zinc-300 hover:text-white transition-all">
+                    Contribute an Idea
+                  </button>
+                </div>
+              ) : (
+                <div className="masonry" id="feedGrid">
+                  {items.map((item, i) => {
+                    if (item.type === 'blog' || (item as any).type === 'project') {
+                      return <BlogsCard key={item.id} item={item as BlogItem} index={i} onClick={handleItemClick} />;
+                    } else {
+                      return <ResourceCard key={item.id} item={item as ResourceItem} index={i} onClick={handleItemClick} />;
+                    }
+                  })}
+                </div>
+              )}
             </div>
+
 
             {/* Sidebar */}
             <div className="hidden lg:block w-72 flex-shrink-0 space-y-6">

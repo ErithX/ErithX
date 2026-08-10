@@ -47,7 +47,7 @@ const ResourceSchema = new mongoose.Schema({
   }],
   category: { 
     type: String, 
-    enum: ['Blogs', 'Study Materials', 'Career', 'Project Blueprints'],
+    enum: ['Blogs', 'Study Materials', 'Career', 'Project Blueprints', 'Project Ideas'],
     default: 'Blogs'
   },
   projectMeta: {

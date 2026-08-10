@@ -28,7 +28,7 @@ export default async function ResourcesPage() {
 
     const readTimeStr = `${Math.max(1, Math.ceil((doc.wordCount || 0) / 200))} min read`;
 
-    let type: 'blog' | 'pdf' | 'doc' = 'blog';
+    let type: 'blog' | 'pdf' | 'doc' | 'project' = 'blog';
     if (doc.category === 'Study Materials') {
       if (doc.content?.includes('data-type="pdf-block"')) {
         type = 'pdf';
@@ -37,7 +37,8 @@ export default async function ResourcesPage() {
       }
     }
     if (doc.category === 'Career') type = 'blog';
-    if (doc.category === 'Project Blueprints') type = 'blog';
+    if (doc.category === 'Project Blueprints' || doc.category === 'Project Ideas') type = 'project';
+
     
     const baseItem = {
       id: doc.slug || doc._id.toString(),
