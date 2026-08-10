@@ -7,7 +7,9 @@ export interface ResourceItem {
   title: string;
   subtitle?: string;
   excerpt: string;
+  category?: string;
   author: string;
+
   authorImg: string;
   isPro: boolean;
   isVerified?: boolean;
