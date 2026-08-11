@@ -156,6 +156,18 @@ Remaining Vital tasks on 25/07/2026
 - [x] **Clean Bug Fixes & Telemetry Git Sync**
   - Stashed, wiped hurried commit, cleanly merged and pushed bug fixes to `origin/version-3`.
 
-## Version 3 Planning (The AI Reviewer)
+## Version 3 Execution (The AI Reviewer & Coder Identity Engine)
 - **Philosophy**: Build it from scratch optimally. This feature is Art, Mastery, Melody. Others should think it cannot be done by AI alone.
+- [x] **Milestone 1: Live Profile Linking & Real-Time Edge Verifier**
+  - Built `UserCoderProfile` MongoDB model & `/api/user/profiles` CRUD endpoint.
+  - Engineered `/api/user/profiles/verify` supporting real-time edge lookups for GitHub, LeetCode (GraphQL), and Codeforces.
+  - Implemented `<ProfileLinkModal />` with debounced micro-spinners, live verified badges, and real avatar previews.
+  - Integrated dynamic `<ConnectedProfilesCard />` on `/dashboard` with live sync indicators.
+- [ ] **Milestone 2: Platform Snapshot Scrapers & Deterministic Delta Engine**
+  - Lightweight scheduled snapshot extractors for GitHub, LeetCode, and Codeforces.
+  - Deterministic progress rules filter (Δ active days, Δ contest rating, Δ hard/medium solves, slacking streaks).
+- [ ] **Milestone 3: AI Reviewer LLM Reasoning Engine & Superadmin Audit Hub**
+  - Context assembler feeding delta + previous review memory into Claude 3.5 Sonnet / Haiku.
+  - Brutally honest senior engineer persona with dynamic tone variation and open loop assignments.
+
 

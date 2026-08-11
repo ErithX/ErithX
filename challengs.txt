@@ -131,6 +131,9 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      - Non-blocking Dispatcher (`/api/analytics/track`): Ingests macro events asynchronously using fire-and-forget client `fetch()` with zero UI thread blocking.
      - Superadmin Telemetry Hub (`/api/superadmin/metrics`): Aggregates and surfaces real-time counts and platform distribution cards directly on the Superadmin dashboard.
 
-
-
-
+24. Real-Time Edge Profile Verifier & Coder Identity Ingestion:
+   - Challenge: In Version 3, students link multiple competitive programming and developer profiles (GitHub, LeetCode, Codeforces). Relying on unverified text inputs leads to broken scraper jobs, 404s, and hallucinated stats. Conversely, slow synchronous lookups cause UI freezing on form submission.
+   - Solution: Built a real-time edge resolver and MongoDB identity schema.
+     - Fast Edge Verifier (`/api/user/profiles/verify`): Implemented debounced (400ms) URL/handle normalization that queries official public endpoints (GitHub REST API, LeetCode GraphQL `matchedUser`, and Codeforces `user.info`) in sub-500ms.
+     - Instant Visual Feedback (`ProfileLinkModal.tsx`): Displays verified badges (`🟢 VERIFIED`), real platform avatars, display names, and top stats (solved count, rating, public repos) instantly before submission.
+     - Coder Identity Model (`models/UserCoderProfile.ts`): Stores verified handles, profile URLs, avatars, and verification timestamps in MongoDB with bidirectional synchronization to Supabase `user_profiles`.

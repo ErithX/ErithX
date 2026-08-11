@@ -133,10 +133,41 @@ export default function FaqPage() {
             </div>
           </details>
 
+          {/*  Item 2.6 (Connecting Coding Profiles)  */}
+          <details className="faq-item group">
+            <summary className="flex items-center justify-between p-6 sm:p-8">
+              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How do I connect my LeetCode, GitHub, or Codeforces accounts?</h2>
+              <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+              </div>
+            </summary>
+            <div className="answer-content px-6 sm:px-8">
+              <p className="text-sm text-zinc-600 leading-relaxed">
+                Navigate to your <strong>Dashboard ➔ Settings ➔ Coding Profiles</strong>. Simply paste your profile URL or username for LeetCode, GitHub, or Codeforces. Our edge verification engine will automatically check and sync your profile with zero manual saving required.
+              </p>
+            </div>
+          </details>
+
+          {/*  Item 2.7 (Why Connect Profiles)  */}
+          <details className="faq-item group">
+            <summary className="flex items-center justify-between p-6 sm:p-8">
+              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Why should I connect my coding profiles?</h2>
+              <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+              </div>
+            </summary>
+            <div className="answer-content px-6 sm:px-8">
+              <p className="text-sm text-zinc-600 leading-relaxed">
+                Connecting your profiles powers your AI Progress Reviewer. It automatically monitors your contest rating deltas, problem-solving velocity, and GitHub project commits to deliver brutally honest weekly feedback without requiring manual progress logs or passwords.
+              </p>
+            </div>
+          </details>
+
           {/*  Item 3  */}
           <details className="faq-item group">
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What resources can I find here?</h2>
+
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Lucide.Plus className="w-4 h-4 text-zinc-600" />
               </div>

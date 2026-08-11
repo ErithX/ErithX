@@ -8,10 +8,10 @@ import DashboardNavbar from '@/components/dashboard/DashboardNavbar';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import UserProfileCard from '@/components/dashboard/UserProfileCard';
 import UpcomingContestsCard from '@/components/dashboard/UpcomingContestsCard';
+import ConnectedProfilesStatus from '@/components/dashboard/ConnectedProfilesStatus';
 
 // Components hidden for Phase 1
 // import AchievementSection from '@/components/dashboard/AchievementSection';
-// import ConnectedProfilesCard from '@/components/dashboard/ConnectedProfilesCard';
 // import WeeklyReviewCard from '@/components/dashboard/WeeklyReviewCard';
 // import SkillMapCard from '@/components/dashboard/SkillMapCard';
 // import RecentActivityCard from '@/components/dashboard/RecentActivityCard';
@@ -85,12 +85,14 @@ export default function DashboardPage() {
               {/* Profile + Contributions */}
               <UserProfileCard user={user} />
 
-              {/* Connected Profiles (Hidden for Phase 1) */}
-              {/* <ConnectedProfilesCard /> */}
+              {/* Connected Profiles Status Strip (v3) */}
+              <ConnectedProfilesStatus />
+
 
               {/* Weekly Review (Hidden for Phase 1) */}
               {/* <WeeklyReviewCard /> */}
             </div>
+
 
             {/* Right 1/3 */}
             <div className="space-y-6">
