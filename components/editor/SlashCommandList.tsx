@@ -109,7 +109,7 @@ export const getSuggestionItems = ({ query }: { query: string }): CommandItem[] 
                   editor.commands.command(({ tr }) => {
                     tr.doc.descendants((node, pos) => {
                       if (node.type.name === 'resizableImage' && node.attrs.isUploading === true) {
-                        tr.setNodeMarkup(pos, undefined, { src: data.url, isUploading: false });
+                        tr.setNodeMarkup(pos, undefined, { ...node.attrs, src: data.url, isUploading: false });
                       }
                     });
                     return true;
@@ -151,7 +151,7 @@ export const getSuggestionItems = ({ query }: { query: string }): CommandItem[] 
                   editor.commands.command(({ tr }) => {
                     tr.doc.descendants((node, pos) => {
                       if (node.type.name === 'pdfBlock' && node.attrs.isUploading === true) {
-                        tr.setNodeMarkup(pos, undefined, { src: data.url, isUploading: false, filename: file.name });
+                        tr.setNodeMarkup(pos, undefined, { ...node.attrs, src: data.url, isUploading: false, filename: file.name });
                       }
                     });
                     return true;

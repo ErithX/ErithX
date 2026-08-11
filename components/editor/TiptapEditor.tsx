@@ -108,6 +108,7 @@ export default function TiptapEditor({ content = '', onChange, readOnly = false 
                   tr.doc.descendants((node, pos) => {
                     if (node.type.name === nodeType.name && node.attrs.isUploading === true) {
                       tr.setNodeMarkup(pos, undefined, { 
+                        ...node.attrs,
                         src: data.url, 
                         isUploading: false,
                         ...(isPdf ? { filename: file.name } : {})
@@ -165,6 +166,7 @@ export default function TiptapEditor({ content = '', onChange, readOnly = false 
                   tr.doc.descendants((node, pos) => {
                     if (node.type.name === nodeType.name && node.attrs.isUploading === true) {
                       tr.setNodeMarkup(pos, undefined, { 
+                        ...node.attrs,
                         src: data.url, 
                         isUploading: false,
                         ...(isPdf ? { filename: file.name } : {})
@@ -231,7 +233,7 @@ export default function TiptapEditor({ content = '', onChange, readOnly = false 
               editor.commands.command(({ tr }) => {
                 tr.doc.descendants((node, pos) => {
                   if (node.type.name === 'resizableImage' && node.attrs.isUploading === true) {
-                    tr.setNodeMarkup(pos, undefined, { src: data.url, isUploading: false });
+                    tr.setNodeMarkup(pos, undefined, { ...node.attrs, src: data.url, isUploading: false });
                   }
                 });
                 return true;
@@ -269,7 +271,7 @@ export default function TiptapEditor({ content = '', onChange, readOnly = false 
               editor.commands.command(({ tr }) => {
                 tr.doc.descendants((node, pos) => {
                   if (node.type.name === 'pdfBlock' && node.attrs.isUploading === true) {
-                    tr.setNodeMarkup(pos, undefined, { src: data.url, isUploading: false, filename: file.name });
+                    tr.setNodeMarkup(pos, undefined, { ...node.attrs, src: data.url, isUploading: false, filename: file.name });
                   }
                 });
                 return true;
