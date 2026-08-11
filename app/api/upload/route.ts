@@ -9,9 +9,9 @@ export async function POST(req: NextRequest) {
     const supabaseClient = await createClient();
     const { data: { user } } = await supabaseClient.auth.getUser();
 
-    // if (!user) {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     const formData = await req.formData();
     const file = formData.get('file') as File;
