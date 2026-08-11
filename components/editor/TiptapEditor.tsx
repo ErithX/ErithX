@@ -221,17 +221,27 @@ export default function TiptapEditor({ content = '', onChange, readOnly = false 
           attrs: { isUploading: true }
         }).run();
         
-        setTimeout(() => {
-          const objectUrl = URL.createObjectURL(file);
-          editor.commands.command(({ tr }) => {
-            tr.doc.descendants((node, pos) => {
-              if (node.type.name === 'resizableImage' && node.attrs.isUploading === true) {
-                tr.setNodeMarkup(pos, undefined, { src: objectUrl, isUploading: false });
-              }
-            });
-            return true;
-          });
-        }, 2000);
+        const uploadFile = async () => {
+          const formData = new FormData();
+          formData.append('file', file);
+          try {
+            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (data.url) {
+              editor.commands.command(({ tr }) => {
+                tr.doc.descendants((node, pos) => {
+                  if (node.type.name === 'resizableImage' && node.attrs.isUploading === true) {
+                    tr.setNodeMarkup(pos, undefined, { src: data.url, isUploading: false });
+                  }
+                });
+                return true;
+              });
+            }
+          } catch (e) {
+            console.error("Upload failed", e);
+          }
+        };
+        uploadFile();
       }
     };
     input.click();
@@ -249,17 +259,27 @@ export default function TiptapEditor({ content = '', onChange, readOnly = false 
           attrs: { isUploading: true, filename: file.name }
         }).run();
         
-        setTimeout(() => {
-          const objectUrl = URL.createObjectURL(file);
-          editor.commands.command(({ tr }) => {
-            tr.doc.descendants((node, pos) => {
-              if (node.type.name === 'pdfBlock' && node.attrs.isUploading === true) {
-                tr.setNodeMarkup(pos, undefined, { src: objectUrl, isUploading: false, filename: file.name });
-              }
-            });
-            return true;
-          });
-        }, 2000);
+        const uploadPdf = async () => {
+          const formData = new FormData();
+          formData.append('file', file);
+          try {
+            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (data.url) {
+              editor.commands.command(({ tr }) => {
+                tr.doc.descendants((node, pos) => {
+                  if (node.type.name === 'pdfBlock' && node.attrs.isUploading === true) {
+                    tr.setNodeMarkup(pos, undefined, { src: data.url, isUploading: false, filename: file.name });
+                  }
+                });
+                return true;
+              });
+            }
+          } catch (e) {
+            console.error("Upload failed", e);
+          }
+        };
+        uploadPdf();
       }
     };
     input.click();
