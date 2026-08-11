@@ -255,10 +255,10 @@ export default function WritePage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowModal(false)} />
 
-          <div className="relative w-full max-w-md bg-[#18181b] border border-white/10 rounded-2xl shadow-2xl p-6">
+          <div className="relative w-full max-w-md bg-[#09090b] border border-zinc-800/80 rounded-2xl shadow-2xl p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-white">Final Review & Publish</h2>
-              <button onClick={() => setShowModal(false)} className="text-zinc-400 hover:text-white transition-colors">
+              <h2 className="text-lg font-semibold text-zinc-100">Final Review & Publish</h2>
+              <button onClick={() => setShowModal(false)} className="text-zinc-500 hover:text-white transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -266,8 +266,8 @@ export default function WritePage() {
             <form onSubmit={handleFinalSubmit} className="space-y-5">
               {/* Cover Image */}
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-2 uppercase tracking-wider">Cover Image</label>
-                <div className="relative w-full h-32 border-2 border-dashed border-white/10 rounded-xl flex flex-col items-center justify-center text-zinc-500 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all overflow-hidden">
+                <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">Cover Image</label>
+                <div className="relative w-full h-32 border border-dashed border-zinc-800 rounded-xl flex flex-col items-center justify-center text-zinc-600 bg-black/50 hover:border-emerald-500/50 hover:text-emerald-500/70 transition-all overflow-hidden cursor-pointer">
                   <input type="file" accept="image/*" onChange={handleCoverUpload} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
                   {isUploadingCover ? (
                     <span className="text-xs font-medium">Uploading...</span>
@@ -275,8 +275,8 @@ export default function WritePage() {
                     <img src={coverUrl} alt="Cover" className="absolute inset-0 w-full h-full object-cover opacity-60" />
                   ) : (
                     <>
-                      <UploadCloud className="w-6 h-6 mb-2" />
-                      <span className="text-xs font-medium">Click to upload cover image</span>
+                      <UploadCloud className="w-5 h-5 mb-2 opacity-50" />
+                      <span className="text-[11px] font-medium opacity-70">Click to upload cover image</span>
                     </>
                   )}
                 </div>
@@ -284,14 +284,14 @@ export default function WritePage() {
 
               {/* Category */}
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-2 uppercase tracking-wider">Category</label>
+                <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">Category</label>
                 <select
                   value={category}
                   onChange={(e) => {
                     setCategory(e.target.value);
                     setModalError(''); // Clear error on change
                   }}
-                  className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-zinc-300 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all appearance-none"
                 >
                   <option value="Blogs">Blogs</option>
                   <option value="Study Materials">Study Materials</option>
@@ -300,33 +300,32 @@ export default function WritePage() {
                 </select>
               </div>
 
-              {/* Target Companies (Only for Project Blueprints / Ideas) */}
+              {/* Target Companies */}
               {(category === 'Project Blueprints' || category === 'Project Ideas') && (
-
                 <div>
-                  <label className="block text-xs font-medium text-emerald-400 mb-2 uppercase tracking-wider">Target Companies</label>
+                  <label className="block text-[10px] font-semibold text-emerald-500/70 mb-2 uppercase tracking-widest">Target Companies</label>
                   <input
                     type="text"
                     value={targetCompanies}
                     onChange={(e) => setTargetCompanies(e.target.value)}
                     placeholder="e.g. Google, Stripe, Uber"
-                    className="w-full bg-black/40 border border-emerald-500/30 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                    className="w-full bg-black border border-emerald-500/20 rounded-lg px-4 py-2.5 text-sm text-zinc-300 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
                   />
-                  <p className="text-[10px] text-zinc-500 mt-1">Comma separated list of companies to display on the blueprint.</p>
+                  <p className="text-[10px] text-zinc-600 mt-1.5">Comma separated list of companies to display on the blueprint.</p>
                 </div>
               )}
 
-              {/* ADMIN OVERRIDE DROPDOWN (Growth Hack) */}
+              {/* ADMIN OVERRIDE DROPDOWN */}
               {user?.email === process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS && (
-                <div className="p-3 border border-emerald-500/30 bg-emerald-500/5 rounded-lg">
-                  <label className="block text-xs font-bold text-emerald-400 mb-2 uppercase tracking-wider flex items-center justify-between">
+                <div className="p-3.5 border border-emerald-500/20 bg-emerald-500/5 rounded-xl">
+                  <label className="block text-[10px] font-bold text-emerald-500/80 mb-2.5 uppercase tracking-widest flex items-center justify-between">
                     <span>Admin Override (Post As)</span>
-                    <span className="bg-emerald-500 text-black px-1.5 py-0.5 rounded text-[8px]">ADMIN ONLY</span>
+                    <span className="bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded text-[8px] tracking-widest">ADMIN ONLY</span>
                   </label>
                   <select
                     value={overrideAuthorId}
                     onChange={(e) => setOverrideAuthorId(e.target.value)}
-                    className="w-full bg-black/60 border border-emerald-500/30 rounded-lg px-3 py-2 text-sm text-emerald-300 focus:outline-none focus:border-emerald-500 transition-colors"
+                    className="w-full bg-black/60 border border-emerald-500/20 rounded-lg px-3 py-2 text-xs text-emerald-400/80 focus:outline-none focus:border-emerald-500/50 transition-all appearance-none"
                   >
                     <option value="">Myself (Real Account)</option>
                     <option value="official-dsa-quest-001">DSA Quest Official</option>
@@ -339,25 +338,27 @@ export default function WritePage() {
 
               {/* Tags */}
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-2 uppercase tracking-wider">Tags</label>
-                <TagsInput tags={tags} setTags={setTags} />
+                <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">Tags</label>
+                <div className="p-1 border border-zinc-800 bg-black rounded-lg focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/20 transition-all">
+                  <TagsInput tags={tags} setTags={setTags} />
+                </div>
               </div>
 
               {/* Error Message */}
               {modalError && (
-                <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm p-3 rounded-lg flex items-start gap-2">
+                <div className="bg-rose-500/5 border border-rose-500/20 text-rose-400 text-xs p-3 rounded-lg flex items-start gap-2">
                   <span className="font-bold">Error:</span>
                   <span>{modalError}</span>
                 </div>
               )}
 
               {/* Submit Actions */}
-              <div className="flex gap-3 pt-4 border-t border-white/10">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors">
+              <div className="flex gap-3 pt-6 mt-6 border-t border-zinc-800/80">
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors border border-zinc-800">
                   Cancel
                 </button>
-                <button type="submit" disabled={isPublishing} className="flex-1 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50">
-                  {isPublishing ? 'Submitting...' : 'Submit for Approval'}
+                <button type="submit" disabled={isPublishing} className="flex-1 px-4 py-2.5 bg-zinc-100 hover:bg-white text-black rounded-lg text-xs font-bold uppercase tracking-wider transition-colors disabled:opacity-50">
+                  {isPublishing ? 'Submitting...' : 'Submit Post'}
                 </button>
               </div>
             </form>
