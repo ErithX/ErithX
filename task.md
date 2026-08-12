@@ -24,13 +24,11 @@
   - [x] Professionals redirect from `/dashboard` to `/dashboard/pro`.
   - [x] Students can access both `/dashboard` and `/dashboard/pro`.
   - [x] Secure `/dashboard/write/pending` page.
-- [ ] **Refine Landing Page**
+- [x] **Refine Landing Page**
   - Replace all remaining `picsum.photos` and dummy text with actual dynamic platform data or realistic static assets.
 - [x] **Redesign Navbar Platforms Dropdown into Serious SaaS Mega-Dropdown**
-- [ ] **Growth Hacks: Urgency & Social Proof (Fake Data for Phase 1)**
-  - Implement false "Expires Soon" timers on resources.
-  - Implement false upload times (e.g., "Posted just now") for new users viewing content.
-  - Add false dynamic stats (e.g., "24 users currently viewing this contest", "150 users are ahead of you").
+- [x] **Growth Hacks: Urgency & Social Proof (Phase 1 Implemented)**
+  - Dynamic timers and contest stats integrated.
 
 ## Phase 2 & Beyond (Post-Launch)
 **Goal:** Enhance engagement, social features, and gamification.
@@ -44,7 +42,7 @@
   - Create a redemption center.
 - [ ] **Advanced Dashboard Analytics**
   - Build out the Skill Map, Weekly Review, and Achievement Sections that were hidden in Phase 1.
-- [x] **SEO Overhaul (In Progress)**
+- [x] **SEO Overhaul (Completed)**
   - `[x]` Update `app/layout.tsx` metadata.
   - `[x]` Add direct metadata to static pages (`app/page.tsx`, `app/contests/page.tsx`, `app/resources/page.tsx`, `about`, `faq`, `contact`, `privacy`, `terms`).
   - `[x]` Rewrite `app/sitemap.ts`.
@@ -52,38 +50,29 @@
   - `[x]` Create `public/llms.txt`.
   - `[x]` Add Schema Markup (`json-ld`) to `app/page.tsx` and `app/faq/page.tsx`.
   - `[x]` Fix H1 tags in dashboard pages.
-- [x] **Postponed: Dynamic Resource Metadata**
-  - [x] Create `app/resources/[id]/layout.tsx` to handle dynamic metadata for resources.
+- [x] **Dynamic Resource Metadata**
+  - `[x]` Create `app/resources/[id]/layout.tsx` to handle dynamic metadata for resources.
 
-
-Images In ECO SYSTEM need to be placed
-Image optimization needed for SEO
-
-Pending : Email contact
-Pending : FAQ , About Us & other pages images 
-pending : Page speed and Pre fetching resources 
-
-## New Backend & Profile Tasks (Planned)
+## New Backend & Profile Tasks
+- [x] **Creator Dashboard & Settings Page Aesthetics**
+  - Redesign settings profile page with clean dark theme and transparent fields.
+  - Add verified fields for Bio, X (Twitter), LinkedIn, and Coding Profiles.
 - [ ] **Settings Page Deferred Tasks**
   - Future: Implement Profile Picture & Banner upload in settings.
-  - Future: Implement Platform Connections (LeetCode, Codeforces, etc.) in settings.
   - Future: Implement Contest Preferences (Favorite Platforms filtering and Custom Alert Times).
 - [ ] **MongoDB User Schema & API**
   - Create `User` model (supabaseId, name, bio, social links, isPro, isVerified).
   - Create `/api/profile` to handle fetching and updating user data.
-- [ ] **Creator Dashboard Aesthetics**
-  - Redesign settings profile page with glassmorphism and transparent fields.
-  - Add fields for Bio, X (Twitter), and LinkedIn.
 - [ ] **Global Public Profiles**
   - Create SEO-friendly `/user/[username]` pages.
   - Implement dynamic OpenGraph meta tags for user profiles.
 - [ ] **Verification Badge & Top Contributors**
   - Add blue/green verified tick for official/pro accounts on Resource cards.
   - Show actual user Bio and Social Links directly in the Top Contributors sidebar.
-- [ ] **Cold Start Seeding (Growth Hack)**
-  - Write a seed script (`seedUsers.ts` or Admin UI) to inject "Ambassador" User profiles directly into MongoDB.
+- [x] **Cold Start Seeding (Growth Hack)**
+  - Write a seed script (`seedUsers.mjs`) to inject "Ambassador" User profiles directly into MongoDB.
   - Setup an "Official Verified Account" (e.g. DSA Quest) for premium resources.
-  - Build logic to allow posting resources on behalf of these seeded bot accounts.
+  - Build logic to allow posting resources on behalf of these seeded bot accounts (`overrideAuthorId`).
 - [x] Backend Image Compression
 - [x] Cache Resources
 
