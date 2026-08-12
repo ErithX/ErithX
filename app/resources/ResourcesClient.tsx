@@ -57,9 +57,9 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
               <span className="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
               <span className="text-xs font-medium text-emerald-400">2,000+ learners active now</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4 gradient-text">The Complete Software Engineering & Student Resource Hub</h1>
+            <h1 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4 gradient-text">The Complete Software Engineering Resource Vault</h1>
             <p className="text-sm text-zinc-400 leading-relaxed mb-8 max-w-lg">
-              Access our all-in-one tech education platform featuring curated BTech CSE semester notes, engineering PDF downloads, technical blogs, and tech career roadmaps. Curated by verified pros, built for students.
+              Access curated engineering blueprints, system architecture PDFs, algorithmic deep-dives, and 2026 tech career roadmaps. Curated by verified engineers, built for zero-fluff mastery.
             </p>
             <div className="flex items-center gap-4">
               <a href="#feed" className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">

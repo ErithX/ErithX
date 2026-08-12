@@ -174,7 +174,7 @@ export default function FaqPage() {
             </summary>
             <div className="answer-content px-6 sm:px-8">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                We provide university semester notes, career guidance materials, and production-ready project ideas to help you build a strong portfolio. All resources are curated by verified industry professionals and top students.
+                We provide curated engineering blueprints, system architecture PDFs, 2026 tech career roadmaps, and production-ready project guides to help you build real technical authority. All resources are curated by verified engineers and contributors.
               </p>
             </div>
           </details>

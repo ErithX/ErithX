@@ -30,7 +30,7 @@ export default function Footer() {
             <div className="space-y-2">
               <Link href="/contests" className="block text-xs text-zinc-400 hover:text-white transition-colors">Contest Board</Link>
               <Link href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">Modern Roadmaps</Link>
-              <Link href="/resources" className="block text-xs text-zinc-400 hover:text-white transition-colors">Semester Notes</Link>
+              <Link href="/resources" className="block text-xs text-zinc-400 hover:text-white transition-colors">Engineering Blueprints</Link>
               <Link href="#" className="block text-xs text-zinc-400 hover:text-white transition-colors">Project Monitor</Link>
             </div>
           </div>
