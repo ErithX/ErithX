@@ -5,6 +5,7 @@ export interface UserFilterConfig {
   is_pro: boolean; // Is the user a paid subscriber?
   admin_note?: string; // Optional note from Superadmin
   previous_recommendation?: string; // Last week's LLM advice to track compliance
+  roy_factor?: number; // Ignorance streak
 }
 
 // ----------------------------------------------------------------------
@@ -195,6 +196,7 @@ export async function generateAIContext(userConfig: UserFilterConfig) {
   const filteredJSON: any = {
     user_id: userConfig.id,
     plan_type: userConfig.is_pro ? "paid" : "free",
+    roy_factor: userConfig.roy_factor ?? 0,
     generated_at: new Date().toISOString(),
     summary: {},
     calculations: {}

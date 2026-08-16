@@ -172,7 +172,7 @@ Remaining Vital tasks on 25/07/2026
   - [x] Brutally honest senior engineer persona with dynamic tone variation and open loop assignments (`services/ai/prompts.ts`).
   - [x] Multi-tier provider fallback router (Llama 3.3 70B ⇄ Gemini 2.5 Flash ⇄ GLM/Nemotron) (`services/ai/reviewerRouter.ts`).
   - [x] AI Review database persistence layer, memory state tracking, and query service (`models/AIReview.ts`, `services/ai/reviewStorage.ts`).
-  - [ ] Context assembler cron endpoint connecting platform snapshots + previous review memory into LLM router (`/api/cron/generate-reviews`).
+  - [x] Context assembler cron endpoint connecting platform snapshots + previous review memory into LLM router (`app/api/cron/generate-reviews/route.ts`).
   - [ ] User review timeline card & Pro trend graph UI on `/dashboard`.
 - [ ] **Bonus Milestone: GitHub Weekly Tracking**
   - [ ] Update `models/PlatformStats.ts` for GithubStats recent events.

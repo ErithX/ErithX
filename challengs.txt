@@ -144,3 +144,10 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      - Schema Architecture (`models/AIReview.ts`): Stores `generated_text`, `targets_set`, `previous_targets`, `model_used`, `prompt_tokens_used`, `roy_factor`, `stats_snapshot`, `admin_note`, `week_start_date`, and email delivery flags with compound indexing on `{ user_id: 1, created_at: -1 }`.
      - Persistence Service (`services/ai/reviewStorage.ts`): Exposes atomic `saveAIReview()` which computes clamped non-negative `roy_factor` updates, `getLatestUserReview()` for zero-lag memory retrieval in next-cycle prompt construction, `getUserReviewHistory()` for dashboard progress timelines, and `markReviewEmailSent()` for delivery idempotency.
 
+26. End-to-End Automated Review Cron Orchestration Pipeline:
+   - Challenge: Unifying the four independent Version 3 subsystems (profile verification, raw platform scrapers, delta rules engine, and multi-tier LLM inference) into a single resilient cron worker without incurring serverless function timeouts, cascading provider rate-limits, or database deadlocks.
+   - Solution: Built `/api/cron/generate-reviews` pipeline.
+     - Sequential Batch Execution: Fetches active verified coder profiles and processes users sequentially with a 1.2s inter-user pacing throttle to respect LLM RPM boundaries.
+     - Closed-Loop Memory Assembly: Queries `getLatestUserReview()` for previous target evaluation, computes weekly $\Delta$ across LeetCode/Codeforces/GitHub using `generateAIContext()`, feeds the payload into `generateWeeklyReview()`, and writes immutable weekly records with updated `roy_factor` ignorance streaks via `saveAIReview()`.
+
+
