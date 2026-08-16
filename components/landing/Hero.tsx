@@ -17,9 +17,9 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg pt-[56px] pb-8">
       {/* Background effects */}
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at top left, rgba(6,78,59,0.3), #09090b 60%)' }}></div>
-      <div className="absolute top-0 right-1/4 w-[300px] h-[300px] md:w-[700px] md:h-[700px] rounded-full opacity-[0.08]" style={{ background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(100px)' }}></div>
-      <div className="absolute bottom-0 left-1/4 w-[250px] h-[250px] md:w-[500px] md:h-[500px] rounded-full opacity-[0.05]" style={{ background: 'radial-gradient(circle, #06b6d4, transparent 70%)', filter: 'blur(80px)' }}></div>
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at top left, rgba(6,78,59,0.1), #09090b 70%)' }}></div>
+      <div className="absolute top-0 right-1/4 w-[300px] h-[300px] md:w-[700px] md:h-[700px] rounded-full opacity-[0.04]" style={{ background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(100px)' }}></div>
+      <div className="absolute bottom-0 left-1/4 w-[250px] h-[250px] md:w-[500px] md:h-[500px] rounded-full opacity-[0.03]" style={{ background: 'radial-gradient(circle, #3f3f46, transparent 70%)', filter: 'blur(80px)' }}></div>
 
       {/* ========================================= */}
       {/* DESKTOP FULL-HEIGHT ORGANIC IMAGE (RIGHT) */}
@@ -36,22 +36,8 @@ export default function Hero() {
           priority
         />
         {/* Color overlay blending */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/40 via-transparent to-cyan-950/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 via-transparent to-transparent"></div>
-
-        {/* Image Label */}
-        {/* <div className="absolute bottom-10 left-10 right-10">
-          <div className="glass rounded-xl p-4 flex items-center gap-3 backdrop-blur-md">
-            <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-              <LayoutDashboard className="w-5 h-5 text-emerald-400" />
-            </div>
-            <div className="flex-1">
-              <div className="text-sm font-medium text-white">Unified Dashboard</div>
-              <div className="text-[10px] text-zinc-300">Contests, notes, projects — one view</div>
-            </div>
-            <svg className="w-4 h-4 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
-          </div>
-        </div> */}
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/80 via-transparent to-zinc-950/60"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/40 to-transparent"></div>
       </div>
 
 
