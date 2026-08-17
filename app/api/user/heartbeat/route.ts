@@ -18,10 +18,26 @@ export async function POST() {
 
     const now = new Date().toISOString();
 
-    // Update last_seen in user_profiles
+    // Fetch current profile to check warning status
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('warning_email_sent, account_status')
+      .eq('id', user.id)
+      .single();
+
+    const updates: any = { 
+      last_seen: now, 
+      last_dashboard_visit: now 
+    };
+
+    if (profile && profile.account_status === 'active' && profile.warning_email_sent) {
+      updates.warning_email_sent = false;
+    }
+
+    // Update in user_profiles
     const { error: updateError } = await supabase
       .from('user_profiles')
-      .update({ last_seen: now })
+      .update(updates)
       .eq('id', user.id);
 
     if (updateError) {

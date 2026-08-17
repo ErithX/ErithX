@@ -1,556 +1,284 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { 
-  Bot, 
-  Calendar, 
-  ChevronRight, 
-  ArrowLeft, 
-  CheckCircle2, 
-  AlertTriangle, 
-  ShieldAlert, 
-  Target, 
-  Sparkles, 
-  Clock, 
-  Zap, 
-  History,
-  CheckSquare,
-  Square,
-  Activity,
-  Layers,
-  ChevronLeft
-} from 'lucide-react';
-import DashboardNavbar from '@/components/dashboard/DashboardNavbar';
-import { useAuthStore } from '@/store/authStore';
-import { createClient } from '@/app/lib/supabase/client';
+import React, { useState } from 'react';
+import { Search, MoreHorizontal, ShieldAlert, Lock, Sparkles, X } from 'lucide-react';
 
-interface ReviewItem {
-  _id: string;
-  user_id: string;
-  generated_text: string;
-  targets_set: string;
-  previous_targets?: string;
-  model_used: string;
-  roy_factor: number;
-  stats_snapshot?: any;
-  week_start_date?: string;
-  created_at: string;
-}
+const DesktopTimeline = () => (
+  <nav className="timeline-nav hidden xl:flex flex-col items-center justify-between">
+    <div className="timeline-line"></div>
+    <button className="text-zinc-500 hover:text-white transition-colors mb-4 z-10 bg-[#09090b] p-1 rounded-full" title="Search Custom Date">
+      <Search className="w-4 h-4" />
+    </button>
+    <div className="flex flex-col gap-6 items-center bg-[#09090b] py-4 px-1 rounded-full">
+      <div className="timeline-dot active"><div className="timeline-tooltip">Week 24 (Current)</div></div>
+      <div className="timeline-dot"><div className="timeline-tooltip">Week 23: +12% Growth</div></div>
+      <div className="timeline-dot"><div className="timeline-tooltip">Week 22: Graphs Mastered</div></div>
+      <div className="timeline-dot missed"><div className="timeline-tooltip">Week 21: Missed (0 Problems)</div></div>
+      <div class="timeline-dot"><div className="timeline-tooltip">Week 20: Started Strong</div></div>
+    </div>
+    <button className="text-zinc-600 hover:text-zinc-400 transition-colors mt-4 z-10 bg-[#09090b] p-1 rounded-full" title="Report Settings">
+      <MoreHorizontal className="w-4 h-4" />
+    </button>
+  </nav>
+);
 
-function ReportsContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const { user, loading: authLoading } = useAuthStore();
-  const supabase = createClient();
+const DesktopWarning = () => {
+  const [isVisible, setIsVisible] = useState(true);
 
-  const [reviewsList, setReviewsList] = useState<ReviewItem[]>([]);
-  const [selectedReview, setSelectedReview] = useState<ReviewItem | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [checkedTargets, setCheckedTargets] = useState<Record<string, boolean>>({});
-
-  const targetDate = searchParams.get('date');
-  const targetId = searchParams.get('id');
-
-  // 1. Fetch all reports for the user
-  useEffect(() => {
-    async function loadReports() {
-      if (!user) return;
-      try {
-        setLoading(true);
-        const res = await fetch('/api/user/reviews');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success && data.reviews) {
-            setReviewsList(data.reviews);
-
-            // Select matching report or fallback to latest
-            if (targetId) {
-              const matched = data.reviews.find((r: ReviewItem) => r._id === targetId);
-              setSelectedReview(matched || data.reviews[0] || null);
-            } else if (targetDate) {
-              const matched = data.reviews.find((r: ReviewItem) => {
-                const d = (r.week_start_date || r.created_at).slice(0, 10);
-                return d === targetDate;
-              });
-              setSelectedReview(matched || data.reviews[0] || null);
-            } else {
-              setSelectedReview(data.reviews[0] || null);
-            }
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load reports:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (!authLoading) {
-      loadReports();
-    }
-  }, [user, authLoading, targetId, targetDate]);
-
-  const selectReport = (r: ReviewItem) => {
-    setSelectedReview(r);
-    const dateStr = (r.week_start_date || r.created_at).slice(0, 10);
-    router.push(`/dashboard/reports?date=${dateStr}`, { scroll: false });
-    setIsSidebarOpen(false);
-  };
-
-  const toggleTargetCheck = (targetKey: string) => {
-    setCheckedTargets(prev => ({
-      ...prev,
-      [targetKey]: !prev[targetKey]
-    }));
-  };
-
-  // Mentor Mood Visual Configuration
-  const getMentorMood = (royFactor: number) => {
-    if (royFactor === 0) {
-      return {
-        title: "Focused & Demanding",
-        sub: "Zero fluff. Expecting continuous hard solves.",
-        themeColor: "emerald",
-        badge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-        avatarBg: "from-emerald-950/60 to-zinc-900",
-        borderAccent: "border-emerald-500/30",
-        icon: CheckCircle2,
-        moodLevel: "Level 0: On Track",
-        quote: "Keep your solves high quality. No vanity numbers."
-      };
-    }
-    if (royFactor === 1) {
-      return {
-        title: "Stern Warning Active",
-        sub: "Previous weekly targets were partially ignored.",
-        themeColor: "amber",
-        badge: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-        avatarBg: "from-amber-950/60 to-zinc-900",
-        borderAccent: "border-amber-500/30",
-        icon: AlertTriangle,
-        moodLevel: "Level 1: Warning",
-        quote: "You fell short of last week's goals. Tighten up your discipline."
-      };
-    }
-    return {
-      title: "Critical Escalation",
-      sub: "Multiple consecutive weeks of ignored targets.",
-      themeColor: "red",
-      badge: "bg-red-500/10 text-red-400 border-red-500/20",
-      avatarBg: "from-red-950/60 to-zinc-900",
-      borderAccent: "border-red-500/30",
-      icon: ShieldAlert,
-      moodLevel: "Level 2+: Slacking Alert",
-      quote: "Stop wasting time. Face the hard problems head-on."
-    };
-  };
-
-  const mood = getMentorMood(selectedReview?.roy_factor ?? 0);
-  const MoodIcon = mood.icon;
-
-  const formattedDate = selectedReview?.created_at
-    ? new Date(selectedReview.created_at).toLocaleDateString('en-US', {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-      })
-    : '';
+  if (!isVisible) return null;
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200">
-      {/* Navbar */}
-      <DashboardNavbar 
-        user={user} 
-        loading={authLoading} 
-        isDropdownOpen={false} 
-        setIsDropdownOpen={() => {}} 
-        dropdownRef={{ current: null }} 
-        handleLogout={async () => {
-          await supabase.auth.signOut();
-          window.location.href = '/';
-        }} 
-      />
-
-      {/* Main Container */}
-      <main className="pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex-1 relative">
-        
-        {/* Top Breadcrumb Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-6 border-b border-white/5">
-          <div className="flex items-center gap-3">
-            <Link 
-              href="/dashboard"
-              className="w-9 h-9 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
-              title="Back to Dashboard"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Link>
-            <div>
-              <div className="flex items-center gap-2 text-xs text-zinc-500">
-                <Link href="/dashboard" className="hover:text-zinc-300 transition-colors">Dashboard</Link>
-                <span>/</span>
-                <span className="text-zinc-300">Weekly Reports</span>
-              </div>
-              <h1 className="text-xl font-bold text-white tracking-tight mt-0.5">
-                AI Mentor Review & Growth Log
-              </h1>
-            </div>
+    <aside className="right-warning hidden xl:block">
+      <div className="glass border-red-500/20 bg-red-500/5 rounded-xl p-5 flex flex-col gap-3 relative group transition-all">
+        <button 
+          onClick={() => setIsVisible(false)}
+          className="absolute top-3 right-3 text-red-400/50 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+        <div className="flex items-center gap-3 pr-4">
+          <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center flex-shrink-0">
+            <ShieldAlert className="w-4 h-4 text-red-400" />
           </div>
-
-          {/* Right Action / Toggle History */}
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/10 text-xs font-medium text-zinc-300 hover:text-white transition-all shadow-sm"
-          >
-            <History className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Past Reports ({reviewsList.length})</span>
-            <ChevronRight className={`w-3.5 h-3.5 text-zinc-500 transition-transform ${isSidebarOpen ? 'rotate-90' : ''}`} />
-          </button>
+          <h4 className="text-xs font-medium text-red-300">Review Privilege At Risk</h4>
         </div>
+        <p className="text-[11px] text-red-400/70 leading-relaxed">
+          System detected brute-force submissions. Continued deviation will result in suspension of AI Review privileges for Week 25.
+        </p>
+      </div>
+    </aside>
+  );
+};
 
-        {/* Loading State */}
-        {loading ? (
-          <div className="py-24 text-center space-y-3">
-            <div className="w-10 h-10 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-xs text-zinc-400 font-mono">Loading weekly reports archive...</p>
-          </div>
-        ) : !selectedReview ? (
-          /* Empty State */
-          <div className="py-20 max-w-xl mx-auto text-center space-y-4 p-8 rounded-2xl bg-white/[0.02] border border-white/10">
-            <Bot className="w-12 h-12 text-zinc-600 mx-auto" />
-            <h2 className="text-base font-semibold text-white">No Reports Generated Yet</h2>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Once you connect your LeetCode, GitHub, or Codeforces accounts and the weekly snapshot runs, your Senior Engineer AI mentor will generate brutally honest, personalized feedback and assigned targets here.
-            </p>
-            <div className="pt-2">
-              <Link 
-                href="/dashboard"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 text-zinc-950 text-xs font-semibold hover:bg-emerald-400 transition-colors"
-              >
-                Connect Profiles on Dashboard
-              </Link>
-            </div>
-          </div>
-        ) : (
-          /* Main Two-Column Reading Layout */
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            {/* LEFT COLUMN: Report Reader (Satisfying Typography) (Col 8) */}
-            <div className="lg:col-span-8 space-y-8">
-              
-              {/* Report Header Card */}
-              <div className="p-6 rounded-2xl bg-gradient-to-b from-white/[0.04] to-transparent border border-white/10">
-                <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                  <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-                    <Calendar className="w-4 h-4 text-emerald-400" />
-                    <span>{formattedDate}</span>
-                  </div>
+const MobileTimeline = () => (
+  <div className="xl:hidden mb-8">
+    <div className="flex justify-between items-center mb-4">
+      <span className="text-[10px] uppercase tracking-widest text-zinc-500">History</span>
+      <button className="text-zinc-500 hover:text-white transition-colors p-1 rounded-full border border-white/5">
+        <Search className="w-3.5 h-3.5" />
+      </button>
+    </div>
+    <div className="mobile-timeline">
+      <div className="mobile-dot active"></div>
+      <div className="mobile-dot"></div>
+      <div className="mobile-dot"></div>
+      <div className="mobile-dot missed"></div>
+      <div className="mobile-dot"></div>
+      <div className="mobile-dot"></div>
+      <div className="mobile-dot"></div>
+    </div>
+  </div>
+);
 
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium bg-zinc-800 text-zinc-300 border border-white/10">
-                      Model: {selectedReview.model_used || 'llama-3.3-70b'}
-                    </span>
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-medium border flex items-center gap-1.5 ${mood.badge}`}>
-                      <MoodIcon className="w-3 h-3" />
-                      <span>{mood.moodLevel}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight leading-snug">
-                  Weekly Engineering Review
-                </h2>
-                <p className="text-xs text-zinc-400 mt-1">
-                  Unfiltered performance analysis, comfort-zone detection, and skill progression targets.
-                </p>
-              </div>
-
-              {/* READABLE REVIEW BODY (Comfortable typography, high readability) */}
-              <article className="p-8 sm:p-10 rounded-2xl bg-zinc-900/50 border border-white/10 shadow-2xl relative">
-                {/* Visual accent bar */}
-                <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
-
-                <div className="prose prose-invert max-w-none">
-                  {/* Formatted paragraphs with satisfying spacing */}
-                  <div className="text-[15px] sm:text-[16px] text-zinc-200 leading-[1.85] font-normal tracking-wide space-y-6">
-                    {selectedReview.generated_text.split('\n\n').map((paragraph, idx) => (
-                      <p key={idx} className="first:text-zinc-100 first:font-medium">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              </article>
-
-              {/* ACTIVE TARGETS CHECKLIST */}
-              {selectedReview.targets_set && (
-                <div className="p-6 rounded-2xl bg-emerald-500/[0.03] border border-emerald-500/20 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <Target className="w-5 h-5 text-emerald-400" />
-                      <h3 className="text-sm font-bold text-white tracking-wide uppercase">
-                        Mentor Assigned Targets For This Week
-                      </h3>
-                    </div>
-                    <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                      Verified Next Cycle
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-zinc-400">
-                    Your mentor will explicitly check whether you completed these specific goals in next week's review.
-                  </p>
-
-                  <div className="space-y-2.5 pt-1">
-                    {/* Interactive Target Item */}
-                    <div 
-                      onClick={() => toggleTargetCheck('target-1')}
-                      className="p-3.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] border border-white/10 flex items-start gap-3 cursor-pointer transition-colors"
-                    >
-                      {checkedTargets['target-1'] ? (
-                        <CheckSquare className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                      ) : (
-                        <Square className="w-4 h-4 text-zinc-500 mt-0.5 flex-shrink-0" />
-                      )}
-                      <div className="text-xs leading-relaxed text-zinc-200">
-                        <span className="font-semibold text-emerald-300">Goal: </span>
-                        <span>{selectedReview.targets_set}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Previous Targets Evaluation */}
-              {selectedReview.previous_targets && (
-                <div className="p-5 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
-                  <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500">
-                    Prior Week Target Evaluated
-                  </div>
-                  <div className="text-xs text-zinc-300">
-                    "{selectedReview.previous_targets}"
-                  </div>
-                </div>
-              )}
-
-            </div>
-
-            {/* RIGHT COLUMN: Mentor Status, Mood Artwork & Meta (Col 4) */}
-            <div className="lg:col-span-4 space-y-6">
-
-              {/* MENTOR MOOD ARTWORK CARD */}
-              <div className={`p-6 rounded-2xl bg-gradient-to-b ${mood.avatarBg} border ${mood.borderAccent} shadow-xl relative overflow-hidden`}>
-                
-                {/* Glow */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl pointer-events-none" />
-
-                <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400 mb-3 flex items-center gap-1.5">
-                  <Bot className="w-3.5 h-3.5 text-zinc-300" />
-                  <span>Mentor Persona Status</span>
-                </div>
-
-                {/* Mood Avatar & Title */}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-zinc-900/80 border border-white/10 flex items-center justify-center text-xl shadow-inner">
-                      {selectedReview.roy_factor === 0 ? '🎯' : selectedReview.roy_factor === 1 ? '⚠️' : '⚡'}
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-white tracking-tight">
-                        {mood.title}
-                      </h4>
-                      <div className="text-[11px] text-zinc-400">
-                        {mood.moodLevel}
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-zinc-300 leading-relaxed italic pt-2 border-t border-white/10">
-                    "{mood.quote}"
-                  </p>
-                  <p className="text-[11px] text-zinc-500">
-                    {mood.sub}
-                  </p>
-                </div>
-              </div>
-
-              {/* QUICK SNAPSHOT METRICS OF THIS REPORT */}
-              {selectedReview.stats_snapshot && (
-                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
-                  <div className="text-xs font-semibold text-zinc-300 flex items-center gap-2">
-                    <Activity className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Analyzed Metrics Snapshot</span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    {selectedReview.stats_snapshot.leetcode && (
-                      <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div className="text-[10px] text-zinc-500">LeetCode Δ Solved</div>
-                        <div className="text-sm font-bold mono text-emerald-400 mt-0.5">
-                          +{selectedReview.stats_snapshot.leetcode.delta_solved_this_week ?? selectedReview.stats_snapshot.leetcode.total_solved}
-                        </div>
-                      </div>
-                    )}
-                    {selectedReview.stats_snapshot.leetcode?.current_rating && (
-                      <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div className="text-[10px] text-zinc-500">LC Contest Rating</div>
-                        <div className="text-sm font-bold mono text-cyan-400 mt-0.5">
-                          {selectedReview.stats_snapshot.leetcode.current_rating}
-                        </div>
-                      </div>
-                    )}
-                    {selectedReview.stats_snapshot.github && (
-                      <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div className="text-[10px] text-zinc-500">GitHub Repos</div>
-                        <div className="text-sm font-bold mono text-zinc-200 mt-0.5">
-                          {selectedReview.stats_snapshot.github.public_repos || 0}
-                        </div>
-                      </div>
-                    )}
-                    {selectedReview.stats_snapshot.codeforces && (
-                      <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div className="text-[10px] text-zinc-500">Codeforces Rating</div>
-                        <div className="text-sm font-bold mono text-purple-400 mt-0.5">
-                          {selectedReview.stats_snapshot.codeforces.current_rating || selectedReview.stats_snapshot.codeforces.rating || 'Unrated'}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* TIMELINE QUICK SELECTOR IN SIDEBAR */}
-              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
-                <div className="flex items-center justify-between text-xs text-zinc-300 font-semibold">
-                  <div className="flex items-center gap-2">
-                    <Layers className="w-3.5 h-3.5 text-zinc-400" />
-                    <span>Report Timeline</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-zinc-500">{reviewsList.length} total</span>
-                </div>
-
-                <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
-                  {reviewsList.map((r, idx) => {
-                    const isSelected = r._id === selectedReview._id;
-                    const dateFormatted = new Date(r.created_at).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    });
-
-                    return (
-                      <button
-                        key={r._id}
-                        onClick={() => selectReport(r)}
-                        className={`w-full text-left p-2.5 rounded-xl text-xs flex items-center justify-between transition-all ${
-                          isSelected 
-                            ? 'bg-emerald-500/15 border border-emerald-500/30 text-white font-medium' 
-                            : 'bg-white/[0.01] hover:bg-white/[0.05] border border-transparent text-zinc-400 hover:text-zinc-200'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className={`w-1.5 h-1.5 rounded-full ${r.roy_factor === 0 ? 'bg-emerald-400' : r.roy_factor === 1 ? 'bg-amber-400' : 'bg-red-400'}`} />
-                          <span>{dateFormatted}</span>
-                        </div>
-                        {isSelected && <span className="text-[10px] font-mono text-emerald-400">Active</span>}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        )}
-
-      </main>
-
-      {/* SLIDE-OVER DRAWER FOR PAST REVIEWS */}
-      {isSidebarOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end">
-          {/* Backdrop */}
-          <div 
-            onClick={() => setIsSidebarOpen(false)}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity" 
-          />
-
-          {/* Drawer Content */}
-          <div className="relative w-full max-w-md bg-zinc-950 border-l border-white/10 h-full p-6 overflow-y-auto shadow-2xl flex flex-col justify-between">
-            <div className="space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                <div className="flex items-center gap-2.5">
-                  <History className="w-5 h-5 text-emerald-400" />
-                  <h3 className="text-base font-bold text-white">Historical Reviews Archive</h3>
-                </div>
-                <button 
-                  onClick={() => setIsSidebarOpen(false)}
-                  className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className="space-y-2.5">
-                {reviewsList.map((r) => {
-                  const isSelected = r._id === selectedReview?._id;
-                  const dateStr = new Date(r.created_at).toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  });
-
-                  return (
-                    <div
-                      key={r._id}
-                      onClick={() => selectReport(r)}
-                      className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                        isSelected 
-                          ? 'bg-emerald-500/10 border-emerald-500/30 text-white' 
-                          : 'bg-white/[0.02] hover:bg-white/[0.05] border-white/5 text-zinc-300'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between text-xs mb-1.5">
-                        <span className="font-semibold text-white">{dateStr}</span>
-                        <span className={`text-[10px] px-2 py-0.5 rounded-full border ${
-                          r.roy_factor === 0 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                          r.roy_factor === 1 ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                          'bg-red-500/10 text-red-400 border-red-500/20'
-                        }`}>
-                          Level {r.roy_factor}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-zinc-400 line-clamp-2 leading-relaxed">
-                        "{r.generated_text}"
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="pt-6 border-t border-white/10 text-center text-xs text-zinc-500">
-              Pro members have permanent unlimited review archives.
-            </div>
-          </div>
+const ReportHeader = () => (
+  <header className="border-b border-white/5 pb-10 mb-12">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-10">
+      <div>
+        <div className="text-xs text-zinc-500 mb-2 tracking-wide">Week 24 Report</div>
+        <h1 className="text-3xl md:text-4xl font-medium tracking-tight text-white">Momentum & Mastery</h1>
+      </div>
+      <div className="flex flex-col items-start md:items-end">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 mb-1">Global Percentile</div>
+        <div className="flex items-baseline gap-1">
+          <span className="text-3xl md:text-5xl font-light bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Top 3</span>
+          <span className="text-xl md:text-2xl font-light text-zinc-400">%</span>
         </div>
-      )}
+        <div className="text-[10px] text-zinc-600 mt-1">Out of 48,210 active peers</div>
+      </div>
+    </div>
+    <div>
+      <div className="flex justify-between items-center mb-3">
+        <span className="text-[10px] uppercase tracking-widest text-zinc-500">8-Week Consistency</span>
+        <span className="text-[10px] text-zinc-400 font-medium">6 weeks active</span>
+      </div>
+      <div className="grid grid-cols-8 gap-1.5 md:gap-2">
+        <div className="momentum-seg active"></div>
+        <div className="momentum-seg active"></div>
+        <div className="momentum-seg"></div>
+        <div className="momentum-seg active"></div>
+        <div class="momentum-seg active"></div>
+        <div className="momentum-seg active"></div>
+        <div className="momentum-seg active"></div>
+        <div className="momentum-seg active"></div>
+      </div>
+    </div>
+  </header>
+);
+
+const MobileWarning = () => {
+  const [isVisible, setIsVisible] = useState(true);
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="xl:hidden mb-12">
+      <div className="glass border-red-500/20 bg-red-500/5 rounded-xl p-4 flex items-start gap-3 relative">
+        <button 
+          onClick={() => setIsVisible(false)}
+          className="absolute top-2 right-2 text-red-400/50 hover:text-red-400 transition-opacity p-1"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+        <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+          <ShieldAlert className="w-4 h-4 text-red-400" />
+        </div>
+        <div className="pr-4">
+          <h4 className="text-xs font-medium text-red-300 mb-1">Review Privilege At Risk</h4>
+          <p className="text-[11px] text-red-400/70 leading-relaxed">
+            System detected brute-force submissions. Continued deviation will result in suspension of AI Review privileges.
+          </p>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
-export default function ReportsPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-[#09090b] flex items-center justify-center text-zinc-500 text-xs font-mono">
-        Loading Reports Sanctuary...
+const ReportBody = () => (
+  <article className="reading-text mb-16">
+    <p>
+      This week marked a distinct shift in your approach. Instead of defaulting to brute-force solutions, you began pausing to identify underlying patterns before writing a single line of code. This hesitation cost you time in the short term, but it is the exact friction required to transition from a pattern-matcher to a problem-solver. Your acceptance rate on medium-difficulty graph problems improved by 18%.
+    </p>
+    <p>
+      However, friction remains in your execution of Dynamic Programming. You correctly identified the overlapping subproblems in the "Minimum Path Sum" grid, but your recurrence relation attempt failed to account for negative edge cases. This is a common trap: optimizing for the happy path while ignoring the boundaries. The goal isn't to write the optimal solution immediately, but to write the naive recursive solution first, prove its correctness, and only then apply memoization.
+    </p>
+    <p>
+      Your debugging syntax improved significantly. You spent an average of 14 minutes debugging failed submissions this week, down from 32 minutes last week. You stopped relying on print statements and began using the step-through debugger to inspect state transitions. This is a massive leverage point. Moving forward, this efficiency will compound, allowing you to attempt one extra problem per session without extending your screen time.
+    </p>
+    <p>
+      You are currently operating in the top 3% of the platform. But percentiles are a lagging indicator. The leading indicator is the quality of your thought process, which is becoming noticeably more structured and deliberate. Keep the friction. It is working.
+    </p>
+  </article>
+);
+
+const NextStepsPremium = () => (
+  <section className="border-t border-white/5 pt-10">
+    <div className="text-[10px] uppercase tracking-[0.2em] text-emerald-400 mb-6">Your Next Move</div>
+    <div className="glass rounded-xl p-6 md:p-8 relative overflow-hidden transition-all min-h-[220px]">
+      <div className="blur-premium">
+        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
+          <h3 className="text-lg font-medium text-white">Focus Area: DP State Transitions</h3>
+          <span className="text-[10px] font-mono px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 w-fit">Target: 3 Problems</span>
+        </div>
+        <p className="text-sm text-zinc-400 leading-relaxed mb-8 max-w-xl">
+          Stop trying to write the optimized solution first. For the next three DP problems, write the brute-force recursive tree on paper, take a photo, and attach it to your submission notes. Only then proceed to code the top-down approach.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-white text-zinc-900 text-xs font-semibold hover:bg-zinc-200 transition-all">
+            Start Target Practice
+          </button>
+        </div>
       </div>
-    }>
-      <ReportsContent />
-    </Suspense>
+      <div className="absolute inset-0 premium-overlay flex flex-col items-center justify-center text-center p-8 z-10">
+        <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
+          <Lock className="w-5 h-5 text-zinc-400" />
+        </div>
+        <h4 className="text-base font-medium text-white mb-2">Unlock Your Optimized Path</h4>
+        <p className="text-xs text-zinc-500 max-w-xs mb-5">
+          Upgrade to Premium to reveal AI-curated next steps, custom problem sets, and targeted roadmaps based on this report.
+        </p>
+        <button className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-zinc-900 text-xs font-bold hover:opacity-90 transition-all">
+          <Sparkles className="w-3.5 h-3.5" />
+          Unlock Premium
+        </button>
+      </div>
+    </div>
+  </section>
+);
+
+export default function ReviewPage() {
+  return (
+    <div className="min-h-screen bg-[#09090b] text-white selection:bg-zinc-800 selection:text-white font-sans grid-bg relative overflow-x-hidden">
+      <style dangerouslySetInnerHTML={{__html: `
+        .aurora-bg {
+          position: fixed; top: -10%; left: 20%; width: 600px; height: 600px;
+          background: radial-gradient(circle, rgba(16,185,129,0.15), transparent 70%);
+          filter: blur(80px); z-index: 0; pointer-events: none;
+        }
+        .aurora-bg-2 {
+          position: fixed; bottom: -10%; right: -10%; width: 500px; height: 500px;
+          background: radial-gradient(circle, rgba(34,211,238,0.12), transparent 70%);
+          filter: blur(80px); z-index: 0; pointer-events: none;
+        }
+        .glass { 
+          background: rgba(9,9,11,0.6); backdrop-filter: blur(16px); 
+          -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); 
+        }
+        .glass:hover { background: rgba(9,9,11,0.7); }
+        .grid-bg { 
+          background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); 
+          background-size: 32px 32px; z-index: 0; position: relative;
+        }
+        .timeline-nav {
+          position: fixed; left: 80px; top: 50%; transform: translateY(-50%);
+          height: 60vh; z-index: 50;
+        }
+        .timeline-line {
+          position: absolute; top: 0; bottom: 0; left: 50%;
+          width: 1px; background: rgba(255,255,255,0.1);
+          transform: translateX(-50%); z-index: -1;
+        }
+        .timeline-dot {
+          width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2);
+          border: 2px solid #09090b; cursor: pointer; transition: all 0.2s ease; position: relative;
+        }
+        .timeline-dot:hover { background: #34d399; transform: scale(1.4); box-shadow: 0 0 12px rgba(16,185,129,0.6); }
+        .timeline-dot.active { background: #10b981; transform: scale(1.6); box-shadow: 0 0 16px rgba(16,185,129,0.8); }
+        .timeline-dot.missed { background: rgba(239, 68, 68, 0.4); border-color: rgba(239, 68, 68, 0.2); }
+        .timeline-tooltip {
+          position: absolute; left: 24px; top: 50%; transform: translateY(-50%);
+          background: #18181b; border: 1px solid rgba(255,255,255,0.1);
+          padding: 6px 12px; border-radius: 6px; font-size: 10px;
+          white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+        }
+        .timeline-dot:hover .timeline-tooltip { opacity: 1; }
+        .mobile-timeline {
+          display: flex; align-items: center; gap: 16px; overflow-x: auto;
+          padding-bottom: 12px; scrollbar-width: none;
+        }
+        .mobile-timeline::-webkit-scrollbar { display: none; }
+        .mobile-dot {
+          width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2);
+          border: 2px solid #09090b; flex-shrink: 0;
+        }
+        .mobile-dot.active { background: #10b981; box-shadow: 0 0 10px rgba(16,185,129,0.6); }
+        .mobile-dot.missed { background: rgba(239, 68, 68, 0.4); }
+        .momentum-seg {
+          height: 6px; border-radius: 3px; background: rgba(255,255,255,0.05); transition: all 0.3s ease;
+        }
+        .momentum-seg.active {
+          background: linear-gradient(to right, #10b981, #34d399);
+          box-shadow: 0 0 12px rgba(16,185,129,0.4);
+        }
+        .reading-text p {
+          margin-bottom: 1.75rem; line-height: 1.8; font-size: 1.0625rem;
+          color: #d4d4d8; font-weight: 400; letter-spacing: -0.01em;
+        }
+        .reading-text p:first-child::first-letter { color: #fff; font-weight: 600; }
+        .blur-premium { filter: blur(5px); pointer-events: none; user-select: none; }
+        .premium-overlay { background: rgba(9,9,11,0.4); backdrop-filter: blur(8px); }
+        .right-warning {
+          position: fixed; right: 32px; bottom: 32px; width: 240px; z-index: 40;
+        }
+        @media (max-width: 1279px) { .right-warning { display: none; } }
+      `}} />
+
+      {/* Aurora Backgrounds */}
+      <div className="aurora-bg"></div>
+      <div className="aurora-bg-2"></div>
+
+      <DesktopTimeline />
+      <DesktopWarning />
+
+      {/* MAIN CONTENT */}
+      <main className="relative pt-8 md:pt-12 pb-20 z-10">
+        <div className="max-w-3xl mx-auto px-5 md:px-8">
+          <MobileTimeline />
+          <ReportHeader />
+          <MobileWarning />
+          <ReportBody />
+          <NextStepsPremium />
+        </div>
+      </main>
+    </div>
   );
 }

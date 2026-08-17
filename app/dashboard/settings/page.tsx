@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { createClient } from '@/app/lib/supabase/client';
 import DashboardNavbar from '@/components/dashboard/DashboardNavbar';
 import { 
   User as UserIcon, Link as LinkIcon, SlidersHorizontal, Bell, 
   Shield, AlertOctagon, CheckCircle, AlertCircle, PlusCircle, X,
-  Github, Linkedin, ArrowUpRight, Check, Twitter, Loader2
+  Github, Linkedin, ArrowUpRight, Check, Twitter, Loader2, Sparkles, Bot, Info, ArrowRight
 } from 'lucide-react';
 import ProBadge from '@/components/profile/ProBadge';
 import ProfileBanner from '@/components/profile/ProfileBanner';
@@ -41,11 +42,27 @@ export default function SettingsPage() {
   const socialTimers = useRef<{twitter: NodeJS.Timeout | null, linkedin: NodeJS.Timeout | null}>({twitter: null, linkedin: null});
 
   const [notifPrefs, setNotifPrefs] = useState({
+    mentorReview: false,
     contestAlerts: true,
     weeklyDigest: true,
     productUpdates: false,
   });
   const [savingNotifs, setSavingNotifs] = useState(false);
+
+  // UI Only State for new settings
+  const [mentorPrefs, setMentorPrefs] = useState({
+    goal: 'Balanced Growth',
+    focus: '',
+    strictness: 'Normal'
+  });
+  const [accountInfo] = useState({
+    status: 'active', // active | inactive | pending
+    lastVisit: '2026-08-16T10:00:00Z',
+    plan: 'free',
+    daysRemaining: 0,
+    quota: '3/4 Reviews Used',
+    inactivityDays: 12
+  });
 
   const supabase = createClient();
 
@@ -322,13 +339,25 @@ export default function SettingsPage() {
                 <button onClick={() => scrollTo('profile')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all ${activeSection === 'profile' ? 'active' : ''}`}>
                   Profile
                 </button>
+                <button onClick={() => scrollTo('ai-mentor')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all ${activeSection === 'ai-mentor' ? 'active' : ''}`}>
+                  AI Mentor Engine
+                </button>
                 <button onClick={() => scrollTo('connections')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all ${activeSection === 'connections' ? 'active' : ''}`}>
                   Coding Profiles
                 </button>
-                <button onClick={() => scrollTo('notifications')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all ${activeSection === 'notifications' ? 'active' : ''}`}>
-                  Notifications
+                <button onClick={() => scrollTo('subscription')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all ${activeSection === 'subscription' ? 'active' : ''}`}>
+                  Subscription
+                </button>
+                <button onClick={() => scrollTo('email-prefs')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all ${activeSection === 'email-prefs' ? 'active' : ''}`}>
+                  Email Preferences
                 </button>
                 <div className="pt-4 mt-4 border-t border-zinc-800"></div>
+                <Link href="/terms" className="settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all">
+                  Terms of Service
+                </Link>
+                <Link href="/privacy" className="settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all">
+                  Privacy Policy
+                </Link>
                 <button onClick={() => scrollTo('danger')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-red-500/80 hover:text-red-400 rounded-md transition-all ${activeSection === 'danger' ? 'active' : ''}`}>
                   Danger Zone
                 </button>
@@ -437,16 +466,183 @@ export default function SettingsPage() {
               </div>
             </section>
 
+            {/* AI MENTOR CONFIGURATION */}
+            <section id="ai-mentor" className="max-w-4xl border border-zinc-800 rounded-lg bg-black overflow-hidden relative">
+              <div className="p-6 md:p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div>
+                    <h2 className="text-xl font-medium text-white">AI Mentor Configuration</h2>
+                    <p className="text-sm text-zinc-400 mt-0.5">Calibrate how the senior engineering LLM analyzes your progress.</p>
+                  </div>
+                </div>
+
+                <div className="space-y-8 mt-8">
+                  {/* Reactivation Status */}
+                  <div className="p-5 rounded-xl bg-zinc-900/50 border border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <h3 className="text-sm font-medium text-zinc-200">Review Status</h3>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className={`px-2.5 py-1 text-xs font-medium rounded-full border ${
+                        accountInfo.status === 'active' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                        accountInfo.status === 'pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                        'bg-red-500/10 text-red-400 border-red-500/20'
+                      }`}>
+                        {accountInfo.status.charAt(0).toUpperCase() + accountInfo.status.slice(1)}
+                      </span>
+                      {accountInfo.status === 'inactive' && (
+                        <button className="px-3 py-1.5 rounded-lg bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors">
+                          Request Reactivation
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Goal / Focus Preference */}
+                  <div className="space-y-3">
+                    <label className="text-sm font-medium text-zinc-200">Primary Career Target</label>
+                    <p className="text-xs text-zinc-500">The mentor will tailor problem recommendations and strictness to this path.</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                      {['FAANG / Top Product', 'Startups & Building', 'Competitive Programming', 'Balanced Generalist', 'Custom Path'].map(goal => (
+                        <label key={goal} className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${mentorPrefs.goal === goal ? 'bg-zinc-800 border-zinc-600' : 'bg-black border-zinc-800 hover:border-zinc-700'}`}>
+                          <input 
+                            type="radio" 
+                            name="career-goal" 
+                            value={goal}
+                            checked={mentorPrefs.goal === goal}
+                            onChange={(e) => setMentorPrefs({...mentorPrefs, goal: e.target.value})}
+                            className="text-white bg-zinc-900 border-zinc-700 focus:ring-white focus:ring-offset-zinc-900"
+                          />
+                          <span className={`ml-3 text-sm ${mentorPrefs.goal === goal ? 'text-white font-medium' : 'text-zinc-400'}`}>{goal}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Personal Focus Area */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <label className="text-sm font-medium text-zinc-200">Current Focus Area</label>
+                        {accountInfo.plan === 'free' && (
+                          <div className="group relative flex items-center">
+                            <Info className="w-4 h-4 text-zinc-500 cursor-help hover:text-zinc-300 transition-colors" />
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 rounded-lg bg-zinc-800 text-xs text-zinc-300 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl border border-zinc-700 z-10 text-center">
+                              Pro unlocks 600 characters and higher LLM priority.
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <ProBadge type="pro" />
+                    </div>
+                    <p className="text-xs text-zinc-500">Provide direct context on what you are struggling with to guide the AI Review.</p>
+                    <div className="relative">
+                      <textarea 
+                        rows={3} 
+                        maxLength={accountInfo.plan === 'free' ? 160 : 600}
+                        value={mentorPrefs.focus}
+                        onChange={(e) => setMentorPrefs({...mentorPrefs, focus: e.target.value})}
+                        placeholder="e.g., I am focusing heavily on Graph Data Structures for the next three weeks." 
+                        className="w-full px-4 py-3 rounded-xl bg-zinc-900/40 border border-zinc-800 text-sm text-zinc-100 placeholder:text-zinc-600 resize-none transition-colors focus:outline-none focus:border-zinc-500"
+                      />
+                    </div>
+                    <div className="flex justify-end items-center text-[11px] text-zinc-500 mt-2">
+                      <span className={mentorPrefs.focus.length >= 160 ? "text-amber-500" : ""}>{mentorPrefs.focus.length} / {accountInfo.plan === 'free' ? '160' : '600'} characters</span>
+                    </div>
+                  </div>
+
+                  {/* Strictness Level */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 mt-4 border-t border-zinc-800/50">
+                    <label className="text-sm font-medium text-zinc-200">Preferred Tone</label>
+                    <div className="flex items-center gap-1 p-1 rounded-full bg-zinc-900/50 border border-zinc-800/80">
+                      {['Soft', 'Normal', 'Direct'].map(level => (
+                        <button 
+                          key={level}
+                          onClick={() => setMentorPrefs({...mentorPrefs, strictness: level})}
+                          className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                            mentorPrefs.strictness === level 
+                              ? 'bg-white text-black shadow-sm' 
+                              : 'text-zinc-400 hover:text-zinc-200'
+                          }`}
+                        >
+                          {level}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </section>
+
             {/* CODING PROFILES / CONNECTIONS SECTION */}
             <CodingProfilesSettings />
 
-            {/* NOTIFICATIONS SECTION */}
-            <section id="notifications" className="max-w-4xl border border-zinc-800 rounded-lg bg-black overflow-hidden">
+            {/* SUBSCRIPTION & USAGE SECTION */}
+            <section id="subscription" className="max-w-4xl border border-zinc-800 rounded-lg bg-black overflow-hidden">
               <div className="p-6 md:p-8">
-                <h2 className="text-xl font-medium text-zinc-100">Email Notifications</h2>
+                <h2 className="text-xl font-medium text-zinc-100 mb-6">Account & Subscription</h2>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="p-4 rounded-xl bg-zinc-900/30 border border-zinc-800/50">
+                    <div className="text-xs text-zinc-500 mb-1">Current Plan</div>
+                    <div className="text-lg font-semibold text-white capitalize">{accountInfo.plan}</div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-zinc-900/30 border border-zinc-800/50">
+                    <div className="text-xs text-zinc-500 mb-1">Days Until Inactive</div>
+                    <div className="text-lg font-semibold text-emerald-400">{accountInfo.inactivityDays} Days</div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-zinc-900/30 border border-zinc-800/50">
+                    <div className="text-xs text-zinc-500 mb-1">Subscription</div>
+                    <div className="text-sm font-medium text-zinc-400 mt-1">No active subscription</div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-zinc-900 to-black border border-zinc-800">
+                  <div>
+                    <h4 className="text-sm font-medium text-zinc-200">Upgrade to Pro</h4>
+                    <p className="text-xs text-zinc-500 mt-0.5">Unlock brutal feedback, unlimited tracking, and deep historical analytics.</p>
+                  </div>
+                  <button className="px-5 py-2.5 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(255,255,255,0.1)] flex items-center gap-2">
+                    View Plans
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            {/* EMAIL PREFERENCES SECTION */}
+            <section id="email-prefs" className="max-w-4xl border border-zinc-800 rounded-lg bg-black overflow-hidden">
+              <div className="p-6 md:p-8">
+                <h2 className="text-xl font-medium text-zinc-100">Email Preferences</h2>
                 <p className="text-sm text-zinc-400 mt-1 mb-8">Manage what emails you receive from DSA Quest.</p>
 
                 <div className="space-y-0">
+                  
+                  {/* AI Mentor Trigger */}
+                  <div className="flex items-center justify-between py-4 border-b border-zinc-800">
+                    <div className="pr-4">
+                      <div className="text-sm font-medium text-zinc-200">
+                        Receive Mentor Feedback Emails
+                      </div>
+                      <div className="text-sm text-zinc-500 mt-0.5">Allow the AI Senior Engineer to email you weekly reality checks.</div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="toggle-checkbox sr-only"
+                        checked={notifPrefs.mentorReview}
+                        disabled={savingNotifs}
+                        onChange={(e) => {
+                          const next = { ...notifPrefs, mentorReview: e.target.checked };
+                          setNotifPrefs(next);
+                          // saveNotifPrefs(next); // Implement later
+                        }}
+                      />
+                      <div className="toggle-label w-10 h-5 bg-zinc-800 rounded-full border border-zinc-700 transition-colors duration-200 ease-in-out"></div>
+                      <span className="toggle-ball absolute left-0.5 top-0.5 bg-zinc-400 w-4 h-4 rounded-full transition-transform duration-200 ease-in-out"></span>
+                    </label>
+                  </div>
                   <div className="flex items-center justify-between py-4 border-b border-zinc-800">
                     <div className="pr-4">
                       <div className="text-sm font-medium text-zinc-200">Contest Alerts</div>
