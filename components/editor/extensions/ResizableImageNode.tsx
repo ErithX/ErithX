@@ -77,7 +77,13 @@ const ResizableImageComponent = ({ editor, node, updateAttributes, selected }: a
             <span className="text-sm font-medium">Uploading image...</span>
           </div>
         ) : (
-          <img src={src} alt="Uploaded" className="w-full h-auto block pointer-events-none" />
+          <img 
+            src={src} 
+            alt="Uploaded" 
+            className={`w-full h-auto block ${isEditable ? 'pointer-events-none' : 'cursor-pointer hover:opacity-95 transition-opacity'}`} 
+            onClick={() => !isEditable && window.open(src, '_blank')}
+            title={!isEditable ? "Click to view full image" : undefined}
+          />
         )}
 
         {/* Hover Alignment Toolbar */}
