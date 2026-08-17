@@ -19,3 +19,4 @@
 
 - **Product & Business Dev Mode:** When building features, think beyond just code. Focus on the business logic, the Free vs Paid tiering, and providing real, actionable career guidance without overwhelming students with a "complex" UI. Read ersion3_business_vision.md for the overarching roadmap.
 
+never touch system prompt , LLM structure & anything without my permission

@@ -24,6 +24,7 @@ export async function callGemini(userStats: any) {
 
   return {
     review_text: parsed.review_text,
+    hidden_summary: parsed.hidden_summary,
     targets_set: parsed.targets_set,
     roy_factor_update: parsed.roy_factor_update || 0,
     model_used: "gemini-3.5-flash",

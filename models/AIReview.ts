@@ -4,6 +4,7 @@ export interface IAIReview extends Document {
   user_id: string;
   generated_text: string;
   targets_set: string;
+  hidden_summary?: string;
   previous_targets?: string;
   model_used: string;
   prompt_tokens_used?: number;
@@ -21,6 +22,7 @@ const AIReviewSchema = new Schema<IAIReview>({
   user_id: { type: String, required: true, index: true },
   generated_text: { type: String, required: true },
   targets_set: { type: String, required: true },
+  hidden_summary: { type: String },
   previous_targets: { type: String },
   model_used: { type: String, required: true },
   prompt_tokens_used: { type: Number },

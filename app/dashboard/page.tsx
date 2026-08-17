@@ -9,10 +9,10 @@ import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import UserProfileCard from '@/components/dashboard/UserProfileCard';
 import UpcomingContestsCard from '@/components/dashboard/UpcomingContestsCard';
 import ConnectedProfilesStatus from '@/components/dashboard/ConnectedProfilesStatus';
+import WeeklyReviewCard from '@/components/dashboard/WeeklyReviewCard';
 
 // Components hidden for Phase 1
 // import AchievementSection from '@/components/dashboard/AchievementSection';
-// import WeeklyReviewCard from '@/components/dashboard/WeeklyReviewCard';
 // import SkillMapCard from '@/components/dashboard/SkillMapCard';
 // import RecentActivityCard from '@/components/dashboard/RecentActivityCard';
 
@@ -68,16 +68,6 @@ export default function DashboardPage() {
           {/* Greeting */}
           <DashboardHeader user={user} />
 
-          {/* Achievement Card Section (Hidden for Phase 1) */}
-          {/* 
-          <AchievementSection 
-            currentLevel={currentLevel} 
-            setCurrentLevel={setCurrentLevel} 
-            currentType={currentType} 
-            setCurrentType={setCurrentType} 
-          /> 
-          */}
-
           {/* Two Column */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
             {/* Left 2/3 */}
@@ -85,12 +75,11 @@ export default function DashboardPage() {
               {/* Profile + Contributions */}
               <UserProfileCard user={user} />
 
+              {/* Weekly Review Preview Card */}
+              <WeeklyReviewCard />
+
               {/* Connected Profiles Status Strip (v3) */}
               <ConnectedProfilesStatus />
-
-
-              {/* Weekly Review (Hidden for Phase 1) */}
-              {/* <WeeklyReviewCard /> */}
             </div>
 
 

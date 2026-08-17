@@ -28,6 +28,7 @@ export async function callLlama(userStats: any) {
 
   return {
     review_text: result.review_text,
+    hidden_summary: result.hidden_summary,
     targets_set: result.targets_set,
     roy_factor_update: result.roy_factor_update || 0,
     model_used: "llama-3.3-70b",

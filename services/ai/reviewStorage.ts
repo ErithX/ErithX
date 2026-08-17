@@ -4,6 +4,7 @@ import AIReview, { IAIReview } from "@/models/AIReview";
 export interface SaveReviewParams {
   userId: string;
   reviewText: string;
+  hiddenSummary?: string;
   targetsSet: string;
   previousTargets?: string;
   royFactorUpdate?: number;
@@ -32,6 +33,7 @@ export async function saveAIReview(params: SaveReviewParams): Promise<IAIReview>
     user_id: params.userId,
     generated_text: params.reviewText,
     targets_set: params.targetsSet,
+    hidden_summary: params.hiddenSummary,
     previous_targets: params.previousTargets,
     model_used: params.modelUsed,
     prompt_tokens_used: params.promptTokensUsed,

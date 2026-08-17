@@ -64,6 +64,7 @@ export async function GET(request: Request) {
         await saveAIReview({
           userId,
           reviewText: llmResponse.review_text,
+          hiddenSummary: llmResponse.hidden_summary,
           targetsSet: llmResponse.targets_set,
           previousTargets: previousTargets || undefined,
           royFactorUpdate: llmResponse.roy_factor_update,

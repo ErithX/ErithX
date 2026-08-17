@@ -31,6 +31,7 @@ export async function callGlm(userStats: any) {
 
   return {
     review_text: result.review_text,
+    hidden_summary: result.hidden_summary,
     targets_set: result.targets_set,
     roy_factor_update: result.roy_factor_update || 0,
     model_used: "glm-5.2",
