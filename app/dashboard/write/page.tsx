@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { createClient } from '@/app/lib/supabase/client';
 import TiptapEditor from '@/components/editor/TiptapEditor';
 import TagsInput from '@/components/editor/TagsInput';
 import { Circle, X, UploadCloud } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function WritePage() {
+function WriteEditor() {
+  const searchParams = useSearchParams();
+  const editId = searchParams.get('id');
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [documentId, setDocumentId] = useState<string | null>(null);
@@ -35,14 +37,23 @@ export default function WritePage() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
       if (user) {
-        fetch('/api/documents')
+        const fetchUrl = editId ? `/api/documents/${editId}` : '/api/documents';
+        fetch(fetchUrl)
           .then(res => res.json())
           .then(data => {
+            if (data.error) {
+              alert("Error loading document: " + data.error);
+              router.push('/dashboard/write');
+              return;
+            }
             if (data._id) {
               setDocumentId(data._id);
               if (data.title) setTitle(data.title);
               if (data.subtitle) setSubtitle(data.subtitle);
               if (data.content) setContent(data.content);
+              if (data.category) setCategory(data.category);
+              if (data.tags) setTags(data.tags);
+              if (data.coverImage) setCoverUrl(data.coverImage);
             }
             setLoading(false);
           })
@@ -366,5 +377,13 @@ export default function WritePage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function WritePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#050505] flex items-center justify-center"><div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+      <WriteEditor />
+    </Suspense>
   );
 }

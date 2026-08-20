@@ -53,9 +53,12 @@ export async function POST(req: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
+    // CRITICAL: Convert Node.js Buffer to ArrayBuffer to prevent payload corruption during fetch
+    const arrayBuffer = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+
     let { data, error } = await supabaseAdmin.storage
       .from('editor-assets')
-      .upload(uniqueFilename, buffer, {
+      .upload(uniqueFilename, arrayBuffer, {
         contentType: contentType,
         upsert: false
       });
@@ -71,7 +74,7 @@ export async function POST(req: NextRequest) {
         // Retry upload
         const retryResult = await supabaseAdmin.storage
           .from('editor-assets')
-          .upload(uniqueFilename, buffer, {
+          .upload(uniqueFilename, arrayBuffer, {
             contentType: contentType,
             upsert: false
           });

@@ -427,6 +427,11 @@ export default function ResourceClient({
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                {(user?.id === doc?.userId || user?.email === 'debjyoti2409@gmail.com') && (
+                  <a href={`/dashboard/write?id=${doc?._id}`} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-orange-500/30 bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 text-xs transition-all mr-2">
+                    <Type className="w-3.5 h-3.5" /> Edit
+                  </a>
+                )}
                 <button 
                   onClick={handleUpvote} 
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs transition-all ${isUpvoted ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' : 'bg-white/5 border-white/5 text-zinc-400 hover:bg-white/10'}`}

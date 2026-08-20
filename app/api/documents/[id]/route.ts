@@ -3,6 +3,41 @@ import { createClient } from '@/app/lib/supabase/server';
 import connectToDatabase from '@/app/lib/mongodb';
 import { Resource } from '@/models/Resource';
 import {User} from '@/models/User'
+// Get a specific document for editing
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const supabaseClient = await createClient();
+    const { data: { user } } = await supabaseClient.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    await connectToDatabase();
+    
+    // We must await params in Next.js 15
+    const id = (await params).id;
+
+    const doc = await Resource.findById(id);
+    if (!doc) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    }
+
+    // Check ownership or super admin
+    const superAdmins = (process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS || '').split(',').map(e => e.trim());
+    const isSuperAdmin = superAdmins.includes(user.email || '');
+
+    if (doc.userId !== user.id && !isSuperAdmin) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    return NextResponse.json(doc, { status: 200 });
+  } catch (error: any) {
+    console.error("Fetch Document API Error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
 // Update a document (Auto-save / Publish)
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
