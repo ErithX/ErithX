@@ -17,9 +17,9 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg pt-[56px] pb-8">
       {/* Background effects */}
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at top left, rgba(6,78,59,0.3), #09090b 60%)' }}></div>
-      <div className="absolute top-0 right-1/4 w-[300px] h-[300px] md:w-[700px] md:h-[700px] rounded-full opacity-[0.08]" style={{ background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(100px)' }}></div>
-      <div className="absolute bottom-0 left-1/4 w-[250px] h-[250px] md:w-[500px] md:h-[500px] rounded-full opacity-[0.05]" style={{ background: 'radial-gradient(circle, #06b6d4, transparent 70%)', filter: 'blur(80px)' }}></div>
+      <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at top right, rgba(6,78,59,0.25), #09090b 60%)'}}></div>
+      <div className="absolute top-20 right-1/4 w-64 h-64 md:w-96 md:h-96 rounded-full opacity-10" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(60px)'}}></div>
+      <div className="absolute bottom-0 left-1/4 w-[250px] h-[250px] md:w-[500px] md:h-[500px] rounded-full opacity-[0.02]" style={{ background: 'radial-gradient(circle, #a1a1aa, transparent 70%)', filter: 'blur(80px)' }}></div>
 
       {/* ========================================= */}
       {/* DESKTOP FULL-HEIGHT ORGANIC IMAGE (RIGHT) */}
@@ -36,8 +36,8 @@ export default function Hero() {
           priority
         />
         {/* Color overlay blending */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/40 via-transparent to-cyan-950/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/40 via-transparent to-zinc-900/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent"></div>
 
         {/* Image Label */}
         {/* <div className="absolute bottom-10 left-10 right-10">
@@ -64,19 +64,21 @@ export default function Hero() {
 
           {/* LEFT: Minimal Text Content */}
           <div className="animate-in text-center lg:text-left flex flex-col items-center lg:items-start py-20 lg:py-0">
+            <div className="flex items-center gap-2 mb-6 mt-4 justify-center lg:justify-start">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
+              <span className="text-xs font-medium text-emerald-400 tracking-wider uppercase">Next-Gen Engineering Platform</span>
+            </div>
 
-
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.05]">
-              <span className="block text-sm md:text-base text-white/90 font-medium tracking-wider mb-4 mt-4"> NEXT-GEN ENGINEERING EDUCATION PLATFORM</span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.05]">
               Your Coding<br />Era Starts<br />Now.
             </h1>
-
-            <p className="text-lg text-zinc-400 leading-relaxed mb-4 max-w-lg mx-auto lg:mx-0">
-              Stop hoarding 50 tabs and missing deadlines. Track every coding contest, steal the best CS notes, and flex your hustle.
-              Built for software engineering students who actually want to win.
+            
+            <p className="text-base text-zinc-400 leading-relaxed mb-4 max-w-lg mx-auto lg:mx-0">
+              Track every coding contest, master System Architecture, and build project blueprints. 
+              The one ecosystem for engineers who want to win.
             </p>
             <p className="text-sm text-zinc-500 mb-10 max-w-lg mx-auto lg:mx-0">
-              Preparation with intent, not burnout. One all-in-one ecosystem for contests, notes, projects, and the community that gets it.
+              Preparation with intent, not burnout.
             </p>
 
             <div className="flex items-center justify-center lg:justify-start gap-4 flex-wrap mb-8 w-full">

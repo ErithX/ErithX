@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { 
   Zap, LogOut, LogIn, Rocket, Menu, X 
 } from 'lucide-react';
+import Image from 'next/image';
 import { createClient } from '@/app/lib/supabase/client';
 import { useAuthStore } from '@/store/authStore';
 import AuthModal from '@/components/AuthModal';
@@ -66,10 +67,7 @@ export default function Navbar({ darkMode, setDarkMode }: NavbarProps = {}) {
           {/* Logo & Main Nav Links */}
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2.5 text-white group">
-              <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center group-hover:border-emerald-500/40 transition-colors">
-                <Zap className="w-4 h-4 text-emerald-400" />
-              </div>
-              <span className="font-semibold text-sm tracking-tight text-white group-hover:text-emerald-400 transition-colors">ErithX</span>
+              <Image src="/newLogo.png" alt="ErithX Logo" width={150} height={48} className="h-10 w-auto object-contain" priority />
             </Link>
 
             {/* Desktop Navigation Links */}

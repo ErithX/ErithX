@@ -168,7 +168,7 @@ body {
 .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); }
 .glass:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); }
 .gradient-text { background: linear-gradient(to right, #ffffff, #a1a1aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.gradient-text-hero { background: linear-gradient(135deg, #ffffff 0%, #34d399 50%, #22d3ee 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.gradient-text-hero { background: linear-gradient(135deg, #ffffff 40%, #71717a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
 .live-pulse { position: relative; }
 .live-pulse::before { content: ''; position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; border-radius: 50%; background: rgba(239,68,68,0.4); transform: translate(-50%,-50%); animation: livePulse 1.5s ease-out infinite; }

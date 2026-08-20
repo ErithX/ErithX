@@ -2,13 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { 
-  Zap, ChevronRight, Bookmark, Share2, Type, 
+  Bookmark, Check, ChevronDown, ChevronRight, Share2, Type, 
   FileText, Clock, ArrowUp, MessageSquare, Download,
   Lightbulb, Info, AlertTriangle, Target, User, Twitter,
-  Github, Linkedin, Eye
+  Github, Linkedin, Eye, ArrowLeft
 } from 'lucide-react';
+import Image from 'next/image';
 import { createClient } from '@/app/lib/supabase/client';
 import { useAuthStore } from '@/store/authStore';
+import { ResourceItem } from '@/components/ResourceCard';
+import ProBadge from '@/components/profile/ProBadge';
 import TiptapEditor from '@/components/editor/TiptapEditor';
 import RelatedResources from '@/components/RelatedResources';
 
@@ -315,10 +318,7 @@ export default function ResourceClient({
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <a href="/resources" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                <Zap className="w-4 h-4 text-emerald-400" />
-              </div>
-              <span className="font-semibold text-sm tracking-tight hidden sm:inline">ErithX</span>
+              <Image src="/newLogo.png" alt="ErithX Logo" width={100} height={32} className="h-6 w-auto object-contain" />
             </a>
             <div className="hidden md:flex items-center gap-1 text-xs text-zinc-600">
               <ChevronRight className="w-3 h-3" />
@@ -724,10 +724,8 @@ export default function ResourceClient({
       <footer className="border-t border-white/5 py-8 px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-zinc-800 flex items-center justify-center">
-              <Zap className="w-3 h-3 text-emerald-400" />
-            </div>
-            <span className="text-[10px] text-zinc-600">© 2025 ErithX. Built for students, backed by pros.</span>
+            <Image src="/newLogo.png" alt="ErithX Logo" width={80} height={24} className="h-4 w-auto object-contain opacity-50 grayscale" />
+            <span className="text-[10px] text-zinc-600">© 2026 ErithX. Built for students, backed by pros.</span>
           </div>
           <div className="flex items-center gap-4">
             <a href="#" className="text-zinc-600 hover:text-zinc-400 transition-colors"><Twitter className="w-4 h-4" /></a>

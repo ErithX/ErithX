@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Zap } from 'lucide-react';
 
 export default function Footer() {
@@ -8,10 +9,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
         <div className="flex flex-col gap-4 max-w-sm">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-              <Zap className="w-4 h-4 text-emerald-400" />
-            </div>
-            <span className="font-semibold text-lg tracking-tight text-white">ErithX</span>
+            <Image src="/newLogo.png" alt="ErithX Logo" width={150} height={48} className="h-10 w-auto object-contain" />
           </Link>
           <p className="text-sm text-zinc-400 leading-relaxed">
             The complete software engineering preparation platform. Track upcoming coding contests, practice Data Structures & Algorithms, and find verified CS study materials.
