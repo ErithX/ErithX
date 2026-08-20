@@ -115,7 +115,7 @@ export async function GET(request: Request) {
                     user_id: data.user.id,
                     email_type: 'welcome',
                     recipient_email: userEmail,
-                    subject: 'Welcome to DSA Quest ✨',
+                    subject: 'Welcome to ErithX ✨',
                     status: 'sent',
                     sent_at: new Date().toISOString(),
                   })
@@ -125,7 +125,7 @@ export async function GET(request: Request) {
                     user_id: data.user.id,
                     email_type: 'welcome',
                     recipient_email: userEmail,
-                    subject: 'Welcome to DSA Quest ✨',
+                    subject: 'Welcome to ErithX ✨',
                     status: 'failed',
                     error_message: JSON.stringify(result.error),
                   })

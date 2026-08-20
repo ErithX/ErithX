@@ -12,7 +12,7 @@ export default function Footer() {
               <div className="w-7 h-7 rounded bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
                 <Zap className="w-3.5 h-3.5 text-emerald-400" />
               </div>
-              <span className="font-semibold text-sm">DSA Quest</span>
+              <span className="font-semibold text-sm">ErithX</span>
             </div>
             <p className="text-xs text-zinc-500 leading-relaxed">The student-first platform for CS engineering. Built with intent, not burnout.</p>
           </div>
@@ -59,7 +59,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="pt-6 border-t border-white/5 flex items-center justify-between flex-wrap gap-4">
-          <div className="text-[10px] text-zinc-600">© 2026 DSA Quest. Built for students, backed by pros.</div>
+          <div className="text-[10px] text-zinc-600">© 2026 ErithX. Built for students, backed by pros.</div>
           <div className="flex items-center gap-4">
             <Link href="#" className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Privacy</Link>
             <Link href="#" className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Terms</Link>

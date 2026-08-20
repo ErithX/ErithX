@@ -1,895 +1,1041 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DSA Quest — Community Hub</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { font-family: 'Inter', sans-serif; }
-    body { background: #09090b; color: #fff; }
-    ::selection { background-color: rgb(6, 78, 59); color: white; }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #09090b; }
-    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
-    .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); }
-    .glass:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); }
-    .gradient-text { background: linear-gradient(to right, #ffffff, #a1a1aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .feed-card { transition: all 200ms ease; cursor: pointer; }
-    .feed-card:hover { transform: translateY(-2px); background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); }
-    .feed-card:hover .card-arrow { transform: translateX(4px); }
-    .card-arrow { transition: transform 150ms ease; }
-    .type-pdf { background: rgba(249,115,22,0.1); color: #fb923c; border: 1px solid rgba(249,115,22,0.2); }
-    .type-blog { background: rgba(16,185,129,0.1); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
-    .type-link { background: rgba(6,182,212,0.1); color: #22d3ee; border: 1px solid rgba(6,182,212,0.2); }
-    .type-image { background: rgba(168,85,247,0.1); color: #c084fc; border: 1px solid rgba(168,85,247,0.2); }
-    .modal-overlay { transition: opacity 200ms ease; }
-    .modal-content { transition: transform 200ms ease, opacity 200ms ease; }
-    .filter-btn.active { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.1); }
-    .pulse-dot { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    @keyframes pulse { 50% { opacity: 0.5; } }
-    @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-    .animate-in { animation: fadeInUp 0.4s ease forwards; }
-    .masonry { columns: 3; column-gap: 1.5rem; }
-    .masonry > * { break-inside: avoid; margin-bottom: 1.5rem; }
-    @media (max-width: 1024px) { .masonry { columns: 2; } }
-    @media (max-width: 640px) { .masonry { columns: 1; } }
-    .upload-zone { border: 2px dashed rgba(255,255,255,0.1); transition: all 150ms ease; }
-    .upload-zone:hover, .upload-zone.dragover { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.05); }
-    .toast { animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards; }
-    @keyframes slideIn { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
-    @keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
-  </style>
-</head>
-<body class="min-h-screen">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ErithX — Community Hub</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            * {
+                font-family: 'Inter', sans-serif;
+            }
+            body {
+                background: #09090b;
+                color: #fff;
+            }
+            ::selection {
+                background-color: rgb(6, 78, 59);
+                color: white;
+            }
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+            ::-webkit-scrollbar-track {
+                background: #09090b;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #27272a;
+                border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #3f3f46;
+            }
+            .glass {
+                background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+            }
+            .glass:hover {
+                background: rgba(255, 255, 255, 0.06);
+                border-color: rgba(255, 255, 255, 0.15);
+            }
+            .gradient-text {
+                background: linear-gradient(to right, #ffffff, #a1a1aa);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+            .feed-card {
+                transition: all 200ms ease;
+                cursor: pointer;
+            }
+            .feed-card:hover {
+                transform: translateY(-2px);
+                background: rgba(255, 255, 255, 0.06);
+                border-color: rgba(255, 255, 255, 0.15);
+            }
+            .feed-card:hover .card-arrow {
+                transform: translateX(4px);
+            }
+            .card-arrow {
+                transition: transform 150ms ease;
+            }
+            .type-pdf {
+                background: rgba(249, 115, 22, 0.1);
+                color: #fb923c;
+                border: 1px solid rgba(249, 115, 22, 0.2);
+            }
+            .type-blog {
+                background: rgba(16, 185, 129, 0.1);
+                color: #34d399;
+                border: 1px solid rgba(16, 185, 129, 0.2);
+            }
+            .type-link {
+                background: rgba(6, 182, 212, 0.1);
+                color: #22d3ee;
+                border: 1px solid rgba(6, 182, 212, 0.2);
+            }
+            .type-image {
+                background: rgba(168, 85, 247, 0.1);
+                color: #c084fc;
+                border: 1px solid rgba(168, 85, 247, 0.2);
+            }
+            .modal-overlay {
+                transition: opacity 200ms ease;
+            }
+            .modal-content {
+                transition: transform 200ms ease, opacity 200ms ease;
+            }
+            .filter-btn.active {
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            .pulse-dot {
+                animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+            @keyframes pulse {
+                50% {
+                    opacity: 0.5;
+                }
+            }
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .animate-in {
+                animation: fadeInUp 0.4s ease forwards;
+            }
+            .masonry {
+                columns: 3;
+                column-gap: 1.5rem;
+            }
+            .masonry > * {
+                break-inside: avoid;
+                margin-bottom: 1.5rem;
+            }
+            @media(max-width: 1024px) {
+                .masonry {
+                    columns: 2;
+                }
+            }
+            @media(max-width: 640px) {
+                .masonry {
+                    columns: 1;
+                }
+            }
+            .upload-zone {
+                border: 2px dashed rgba(255, 255, 255, 0.1);
+                transition: all 150ms ease;
+            }
+            .upload-zone:hover,
+            .upload-zone.dragover {
+                border-color: rgba(16, 185, 129, 0.4);
+                background: rgba(16, 185, 129, 0.05);
+            }
+            .toast {
+                animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+            }
+            @keyframes slideIn {
+                from {
+                    transform: translateY(20px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes fadeOut {
+                from {
+                    opacity: 1;
+                }
+                to {
+                    opacity: 0;
+                }
+            }
+        </style>
+    </head>
+    <body
+        class="min-h-screen">
 
-  <!-- Toast Container -->
-  <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2"></div>
+        <!-- Toast Container -->
+        <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2"></div>
 
-  <!-- NAVBAR -->
-  <nav class="fixed top-0 w-full z-50 border-b border-white/5" style="background:rgba(9,9,11,0.85);backdrop-filter:blur(12px);">
-    <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-      <div class="flex items-center gap-6">
-        <a href="#" class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center">
-            <i data-lucide="zap" class="w-4 h-4 text-emerald-500"></i>
-          </div>
-          <span class="font-semibold text-sm tracking-tight">DSA Quest</span>
-          <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 hidden sm:inline">Community</span>
-        </a>
-        <div class="hidden md:flex items-center gap-1">
-          <a href="#feed" class="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Feed</a>
-          <a href="#" class="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Events</a>
-          <a href="#" class="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Milestones</a>
-        </div>
-      </div>
-      <div class="flex items-center gap-3">
-        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/5 bg-white/[0.02]">
-          <i data-lucide="search" class="w-3.5 h-3.5 text-zinc-500"></i>
-          <input type="text" placeholder="Search resources..." class="bg-transparent text-xs text-zinc-300 placeholder:text-zinc-600 outline-none w-40" id="searchInput">
-        </div>
-        <button onclick="openUploadModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">
-          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-          <span class="hidden sm:inline">Upload</span>
-        </button>
-        <div class="w-7 h-7 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-zinc-700 transition-colors">
-          <i data-lucide="user" class="w-3.5 h-3.5 text-zinc-400"></i>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <!-- HERO SECTION -->
-  <section class="pt-28 pb-12 px-6 relative overflow-hidden">
-    <div class="absolute inset-0" style="background:radial-gradient(ellipse at top, rgba(6,78,59,0.2), #09090b, #09090b);"></div>
-    <div class="absolute top-20 right-1/4 w-96 h-96 rounded-full opacity-10" style="background:radial-gradient(circle, #10b981, transparent 70%);filter:blur(60px);"></div>
-    <div class="max-w-7xl mx-auto relative z-10">
-      <div class="max-w-2xl">
-        <div class="flex items-center gap-2 mb-4">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
-          <span class="text-xs font-medium text-emerald-400">2,000+ learners active now</span>
-        </div>
-        <h1 class="text-4xl md:text-5xl font-medium tracking-tighter mb-4 gradient-text">The Complete Student Ecosystem</h1>
-        <p class="text-sm text-zinc-400 leading-relaxed mb-8 max-w-lg">
-          Curated resources by verified industry professionals. Share study materials, blogs, diagrams, and links — all in one place. Built for students, backed by pros.
-        </p>
-        <div class="flex items-center gap-4">
-          <button onclick="document.getElementById('feed').scrollIntoView({behavior:'smooth'})" class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">
-            Explore Feed
-            <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
-          </button>
-          <button onclick="openUploadModal()" class="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/10 text-zinc-300 text-xs font-medium hover:bg-white/5 transition-all">
-            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-            Contribute
-          </button>
-        </div>
-      </div>
-      <!-- Stats -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
-        <div class="glass rounded-lg p-4">
-          <div class="text-2xl font-semibold">1,247</div>
-          <div class="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Resources Shared</div>
-        </div>
-        <div class="glass rounded-lg p-4">
-          <div class="text-2xl font-semibold text-emerald-400">89</div>
-          <div class="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Pro Contributors</div>
-        </div>
-        <div class="glass rounded-lg p-4">
-          <div class="text-2xl font-semibold">4,831</div>
-          <div class="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Community Members</div>
-        </div>
-        <div class="glass rounded-lg p-4">
-          <div class="text-2xl font-semibold text-cyan-400">23</div>
-          <div class="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">New This Week</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FEED SECTION -->
-  <section id="feed" class="px-6 pb-24">
-    <div class="max-w-7xl mx-auto">
-      <!-- Filters -->
-      <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
-        <div class="flex items-center gap-2 flex-wrap">
-          <button class="filter-btn active px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all" data-filter="all" onclick="filterCards('all', this)">
-            All
-          </button>
-          <button class="filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5" data-filter="blog" onclick="filterCards('blog', this)">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Blogs
-          </button>
-          <button class="filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5" data-filter="pdf" onclick="filterCards('pdf', this)">
-            <span class="w-2 h-2 rounded-full bg-orange-500"></span> PDFs
-          </button>
-          <button class="filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5" data-filter="link" onclick="filterCards('link', this)">
-            <span class="w-2 h-2 rounded-full bg-cyan-500"></span> Links
-          </button>
-          <button class="filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5" data-filter="image" onclick="filterCards('image', this)">
-            <span class="w-2 h-2 rounded-full bg-purple-500"></span> Images
-          </button>
-        </div>
-        <div class="flex items-center gap-2">
-          <button class="p-1.5 rounded hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="Grid view">
-            <i data-lucide="layout-grid" class="w-4 h-4"></i>
-          </button>
-          <button class="p-1.5 rounded hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="List view">
-            <i data-lucide="list" class="w-4 h-4"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Main Content: Feed + Sidebar -->
-      <div class="flex gap-6">
-        <!-- Masonry Feed -->
-        <div class="flex-1 min-w-0">
-          <div class="masonry" id="feedGrid">
-            <!-- Cards injected by JS -->
-          </div>
-        </div>
-
-        <!-- Sidebar -->
-        <div class="hidden lg:block w-72 flex-shrink-0 space-y-6">
-          <!-- Trending Tags -->
-          <div class="glass rounded-xl p-5">
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
-              <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> Trending Tags
-            </h3>
-            <div class="flex flex-wrap gap-2">
-              <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#dynamic-programming</span>
-              <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#system-design</span>
-              <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#interview-prep</span>
-              <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#graphs</span>
-              <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#career-playbook</span>
-              <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#leetcode</span>
-              <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#open-source</span>
-              <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#sql</span>
+        <!-- NAVBAR -->
+        <nav class="fixed top-0 w-full z-50 border-b border-white/5" style="background:rgba(9,9,11,0.85);backdrop-filter:blur(12px);">
+            <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+                <div class="flex items-center gap-6">
+                    <a href="#" class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center">
+                            <i data-lucide="zap" class="w-4 h-4 text-emerald-500"></i>
+                        </div>
+                        <span class="font-semibold text-sm tracking-tight">ErithX</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 ml-1 hidden sm:inline">Community</span>
+                    </a>
+                    <div class="hidden md:flex items-center gap-1">
+                        <a href="#feed" class="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Feed</a>
+                        <a href="#" class="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Events</a>
+                        <a href="#" class="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors rounded">Milestones</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/5 bg-white/[0.02]">
+                        <i data-lucide="search" class="w-3.5 h-3.5 text-zinc-500"></i>
+                        <input type="text" placeholder="Search resources..." class="bg-transparent text-xs text-zinc-300 placeholder:text-zinc-600 outline-none w-40" id="searchInput">
+                    </div>
+                    <button onclick="openUploadModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                        <span class="hidden sm:inline">Upload</span>
+                    </button>
+                    <div class="w-7 h-7 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-zinc-700 transition-colors">
+                        <i data-lucide="user" class="w-3.5 h-3.5 text-zinc-400"></i>
+                    </div>
+                </div>
             </div>
-          </div>
+        </nav>
 
-          <!-- Top Contributors -->
-          <div class="glass rounded-xl p-5">
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
-              <i data-lucide="award" class="w-3.5 h-3.5"></i> Top Contributors
-            </h3>
-            <div class="space-y-3">
-              <div class="flex items-center gap-3">
-                <img src="https://picsum.photos/seed/pro1/40/40.jpg" class="w-8 h-8 rounded-full object-cover">
-                <div class="min-w-0">
-                  <div class="text-xs font-medium truncate flex items-center gap-1">Priya Sharma <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span></div>
-                  <div class="text-[10px] text-zinc-500">SDE @ Google • 47 posts</div>
+        <!-- HERO SECTION -->
+        <section class="pt-28 pb-12 px-6 relative overflow-hidden">
+            <div class="absolute inset-0" style="background:radial-gradient(ellipse at top, rgba(6,78,59,0.2), #09090b, #09090b);"></div>
+            <div class="absolute top-20 right-1/4 w-96 h-96 rounded-full opacity-10" style="background:radial-gradient(circle, #10b981, transparent 70%);filter:blur(60px);"></div>
+            <div class="max-w-7xl mx-auto relative z-10">
+                <div class="max-w-2xl">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
+                        <span class="text-xs font-medium text-emerald-400">2,000+ learners active now</span>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-medium tracking-tighter mb-4 gradient-text">The Complete Student Ecosystem</h1>
+                    <p class="text-sm text-zinc-400 leading-relaxed mb-8 max-w-lg">
+                        Curated resources by verified industry professionals. Share study materials, blogs, diagrams, and links — all in one place. Built for students, backed by pros.
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <button onclick="document.getElementById('feed').scrollIntoView({behavior:'smooth'})" class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">
+                            Explore Feed
+                            <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <button onclick="openUploadModal()" class="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/10 text-zinc-300 text-xs font-medium hover:bg-white/5 transition-all">
+                            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                            Contribute
+                        </button>
+                    </div>
                 </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <img src="https://picsum.photos/seed/pro2/40/40.jpg" class="w-8 h-8 rounded-full object-cover">
-                <div class="min-w-0">
-                  <div class="text-xs font-medium truncate flex items-center gap-1">Rahul Verma <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span></div>
-                  <div class="text-[10px] text-zinc-500">Tech Lead @ MS • 32 posts</div>
+                <!-- Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+                    <div class="glass rounded-lg p-4">
+                        <div class="text-2xl font-semibold">1,247</div>
+                        <div class="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Resources Shared</div>
+                    </div>
+                    <div class="glass rounded-lg p-4">
+                        <div class="text-2xl font-semibold text-emerald-400">89</div>
+                        <div class="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Pro Contributors</div>
+                    </div>
+                    <div class="glass rounded-lg p-4">
+                        <div class="text-2xl font-semibold">4,831</div>
+                        <div class="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Community Members</div>
+                    </div>
+                    <div class="glass rounded-lg p-4">
+                        <div class="text-2xl font-semibold text-cyan-400">23</div>
+                        <div class="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">New This Week</div>
+                    </div>
                 </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <img src="https://picsum.photos/seed/pro3/40/40.jpg" class="w-8 h-8 rounded-full object-cover">
-                <div class="min-w-0">
-                  <div class="text-xs font-medium truncate">Ankit Gupta</div>
-                  <div class="text-[10px] text-zinc-500">Student • 28 posts</div>
-                </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <img src="https://picsum.photos/seed/pro4/40/40.jpg" class="w-8 h-8 rounded-full object-cover">
-                <div class="min-w-0">
-                  <div class="text-xs font-medium truncate flex items-center gap-1">Sarah Chen <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span></div>
-                  <div class="text-[10px] text-zinc-500">SDE II @ Amazon • 21 posts</div>
-                </div>
-              </div>
             </div>
-          </div>
+        </section>
 
-          <!-- Milestone Preview -->
-          <div class="glass rounded-xl p-5">
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
-              <i data-lucide="trophy" class="w-3.5 h-3.5"></i> Latest Milestones
-            </h3>
-            <div class="space-y-3">
-              <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02] border border-white/5">
-                <div class="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
-                  <i data-lucide="flame" class="w-4 h-4 text-yellow-500"></i>
+        <!-- FEED SECTION -->
+        <section id="feed" class="px-6 pb-24">
+            <div
+                class="max-w-7xl mx-auto">
+                <!-- Filters -->
+                <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button class="filter-btn active px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all" data-filter="all" onclick="filterCards('all', this)">
+                            All
+                        </button>
+                        <button class="filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5" data-filter="blog" onclick="filterCards('blog', this)">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            Blogs
+                        </button>
+                        <button class="filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5" data-filter="pdf" onclick="filterCards('pdf', this)">
+                            <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                            PDFs
+                        </button>
+                        <button class="filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5" data-filter="link" onclick="filterCards('link', this)">
+                            <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                            Links
+                        </button>
+                        <button class="filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5" data-filter="image" onclick="filterCards('image', this)">
+                            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                            Images
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="p-1.5 rounded hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="Grid view">
+                            <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                        </button>
+                        <button class="p-1.5 rounded hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="List view">
+                            <i data-lucide="list" class="w-4 h-4"></i>
+                        </button>
+                    </div>
                 </div>
+
+                <!-- Main Content: Feed + Sidebar -->
+                <div
+                    class="flex gap-6">
+                    <!-- Masonry Feed -->
+                    <div class="flex-1 min-w-0">
+                        <div
+                            class="masonry" id="feedGrid"><!-- Cards injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div
+                        class="hidden lg:block w-72 flex-shrink-0 space-y-6">
+                        <!-- Trending Tags -->
+                        <div class="glass rounded-xl p-5">
+                            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
+                                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                                Trending Tags
+                            </h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#dynamic-programming</span>
+                                <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#system-design</span>
+                                <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#interview-prep</span>
+                                <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#graphs</span>
+                                <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#career-playbook</span>
+                                <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#leetcode</span>
+                                <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#open-source</span>
+                                <span class="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">#sql</span>
+                            </div>
+                        </div>
+
+                        <!-- Top Contributors -->
+                        <div class="glass rounded-xl p-5">
+                            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
+                                <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                                Top Contributors
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <img src="https://picsum.photos/seed/pro1/40/40.jpg" class="w-8 h-8 rounded-full object-cover">
+                                    <div class="min-w-0">
+                                        <div class="text-xs font-medium truncate flex items-center gap-1">Priya Sharma
+                                            <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>
+                                        </div>
+                                        <div class="text-[10px] text-zinc-500">SDE @ Google • 47 posts</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <img src="https://picsum.photos/seed/pro2/40/40.jpg" class="w-8 h-8 rounded-full object-cover">
+                                    <div class="min-w-0">
+                                        <div class="text-xs font-medium truncate flex items-center gap-1">Rahul Verma
+                                            <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>
+                                        </div>
+                                        <div class="text-[10px] text-zinc-500">Tech Lead @ MS • 32 posts</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <img src="https://picsum.photos/seed/pro3/40/40.jpg" class="w-8 h-8 rounded-full object-cover">
+                                    <div class="min-w-0">
+                                        <div class="text-xs font-medium truncate">Ankit Gupta</div>
+                                        <div class="text-[10px] text-zinc-500">Student • 28 posts</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <img src="https://picsum.photos/seed/pro4/40/40.jpg" class="w-8 h-8 rounded-full object-cover">
+                                    <div class="min-w-0">
+                                        <div class="text-xs font-medium truncate flex items-center gap-1">Sarah Chen
+                                            <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>
+                                        </div>
+                                        <div class="text-[10px] text-zinc-500">SDE II @ Amazon • 21 posts</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Milestone Preview -->
+                        <div class="glass rounded-xl p-5">
+                            <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
+                                <i data-lucide="trophy" class="w-3.5 h-3.5"></i>
+                                Latest Milestones
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02] border border-white/5">
+                                    <div class="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="flame" class="w-4 h-4 text-yellow-500"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-[11px] font-medium">30-Day Streak 🔥</div>
+                                        <div class="text-[10px] text-zinc-500">Ankit • 2h ago</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02] border border-white/5">
+                                    <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="code" class="w-4 h-4 text-emerald-500"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-[11px] font-medium">100 Problems Solved</div>
+                                        <div class="text-[10px] text-zinc-500">Meera • 5h ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DETAIL MODAL -->
+        <div id="detailModal" class="fixed inset-0 z-[60] hidden">
+            <div class="modal-overlay absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeDetailModal()"></div>
+            <div class="modal-content absolute right-0 top-0 h-full w-full max-w-3xl bg-zinc-950 border-l border-white/5 overflow-y-auto">
+                <div
+                    id="detailContent" class="p-8"><!-- Filled by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- UPLOAD MODAL -->
+        <div id="uploadModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
+            <div class="modal-overlay absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeUploadModal()"></div>
+            <div
+                class="modal-content relative w-full max-w-xl glass rounded-2xl p-0 overflow-hidden">
+                <!-- Header -->
+                <div class="flex items-center justify-between p-6 border-b border-white/5">
+                    <h2 class="text-lg font-medium">Share a Resource</h2>
+                    <button onclick="closeUploadModal()" class="p-1.5 rounded-lg hover:bg-white/5 transition-colors">
+                        <i data-lucide="x" class="w-4 h-4 text-zinc-400"></i>
+                    </button>
+                </div>
+
+                <!-- Upload Type Selector -->
+                <div class="p-6">
+                    <div class="grid grid-cols-4 gap-3 mb-6">
+                        <button class="upload-type-btn active flex flex-col items-center gap-2 p-3 rounded-xl border border-white/5 hover:bg-white/5 transition-all" data-type="blog" onclick="selectUploadType('blog', this)">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                                <i data-lucide="pen-line" class="w-5 h-5 text-emerald-400"></i>
+                            </div>
+                            <span class="text-[10px] font-medium text-zinc-400">Blog</span>
+                        </button>
+                        <button class="upload-type-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-white/5 hover:bg-white/5 transition-all" data-type="pdf" onclick="selectUploadType('pdf', this)">
+                            <div class="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                                <i data-lucide="file-text" class="w-5 h-5 text-orange-400"></i>
+                            </div>
+                            <span class="text-[10px] font-medium text-zinc-400">PDF</span>
+                        </button>
+                        <button class="upload-type-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-white/5 hover:bg-white/5 transition-all" data-type="link" onclick="selectUploadType('link', this)">
+                            <div class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                                <i data-lucide="link" class="w-5 h-5 text-cyan-400"></i>
+                            </div>
+                            <span class="text-[10px] font-medium text-zinc-400">Link</span>
+                        </button>
+                        <button class="upload-type-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-white/5 hover:bg-white/5 transition-all" data-type="image" onclick="selectUploadType('image', this)">
+                            <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                                <i data-lucide="image" class="w-5 h-5 text-purple-400"></i>
+                            </div>
+                            <span class="text-[10px] font-medium text-zinc-400">Image</span>
+                        </button>
+                    </div>
+
+                    <!-- Form Fields -->
+                    <form id="uploadForm" onsubmit="handleUpload(event)">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-xs font-medium text-zinc-400 mb-1.5 block">Title *</label>
+                                <input type="text" required class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors" placeholder="Give your resource a clear title">
+                            </div>
+
+                            <!-- Blog Fields -->
+                            <div id="field-blog" class="upload-field">
+                                <label class="text-xs font-medium text-zinc-400 mb-1.5 block">Content *</label>
+                                <textarea rows="6" class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors resize-none" placeholder="Write your blog post... Markdown supported"></textarea>
+                            </div>
+
+                            <!-- PDF Fields -->
+                            <div id="field-pdf" class="upload-field hidden">
+                                <label class="text-xs font-medium text-zinc-400 mb-1.5 block">Upload PDF *</label>
+                                <div class="upload-zone rounded-xl p-8 text-center cursor-pointer" onclick="document.getElementById('pdfInput').click()" id="pdfDropZone">
+                                    <i data-lucide="upload-cloud" class="w-8 h-8 text-zinc-500 mx-auto mb-3"></i>
+                                    <p class="text-xs text-zinc-400">Drag & drop your PDF here or
+                                        <span class="text-emerald-400">browse</span>
+                                    </p>
+                                    <p class="text-[10px] text-zinc-600 mt-1">Max 25MB</p>
+                                    <input type="file" id="pdfInput" accept=".pdf" class="hidden" onchange="handleFileSelect(this, 'pdf')">
+                                </div>
+                                <div id="pdfFileName" class="hidden mt-2 text-xs text-emerald-400 flex items-center gap-1.5">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                                    <span></span>
+                                </div>
+                            </div>
+
+                            <!-- Link Fields -->
+                            <div id="field-link" class="upload-field hidden">
+                                <label class="text-xs font-medium text-zinc-400 mb-1.5 block">URL *</label>
+                                <input type="url" class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors" placeholder="https://...">
+                                <label class="text-xs font-medium text-zinc-400 mb-1.5 block mt-4">Description</label>
+                                <textarea rows="3" class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors resize-none" placeholder="Brief description of what this link contains"></textarea>
+                            </div>
+
+                            <!-- Image Fields -->
+                            <div id="field-image" class="upload-field hidden">
+                                <label class="text-xs font-medium text-zinc-400 mb-1.5 block">Upload Image *</label>
+                                <div class="upload-zone rounded-xl p-8 text-center cursor-pointer" onclick="document.getElementById('imageInput').click()" id="imageDropZone">
+                                    <i data-lucide="image-plus" class="w-8 h-8 text-zinc-500 mx-auto mb-3"></i>
+                                    <p class="text-xs text-zinc-400">Drag & drop your diagram/flowchart or
+                                        <span class="text-emerald-400">browse</span>
+                                    </p>
+                                    <p class="text-[10px] text-zinc-600 mt-1">PNG, JPG, SVG • Max 10MB</p>
+                                    <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleFileSelect(this, 'image')">
+                                </div>
+                                <div id="imageFileName" class="hidden mt-2 text-xs text-emerald-400 flex items-center gap-1.5">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                                    <span></span>
+                                </div>
+                                <label class="text-xs font-medium text-zinc-400 mb-1.5 block mt-4">Caption</label>
+                                <input type="text" class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors" placeholder="e.g., Binary Search Tree traversal flowchart">
+                            </div>
+
+                            <!-- Common Fields -->
+                            <div>
+                                <label class="text-xs font-medium text-zinc-400 mb-1.5 block">Tags</label>
+                                <input type="text" class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors" placeholder="e.g., dsa, graphs, interview-prep (comma separated)">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end gap-3 mt-6 pt-6 border-t border-white/5">
+                            <button type="button" onclick="closeUploadModal()" class="px-4 py-2 rounded-lg text-xs font-medium text-zinc-400 hover:text-white transition-colors">Cancel</button>
+                            <button type="submit" class="px-5 py-2 rounded-lg bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all flex items-center gap-1.5">
+                                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                Publish
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="border-t border-white/5 py-8 px-6">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <div class="text-[10px] text-zinc-600">© 2025 ErithX. Built for students, backed by pros.</div>
+                <div class="flex items-center gap-4">
+                    <a href="#" class="text-zinc-500 hover:text-white transition-colors">
+                        <i data-lucide="twitter" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#" class="text-zinc-500 hover:text-white transition-colors">
+                        <i data-lucide="github" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#" class="text-zinc-500 hover:text-white transition-colors">
+                        <i data-lucide="linkedin" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            // ============= DATA =============
+            const feedData = [
+              {
+                id: 1, type: 'blog', title: 'The Evolution of ErithX: The Ultimate All-in-One Tech Starter Pack',
+                excerpt: 'Every computer science student shares the same daily headache. On any given weekend, there is a major coding contest on one site, a global hackathon hidden on a random forum...',
+                fullContent: `<p>Every computer science student and aspiring developer shares the same daily headache. On any given weekend, there is a major coding contest on one site, a global hackathon hidden on a random forum, a data science challenge on another, and an interview preparation sprint happening somewhere else entirely.</p>
+                <p>To keep up, you end up hoarding dozens of open browser tabs, setting chaotic phone alarms, and constantly stressing over timezone conversions. Missing a great opportunity simply because you forgot to check a specific webpage has practically become a rite of passage.</p>
+                <h3>Where We Are Today: The Smart Reminder</h3>
+                <p>ErithX started as a simple, elegant solution to this exact problem. Think of it as a clean, centralized calendar built specifically for tech students. Instead of jumping between five different platforms, you get a single, unified view of every valuable upcoming event across the entire tech ecosystem.</p>
+                <p>With a seamless one-click sign-up, students receive automated email alerts directly in their inbox before a contest begins. Without spending a single rupee on ads, this pure helpful utility has already organically attracted over 2,000 monthly visitors.</p>
+                <h3>Where We Are Going: The Complete Student Ecosystem</h3>
+                <p>The grand vision for ErithX is to transform it from a simple reminder site into the definitive starter pack for every tech student worldwide—a completely free, ad-free space where students and industry experts thrive together.</p>
+                <h3>1. The Expert Knowledge Hub</h3>
+                <p>Forget digging through outdated tutorials and endless internet spam. The platform will feature a dynamic resource library curated by verified industry professionals—including Software Engineers and Tech Leads from top companies.</p>
+                <h3>2. Personalized Guidance & Progress Reviews</h3>
+                <p>We don't believe in generic roadmaps because every student's journey is different. On the future platform, you can share your public tech profiles and achievements to receive a customized weekly progress check-in.</p>
+                <h3>3. Verifiable Milestone Cards</h3>
+                <p>True consistency deserves to be recognized. When you hit major milestones, maintain a great learning streak, or crush a difficult coding round, ErithX will instantly generate a beautifully designed, sleek digital progress card.</p>`,
+                author: 'ErithX Team', authorImg: 'team1', isPro: true,
+                tags: ['community', 'vision'], upvotes: 342, comments: 47, time: '2h ago',
+                readTime: '5 min read'
+              },
+              {
+                id: 2, type: 'pdf', title: 'Mastering Dynamic Programming: A Visual Guide',
+                excerpt: 'Complete DP cheat sheet covering all major patterns — from Fibonacci to Matrix Chain Multiplication with state transition diagrams.',
+                author: 'Priya Sharma', authorImg: 'pro1', isPro: true,
+                tags: ['dp', 'cheatsheet', 'interview-prep'], upvotes: 521, comments: 89, time: '5h ago',
+                pages: 42, size: '3.8 MB', coverImg: 'dp-cheatsheet'
+              },
+              {
+                id: 3, type: 'image', title: 'Binary Search Tree — Complete Traversal Flowchart',
+                excerpt: 'A comprehensive flowchart showing Inorder, Preorder, Postorder, and Level-order traversals with decision points.',
+                author: 'Rahul Verma', authorImg: 'pro2', isPro: true,
+                tags: ['bst', 'trees', 'flowchart'], upvotes: 287, comments: 23, time: '8h ago',
+                imageSrc: 'bst-flowchart'
+              },
+              {
+                id: 4, type: 'link', title: 'NeetCode 150 — The Ultimate Blind 75 Expansion',
+                excerpt: 'NeetCode\'s expanded list of 150 LeetCode problems organized by pattern. The gold standard for interview preparation.',
+                author: 'Ankit Gupta', authorImg: 'pro3', isPro: false,
+                tags: ['leetcode', 'neetcode', 'interview-prep'], upvotes: 198, comments: 31, time: '12h ago',
+                url: 'neetcode.io', favicon: 'neetcode'
+              },
+              {
+                id: 5, type: 'blog', title: 'How I Cracked Google SDE Interview: A Real Experience',
+                excerpt: 'From online assessment to onsite rounds — here\'s everything that was asked, how I prepared, and what I wish I knew earlier. Includes my exact 3-month study plan.',
+                author: 'Sarah Chen', authorImg: 'pro4', isPro: true,
+                tags: ['google', 'interview', 'sde'], upvotes: 891, comments: 156, time: '1d ago',
+                readTime: '12 min read'
+              },
+              {
+                id: 6, type: 'pdf', title: 'System Design Primer: Distributed Systems Notes',
+                excerpt: 'Comprehensive notes covering load balancing, caching, database sharding, message queues, and microservices architecture.',
+                author: 'Rahul Verma', authorImg: 'pro2', isPro: true,
+                tags: ['system-design', 'distributed'], upvotes: 445, comments: 67, time: '1d ago',
+                pages: 78, size: '7.2 MB', coverImg: 'sys-design'
+              },
+              {
+                id: 7, type: 'image', title: 'Sorting Algorithms Comparison Chart',
+                excerpt: 'Visual comparison of all major sorting algorithms — time complexity, space complexity, stability, and when to use which.',
+                author: 'Meera Patel', authorImg: 'user1', isPro: false,
+                tags: ['sorting', 'algorithms', 'comparison'], upvotes: 334, comments: 18, time: '2d ago',
+                imageSrc: 'sorting-compare'
+              },
+              {
+                id: 8, type: 'link', title: 'Visualgo — Algorithm Visualization Tool',
+                excerpt: 'Interactive visualization of data structures and algorithms. Perfect for understanding how BFS, DFS, Dijkstra and others actually work step by step.',
+                author: 'Priya Sharma', authorImg: 'pro1', isPro: true,
+                tags: ['visualization', 'tools', 'learning'], upvotes: 267, comments: 12, time: '2d ago',
+                url: 'visualgo.net', favicon: 'visualgo'
+              },
+              {
+                id: 9, type: 'blog', title: 'Why Graph Problems Terrify Beginners (And Shouldn\'t)',
+                excerpt: 'Most students panic at the word "graph." Here\'s a mental model that makes BFS, DFS, and Dijkstra feel natural — not scary.',
+                author: 'Ankit Gupta', authorImg: 'pro3', isPro: false,
+                tags: ['graphs', 'bfs', 'dfs'], upvotes: 178, comments: 34, time: '3d ago',
+                readTime: '8 min read'
+              },
+              {
+                id: 10, type: 'pdf', title: 'OS Concepts Cheatsheet for GATE',
+                excerpt: 'All important Operating System concepts in one place — process scheduling, deadlocks, memory management, and paging with formulas.',
+                author: 'Vikram Singh', authorImg: 'user2', isPro: false,
+                tags: ['os', 'gate', 'cheatsheet'], upvotes: 156, comments: 21, time: '3d ago',
+                pages: 24, size: '1.5 MB', coverImg: 'os-cheatsheet'
+              },
+              {
+                id: 11, type: 'image', title: 'React Component Lifecycle Diagram',
+                excerpt: 'Complete lifecycle of React class components — mounting, updating, and unmounting phases with method call order.',
+                author: 'Sarah Chen', authorImg: 'pro4', isPro: true,
+                tags: ['react', 'frontend', 'diagram'], upvotes: 223, comments: 9, time: '4d ago',
+                imageSrc: 'react-lifecycle'
+              },
+              {
+                id: 12, type: 'link', title: 'Big-O Cheat Sheet by Eric Rowell',
+                excerpt: 'The definitive Big-O complexity chart for all common data structure operations and sorting algorithms. Bookmark this.',
+                author: 'Meera Patel', authorImg: 'user1', isPro: false,
+                tags: ['big-o', 'complexity', 'reference'], upvotes: 412, comments: 5, time: '5d ago',
+                url: 'bigocheatsheet.com', favicon: 'bigo'
+              }
+            ];
+            
+            // ============= RENDER FEED =============
+            function renderFeed(data) {
+              const grid = document.getElementById('feedGrid');
+              grid.innerHTML = '';
+              
+              data.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `feed-card glass rounded-xl overflow-hidden animate-in`;
+                card.style.animationDelay = `${index * 0.05}s`;
+                card.style.opacity = '0';
+                card.setAttribute('data-type', item.type);
+                card.onclick = () => openDetailModal(item);
+            
+                let typeBadge = '';
+                let contentPreview = '';
+                let metaInfo = '';
+            
+                // Type badge
+                const typeConfig = {
+                  blog: { class: 'type-blog', icon: 'pen-line', label: 'Blog' },
+                  pdf: { class: 'type-pdf', icon: 'file-text', label: 'PDF' },
+                  link: { class: 'type-link', icon: 'link', label: 'Link' },
+                  image: { class: 'type-image', icon: 'image', label: 'Image' }
+                };
+                const tc = typeConfig[item.type];
+                typeBadge = `<span class="${tc.class} px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1"><i data-lucide="${tc.icon}" class="w-3 h-3"></i>${tc.label}</span>`;
+            
+                // Content preview based on type
+                if (item.type === 'image') {
+                  contentPreview = `
+                    <div class="relative overflow-hidden">
+                      <img src="https://picsum.photos/seed/${item.imageSrc}/600/400.jpg" class="w-full h-48 object-cover" alt="${item.title}">
+                      <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent"></div>
+                    </div>`;
+                } else if (item.type === 'pdf') {
+                  contentPreview = `
+                    <div class="relative overflow-hidden">
+                      <img src="https://picsum.photos/seed/${item.coverImg}/600/300.jpg" class="w-full h-36 object-cover opacity-60" alt="${item.title}">
+                      <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
+                      <div class="absolute bottom-3 left-4 flex items-center gap-2">
+                        <div class="w-10 h-12 rounded bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
+                          <i data-lucide="file-text" class="w-5 h-5 text-orange-400"></i>
+                        </div>
+                        <div>
+                          <div class="text-[10px] text-orange-400 font-medium">${item.pages} pages</div>
+                          <div class="text-[10px] text-zinc-500">${item.size}</div>
+                        </div>
+                      </div>
+                    </div>`;
+                } else if (item.type === 'link') {
+                  contentPreview = `
+                    <div class="p-4 bg-white/[0.02] border-b border-white/5">
+                      <div class="flex items-center gap-2 mb-2">
+                        <div class="w-5 h-5 rounded bg-cyan-500/20 flex items-center justify-center">
+                          <i data-lucide="globe" class="w-3 h-3 text-cyan-400"></i>
+                        </div>
+                        <span class="text-[10px] text-cyan-400 font-mono">${item.url}</span>
+                      </div>
+                    </div>`;
+                }
+            
+                // Meta info
+                if (item.type === 'blog') {
+                  metaInfo = `<span class="text-[10px] text-zinc-600 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>${item.readTime}</span>`;
+                }
+            
+                card.innerHTML = `
+                  ${contentPreview}
+                  <div class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                      ${typeBadge}
+                      <span class="text-[10px] text-zinc-600">${item.time}</span>
+                    </div>
+                    <h3 class="text-sm font-medium leading-snug mb-2 line-clamp-2">${item.title}</h3>
+                    <p class="text-xs text-zinc-500 leading-relaxed mb-3 line-clamp-2">${item.excerpt}</p>
+                    <div class="flex flex-wrap gap-1.5 mb-3">
+                      ${item.tags.map(t => `<span class="px-1.5 py-0.5 rounded text-[9px] bg-white/5 text-zinc-500">#${t}</span>`).join('')}
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                      <div class="flex items-center gap-2">
+                        <img src="https://picsum.photos/seed/${item.authorImg}/32/32.jpg" class="w-5 h-5 rounded-full object-cover">
+                        <span class="text-[10px] text-zinc-400">${item.author}</span>
+                        ${item.isPro ? '<span class="text-[8px] bg-emerald-500/20 text-emerald-400 px-1 py-0.5 rounded font-bold">PRO</span>' : ''}
+                      </div>
+                      <div class="flex items-center gap-3">
+                        ${metaInfo}
+                        <span class="text-[10px] text-zinc-500 flex items-center gap-1"><i data-lucide="arrow-up" class="w-3 h-3"></i>${item.upvotes}</span>
+                        <span class="text-[10px] text-zinc-500 flex items-center gap-1"><i data-lucide="message-square" class="w-3 h-3"></i>${item.comments}</span>
+                      </div>
+                    </div>
+                  </div>
+                `;
+            
+                grid.appendChild(card);
+              });
+            
+              lucide.createIcons();
+            }
+            
+            // ============= FILTER =============
+            function filterCards(type, btn) {
+              document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+            
+              const cards = document.querySelectorAll('#feedGrid .feed-card');
+              const filteredData = type === 'all' ? feedData : feedData.filter(d => d.type === type);
+              renderFeed(filteredData);
+            }
+            
+            // ============= DETAIL MODAL =============
+            function openDetailModal(item) {
+              const modal = document.getElementById('detailModal');
+              const content = document.getElementById('detailContent');
+            
+              const typeConfig = {
+                blog: { class: 'type-blog', icon: 'pen-line', label: 'Blog' },
+                pdf: { class: 'type-pdf', icon: 'file-text', label: 'PDF' },
+                link: { class: 'type-link', icon: 'link', label: 'Link' },
+                image: { class: 'type-image', icon: 'image', label: 'Image' }
+              };
+              const tc = typeConfig[item.type];
+            
+              let heroContent = '';
+              let mainContent = '';
+            
+              if (item.type === 'blog') {
+                heroContent = `<div class="mb-8">${item.fullContent}</div>`;
+              } else if (item.type === 'pdf') {
+                heroContent = `
+                  <div class="mb-8 rounded-xl overflow-hidden border border-white/5">
+                    <img src="https://picsum.photos/seed/${item.coverImg}/800/400.jpg" class="w-full h-64 object-cover opacity-70" alt="${item.title}">
+                    <div class="p-6 bg-white/[0.02] flex items-center justify-between">
+                      <div class="flex items-center gap-3">
+                        <div class="w-12 h-14 rounded-lg bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
+                          <i data-lucide="file-text" class="w-6 h-6 text-orange-400"></i>
+                        </div>
+                        <div>
+                          <div class="text-sm font-medium">PDF Document</div>
+                          <div class="text-xs text-zinc-500">${item.pages} pages • ${item.size}</div>
+                        </div>
+                      </div>
+                      <button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium hover:bg-orange-500/20 transition-all">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i> Download PDF
+                      </button>
+                    </div>
+                  </div>
+                  <div class="mb-8"><p class="text-sm text-zinc-400 leading-relaxed">${item.excerpt}</p></div>`;
+              } else if (item.type === 'link') {
+                heroContent = `
+                  <div class="mb-8 rounded-xl overflow-hidden border border-white/5 bg-white/[0.02]">
+                    <img src="https://picsum.photos/seed/${item.favicon}-og/800/400.jpg" class="w-full h-48 object-cover opacity-50" alt="${item.title}">
+                    <div class="p-6">
+                      <div class="flex items-center gap-2 mb-3">
+                        <div class="w-6 h-6 rounded bg-cyan-500/20 flex items-center justify-center">
+                          <i data-lucide="globe" class="w-3.5 h-3.5 text-cyan-400"></i>
+                        </div>
+                        <span class="text-xs text-cyan-400 font-mono">${item.url}</span>
+                      </div>
+                      <p class="text-sm text-zinc-400 leading-relaxed mb-4">${item.excerpt}</p>
+                      <a href="#" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/20 transition-all">
+                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Visit Resource
+                      </a>
+                    </div>
+                  </div>`;
+              } else if (item.type === 'image') {
+                heroContent = `
+                  <div class="mb-8 rounded-xl overflow-hidden border border-white/5">
+                    <img src="https://picsum.photos/seed/${item.imageSrc}/800/600.jpg" class="w-full object-contain bg-zinc-900" alt="${item.title}">
+                  </div>
+                  <div class="mb-8"><p class="text-sm text-zinc-400 leading-relaxed">${item.excerpt}</p></div>`;
+              }
+            
+              content.innerHTML = `
+                <div class="flex items-center justify-between mb-8">
+                  <div class="flex items-center gap-3">
+                    <span class="${tc.class} px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                      <i data-lucide="${tc.icon}" class="w-3.5 h-3.5"></i>${tc.label}
+                    </span>
+                    <span class="text-xs text-zinc-600">${item.time}</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button onclick="handleBookmark()" class="p-2 rounded-lg hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="Bookmark">
+                      <i data-lucide="bookmark" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="handleShare()" class="p-2 rounded-lg hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="Share">
+                      <i data-lucide="share-2" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="closeDetailModal()" class="p-2 rounded-lg hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="Close">
+                      <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </div>
+            
+                <h1 class="text-2xl font-medium tracking-tight mb-4">${item.title}</h1>
+                
+                <div class="flex items-center gap-3 mb-6 pb-6 border-b border-white/5">
+                  <img src="https://picsum.photos/seed/${item.authorImg}/48/48.jpg" class="w-10 h-10 rounded-full object-cover">
+                  <div>
+                    <div class="text-sm font-medium flex items-center gap-1.5">
+                      ${item.author}
+                      ${item.isPro ? '<span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>' : ''}
+                    </div>
+                    <div class="text-xs text-zinc-500">${item.time}</div>
+                  </div>
+                </div>
+            
+                ${heroContent}
+            
+                <div class="flex flex-wrap gap-2 mb-8">
+                  ${item.tags.map(t => `<span class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400">#${t}</span>`).join('')}
+                </div>
+            
+                <!-- Engagement Bar -->
+                <div class="flex items-center gap-4 py-4 border-t border-b border-white/5 mb-8">
+                  <button onclick="handleUpvote(this)" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-xs text-zinc-400">
+                    <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                    <span class="upvote-count">${item.upvotes}</span>
+                  </button>
+                  <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors text-xs text-zinc-400">
+                    <i data-lucide="message-square" class="w-4 h-4"></i>
+                    ${item.comments} Comments
+                  </button>
+                  <button onclick="handleBookmark()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors text-xs text-zinc-400 ml-auto">
+                    <i data-lucide="bookmark" class="w-4 h-4"></i>
+                    Save
+                  </button>
+                </div>
+            
+                <!-- Comments Section -->
                 <div>
-                  <div class="text-[11px] font-medium">30-Day Streak 🔥</div>
-                  <div class="text-[10px] text-zinc-500">Ankit • 2h ago</div>
+                  <h3 class="text-sm font-medium mb-4">Comments</h3>
+                  <div class="flex items-start gap-3 mb-6">
+                    <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="user" class="w-4 h-4 text-zinc-500"></i>
+                    </div>
+                    <div class="flex-1">
+                      <input type="text" placeholder="Add a comment..." class="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/10 text-xs text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors">
+                    </div>
+                  </div>
+                  <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                      <img src="https://picsum.photos/seed/commenter1/32/32.jpg" class="w-7 h-7 rounded-full object-cover flex-shrink-0">
+                      <div>
+                        <div class="text-xs font-medium">Dev Enthusiast <span class="text-[9px] text-zinc-600 ml-1">3h ago</span></div>
+                        <p class="text-xs text-zinc-400 mt-1">This is exactly what I needed! Bookmarked for my interview prep. 🔥</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                      <img src="https://picsum.photos/seed/commenter2/32/32.jpg" class="w-7 h-7 rounded-full object-cover flex-shrink-0">
+                      <div>
+                        <div class="text-xs font-medium">CS Student <span class="text-[9px] text-zinc-600 ml-1">5h ago</span></div>
+                        <p class="text-xs text-zinc-400 mt-1">Can you share the complete study plan you followed? This is gold!</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02] border border-white/5">
-                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-                  <i data-lucide="code" class="w-4 h-4 text-emerald-500"></i>
+              `;
+            
+              modal.classList.remove('hidden');
+              document.body.style.overflow = 'hidden';
+              lucide.createIcons();
+            }
+            
+            function closeDetailModal() {
+              const modal = document.getElementById('detailModal');
+              modal.classList.add('hidden');
+              document.body.style.overflow = '';
+            }
+            
+            // ============= UPLOAD MODAL =============
+            function openUploadModal() {
+              document.getElementById('uploadModal').classList.remove('hidden');
+              document.body.style.overflow = 'hidden';
+              lucide.createIcons();
+            }
+            
+            function closeUploadModal() {
+              document.getElementById('uploadModal').classList.add('hidden');
+              document.body.style.overflow = '';
+            }
+            
+            function selectUploadType(type, btn) {
+              document.querySelectorAll('.upload-type-btn').forEach(b => {
+                b.classList.remove('active');
+                b.style.borderColor = 'rgba(255,255,255,0.05)';
+                b.style.background = 'transparent';
+              });
+              btn.classList.add('active');
+              btn.style.borderColor = 'rgba(255,255,255,0.1)';
+              btn.style.background = 'rgba(255,255,255,0.05)';
+            
+              document.querySelectorAll('.upload-field').forEach(f => f.classList.add('hidden'));
+              document.getElementById(`field-${type}`).classList.remove('hidden');
+            }
+            
+            function handleFileSelect(input, type) {
+              if (input.files.length > 0) {
+                const nameEl = document.getElementById(`${type}FileName`);
+                nameEl.classList.remove('hidden');
+                nameEl.querySelector('span').textContent = input.files[0].name;
+              }
+            }
+            
+            function handleUpload(e) {
+              e.preventDefault();
+              closeUploadModal();
+              showToast('Resource published successfully! 🎉', 'success');
+            }
+            
+            // ============= INTERACTIONS =============
+            function handleUpvote(btn) {
+              const count = btn.querySelector('.upvote-count');
+              const current = parseInt(count.textContent);
+              if (btn.classList.contains('upvoted')) {
+                count.textContent = current - 1;
+                btn.classList.remove('upvoted');
+                btn.style.background = '';
+                btn.style.color = '';
+              } else {
+                count.textContent = current + 1;
+                btn.classList.add('upvoted');
+                btn.style.background = 'rgba(16,185,129,0.1)';
+                btn.style.color = '#34d399';
+              }
+            }
+            
+            function handleBookmark() {
+              showToast('Saved to bookmarks! 📌', 'success');
+            }
+            
+            function handleShare() {
+              showToast('Link copied to clipboard! 🔗', 'success');
+            }
+            
+            // ============= TOAST =============
+            function showToast(message, type = 'success') {
+              const container = document.getElementById('toast-container');
+              const toast = document.createElement('div');
+              const bgColor = type === 'success' ? 'rgba(16,185,129,0.1)' : 'rgba(249,115,22,0.1)';
+              const borderColor = type === 'success' ? 'rgba(16,185,129,0.2)' : 'rgba(249,115,22,0.2)';
+              const textColor = type === 'success' ? '#34d399' : '#fb923c';
+              
+              toast.className = 'toast';
+              toast.innerHTML = `
+                <div class="px-4 py-3 rounded-xl backdrop-blur-md text-xs font-medium flex items-center gap-2" style="background:${bgColor};border:1px solid ${borderColor};color:${textColor};">
+                  <i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}" class="w-4 h-4"></i>
+                  ${message}
                 </div>
-                <div>
-                  <div class="text-[11px] font-medium">100 Problems Solved</div>
-                  <div class="text-[10px] text-zinc-500">Meera • 5h ago</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DETAIL MODAL -->
-  <div id="detailModal" class="fixed inset-0 z-[60] hidden">
-    <div class="modal-overlay absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeDetailModal()"></div>
-    <div class="modal-content absolute right-0 top-0 h-full w-full max-w-3xl bg-zinc-950 border-l border-white/5 overflow-y-auto">
-      <div id="detailContent" class="p-8">
-        <!-- Filled by JS -->
-      </div>
-    </div>
-  </div>
-
-  <!-- UPLOAD MODAL -->
-  <div id="uploadModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
-    <div class="modal-overlay absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeUploadModal()"></div>
-    <div class="modal-content relative w-full max-w-xl glass rounded-2xl p-0 overflow-hidden">
-      <!-- Header -->
-      <div class="flex items-center justify-between p-6 border-b border-white/5">
-        <h2 class="text-lg font-medium">Share a Resource</h2>
-        <button onclick="closeUploadModal()" class="p-1.5 rounded-lg hover:bg-white/5 transition-colors">
-          <i data-lucide="x" class="w-4 h-4 text-zinc-400"></i>
-        </button>
-      </div>
-
-      <!-- Upload Type Selector -->
-      <div class="p-6">
-        <div class="grid grid-cols-4 gap-3 mb-6">
-          <button class="upload-type-btn active flex flex-col items-center gap-2 p-3 rounded-xl border border-white/5 hover:bg-white/5 transition-all" data-type="blog" onclick="selectUploadType('blog', this)">
-            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-              <i data-lucide="pen-line" class="w-5 h-5 text-emerald-400"></i>
-            </div>
-            <span class="text-[10px] font-medium text-zinc-400">Blog</span>
-          </button>
-          <button class="upload-type-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-white/5 hover:bg-white/5 transition-all" data-type="pdf" onclick="selectUploadType('pdf', this)">
-            <div class="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
-              <i data-lucide="file-text" class="w-5 h-5 text-orange-400"></i>
-            </div>
-            <span class="text-[10px] font-medium text-zinc-400">PDF</span>
-          </button>
-          <button class="upload-type-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-white/5 hover:bg-white/5 transition-all" data-type="link" onclick="selectUploadType('link', this)">
-            <div class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-              <i data-lucide="link" class="w-5 h-5 text-cyan-400"></i>
-            </div>
-            <span class="text-[10px] font-medium text-zinc-400">Link</span>
-          </button>
-          <button class="upload-type-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-white/5 hover:bg-white/5 transition-all" data-type="image" onclick="selectUploadType('image', this)">
-            <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
-              <i data-lucide="image" class="w-5 h-5 text-purple-400"></i>
-            </div>
-            <span class="text-[10px] font-medium text-zinc-400">Image</span>
-          </button>
-        </div>
-
-        <!-- Form Fields -->
-        <form id="uploadForm" onsubmit="handleUpload(event)">
-          <div class="space-y-4">
-            <div>
-              <label class="text-xs font-medium text-zinc-400 mb-1.5 block">Title *</label>
-              <input type="text" required class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors" placeholder="Give your resource a clear title">
-            </div>
-
-            <!-- Blog Fields -->
-            <div id="field-blog" class="upload-field">
-              <label class="text-xs font-medium text-zinc-400 mb-1.5 block">Content *</label>
-              <textarea rows="6" class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors resize-none" placeholder="Write your blog post... Markdown supported"></textarea>
-            </div>
-
-            <!-- PDF Fields -->
-            <div id="field-pdf" class="upload-field hidden">
-              <label class="text-xs font-medium text-zinc-400 mb-1.5 block">Upload PDF *</label>
-              <div class="upload-zone rounded-xl p-8 text-center cursor-pointer" onclick="document.getElementById('pdfInput').click()" id="pdfDropZone">
-                <i data-lucide="upload-cloud" class="w-8 h-8 text-zinc-500 mx-auto mb-3"></i>
-                <p class="text-xs text-zinc-400">Drag & drop your PDF here or <span class="text-emerald-400">browse</span></p>
-                <p class="text-[10px] text-zinc-600 mt-1">Max 25MB</p>
-                <input type="file" id="pdfInput" accept=".pdf" class="hidden" onchange="handleFileSelect(this, 'pdf')">
-              </div>
-              <div id="pdfFileName" class="hidden mt-2 text-xs text-emerald-400 flex items-center gap-1.5">
-                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
-                <span></span>
-              </div>
-            </div>
-
-            <!-- Link Fields -->
-            <div id="field-link" class="upload-field hidden">
-              <label class="text-xs font-medium text-zinc-400 mb-1.5 block">URL *</label>
-              <input type="url" class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors" placeholder="https://...">
-              <label class="text-xs font-medium text-zinc-400 mb-1.5 block mt-4">Description</label>
-              <textarea rows="3" class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors resize-none" placeholder="Brief description of what this link contains"></textarea>
-            </div>
-
-            <!-- Image Fields -->
-            <div id="field-image" class="upload-field hidden">
-              <label class="text-xs font-medium text-zinc-400 mb-1.5 block">Upload Image *</label>
-              <div class="upload-zone rounded-xl p-8 text-center cursor-pointer" onclick="document.getElementById('imageInput').click()" id="imageDropZone">
-                <i data-lucide="image-plus" class="w-8 h-8 text-zinc-500 mx-auto mb-3"></i>
-                <p class="text-xs text-zinc-400">Drag & drop your diagram/flowchart or <span class="text-emerald-400">browse</span></p>
-                <p class="text-[10px] text-zinc-600 mt-1">PNG, JPG, SVG • Max 10MB</p>
-                <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleFileSelect(this, 'image')">
-              </div>
-              <div id="imageFileName" class="hidden mt-2 text-xs text-emerald-400 flex items-center gap-1.5">
-                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
-                <span></span>
-              </div>
-              <label class="text-xs font-medium text-zinc-400 mb-1.5 block mt-4">Caption</label>
-              <input type="text" class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors" placeholder="e.g., Binary Search Tree traversal flowchart">
-            </div>
-
-            <!-- Common Fields -->
-            <div>
-              <label class="text-xs font-medium text-zinc-400 mb-1.5 block">Tags</label>
-              <input type="text" class="w-full px-4 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors" placeholder="e.g., dsa, graphs, interview-prep (comma separated)">
-            </div>
-          </div>
-
-          <div class="flex items-center justify-end gap-3 mt-6 pt-6 border-t border-white/5">
-            <button type="button" onclick="closeUploadModal()" class="px-4 py-2 rounded-lg text-xs font-medium text-zinc-400 hover:text-white transition-colors">Cancel</button>
-            <button type="submit" class="px-5 py-2 rounded-lg bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all flex items-center gap-1.5">
-              <i data-lucide="send" class="w-3.5 h-3.5"></i>
-              Publish
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="border-t border-white/5 py-8 px-6">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="text-[10px] text-zinc-600">© 2025 DSA Quest. Built for students, backed by pros.</div>
-      <div class="flex items-center gap-4">
-        <a href="#" class="text-zinc-500 hover:text-white transition-colors"><i data-lucide="twitter" class="w-4 h-4"></i></a>
-        <a href="#" class="text-zinc-500 hover:text-white transition-colors"><i data-lucide="github" class="w-4 h-4"></i></a>
-        <a href="#" class="text-zinc-500 hover:text-white transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
-      </div>
-    </div>
-  </footer>
-
-<script>
-// ============= DATA =============
-const feedData = [
-  {
-    id: 1, type: 'blog', title: 'The Evolution of DSA Quest: The Ultimate All-in-One Tech Starter Pack',
-    excerpt: 'Every computer science student shares the same daily headache. On any given weekend, there is a major coding contest on one site, a global hackathon hidden on a random forum...',
-    fullContent: `<p>Every computer science student and aspiring developer shares the same daily headache. On any given weekend, there is a major coding contest on one site, a global hackathon hidden on a random forum, a data science challenge on another, and an interview preparation sprint happening somewhere else entirely.</p>
-    <p>To keep up, you end up hoarding dozens of open browser tabs, setting chaotic phone alarms, and constantly stressing over timezone conversions. Missing a great opportunity simply because you forgot to check a specific webpage has practically become a rite of passage.</p>
-    <h3>Where We Are Today: The Smart Reminder</h3>
-    <p>DSA Quest started as a simple, elegant solution to this exact problem. Think of it as a clean, centralized calendar built specifically for tech students. Instead of jumping between five different platforms, you get a single, unified view of every valuable upcoming event across the entire tech ecosystem.</p>
-    <p>With a seamless one-click sign-up, students receive automated email alerts directly in their inbox before a contest begins. Without spending a single rupee on ads, this pure helpful utility has already organically attracted over 2,000 monthly visitors.</p>
-    <h3>Where We Are Going: The Complete Student Ecosystem</h3>
-    <p>The grand vision for DSA Quest is to transform it from a simple reminder site into the definitive starter pack for every tech student worldwide—a completely free, ad-free space where students and industry experts thrive together.</p>
-    <h3>1. The Expert Knowledge Hub</h3>
-    <p>Forget digging through outdated tutorials and endless internet spam. The platform will feature a dynamic resource library curated by verified industry professionals—including Software Engineers and Tech Leads from top companies.</p>
-    <h3>2. Personalized Guidance & Progress Reviews</h3>
-    <p>We don't believe in generic roadmaps because every student's journey is different. On the future platform, you can share your public tech profiles and achievements to receive a customized weekly progress check-in.</p>
-    <h3>3. Verifiable Milestone Cards</h3>
-    <p>True consistency deserves to be recognized. When you hit major milestones, maintain a great learning streak, or crush a difficult coding round, DSA Quest will instantly generate a beautifully designed, sleek digital progress card.</p>`,
-    author: 'DSA Quest Team', authorImg: 'team1', isPro: true,
-    tags: ['community', 'vision'], upvotes: 342, comments: 47, time: '2h ago',
-    readTime: '5 min read'
-  },
-  {
-    id: 2, type: 'pdf', title: 'Mastering Dynamic Programming: A Visual Guide',
-    excerpt: 'Complete DP cheat sheet covering all major patterns — from Fibonacci to Matrix Chain Multiplication with state transition diagrams.',
-    author: 'Priya Sharma', authorImg: 'pro1', isPro: true,
-    tags: ['dp', 'cheatsheet', 'interview-prep'], upvotes: 521, comments: 89, time: '5h ago',
-    pages: 42, size: '3.8 MB', coverImg: 'dp-cheatsheet'
-  },
-  {
-    id: 3, type: 'image', title: 'Binary Search Tree — Complete Traversal Flowchart',
-    excerpt: 'A comprehensive flowchart showing Inorder, Preorder, Postorder, and Level-order traversals with decision points.',
-    author: 'Rahul Verma', authorImg: 'pro2', isPro: true,
-    tags: ['bst', 'trees', 'flowchart'], upvotes: 287, comments: 23, time: '8h ago',
-    imageSrc: 'bst-flowchart'
-  },
-  {
-    id: 4, type: 'link', title: 'NeetCode 150 — The Ultimate Blind 75 Expansion',
-    excerpt: 'NeetCode\'s expanded list of 150 LeetCode problems organized by pattern. The gold standard for interview preparation.',
-    author: 'Ankit Gupta', authorImg: 'pro3', isPro: false,
-    tags: ['leetcode', 'neetcode', 'interview-prep'], upvotes: 198, comments: 31, time: '12h ago',
-    url: 'neetcode.io', favicon: 'neetcode'
-  },
-  {
-    id: 5, type: 'blog', title: 'How I Cracked Google SDE Interview: A Real Experience',
-    excerpt: 'From online assessment to onsite rounds — here\'s everything that was asked, how I prepared, and what I wish I knew earlier. Includes my exact 3-month study plan.',
-    author: 'Sarah Chen', authorImg: 'pro4', isPro: true,
-    tags: ['google', 'interview', 'sde'], upvotes: 891, comments: 156, time: '1d ago',
-    readTime: '12 min read'
-  },
-  {
-    id: 6, type: 'pdf', title: 'System Design Primer: Distributed Systems Notes',
-    excerpt: 'Comprehensive notes covering load balancing, caching, database sharding, message queues, and microservices architecture.',
-    author: 'Rahul Verma', authorImg: 'pro2', isPro: true,
-    tags: ['system-design', 'distributed'], upvotes: 445, comments: 67, time: '1d ago',
-    pages: 78, size: '7.2 MB', coverImg: 'sys-design'
-  },
-  {
-    id: 7, type: 'image', title: 'Sorting Algorithms Comparison Chart',
-    excerpt: 'Visual comparison of all major sorting algorithms — time complexity, space complexity, stability, and when to use which.',
-    author: 'Meera Patel', authorImg: 'user1', isPro: false,
-    tags: ['sorting', 'algorithms', 'comparison'], upvotes: 334, comments: 18, time: '2d ago',
-    imageSrc: 'sorting-compare'
-  },
-  {
-    id: 8, type: 'link', title: 'Visualgo — Algorithm Visualization Tool',
-    excerpt: 'Interactive visualization of data structures and algorithms. Perfect for understanding how BFS, DFS, Dijkstra and others actually work step by step.',
-    author: 'Priya Sharma', authorImg: 'pro1', isPro: true,
-    tags: ['visualization', 'tools', 'learning'], upvotes: 267, comments: 12, time: '2d ago',
-    url: 'visualgo.net', favicon: 'visualgo'
-  },
-  {
-    id: 9, type: 'blog', title: 'Why Graph Problems Terrify Beginners (And Shouldn\'t)',
-    excerpt: 'Most students panic at the word "graph." Here\'s a mental model that makes BFS, DFS, and Dijkstra feel natural — not scary.',
-    author: 'Ankit Gupta', authorImg: 'pro3', isPro: false,
-    tags: ['graphs', 'bfs', 'dfs'], upvotes: 178, comments: 34, time: '3d ago',
-    readTime: '8 min read'
-  },
-  {
-    id: 10, type: 'pdf', title: 'OS Concepts Cheatsheet for GATE',
-    excerpt: 'All important Operating System concepts in one place — process scheduling, deadlocks, memory management, and paging with formulas.',
-    author: 'Vikram Singh', authorImg: 'user2', isPro: false,
-    tags: ['os', 'gate', 'cheatsheet'], upvotes: 156, comments: 21, time: '3d ago',
-    pages: 24, size: '1.5 MB', coverImg: 'os-cheatsheet'
-  },
-  {
-    id: 11, type: 'image', title: 'React Component Lifecycle Diagram',
-    excerpt: 'Complete lifecycle of React class components — mounting, updating, and unmounting phases with method call order.',
-    author: 'Sarah Chen', authorImg: 'pro4', isPro: true,
-    tags: ['react', 'frontend', 'diagram'], upvotes: 223, comments: 9, time: '4d ago',
-    imageSrc: 'react-lifecycle'
-  },
-  {
-    id: 12, type: 'link', title: 'Big-O Cheat Sheet by Eric Rowell',
-    excerpt: 'The definitive Big-O complexity chart for all common data structure operations and sorting algorithms. Bookmark this.',
-    author: 'Meera Patel', authorImg: 'user1', isPro: false,
-    tags: ['big-o', 'complexity', 'reference'], upvotes: 412, comments: 5, time: '5d ago',
-    url: 'bigocheatsheet.com', favicon: 'bigo'
-  }
-];
-
-// ============= RENDER FEED =============
-function renderFeed(data) {
-  const grid = document.getElementById('feedGrid');
-  grid.innerHTML = '';
-  
-  data.forEach((item, index) => {
-    const card = document.createElement('div');
-    card.className = `feed-card glass rounded-xl overflow-hidden animate-in`;
-    card.style.animationDelay = `${index * 0.05}s`;
-    card.style.opacity = '0';
-    card.setAttribute('data-type', item.type);
-    card.onclick = () => openDetailModal(item);
-
-    let typeBadge = '';
-    let contentPreview = '';
-    let metaInfo = '';
-
-    // Type badge
-    const typeConfig = {
-      blog: { class: 'type-blog', icon: 'pen-line', label: 'Blog' },
-      pdf: { class: 'type-pdf', icon: 'file-text', label: 'PDF' },
-      link: { class: 'type-link', icon: 'link', label: 'Link' },
-      image: { class: 'type-image', icon: 'image', label: 'Image' }
-    };
-    const tc = typeConfig[item.type];
-    typeBadge = `<span class="${tc.class} px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1"><i data-lucide="${tc.icon}" class="w-3 h-3"></i>${tc.label}</span>`;
-
-    // Content preview based on type
-    if (item.type === 'image') {
-      contentPreview = `
-        <div class="relative overflow-hidden">
-          <img src="https://picsum.photos/seed/${item.imageSrc}/600/400.jpg" class="w-full h-48 object-cover" alt="${item.title}">
-          <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent"></div>
-        </div>`;
-    } else if (item.type === 'pdf') {
-      contentPreview = `
-        <div class="relative overflow-hidden">
-          <img src="https://picsum.photos/seed/${item.coverImg}/600/300.jpg" class="w-full h-36 object-cover opacity-60" alt="${item.title}">
-          <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
-          <div class="absolute bottom-3 left-4 flex items-center gap-2">
-            <div class="w-10 h-12 rounded bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
-              <i data-lucide="file-text" class="w-5 h-5 text-orange-400"></i>
-            </div>
-            <div>
-              <div class="text-[10px] text-orange-400 font-medium">${item.pages} pages</div>
-              <div class="text-[10px] text-zinc-500">${item.size}</div>
-            </div>
-          </div>
-        </div>`;
-    } else if (item.type === 'link') {
-      contentPreview = `
-        <div class="p-4 bg-white/[0.02] border-b border-white/5">
-          <div class="flex items-center gap-2 mb-2">
-            <div class="w-5 h-5 rounded bg-cyan-500/20 flex items-center justify-center">
-              <i data-lucide="globe" class="w-3 h-3 text-cyan-400"></i>
-            </div>
-            <span class="text-[10px] text-cyan-400 font-mono">${item.url}</span>
-          </div>
-        </div>`;
-    }
-
-    // Meta info
-    if (item.type === 'blog') {
-      metaInfo = `<span class="text-[10px] text-zinc-600 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>${item.readTime}</span>`;
-    }
-
-    card.innerHTML = `
-      ${contentPreview}
-      <div class="p-4">
-        <div class="flex items-center justify-between mb-2">
-          ${typeBadge}
-          <span class="text-[10px] text-zinc-600">${item.time}</span>
-        </div>
-        <h3 class="text-sm font-medium leading-snug mb-2 line-clamp-2">${item.title}</h3>
-        <p class="text-xs text-zinc-500 leading-relaxed mb-3 line-clamp-2">${item.excerpt}</p>
-        <div class="flex flex-wrap gap-1.5 mb-3">
-          ${item.tags.map(t => `<span class="px-1.5 py-0.5 rounded text-[9px] bg-white/5 text-zinc-500">#${t}</span>`).join('')}
-        </div>
-        <div class="flex items-center justify-between pt-3 border-t border-white/5">
-          <div class="flex items-center gap-2">
-            <img src="https://picsum.photos/seed/${item.authorImg}/32/32.jpg" class="w-5 h-5 rounded-full object-cover">
-            <span class="text-[10px] text-zinc-400">${item.author}</span>
-            ${item.isPro ? '<span class="text-[8px] bg-emerald-500/20 text-emerald-400 px-1 py-0.5 rounded font-bold">PRO</span>' : ''}
-          </div>
-          <div class="flex items-center gap-3">
-            ${metaInfo}
-            <span class="text-[10px] text-zinc-500 flex items-center gap-1"><i data-lucide="arrow-up" class="w-3 h-3"></i>${item.upvotes}</span>
-            <span class="text-[10px] text-zinc-500 flex items-center gap-1"><i data-lucide="message-square" class="w-3 h-3"></i>${item.comments}</span>
-          </div>
-        </div>
-      </div>
-    `;
-
-    grid.appendChild(card);
-  });
-
-  lucide.createIcons();
-}
-
-// ============= FILTER =============
-function filterCards(type, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-
-  const cards = document.querySelectorAll('#feedGrid .feed-card');
-  const filteredData = type === 'all' ? feedData : feedData.filter(d => d.type === type);
-  renderFeed(filteredData);
-}
-
-// ============= DETAIL MODAL =============
-function openDetailModal(item) {
-  const modal = document.getElementById('detailModal');
-  const content = document.getElementById('detailContent');
-
-  const typeConfig = {
-    blog: { class: 'type-blog', icon: 'pen-line', label: 'Blog' },
-    pdf: { class: 'type-pdf', icon: 'file-text', label: 'PDF' },
-    link: { class: 'type-link', icon: 'link', label: 'Link' },
-    image: { class: 'type-image', icon: 'image', label: 'Image' }
-  };
-  const tc = typeConfig[item.type];
-
-  let heroContent = '';
-  let mainContent = '';
-
-  if (item.type === 'blog') {
-    heroContent = `<div class="mb-8">${item.fullContent}</div>`;
-  } else if (item.type === 'pdf') {
-    heroContent = `
-      <div class="mb-8 rounded-xl overflow-hidden border border-white/5">
-        <img src="https://picsum.photos/seed/${item.coverImg}/800/400.jpg" class="w-full h-64 object-cover opacity-70" alt="${item.title}">
-        <div class="p-6 bg-white/[0.02] flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-14 rounded-lg bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
-              <i data-lucide="file-text" class="w-6 h-6 text-orange-400"></i>
-            </div>
-            <div>
-              <div class="text-sm font-medium">PDF Document</div>
-              <div class="text-xs text-zinc-500">${item.pages} pages • ${item.size}</div>
-            </div>
-          </div>
-          <button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium hover:bg-orange-500/20 transition-all">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i> Download PDF
-          </button>
-        </div>
-      </div>
-      <div class="mb-8"><p class="text-sm text-zinc-400 leading-relaxed">${item.excerpt}</p></div>`;
-  } else if (item.type === 'link') {
-    heroContent = `
-      <div class="mb-8 rounded-xl overflow-hidden border border-white/5 bg-white/[0.02]">
-        <img src="https://picsum.photos/seed/${item.favicon}-og/800/400.jpg" class="w-full h-48 object-cover opacity-50" alt="${item.title}">
-        <div class="p-6">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-6 h-6 rounded bg-cyan-500/20 flex items-center justify-center">
-              <i data-lucide="globe" class="w-3.5 h-3.5 text-cyan-400"></i>
-            </div>
-            <span class="text-xs text-cyan-400 font-mono">${item.url}</span>
-          </div>
-          <p class="text-sm text-zinc-400 leading-relaxed mb-4">${item.excerpt}</p>
-          <a href="#" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/20 transition-all">
-            <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Visit Resource
-          </a>
-        </div>
-      </div>`;
-  } else if (item.type === 'image') {
-    heroContent = `
-      <div class="mb-8 rounded-xl overflow-hidden border border-white/5">
-        <img src="https://picsum.photos/seed/${item.imageSrc}/800/600.jpg" class="w-full object-contain bg-zinc-900" alt="${item.title}">
-      </div>
-      <div class="mb-8"><p class="text-sm text-zinc-400 leading-relaxed">${item.excerpt}</p></div>`;
-  }
-
-  content.innerHTML = `
-    <div class="flex items-center justify-between mb-8">
-      <div class="flex items-center gap-3">
-        <span class="${tc.class} px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
-          <i data-lucide="${tc.icon}" class="w-3.5 h-3.5"></i>${tc.label}
-        </span>
-        <span class="text-xs text-zinc-600">${item.time}</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="handleBookmark()" class="p-2 rounded-lg hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="Bookmark">
-          <i data-lucide="bookmark" class="w-4 h-4"></i>
-        </button>
-        <button onclick="handleShare()" class="p-2 rounded-lg hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="Share">
-          <i data-lucide="share-2" class="w-4 h-4"></i>
-        </button>
-        <button onclick="closeDetailModal()" class="p-2 rounded-lg hover:bg-white/5 transition-colors text-zinc-500 hover:text-white" title="Close">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
-    </div>
-
-    <h1 class="text-2xl font-medium tracking-tight mb-4">${item.title}</h1>
-    
-    <div class="flex items-center gap-3 mb-6 pb-6 border-b border-white/5">
-      <img src="https://picsum.photos/seed/${item.authorImg}/48/48.jpg" class="w-10 h-10 rounded-full object-cover">
-      <div>
-        <div class="text-sm font-medium flex items-center gap-1.5">
-          ${item.author}
-          ${item.isPro ? '<span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>' : ''}
-        </div>
-        <div class="text-xs text-zinc-500">${item.time}</div>
-      </div>
-    </div>
-
-    ${heroContent}
-
-    <div class="flex flex-wrap gap-2 mb-8">
-      ${item.tags.map(t => `<span class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400">#${t}</span>`).join('')}
-    </div>
-
-    <!-- Engagement Bar -->
-    <div class="flex items-center gap-4 py-4 border-t border-b border-white/5 mb-8">
-      <button onclick="handleUpvote(this)" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-xs text-zinc-400">
-        <i data-lucide="arrow-up" class="w-4 h-4"></i>
-        <span class="upvote-count">${item.upvotes}</span>
-      </button>
-      <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors text-xs text-zinc-400">
-        <i data-lucide="message-square" class="w-4 h-4"></i>
-        ${item.comments} Comments
-      </button>
-      <button onclick="handleBookmark()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors text-xs text-zinc-400 ml-auto">
-        <i data-lucide="bookmark" class="w-4 h-4"></i>
-        Save
-      </button>
-    </div>
-
-    <!-- Comments Section -->
-    <div>
-      <h3 class="text-sm font-medium mb-4">Comments</h3>
-      <div class="flex items-start gap-3 mb-6">
-        <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0">
-          <i data-lucide="user" class="w-4 h-4 text-zinc-500"></i>
-        </div>
-        <div class="flex-1">
-          <input type="text" placeholder="Add a comment..." class="w-full px-3 py-2 rounded-lg bg-white/[0.03] border border-white/10 text-xs text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-emerald-500/50 transition-colors">
-        </div>
-      </div>
-      <div class="space-y-4">
-        <div class="flex items-start gap-3">
-          <img src="https://picsum.photos/seed/commenter1/32/32.jpg" class="w-7 h-7 rounded-full object-cover flex-shrink-0">
-          <div>
-            <div class="text-xs font-medium">Dev Enthusiast <span class="text-[9px] text-zinc-600 ml-1">3h ago</span></div>
-            <p class="text-xs text-zinc-400 mt-1">This is exactly what I needed! Bookmarked for my interview prep. 🔥</p>
-          </div>
-        </div>
-        <div class="flex items-start gap-3">
-          <img src="https://picsum.photos/seed/commenter2/32/32.jpg" class="w-7 h-7 rounded-full object-cover flex-shrink-0">
-          <div>
-            <div class="text-xs font-medium">CS Student <span class="text-[9px] text-zinc-600 ml-1">5h ago</span></div>
-            <p class="text-xs text-zinc-400 mt-1">Can you share the complete study plan you followed? This is gold!</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-
-  modal.classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-  lucide.createIcons();
-}
-
-function closeDetailModal() {
-  const modal = document.getElementById('detailModal');
-  modal.classList.add('hidden');
-  document.body.style.overflow = '';
-}
-
-// ============= UPLOAD MODAL =============
-function openUploadModal() {
-  document.getElementById('uploadModal').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-  lucide.createIcons();
-}
-
-function closeUploadModal() {
-  document.getElementById('uploadModal').classList.add('hidden');
-  document.body.style.overflow = '';
-}
-
-function selectUploadType(type, btn) {
-  document.querySelectorAll('.upload-type-btn').forEach(b => {
-    b.classList.remove('active');
-    b.style.borderColor = 'rgba(255,255,255,0.05)';
-    b.style.background = 'transparent';
-  });
-  btn.classList.add('active');
-  btn.style.borderColor = 'rgba(255,255,255,0.1)';
-  btn.style.background = 'rgba(255,255,255,0.05)';
-
-  document.querySelectorAll('.upload-field').forEach(f => f.classList.add('hidden'));
-  document.getElementById(`field-${type}`).classList.remove('hidden');
-}
-
-function handleFileSelect(input, type) {
-  if (input.files.length > 0) {
-    const nameEl = document.getElementById(`${type}FileName`);
-    nameEl.classList.remove('hidden');
-    nameEl.querySelector('span').textContent = input.files[0].name;
-  }
-}
-
-function handleUpload(e) {
-  e.preventDefault();
-  closeUploadModal();
-  showToast('Resource published successfully! 🎉', 'success');
-}
-
-// ============= INTERACTIONS =============
-function handleUpvote(btn) {
-  const count = btn.querySelector('.upvote-count');
-  const current = parseInt(count.textContent);
-  if (btn.classList.contains('upvoted')) {
-    count.textContent = current - 1;
-    btn.classList.remove('upvoted');
-    btn.style.background = '';
-    btn.style.color = '';
-  } else {
-    count.textContent = current + 1;
-    btn.classList.add('upvoted');
-    btn.style.background = 'rgba(16,185,129,0.1)';
-    btn.style.color = '#34d399';
-  }
-}
-
-function handleBookmark() {
-  showToast('Saved to bookmarks! 📌', 'success');
-}
-
-function handleShare() {
-  showToast('Link copied to clipboard! 🔗', 'success');
-}
-
-// ============= TOAST =============
-function showToast(message, type = 'success') {
-  const container = document.getElementById('toast-container');
-  const toast = document.createElement('div');
-  const bgColor = type === 'success' ? 'rgba(16,185,129,0.1)' : 'rgba(249,115,22,0.1)';
-  const borderColor = type === 'success' ? 'rgba(16,185,129,0.2)' : 'rgba(249,115,22,0.2)';
-  const textColor = type === 'success' ? '#34d399' : '#fb923c';
-  
-  toast.className = 'toast';
-  toast.innerHTML = `
-    <div class="px-4 py-3 rounded-xl backdrop-blur-md text-xs font-medium flex items-center gap-2" style="background:${bgColor};border:1px solid ${borderColor};color:${textColor};">
-      <i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}" class="w-4 h-4"></i>
-      ${message}
-    </div>
-  `;
-  container.appendChild(toast);
-  lucide.createIcons();
-  setTimeout(() => toast.remove(), 3000);
-}
-
-// ============= SEARCH =============
-document.getElementById('searchInput').addEventListener('input', function(e) {
-  const query = e.target.value.toLowerCase();
-  if (!query) {
-    renderFeed(feedData);
-    return;
-  }
-  const filtered = feedData.filter(item => 
-    item.title.toLowerCase().includes(query) || 
-    item.excerpt.toLowerCase().includes(query) ||
-    item.tags.some(t => t.toLowerCase().includes(query))
-  );
-  renderFeed(filtered);
-});
-
-// ============= DRAG & DROP =============
-['pdfDropZone', 'imageDropZone'].forEach(id => {
-  const zone = document.getElementById(id);
-  if (!zone) return;
-  zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-  zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('dragover'); });
-});
-
-// ============= KEYBOARD SHORTCUTS =============
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    closeDetailModal();
-    closeUploadModal();
-  }
-});
-
-// ============= INIT =============
-renderFeed(feedData);
-
-// Initialize active upload type button style
-document.querySelector('.upload-type-btn.active').style.borderColor = 'rgba(255,255,255,0.1)';
-document.querySelector('.upload-type-btn.active').style.background = 'rgba(255,255,255,0.05)';
-</script>
-
-</body>
-</html>
+              `;
+              container.appendChild(toast);
+              lucide.createIcons();
+              setTimeout(() => toast.remove(), 3000);
+            }
+            
+            // ============= SEARCH =============
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+              const query = e.target.value.toLowerCase();
+              if (!query) {
+                renderFeed(feedData);
+                return;
+              }
+              const filtered = feedData.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                item.excerpt.toLowerCase().includes(query) ||
+                item.tags.some(t => t.toLowerCase().includes(query))
+              );
+              renderFeed(filtered);
+            });
+            
+            // ============= DRAG & DROP =============
+            ['pdfDropZone', 'imageDropZone'].forEach(id => {
+              const zone = document.getElementById(id);
+              if (!zone) return;
+              zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+              zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+              zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('dragover'); });
+            });
+            
+            // ============= KEYBOARD SHORTCUTS =============
+            document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape') {
+                closeDetailModal();
+                closeUploadModal();
+              }
+            });
+            
+            // ============= INIT =============
+            renderFeed(feedData);
+            
+            // Initialize active upload type button style
+            document.querySelector('.upload-type-btn.active').style.borderColor = 'rgba(255,255,255,0.1)';
+            document.querySelector('.upload-type-btn.active').style.background = 'rgba(255,255,255,0.05)';
+            </script>
+            
+            </body>
+            </html>

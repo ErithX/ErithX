@@ -11,7 +11,7 @@ import CTA from '@/components/landing/CTA';
 import ScrollRevealProvider from '@/components/landing/ScrollRevealProvider';
 
 export const metadata: Metadata = {
-  title: 'DSA Quest | Turn Career Prep Into a Game You Love to Win',
+  title: 'ErithX | Turn Career Prep Into a Game You Love to Win',
   description: 'Make coding practice engaging. Track live contests from major platforms, get clear study notes, and prepare for your placement exams.',
 };
 
@@ -19,8 +19,8 @@ export default function Home() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'DSA Quest',
-    url: 'https://contest-tracker-zms3.vercel.app',
+    name: 'ErithX',
+    url: process.env.NEXT_PUBLIC_NEW_DOMAIN,
     applicationCategory: 'EducationalApplication, DeveloperApplication',
     operatingSystem: 'All',
     description: 'The premier zero-noise digital sanctuary for software engineering students. Features 1-Click Google Calendar sync for coding contests, project blueprints with PDFs, and 2026+ practical career readiness.',

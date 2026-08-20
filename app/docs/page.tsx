@@ -9,10 +9,10 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Platform Documentation & Architecture Guide | DSA Quest',
-  description: 'Official technical documentation for DSA Quest. Learn how our 1-click Google Calendar sync operates, explore multi-platform contest aggregation architecture, and master our project blueprints designed for 2026 tech hiring.',
+  title: 'Platform Documentation & Architecture Guide | ErithX',
+  description: 'Official technical documentation for ErithX. Learn how our 1-click Google Calendar sync operates, explore multi-platform contest aggregation architecture, and master our project blueprints designed for 2026 tech hiring.',
   keywords: [
-    'DSA Quest documentation', 
+    'ErithX documentation', 
     'google calendar sync API', 
     'coding contest aggregator', 
     'system design blueprints', 
@@ -20,18 +20,18 @@ export const metadata: Metadata = {
     'software engineering placement prep',
     'tech interview preparation 2026'
   ],
-  authors: [{ name: 'DSA Quest Engineering' }],
+  authors: [{ name: 'ErithX Engineering' }],
   openGraph: {
-    title: 'Platform Documentation & Architecture Guide | DSA Quest',
-    description: 'Deep dive into DSA Quest\'s architecture: 1-click calendar sync, multi-platform contest aggregation, and advanced project blueprints.',
-    url: 'https://contest-tracker-zms3.vercel.app/docs',
-    siteName: 'DSA Quest',
+    title: 'Platform Documentation & Architecture Guide | ErithX',
+    description: 'Deep dive into ErithX\'s architecture: 1-click calendar sync, multi-platform contest aggregation, and advanced project blueprints.',
+    url: `${process.env.NEXT_PUBLIC_NEW_DOMAIN}/docs`,
+    siteName: 'ErithX',
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Platform Documentation | DSA Quest',
-    description: 'Deep dive into DSA Quest\'s architecture: 1-click calendar sync, multi-platform contest aggregation, and advanced project blueprints.',
+    title: 'Platform Documentation | ErithX',
+    description: 'Deep dive into ErithX\'s architecture: 1-click calendar sync, multi-platform contest aggregation, and advanced project blueprints.',
   },
   robots: {
     index: true,
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://contest-tracker-zms3.vercel.app/docs',
+    canonical: `${process.env.NEXT_PUBLIC_NEW_DOMAIN}/docs`,
   },
 };
 
@@ -55,21 +55,21 @@ export default function DocsPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
-    headline: 'DSA Quest Official Platform Documentation',
+    headline: 'ErithX Official Platform Documentation',
     alternativeHeadline: 'Architecture Guide and User Manual',
-    url: 'https://contest-tracker-zms3.vercel.app/docs',
-    description: 'Comprehensive technical documentation and user guide for DSA Quest features, calendar sync mechanics, project blueprints, and platform philosophy.',
+    url: `${process.env.NEXT_PUBLIC_NEW_DOMAIN}/docs`,
+    description: 'Comprehensive technical documentation and user guide for ErithX features, calendar sync mechanics, project blueprints, and platform philosophy.',
     author: {
       '@type': 'Organization',
-      name: 'DSA Quest',
-      url: 'https://contest-tracker-zms3.vercel.app'
+      name: 'ErithX',
+      url: process.env.NEXT_PUBLIC_NEW_DOMAIN
     },
     publisher: {
       '@type': 'Organization',
-      name: 'DSA Quest',
+      name: 'ErithX',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://contest-tracker-zms3.vercel.app/logo.png'
+        url: `${process.env.NEXT_PUBLIC_NEW_DOMAIN}/logo.png`
       }
     }
   };
@@ -111,7 +111,7 @@ export default function DocsPage() {
               Architecture Guide & <br className="hidden sm:block"/>User Manual
             </h1>
             <p className="text-lg text-zinc-400 leading-relaxed">
-              Welcome to the official DSA Quest documentation. This guide details the underlying architecture of our platform, from real-time multi-platform contest aggregation and 1-click calendar synchronization to our philosophy of sustainable, burnout-free engineering preparation.
+              Welcome to the official ErithX documentation. This guide details the underlying architecture of our platform, from real-time multi-platform contest aggregation and 1-click calendar synchronization to our philosophy of sustainable, burnout-free engineering preparation.
             </p>
           </header>
 
@@ -169,7 +169,7 @@ export default function DocsPage() {
                 </div>
                 <div className="space-y-5 text-[15px] text-zinc-400 leading-relaxed">
                   <p>
-                    DSA Quest is engineered as a high-fidelity, student-first digital sanctuary aimed at democratizing software engineering placement preparation. We replaced the chaotic, fragmented experience of shuffling between a dozen competitive programming platforms with a unified, distraction-reduced command center.
+                    ErithX is engineered as a high-fidelity, student-first digital sanctuary aimed at democratizing software engineering placement preparation. We replaced the chaotic, fragmented experience of shuffling between a dozen competitive programming platforms with a unified, distraction-reduced command center.
                   </p>
                   <p>
                     Our architecture is designed around three core pillars: real-time data aggregation, frictionless utility, and mental wellness. By bridging the gap between raw algorithmic practice and modern system design, we prepare developers not just for legacy interviews, but for the rigorous demands of 2026+ tech hiring.
@@ -235,7 +235,7 @@ export default function DocsPage() {
                     <div className="p-4 rounded-xl bg-emerald-500/[0.03] border border-emerald-500/20 text-sm">
                       <span className="text-emerald-400 font-semibold block mb-1">Extension-Less Architecture</span>
                       <p className="text-zinc-400">
-                        Unlike plugins that require background permissions and drain system resources, DSA Quest generates standard web calendar templates. This ensures instantaneous compatibility across mobile iOS Safari, Android Chrome, and desktop environments.
+                        Unlike plugins that require background permissions and drain system resources, ErithX generates standard web calendar templates. This ensures instantaneous compatibility across mobile iOS Safari, Android Chrome, and desktop environments.
                       </p>
                     </div>
                   </div>
@@ -254,7 +254,7 @@ export default function DocsPage() {
                 </div>
                 <div className="space-y-5 text-[15px] text-zinc-400 leading-relaxed">
                   <p>
-                    The aggregator serves as the central nervous system of DSA Quest. Our distributed backend scrapers continuously poll and normalize match data from over 10 major platforms, including LeetCode, Codeforces, CodeChef, AtCoder, HackerRank, GeeksforGeeks, and Kaggle.
+                    The aggregator serves as the central nervous system of ErithX. Our distributed backend scrapers continuously poll and normalize match data from over 10 major platforms, including LeetCode, Codeforces, CodeChef, AtCoder, HackerRank, GeeksforGeeks, and Kaggle.
                   </p>
                   
                   <div className="grid sm:grid-cols-3 gap-4 my-6">
@@ -292,7 +292,7 @@ export default function DocsPage() {
                 </div>
                 <div className="space-y-5 text-[15px] text-zinc-400 leading-relaxed">
                   <p>
-                    Transitioning from theoretical data structures to practical system design is a notorious bottleneck for students. DSA Quest bridges this gap by curating high-yield engineering blueprints tailored for modern technical interviews. Rather than superficial tutorials, these resources provide deep architectural diagrams, microservice schemas, and downloadable PDF references.
+                    Transitioning from theoretical data structures to practical system design is a notorious bottleneck for students. ErithX bridges this gap by curating high-yield engineering blueprints tailored for modern technical interviews. Rather than superficial tutorials, these resources provide deep architectural diagrams, microservice schemas, and downloadable PDF references.
                   </p>
                   <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 space-y-4">
                     <h4 className="text-sm font-semibold uppercase tracking-wider text-zinc-200">Featured Blueprint Topics</h4>
@@ -361,7 +361,7 @@ export default function DocsPage() {
                 </div>
                 <div className="space-y-5 text-[15px] text-zinc-400 leading-relaxed">
                   <p>
-                    We fundamentally reject the gamified, toxic placement panic and artificial streak pressures propagated by legacy platforms. DSA Quest is intentionally engineered to foster consistent, passionate craftsmanship. By removing distracting ad clutter and meaningless metrics, we help developers build sustainable, long-term careers with their mental sanity fully intact. Preparation should be a journey of intellectual growth, not an anxiety-inducing sprint.
+                    We fundamentally reject the gamified, toxic placement panic and artificial streak pressures propagated by legacy platforms. ErithX is intentionally engineered to foster consistent, passionate craftsmanship. By removing distracting ad clutter and meaningless metrics, we help developers build sustainable, long-term careers with their mental sanity fully intact. Preparation should be a journey of intellectual growth, not an anxiety-inducing sprint.
                   </p>
                 </div>
               </section>

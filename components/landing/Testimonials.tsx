@@ -22,7 +22,7 @@ export default function Testimonials() {
               <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
             </div>
             <p className="text-sm text-zinc-300 leading-relaxed mb-6">
-              &quot;I used to open 30 tabs every morning trying to track contests. DSA Quest replaced all of them. The milestone cards actually got me a recruiter DM on LinkedIn.&quot;
+              &quot;I used to open 30 tabs every morning trying to track contests. ErithX replaced all of them. The milestone cards actually got me a recruiter DM on LinkedIn.&quot;
             </p>
             <div className="flex items-center gap-3 pt-4 border-t border-white/5">
               <img src="https://picsum.photos/seed/test1/48/48.jpg" className="w-10 h-10 rounded-full object-cover" alt="Arjun Mehta" />

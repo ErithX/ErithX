@@ -1,11 +1,11 @@
-# 🏆 DSA Quest: Achievement Card System Rules & AI Specifications
+# 🏆 ErithX: Achievement Card System Rules & AI Specifications
 
 ## 1. Overview of the 30 Cards (The "Why")
 
 ### The Problem with Existing Platforms
 Today, a student writes "Proficient in DSA" on their resume, links 4 different profiles (LeetCode, Codeforces, GitHub), and hopes the recruiter checks them. Recruiters *don't check* because it takes too much time, and "streaks" on other platforms don't prove reliability—they just prove you clicked a button daily.
 
-### The DSA Quest Solution: 30 Verifiable Stories
+### The ErithX Solution: 30 Verifiable Stories
 Our system generates **30 distinct Achievement Cards** (6 Tiers × 5 Story Types). 
 
 **Why they are needed:** They transform scattered, unverified data into a single, visually striking, recruiter-ready asset. 
@@ -113,7 +113,7 @@ The system is a matrix. Users progress through **6 Tiers** (based on overall com
 
 13. **Gold Cross-Platform**
     - **Unlock Filter:** 30-day streak + 15 contests attended + 3 platforms connected.
-    - **Data Shown:** 3 platform ratings + Composite Score (e.g., 1400) + "Top 30%" on DSA Quest.
+    - **Data Shown:** 3 platform ratings + Composite Score (e.g., 1400) + "Top 30%" on ErithX.
     - **Business Value:** "I am a well-rounded competitive programmer, verified across the big 3 platforms."
 
 14. **Gold Skill Map**

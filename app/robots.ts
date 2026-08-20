@@ -17,6 +17,6 @@ export default function robots(): MetadataRoute.Robots {
         '/api/',
       ],
     },
-    sitemap: 'https://contest-tracker-zms3.vercel.app/sitemap.xml',
+    sitemap: 'https://erithx.dev/sitemap.xml',
   };
 }

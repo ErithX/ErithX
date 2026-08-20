@@ -211,7 +211,7 @@ export default function FeaturesClient() {
               >
                 <Image 
                   src="/Features/Contestdashboard.png" 
-                  alt="DSA Quest Universal Contest Board Dashboard" 
+                  alt="ErithX Universal Contest Board Dashboard" 
                   width={1920}
                   height={1080}
                   quality={100}
@@ -365,7 +365,7 @@ export default function FeaturesClient() {
                 >
                   <Image 
                     src="/Features/Editor.png" 
-                    alt="DSA Quest Creator Studio Publishing Environment" 
+                    alt="ErithX Creator Studio Publishing Environment" 
                     width={1920}
                     height={1080}
                     quality={100}

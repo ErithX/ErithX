@@ -55,7 +55,7 @@ export default function AboutPage() {
         quality={100}
         priority
         className="object-cover" 
-        alt="DSA Quest Workspace" 
+        alt="ErithX Workspace" 
       />
       
       {/*  Gradient Overlay for Text Readability & Navbar Visibility  */}
@@ -75,7 +75,7 @@ export default function AboutPage() {
         </h1>
         
         <p className="text-base sm:text-lg text-zinc-200 leading-relaxed max-w-xl">
-          DSA Quest is a modern engineering ecosystem built to turn career preparation into an enjoyable, high-value journey, helping students build real technical authority and career visibility.
+          ErithX is a modern engineering ecosystem built to turn career preparation into an enjoyable, high-value journey, helping students build real technical authority and career visibility.
         </p>
       </div>
     </section>
@@ -113,7 +113,7 @@ export default function AboutPage() {
         <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
           <div className="order-2 md:order-1 scroll-reveal">
             <div className="relative w-full aspect-[4/3]">
-              <Image src="/about-second.png" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-contain" alt="DSA Quest structured ecosystem with live contest tracking and resource hub" />
+              <Image src="/about-second.png" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-contain" alt="ErithX structured ecosystem with live contest tracking and resource hub" />
             </div>
           </div>
           <div className="order-1 md:order-2 scroll-reveal">
@@ -158,7 +158,7 @@ export default function AboutPage() {
             <img src="https://picsum.photos/seed/founderavatar/40/40.jpg" className="w-full h-full object-cover" alt="Founder" />
           </div>
           <div className="text-left">
-            <div className="text-sm font-semibold text-zinc-900">The DSA Quest Team</div>
+            <div className="text-sm font-semibold text-zinc-900">The ErithX Team</div>
             <div className="text-xs text-zinc-500">Built by students, for students</div>
           </div>
         </div>

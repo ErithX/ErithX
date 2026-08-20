@@ -32,7 +32,7 @@ export default function Hero() {
           src="/landing/hero-bg.png"
           fill
           className="object-cover"
-          alt="DSA Quest Platform Dashboard Preview showing upcoming contests and analytics"
+          alt="ErithX Platform Dashboard Preview showing upcoming contests and analytics"
           priority
         />
         {/* Color overlay blending */}
@@ -93,10 +93,10 @@ export default function Hero() {
             {/* Social proof strip */}
             <div className="flex items-center justify-center lg:justify-start gap-4 w-full">
               <div className="flex -space-x-2">
-                <Image src="https://picsum.photos/seed/herouser1/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="DSA Quest community student avatar 1" />
-                <Image src="https://picsum.photos/seed/herouser2/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="DSA Quest community student avatar 2" />
-                <Image src="https://picsum.photos/seed/herouser3/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="DSA Quest community student avatar 3" />
-                <Image src="https://picsum.photos/seed/herouser4/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="DSA Quest community student avatar 4" />
+                <Image src="https://picsum.photos/seed/herouser1/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="ErithX community student avatar 1" />
+                <Image src="https://picsum.photos/seed/herouser2/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="ErithX community student avatar 2" />
+                <Image src="https://picsum.photos/seed/herouser3/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="ErithX community student avatar 3" />
+                <Image src="https://picsum.photos/seed/herouser4/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="ErithX community student avatar 4" />
               </div>
               <div className="text-left">
                 <div className="text-xs font-medium text-white">2,400+ students</div>

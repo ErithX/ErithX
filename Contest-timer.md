@@ -226,7 +226,7 @@ No redesign of the timing system would be required.
 
 # Final Recommendation
 
-The **Hybrid Global Clock Architecture** is the recommended production solution for DSA Quest.
+The **Hybrid Global Clock Architecture** is the recommended production solution for ErithX.
 
 It combines:
 

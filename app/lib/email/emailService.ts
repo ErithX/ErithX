@@ -18,8 +18,8 @@ interface EmailOptions {
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 const UNSUBSCRIBE_URL = `${APP_URL}/dashboard/settings`;
-const PHYSICAL_ADDRESS = 'DSA Quest, India';
-const SENDER_NAME = 'DSA Quest';
+const PHYSICAL_ADDRESS = 'ErithX, India';
+const SENDER_NAME = 'ErithX';
 const SENDER_EMAIL = process.env.SMTP_USER || '';
 
 function createTransporter() {
@@ -155,11 +155,11 @@ function emailFooter(): string {
     <tr>
       <td style="padding:24px 32px;background-color:#f9fafb;border-top:1px solid #e5e7eb;">
         <p style="margin:0 0 8px 0;font-size:12px;color:#6b7280;line-height:1.6;text-align:center;">
-          You received this because you have an account on DSA Quest.
+          You received this because you have an account on ErithX.
           <br>
           <a href="${UNSUBSCRIBE_URL}" style="color:#3b82f6;text-decoration:underline;">Manage email preferences</a>
           &nbsp;&middot;&nbsp;
-          <a href="${APP_URL}/about" style="color:#3b82f6;text-decoration:underline;">About DSA Quest</a>
+          <a href="${APP_URL}/about" style="color:#3b82f6;text-decoration:underline;">About ErithX</a>
         </p>
         <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.6;text-align:center;">
           ${SENDER_NAME} &middot; ${PHYSICAL_ADDRESS}
@@ -173,11 +173,11 @@ function emailFooter(): string {
 // --- WELCOME EMAIL ---
 
 export async function sendWelcomeEmail(userEmail: string, userName: string, upcomingContests?: Contest[], topResource?: any) {
-  const subject = 'Welcome to DSA Quest ✨';
+  const subject = 'Welcome to ErithX ✨';
   const html = emailWrapper(`
     <tr>
       <td style="padding:32px 32px 24px 32px;">
-        <h1 style="margin:0 0 8px 0;font-size:22px;color:#111827;font-weight:700;">Welcome to DSA Quest</h1>
+        <h1 style="margin:0 0 8px 0;font-size:22px;color:#111827;font-weight:700;">Welcome to ErithX</h1>
         <p style="margin:0;font-size:14px;color:#6b7280;">Your coding contest tracker is ready.</p>
       </td>
     </tr>
@@ -187,7 +187,7 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, upco
           Hey ${userName},
         </p>
         <p style="margin:0 0 16px 0;font-size:15px;color:#374151;line-height:1.6;">
-          Thanks for signing up. DSA Quest tracks upcoming coding contests from LeetCode, Codeforces, CodeChef, AtCoder, and more &mdash; all in one place.
+          Thanks for signing up. ErithX tracks upcoming coding contests from LeetCode, Codeforces, CodeChef, AtCoder, and more &mdash; all in one place.
         </p>
         <p style="margin:0 0 24px 0;font-size:15px;color:#374151;line-height:1.6;">
           Here is what you can do right now:
@@ -284,7 +284,7 @@ export async function sendDailyContestDigest(
     return { success: true, skipped: true };
   }
 
-  const subject = subjectLine || `${contests.length} contest${contests.length > 1 ? 's' : ''} starting soon on DSA Quest`;
+  const subject = subjectLine || `${contests.length} contest${contests.length > 1 ? 's' : ''} starting soon on ErithX`;
   const html = emailWrapper(`
     <tr>
       <td style="padding:32px 32px 24px 32px;">
@@ -473,12 +473,12 @@ export async function sendProductUpdate(
   updateSummary: string,
   updateUrl?: string
 ) {
-  const subject = `DSA Quest: ${updateTitle}`;
+  const subject = `ErithX: ${updateTitle}`;
   const html = emailWrapper(`
     <tr>
       <td style="padding:32px 32px 24px 32px;">
         <h1 style="margin:0 0 8px 0;font-size:22px;color:#111827;font-weight:700;">Product Update</h1>
-        <p style="margin:0;font-size:14px;color:#6b7280;">What's new on DSA Quest</p>
+        <p style="margin:0;font-size:14px;color:#6b7280;">What's new on ErithX</p>
       </td>
     </tr>
     <tr>
@@ -487,7 +487,7 @@ export async function sendProductUpdate(
           Hey ${userName},
         </p>
         <p style="margin:0 0 20px 0;font-size:15px;color:#374151;line-height:1.6;">
-          We have been working on improvements to DSA Quest. Here is the latest:
+          We have been working on improvements to ErithX. Here is the latest:
         </p>
         <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;margin-bottom:20px;">
           <tr>

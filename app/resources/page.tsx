@@ -4,7 +4,7 @@ import { Resource } from '@/models/Resource';
 import ResourcesClient from './ResourcesClient';
 
 export const metadata: Metadata = {
-  title: 'DSA Quest | Resources Feed',
+  title: 'ErithX | Resources Feed',
   description: 'Discover verified tech resources, guides, and study materials for your competitive programming journey.',
 };
 

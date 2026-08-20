@@ -11,7 +11,7 @@ export default function Footer() {
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
               <Zap className="w-4 h-4 text-emerald-400" />
             </div>
-            <span className="font-semibold text-lg tracking-tight text-white">DSA Quest</span>
+            <span className="font-semibold text-lg tracking-tight text-white">ErithX</span>
           </Link>
           <p className="text-sm text-zinc-400 leading-relaxed">
             The complete software engineering preparation platform. Track upcoming coding contests, practice Data Structures & Algorithms, and find verified CS study materials.
@@ -55,7 +55,7 @@ export default function Footer() {
       </div>
       <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="text-xs text-zinc-500">
-          © {new Date().getFullYear()} DSA Quest. All rights reserved. Built for competitive programmers & CS students.
+          © {new Date().getFullYear()} ErithX. All rights reserved. Built for competitive programmers & CS students.
         </p>
       </div>
     </footer>

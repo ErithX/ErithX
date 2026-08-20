@@ -44,7 +44,7 @@ export const CONTEST_ALERT_SUBJECTS: EmailSubjectTemplate[] = [
   { id: 'ca_cur_4', family: 'curiosity', text: 'Your next contest is almost live' },
 
   // Platform + Specificity
-  { id: 'ca_plat_1', family: 'platform', text: 'DSA Quest alert: {{contest_name}} in 30' },
+  { id: 'ca_plat_1', family: 'platform', text: 'ErithX alert: {{contest_name}} in 30' },
   { id: 'ca_plat_2', family: 'platform', text: '{{platform}} · {{contest_name}} starts soon' },
   { id: 'ca_plat_3', family: 'platform', text: 'Codeforces Round coming up in 30 min' },
   { id: 'ca_plat_4', family: 'platform', text: 'LeetCode contest starts in 30 minutes' },
@@ -91,7 +91,7 @@ export const DAILY_DIGEST_SUBJECTS: EmailSubjectTemplate[] = [
   { id: 'dd_sup_5', family: 'supportive', text: 'Show up if you want — contests inside' },
 
   // Platform + Freshness
-  { id: 'dd_plat_1', family: 'platform', text: 'DSA Quest daily: tomorrow’s contests' },
+  { id: 'dd_plat_1', family: 'platform', text: 'ErithX daily: tomorrow’s contests' },
   { id: 'dd_plat_2', family: 'platform', text: 'Fresh contest list for tomorrow 👀' },
   { id: 'dd_plat_3', family: 'platform', text: 'Daily drop: high-signal contests only' },
   { id: 'dd_plat_4', family: 'platform', text: 'Tomorrow’s contests are live' },

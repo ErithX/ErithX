@@ -70,7 +70,7 @@ export default function PrivacyPage() {
       {/*  Intro  */}
       <div className="mb-16 text-base text-zinc-400 leading-relaxed">
         <p>
-          At DSA Quest, accessible from dsaquest.com, the privacy of our visitors is one of our main priorities. This Privacy Policy document outlines the types of information that is collected and recorded by DSA Quest and how we use it.
+          At ErithX, accessible from dsaquest.com, the privacy of our visitors is one of our main priorities. This Privacy Policy document outlines the types of information that is collected and recorded by ErithX and how we use it.
         </p>
         <p className="mt-4">
           By using our platform, you hereby consent to our Privacy Policy and agree to its terms.
@@ -149,7 +149,7 @@ export default function PrivacyPage() {
           </div>
           <div className="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
             <p>
-              We do not share, sell, rent, or trade your personal data with anyone. Your email address is kept strictly internal and is only used to deliver the core features of DSA Quest.
+              We do not share, sell, rent, or trade your personal data with anyone. Your email address is kept strictly internal and is only used to deliver the core features of ErithX.
             </p>
             <p>
               We may share data only if legally compelled to do so by law enforcement or government agencies, though this is highly unlikely for a platform that only stores an email address.
@@ -240,7 +240,7 @@ export default function PrivacyPage() {
       {/*  Footer Note  */}
       <footer className="mt-20 pt-8 border-t border-white/5 text-center">
         <p className="text-[10px] uppercase tracking-widest text-zinc-600">
-          © 2026 DSA Quest. Built for students, backed by pros.
+          © 2026 ErithX. Built for students, backed by pros.
         </p>
       </footer>
 

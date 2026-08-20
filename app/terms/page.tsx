@@ -70,10 +70,10 @@ export default function TermsPage() {
       {/*  Intro  */}
       <div className="mb-16 text-base text-zinc-400 leading-relaxed">
         <p>
-          Welcome to DSA Quest. These Terms and Conditions ("Terms") outline the rules and regulations for using our platform. 
+          Welcome to ErithX. These Terms and Conditions ("Terms") outline the rules and regulations for using our platform. 
         </p>
         <p className="mt-4">
-          By accessing this website and logging in, we assume you agree to these terms in full. Do not continue to use DSA Quest if you do not accept all of the terms and conditions stated on this page.
+          By accessing this website and logging in, we assume you agree to these terms in full. Do not continue to use ErithX if you do not accept all of the terms and conditions stated on this page.
         </p>
       </div>
 
@@ -90,7 +90,7 @@ export default function TermsPage() {
           </div>
           <div className="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
             <p>
-              By logging in with Google Authentication and accessing the DSA Quest platform, you automatically agree to be bound by all the rules, policies, and guidelines outlined on this page. 
+              By logging in with Google Authentication and accessing the ErithX platform, you automatically agree to be bound by all the rules, policies, and guidelines outlined on this page. 
             </p>
             <p>
               If you do not agree with any part of these Terms, you must not log in or use our services. Your continued use of the platform constitutes ongoing acceptance of these Terms.
@@ -108,7 +108,7 @@ export default function TermsPage() {
           </div>
           <div className="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
             <p>
-              DSA Quest is an independent project designed to provide automated and regular coding contest alerts, curate academic resources, and offer career guidance.
+              ErithX is an independent project designed to provide automated and regular coding contest alerts, curate academic resources, and offer career guidance.
             </p>
             <p>
               The platform is built strictly for informational and educational purposes to assist engineering students in their preparation. It is not a certified educational institution, and using our services does not guarantee employment, placement, or success in any specific contest.
@@ -150,7 +150,7 @@ export default function TermsPage() {
           </div>
           <div className="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
             <p>
-              All code, software, UI/UX design, logos, graphics, and unique features displayed on DSA Quest belong entirely to Debjyoti and the DSA Quest development team. 
+              All code, software, UI/UX design, logos, graphics, and unique features displayed on ErithX belong entirely to Debjyoti and the ErithX development team. 
             </p>
             <p>
               You may not copy, reproduce, republish, download, or distribute any material from this platform for commercial purposes without explicit written permission. Unauthorized use of our intellectual property is a violation of applicable copyright and trademark laws.
@@ -168,7 +168,7 @@ export default function TermsPage() {
           </div>
           <div className="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
             <p>
-              The DSA Quest platform is provided on an "as is" and "as available" basis. We are a student team, and while we strive for excellence, we make no absolute guarantees regarding uptime, reliability, or accuracy.
+              The ErithX platform is provided on an "as is" and "as available" basis. We are a student team, and while we strive for excellence, we make no absolute guarantees regarding uptime, reliability, or accuracy.
             </p>
             <p>
               Under no circumstances shall we be held legally or financially responsible if:
@@ -194,7 +194,7 @@ export default function TermsPage() {
               Our platform relies on third-party infrastructure to function. Specifically, user authentication is powered by <span className="text-zinc-200 font-medium">Supabase</span> and <span className="text-zinc-200 font-medium">Google OAuth</span>.
             </p>
             <p>
-              DSA Quest is not responsible for any service disruptions, data breaches, or technical failures that originate from these external systems. By using our site, you also agree to the terms and privacy policies of Google and Supabase.
+              ErithX is not responsible for any service disruptions, data breaches, or technical failures that originate from these external systems. By using our site, you also agree to the terms and privacy policies of Google and Supabase.
             </p>
           </div>
         </section>
@@ -241,7 +241,7 @@ export default function TermsPage() {
       {/*  Footer Note  */}
       <footer className="mt-20 pt-8 border-t border-white/5 text-center">
         <p className="text-[10px] uppercase tracking-widest text-zinc-600">
-          © 2026 DSA Quest. Built for students, backed by pros.
+          © 2026 ErithX. Built for students, backed by pros.
         </p>
       </footer>
 

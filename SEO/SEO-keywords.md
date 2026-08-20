@@ -40,7 +40,7 @@ AI tools and frameworks learning hub
 Engineering previous year question papers collection
 
 # /landing keywords
-**Title:** DSA Quest | Turn Career Prep Into a Game You Love to Win
+**Title:** ErithX | Turn Career Prep Into a Game You Love to Win
 **Description:** Make coding practice engaging. Track live contests from major platforms, get clear study notes, and prepare for your placement exams.
 
 All in one software engineering platform
@@ -53,8 +53,8 @@ BTech CSE complete student portal
 Self taught software engineer launchpad
 AI era developer training platform
 College engineering to tech career gateway
-DSA Quest
-DSA Quest platform
-DSA Quest official website
-DSA Quest portal
-DSA Quest roadmap
+ErithX
+ErithX platform
+ErithX official website
+ErithX portal
+ErithX roadmap

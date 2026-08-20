@@ -59,11 +59,11 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'student' }: 
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
               <Zap className="w-4 h-4 text-emerald-400" />
             </div>
-            <span className="font-semibold text-lg tracking-tight text-white">DSA Quest</span>
+            <span className="font-semibold text-lg tracking-tight text-white">ErithX</span>
           </div>
 
           <h2 className="text-2xl font-medium tracking-tight mb-2 text-white">
-            Welcome to DSA Quest
+            Welcome to ErithX
           </h2>
           <p className="text-sm text-zinc-400 mb-6">
             Track your competitive programming contests and resources all in one place.

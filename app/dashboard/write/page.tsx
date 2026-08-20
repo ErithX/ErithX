@@ -339,7 +339,7 @@ function WriteEditor() {
                     className="w-full bg-black/60 border border-emerald-500/20 rounded-lg px-3 py-2 text-xs text-emerald-400/80 focus:outline-none focus:border-emerald-500/50 transition-all appearance-none"
                   >
                     <option value="">Myself (Real Account)</option>
-                    <option value="official-dsa-quest-001">DSA Quest Official</option>
+                    <option value="official-dsa-quest-001">ErithX Official</option>
                     <option value="ambassador-rahul-002">Rahul Sharma (PRO)</option>
                     <option value="ambassador-priya-003">Priya Patel</option>
                     <option value="ambassador-alex-004">Alex Dev</option>

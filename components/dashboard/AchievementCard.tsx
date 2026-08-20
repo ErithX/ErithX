@@ -123,7 +123,7 @@ export default function AchievementCard({ level, type, onCycleLevel }: Achieveme
             <div className="text-center p-3 rounded-lg bg-black/20 border border-white/5">
               <div className="text-[9px] uppercase tracking-widest text-zinc-500 mb-1">Composite Score</div>
               <div className="text-2xl font-bold mono" style={{ color: c.accent }}>{c.rating}</div>
-              <div className="text-[10px] text-zinc-500">{c.pct} on DSA Quest</div>
+              <div className="text-[10px] text-zinc-500">{c.pct} on ErithX</div>
             </div>
           </>
         );
@@ -214,7 +214,7 @@ export default function AchievementCard({ level, type, onCycleLevel }: Achieveme
         <div className="flex items-center justify-between pt-4 border-t border-white/5 mt-5">
           <div className="flex items-center gap-1.5">
             <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[9px] text-zinc-500">Verified by DSA Quest</span>
+            <span className="text-[9px] text-zinc-500">Verified by ErithX</span>
           </div>
           <span className="text-[9px] mono text-zinc-600">dsaquest.io/v/arjun-m</span>
         </div>

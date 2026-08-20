@@ -108,7 +108,7 @@ export default function DashboardPage() {
       </main>
 
       <footer className="border-t border-white/5 py-6 px-6 mt-12">
-        <div className="max-w-7xl mx-auto text-center text-[10px] text-zinc-600">© 2025 DSA Quest. Built for students, backed by pros.</div>
+        <div className="max-w-7xl mx-auto text-center text-[10px] text-zinc-600">© 2025 ErithX. Built for students, backed by pros.</div>
       </footer>
     </div>
   );

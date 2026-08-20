@@ -1,217 +1,267 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us — DSA Quest</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: #ffffff; color: #18181b; overflow-x: hidden; }
-    .font-display { font-family: 'Fraunces', serif; letter-spacing: -0.02em; }
-    ::selection { background-color: #d1fae5; color: #065f46; }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #ffffff; }
-    ::-webkit-scrollbar-thumb { background: #e4e4e7; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #d4d4d8; }
-    
-    .form-input {
-      transition: all 200ms ease;
-      background: #f9fafb;
-      border: 1px solid #e4e4e7;
-    }
-    .form-input:focus {
-      background: #ffffff;
-      border-color: #18181b;
-      outline: none;
-      box-shadow: 0 0 0 4px rgba(24, 24, 27, 0.05);
-    }
-    .form-input::placeholder { color: #a1a1aa; }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contact Us — ErithX</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            * {
+                font-family: 'Inter', sans-serif;
+                -webkit-tap-highlight-color: transparent;
+            }
+            body {
+                background: #ffffff;
+                color: #18181b;
+                overflow-x: hidden;
+            }
+            .font-display {
+                font-family: 'Fraunces', serif;
+                letter-spacing: -0.02em;
+            }
+            ::selection {
+                background-color: #d1fae5;
+                color: #065f46;
+            }
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+            ::-webkit-scrollbar-track {
+                background: #ffffff;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #e4e4e7;
+                border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #d4d4d8;
+            }
 
-    .submit-btn { transition: all 250ms ease; }
-    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); }
-    
-    .link-underline { position: relative; display: inline-block; }
-    .link-underline::after { content: ''; position: absolute; width: 100%; height: 1px; bottom: -2px; left: 0; background: #18181b; transform: scaleX(0); transform-origin: right; transition: transform 0.4s ease; }
-    .link-underline:hover::after { transform: scaleX(1); transform-origin: left; }
-  </style>
-</head>
-<body class="min-h-screen">
+            .form-input {
+                transition: all 200ms ease;
+                background: #f9fafb;
+                border: 1px solid #e4e4e7;
+            }
+            .form-input:focus {
+                background: #ffffff;
+                border-color: #18181b;
+                outline: none;
+                box-shadow: 0 0 0 4px rgba(24, 24, 27, 0.05);
+            }
+            .form-input::placeholder {
+                color: #a1a1aa;
+            }
 
-  <main class="min-h-screen flex items-center justify-center py-20 md:py-32 px-6 sm:px-8">
-    <div class="max-w-6xl mx-auto w-full">
-      
-      <div class="grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
-        
-        <!-- LEFT COLUMN: Information -->
-        <div class="scroll-reveal">
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100 mb-8">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-            <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-600">Get in Touch</span>
-          </div>
-          
-          <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-medium text-zinc-900 mb-6 leading-[1.05]">
-            Let's build the <em class="font-normal text-emerald-600">future</em> of engineering prep.
-          </h1>
-          
-          <p class="text-base text-zinc-500 leading-relaxed mb-10 max-w-md">
-            Have a question, a partnership idea, or just want to share feedback? We usually respond within 24 hours.
-          </p>
+            .submit-btn {
+                transition: all 250ms ease;
+            }
+            .submit-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+            }
 
-          <!-- Contact Details -->
-          <div class="space-y-6">
-            <div class="flex items-start gap-4">
-              <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center flex-shrink-0 mt-1">
-                <i data-lucide="mail" class="w-4 h-4 text-zinc-600"></i>
-              </div>
-              <div>
-                <div class="text-xs uppercase tracking-widest text-zinc-400 mb-1">Email Us</div>
-                <a href="mailto:hello@dsaquest.com" class="text-lg font-medium text-zinc-900 link-underline">hello@dsaquest.com</a>
-                <p class="text-sm text-zinc-500 mt-1">For general inquiries and support.</p>
-              </div>
-            </div>
+            .link-underline {
+                position: relative;
+                display: inline-block;
+            }
+            .link-underline::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 1px;
+                bottom: -2px;
+                left: 0;
+                background: #18181b;
+                transform: scaleX(0);
+                transform-origin: right;
+                transition: transform 0.4s ease;
+            }
+            .link-underline:hover::after {
+                transform: scaleX(1);
+                transform-origin: left;
+            }
+        </style>
+    </head>
+    <body class="min-h-screen">
 
-            <div class="flex items-start gap-4">
-              <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center flex-shrink-0 mt-1">
-                <i data-lucide="message-circle" class="w-4 h-4 text-zinc-600"></i>
-              </div>
-              <div>
-                <div class="text-xs uppercase tracking-widest text-zinc-400 mb-1">Community</div>
-                <a href="#" class="text-lg font-medium text-zinc-900 link-underline">Join our Discord</a>
-                <p class="text-sm text-zinc-500 mt-1">Chat with 4,800+ students and pros.</p>
-              </div>
-            </div>
-          </div>
+        <main class="min-h-screen flex items-center justify-center py-20 md:py-32 px-6 sm:px-8">
+            <div class="max-w-6xl mx-auto w-full">
 
-          <!-- Socials -->
-          <div class="mt-12 pt-8 border-t border-zinc-100">
-            <div class="text-xs uppercase tracking-widest text-zinc-400 mb-4">Follow the journey</div>
-            <div class="flex items-center gap-3">
-              <a href="#" class="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-900 text-zinc-600 hover:text-white flex items-center justify-center transition-colors duration-300">
-                <i data-lucide="twitter" class="w-4 h-4"></i>
-              </a>
-              <a href="#" class="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-900 text-zinc-600 hover:text-white flex items-center justify-center transition-colors duration-300">
-                <i data-lucide="github" class="w-4 h-4"></i>
-              </a>
-              <a href="#" class="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-900 text-zinc-600 hover:text-white flex items-center justify-center transition-colors duration-300">
-                <i data-lucide="linkedin" class="w-4 h-4"></i>
-              </a>
-            </div>
-          </div>
-        </div>
+                <div
+                    class="grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
 
-        <!-- RIGHT COLUMN: The Form -->
-        <div class="scroll-reveal">
-          <div class="bg-zinc-50 rounded-3xl p-8 sm:p-10 border border-zinc-100 shadow-sm">
-            
-            <!-- Form View -->
-            <form id="contactForm" onsubmit="handleSubmit(event)" class="space-y-6">
-              <div class="grid sm:grid-cols-2 gap-6">
-                <div>
-                  <label class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">First Name</label>
-                  <input type="text" required class="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="Arjun">
+                    <!-- LEFT COLUMN: Information -->
+                    <div class="scroll-reveal">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100 mb-8">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-600">Get in Touch</span>
+                        </div>
+
+                        <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-medium text-zinc-900 mb-6 leading-[1.05]">
+                            Let's build the
+                            <em class="font-normal text-emerald-600">future</em>
+                            of engineering prep.
+                        </h1>
+
+                        <p class="text-base text-zinc-500 leading-relaxed mb-10 max-w-md">
+                            Have a question, a partnership idea, or just want to share feedback? We usually respond within 24 hours.
+                        </p>
+
+                        <!-- Contact Details -->
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center flex-shrink-0 mt-1">
+                                    <i data-lucide="mail" class="w-4 h-4 text-zinc-600"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs uppercase tracking-widest text-zinc-400 mb-1">Email Us</div>
+                                    <a href="mailto:hello@dsaquest.com" class="text-lg font-medium text-zinc-900 link-underline">hello@dsaquest.com</a>
+                                    <p class="text-sm text-zinc-500 mt-1">For general inquiries and support.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center flex-shrink-0 mt-1">
+                                    <i data-lucide="message-circle" class="w-4 h-4 text-zinc-600"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs uppercase tracking-widest text-zinc-400 mb-1">Community</div>
+                                    <a href="#" class="text-lg font-medium text-zinc-900 link-underline">Join our Discord</a>
+                                    <p class="text-sm text-zinc-500 mt-1">Chat with 4,800+ students and pros.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Socials -->
+                        <div class="mt-12 pt-8 border-t border-zinc-100">
+                            <div class="text-xs uppercase tracking-widest text-zinc-400 mb-4">Follow the journey</div>
+                            <div class="flex items-center gap-3">
+                                <a href="#" class="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-900 text-zinc-600 hover:text-white flex items-center justify-center transition-colors duration-300">
+                                    <i data-lucide="twitter" class="w-4 h-4"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-900 text-zinc-600 hover:text-white flex items-center justify-center transition-colors duration-300">
+                                    <i data-lucide="github" class="w-4 h-4"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-900 text-zinc-600 hover:text-white flex items-center justify-center transition-colors duration-300">
+                                    <i data-lucide="linkedin" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: The Form -->
+                    <div class="scroll-reveal">
+                        <div
+                            class="bg-zinc-50 rounded-3xl p-8 sm:p-10 border border-zinc-100 shadow-sm">
+
+                            <!-- Form View -->
+                            <form id="contactForm" onsubmit="handleSubmit(event)" class="space-y-6">
+                                <div class="grid sm:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">First Name</label>
+                                        <input type="text" required class="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="Arjun">
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Last Name</label>
+                                        <input type="text" required class="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="Mehta">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Email Address</label>
+                                    <input type="email" required class="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="you@college.edu">
+                                </div>
+
+                                <div>
+                                    <label class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">What's this about?</label>
+                                    <select required class="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900 appearance-none cursor-pointer">
+                                        <option value="" disabled selected>Select a topic...</option>
+                                        <option>General Inquiry</option>
+                                        <option>Partnership / Collaboration</option>
+                                        <option>Bug Report / Feedback</option>
+                                        <option>Resource Contribution</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Message</label>
+                                    <textarea required rows="5" class="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900 resize-none" placeholder="Tell us what's on your mind..."></textarea>
+                                </div>
+
+                                <button type="submit" class="submit-btn w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-zinc-900 text-white text-sm font-semibold">
+                                    Send Message
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                            </form>
+
+                            <!-- Success View (Hidden by default) -->
+                            <div id="successView" class="hidden flex-col items-center justify-center text-center py-12">
+                                <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-6">
+                                    <i data-lucide="check-circle-2" class="w-8 h-8 text-emerald-600"></i>
+                                </div>
+                                <h3 class="font-display text-3xl font-medium text-zinc-900 mb-3">Message Sent!</h3>
+                                <p class="text-sm text-zinc-500 max-w-xs mb-8">
+                                    Thanks for reaching out. We'll get back to you within 24 hours.
+                                </p>
+                                <button onclick="resetForm()" class="text-sm text-zinc-900 font-semibold link-underline">
+                                    Send another message
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
-                <div>
-                  <label class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Last Name</label>
-                  <input type="text" required class="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="Mehta">
-                </div>
-              </div>
-
-              <div>
-                <label class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Email Address</label>
-                <input type="email" required class="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900" placeholder="you@college.edu">
-              </div>
-
-              <div>
-                <label class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">What's this about?</label>
-                <select required class="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900 appearance-none cursor-pointer">
-                  <option value="" disabled selected>Select a topic...</option>
-                  <option>General Inquiry</option>
-                  <option>Partnership / Collaboration</option>
-                  <option>Bug Report / Feedback</option>
-                  <option>Resource Contribution</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">Message</label>
-                <textarea required rows="5" class="form-input w-full px-4 py-3 rounded-xl text-sm text-zinc-900 resize-none" placeholder="Tell us what's on your mind..."></textarea>
-              </div>
-
-              <button type="submit" class="submit-btn w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-zinc-900 text-white text-sm font-semibold">
-                Send Message
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-            </form>
-
-            <!-- Success View (Hidden by default) -->
-            <div id="successView" class="hidden flex-col items-center justify-center text-center py-12">
-              <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-6">
-                <i data-lucide="check-circle-2" class="w-8 h-8 text-emerald-600"></i>
-              </div>
-              <h3 class="font-display text-3xl font-medium text-zinc-900 mb-3">Message Sent!</h3>
-              <p class="text-sm text-zinc-500 max-w-xs mb-8">
-                Thanks for reaching out. We'll get back to you within 24 hours.
-              </p>
-              <button onclick="resetForm()" class="text-sm text-zinc-900 font-semibold link-underline">
-                Send another message
-              </button>
             </div>
+        </main>
 
-          </div>
-        </div>
+        <script>
+            // ============= SCROLL REVEAL =============
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {threshold: 0.1});
 
-      </div>
-    </div>
-  </main>
+            document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
 
-<script>
-// ============= SCROLL REVEAL =============
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.1 });
+            // Add visible class immediately since it's a short page
+            window.addEventListener('load', () => {
+                document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.add('visible'));
+            });
 
-document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+            // ============= FORM HANDLING =============
+            function handleSubmit(e) {
+                e.preventDefault();
+                // Toggle views
+                document.getElementById('contactForm').classList.add('hidden');
+                const successView = document.getElementById('successView');
+                successView.classList.remove('hidden');
+                successView.classList.add('flex');
 
-// Add visible class immediately since it's a short page
-window.addEventListener('load', () => {
-  document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.add('visible'));
-});
+                // Scroll to top of form
+                successView.scrollIntoView({behavior: 'smooth', block: 'center'});
+                lucide.createIcons();
+            }
 
-// ============= FORM HANDLING =============
-function handleSubmit(e) {
-  e.preventDefault();
-  // Toggle views
-  document.getElementById('contactForm').classList.add('hidden');
-  const successView = document.getElementById('successView');
-  successView.classList.remove('hidden');
-  successView.classList.add('flex');
-  
-  // Scroll to top of form
-  successView.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  lucide.createIcons();
-}
+            function resetForm() {
+                document.getElementById('contactForm').reset();
+                document.getElementById('contactForm').classList.remove('hidden');
+                const successView = document.getElementById('successView');
+                successView.classList.add('hidden');
+                successView.classList.remove('flex');
+                lucide.createIcons();
+            }
 
-function resetForm() {
-  document.getElementById('contactForm').reset();
-  document.getElementById('contactForm').classList.remove('hidden');
-  const successView = document.getElementById('successView');
-  successView.classList.add('hidden');
-  successView.classList.remove('flex');
-  lucide.createIcons();
-}
+            // ============= INIT ICONS =============
+            lucide.createIcons();
+        </script>
 
-// ============= INIT ICONS =============
-lucide.createIcons();
-</script>
-
-</body>
+    </body>
 </html>

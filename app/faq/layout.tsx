@@ -15,15 +15,15 @@ export default function FaqLayout({
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'What is DSA Quest?',
+        name: 'What is ErithX?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'DSA Quest is an all-in-one platform for students to track upcoming coding contests and access high-quality DSA study materials.',
+          text: 'ErithX is an all-in-one platform for students to track upcoming coding contests and access high-quality DSA study materials.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Is DSA Quest free?',
+        name: 'Is ErithX free?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'Yes, tracking coding contests and accessing community study resources is completely free for all students.',

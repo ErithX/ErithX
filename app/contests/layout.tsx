@@ -5,13 +5,13 @@ export const metadata: Metadata = {
   description: 'Track upcoming coding contests from LeetCode, Codeforces & more in real-time. Features 1-click Calendar sync (Google/Apple) to never miss a contest.',
   keywords: 'DSA contest today, dsa contest online, dsa contest platform, codechef dsa contest, dsa contest gfg, dsa coding contest, dsa contest tracker online, coding contest tracker, competitive programming calendar, hackathon calendar, add to calendar contest, google calendar coding contests',
   openGraph: {
-    title: 'Live Coding Contests Calendar & Competitive Programming Tracker | DSA Quest',
+    title: 'Live Coding Contests Calendar & Competitive Programming Tracker | ErithX',
     description: 'Track coding contests from LeetCode, Codeforces & more in real-time. Sync directly to your Google or Apple Calendar with 1-click.',
-    url: 'https://contest-tracker-zms3.vercel.app/contests',
+    url: `${process.env.NEXT_PUBLIC_NEW_DOMAIN}/contests`,
     type: 'website',
   },
   alternates: {
-    canonical: 'https://contest-tracker-zms3.vercel.app/contests',
+    canonical: `${process.env.NEXT_PUBLIC_NEW_DOMAIN}/contests`,
   },
 };
 
@@ -25,11 +25,11 @@ export default function ContestsLayout({
     '@type': 'WebPage',
     'name': 'Live Coding Contests Calendar & Competitive Programming Tracker',
     'description': 'Track upcoming coding contests from LeetCode, Codeforces & more in real-time. Features 1-click Calendar sync (Google/Apple) to never miss a contest.',
-    'url': 'https://contest-tracker-zms3.vercel.app/contests',
+    'url': `${process.env.NEXT_PUBLIC_NEW_DOMAIN}/contests`,
     'publisher': {
       '@type': 'Organization',
-      'name': 'DSA Quest',
-      'url': 'https://contest-tracker-zms3.vercel.app',
+      'name': 'ErithX',
+      'url': process.env.NEXT_PUBLIC_NEW_DOMAIN,
     },
   };
 

@@ -69,7 +69,7 @@ export default function Navbar({ darkMode, setDarkMode }: NavbarProps = {}) {
               <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center group-hover:border-emerald-500/40 transition-colors">
                 <Zap className="w-4 h-4 text-emerald-400" />
               </div>
-              <span className="font-semibold text-sm tracking-tight text-white group-hover:text-emerald-400 transition-colors">DSA Quest</span>
+              <span className="font-semibold text-sm tracking-tight text-white group-hover:text-emerald-400 transition-colors">ErithX</span>
             </Link>
 
             {/* Desktop Navigation Links */}

@@ -401,7 +401,7 @@ export default function SettingsPage() {
             {/* NOTIFICATIONS SECTION */}
             <section id="notifications" className="glass rounded-xl p-6 border border-white/[0.08] bg-white/[0.03]">
               <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-500 mb-1">Email Notifications</h2>
-              <p className="text-xs text-zinc-600 mb-6">Manage what emails you receive from DSA Quest.</p>
+              <p className="text-xs text-zinc-600 mb-6">Manage what emails you receive from ErithX.</p>
 
               <div className="space-y-0">
                 <div className="flex items-center justify-between py-4 border-b border-white/5">

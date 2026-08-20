@@ -23,11 +23,11 @@ export default function Manifesto() {
                 <div className="glass rounded-xl p-5">
                   <Quote className="w-5 h-5 text-emerald-400 mb-2" />
                   <p className="text-xs text-zinc-300 leading-relaxed italic mb-3">
-                    Grinding without intent is just exhaustion. We built DSA Quest for the student who wants to win without losing themselves.
+                    Grinding without intent is just exhaustion. We built ErithX for the student who wants to win without losing themselves.
                   </p>
                   <div className="flex items-center gap-2">
-                    <Image src="https://picsum.photos/seed/founder/32/32.jpg" width={24} height={24} className="rounded-full object-cover" alt="DSA Quest Founder profile picture" />
-                    <span className="text-[10px] text-zinc-500">DSA Quest Team</span>
+                    <Image src="https://picsum.photos/seed/founder/32/32.jpg" width={24} height={24} className="rounded-full object-cover" alt="ErithX Founder profile picture" />
+                    <span className="text-[10px] text-zinc-500">ErithX Team</span>
                   </div>
                 </div>
               </div>
@@ -50,7 +50,7 @@ export default function Manifesto() {
                 The internet is full of bootcamps screaming &quot;100 days, 14 hours, no excuses.&quot; That&apos;s not education. That&apos;s burnout disguised as discipline.
               </p>
               <p>
-                DSA Quest exists because Gen Z engineering students deserve a platform that understands them — one that speaks to their emotion, their ambition, their real pain points. Not a sterile portal built by people who forgot what being a student feels like.
+                ErithX exists because Gen Z engineering students deserve a platform that understands them — one that speaks to their emotion, their ambition, their real pain points. Not a sterile portal built by people who forgot what being a student feels like.
               </p>
               <p className="text-white font-medium">
                 We focus on preparation with enjoyment, passion, and intent. Not rote grinding. Not guilt-driven streaks. Just a system that makes winning feel inevitable.

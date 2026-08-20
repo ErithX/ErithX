@@ -11,7 +11,7 @@ export default function Journey() {
         <div className="text-center mb-20 scroll-reveal">
           <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The Engineering Journey</span>
           <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Master the chaos.</h2>
-          <p className="text-sm text-zinc-500 max-w-lg mx-auto">From confused first-year to an industry-ready engineer. DSA Quest provides the exact resources for every step.</p>
+          <p className="text-sm text-zinc-500 max-w-lg mx-auto">From confused first-year to an industry-ready engineer. ErithX provides the exact resources for every step.</p>
         </div>
 
         {/* Journey stages */}

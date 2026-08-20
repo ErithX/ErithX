@@ -22,7 +22,7 @@ export default function DashboardNavbar({
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
               <Zap className="w-4 h-4 text-emerald-400" />
             </div>
-            <span className="font-semibold text-sm tracking-tight text-white">DSA Quest</span>
+            <span className="font-semibold text-sm tracking-tight text-white">ErithX</span>
           </Link>
           <div className="hidden md:flex items-center gap-1">
             {user?.user_metadata?.role === 'professional' ? (

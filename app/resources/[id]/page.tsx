@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   
   if (!doc) {
     return {
-      title: 'Resource Not Found | DSA Quest',
+      title: 'Resource Not Found | ErithX',
       description: 'The requested resource could not be found.',
     };
   }
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 
   return {
-    title: `${doc.title} | DSA Quest Resources`,
+    title: `${doc.title} | ErithX Resources`,
     description: description,
     keywords: doc.tags || [],
     openGraph: {

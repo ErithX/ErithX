@@ -7,7 +7,7 @@ import { applyContestRules } from "@/app/api/contests/algorithm";
 import { mapApiContests } from "@/app/utils/contestFetch";
 
 export const metadata: Metadata = {
-  title: 'Coding Contests Dashboard | DSA Quest',
+  title: 'Coding Contests Dashboard | ErithX',
   description: 'Track live and upcoming coding contests across LeetCode, Codeforces & more. Features 1-click add-to-calendar sync.',
 };
 

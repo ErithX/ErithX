@@ -244,7 +244,7 @@ export default function SuperadminPage() {
                 className={`mb-2 text-sm font-black uppercase ${darkMode ? "text-blue-300" : "text-blue-600"
                   }`}
               >
-                DSA Quest control room
+                ErithX control room
               </p>
               <h1
                 className={`text-4xl font-black md:text-6xl ${darkMode ? "text-white" : "text-black"

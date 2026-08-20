@@ -76,7 +76,7 @@ export default function FaqPage() {
         </h1>
         
         <p className="text-base sm:text-lg text-zinc-200 leading-relaxed max-w-xl">
-          Everything you need to know about DSA Quest, contest tracking, and your account.
+          Everything you need to know about ErithX, contest tracking, and your account.
         </p>
       </div>
     </section>
@@ -91,7 +91,7 @@ export default function FaqPage() {
           {/*  Item 1  */}
           <details className="faq-item group" open>
             <summary className="flex items-center justify-between p-6 sm:p-8">
-              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What is DSA Quest?</h2>
+              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What is ErithX?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Lucide.Plus className="w-4 h-4 text-zinc-600" />
               </div>

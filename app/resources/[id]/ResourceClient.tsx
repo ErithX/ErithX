@@ -225,8 +225,8 @@ export default function ResourceClient({
 
   const handleShare = async () => {
     const shareData = {
-      title: doc?.title || 'DSA Quest Resource',
-      text: 'Check out this awesome resource on DSA Quest!',
+      title: doc?.title || 'ErithX Resource',
+      text: 'Check out this awesome resource on ErithX!',
       url: window.location.href
     };
     
@@ -318,7 +318,7 @@ export default function ResourceClient({
               <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
                 <Zap className="w-4 h-4 text-emerald-400" />
               </div>
-              <span className="font-semibold text-sm tracking-tight hidden sm:inline">DSA Quest</span>
+              <span className="font-semibold text-sm tracking-tight hidden sm:inline">ErithX</span>
             </a>
             <div className="hidden md:flex items-center gap-1 text-xs text-zinc-600">
               <ChevronRight className="w-3 h-3" />
@@ -727,7 +727,7 @@ export default function ResourceClient({
             <div className="w-6 h-6 rounded bg-zinc-800 flex items-center justify-center">
               <Zap className="w-3 h-3 text-emerald-400" />
             </div>
-            <span className="text-[10px] text-zinc-600">© 2025 DSA Quest. Built for students, backed by pros.</span>
+            <span className="text-[10px] text-zinc-600">© 2025 ErithX. Built for students, backed by pros.</span>
           </div>
           <div className="flex items-center gap-4">
             <a href="#" className="text-zinc-600 hover:text-zinc-400 transition-colors"><Twitter className="w-4 h-4" /></a>

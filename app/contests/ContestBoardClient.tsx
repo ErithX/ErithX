@@ -429,7 +429,7 @@ export default function ContestBoardClient({ initialContests }: { initialContest
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">Simple & Powerful</span>
-            <h2 className="text-3xl font-medium tracking-tight mb-3">How DSA Quest Works</h2>
+            <h2 className="text-3xl font-medium tracking-tight mb-3">How ErithX Works</h2>
             <p className="text-sm text-zinc-500 max-w-md mx-auto">Three steps to never missing an opportunity again. No complicated setup, no spam — just timely alerts.</p>
           </div>
 
@@ -472,8 +472,8 @@ export default function ContestBoardClient({ initialContests }: { initialContest
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The Grand Vision</span>
-            <h2 className="text-3xl font-medium tracking-tight mb-3">DSA Quest: The Complete Computer Science Student Portal</h2>
-            <p className="text-sm text-zinc-500 max-w-lg mx-auto">DSA Quest is evolving from a simple contest tracker into the definitive starter pack for every tech student — completely free, ad-free, forever.</p>
+            <h2 className="text-3xl font-medium tracking-tight mb-3">ErithX: The Complete Computer Science Student Portal</h2>
+            <p className="text-sm text-zinc-500 max-w-lg mx-auto">ErithX is evolving from a simple contest tracker into the definitive starter pack for every tech student — completely free, ad-free, forever.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
