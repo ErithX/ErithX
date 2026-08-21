@@ -1,13 +1,3 @@
-/**
- * FetchAnalytics.js - Template for fetching Google Analytics 4 (GA4) data.
- * 
- * Pre-requisites:
- * 1. npm install @google-analytics/data
- * 2. Set up a Google Cloud Service Account and download the JSON key.
- * 3. Grant the Service Account email "Viewer" access in your GA4 Property settings.
- * 4. Set the GOOGLE_APPLICATION_CREDENTIALS env var to the path of your JSON key.
- */
-
 const { BetaAnalyticsDataClient } = require('@google-analytics/data');
 
 // Replace with your actual GA4 Property ID (Found in GA Admin > Property Settings)

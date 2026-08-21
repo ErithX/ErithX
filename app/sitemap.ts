@@ -75,10 +75,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let dynamicRoutes: MetadataRoute.Sitemap = [];
   try {
     await connectToDatabase();
-    const resources = await Resource.find({ status: 'published' }).select('_id updatedAt').lean();
+    const resources = await Resource.find({ status: 'published' }).select('_id slug updatedAt').lean();
     
     dynamicRoutes = resources.map((resource: any) => ({
-      url: `${baseUrl}/resources/${resource._id}`,
+      url: `${baseUrl}/resources/${resource.slug || resource._id}`,
       lastModified: resource.updatedAt || new Date(),
       changeFrequency: 'weekly',
       priority: 0.7,
