@@ -52,6 +52,10 @@ export async function verifyEmailConfig() {
 }
 
 export async function sendEmail({ to, subject, html, text }: EmailOptions, retries = 3) {
+  // TEMPORARILY DISABLED EMAILS UNTIL RESEND TRANSITION
+  console.log(`[EMAIL DISABLED] Blocked email to ${to} (Subject: ${subject})`);
+  return true;
+
   let lastError: any;
 
   for (let attempt = 1; attempt <= retries; attempt++) {
