@@ -51,7 +51,7 @@ export default function Ecosystem() {
 
           {/* Card 2: Milestone Cards -> High-Quality Free PDF Notes */}
           <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5">
-            <Image src="/landing/study-notes.jpg" fill className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Premium PDF Notes for B.Tech students" />
+            <Image src="/landing/study-notes.jpg" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Premium PDF Notes for B.Tech students" />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent"></div>
             <div className="relative z-10 p-5 h-full flex flex-col justify-between">
               <div>
