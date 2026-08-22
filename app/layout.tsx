@@ -63,6 +63,37 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
        <meta name="google-site-verification" content="4KfpDK0yjbk36wT5FagXAX1r2DHchla3Haf3g0q_F1c" />
         
+        {/* SEO Schema Markup - explicitly linking the platform to the founder */}
+        <Script id="schema-org" type="application/ld+json" strategy="afterInteractive">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "@id": "https://erithx.dev/#website",
+                  "url": "https://erithx.dev/",
+                  "name": "ErithX",
+                  "publisher": {
+                    "@id": "https://erithx.dev/#organization"
+                  }
+                },
+                {
+                  "@type": "Organization",
+                  "@id": "https://erithx.dev/#organization",
+                  "name": "ErithX",
+                  "url": "https://erithx.dev/",
+                  "logo": "https://erithx.dev/favicon.png",
+                  "founder": {
+                    "@type": "Person",
+                    "name": "Debjyoti Roy",
+                    "jobTitle": "Founder & Developer"
+                  }
+                }
+              ]
+            }
+          `}
+        </Script>
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-WS99FGKXWT"
