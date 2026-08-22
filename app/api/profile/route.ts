@@ -33,7 +33,8 @@ export async function POST(request: Request) {
             avatar,
             bio,
             twitterUrl,
-            linkedinUrl
+            linkedinUrl,
+            mentorPrefs
         } = data;
         
         if (!supabaseId) {
@@ -49,7 +50,8 @@ export async function POST(request: Request) {
                 avatar,
                 bio,
                 twitterUrl,
-                linkedinUrl
+                linkedinUrl,
+                ...(mentorPrefs ? { mentorPrefs } : {})
             }, 
             {
                 new: true,

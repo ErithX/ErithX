@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/app/lib/mongodb';
 import { UserCoderProfile } from '@/models/UserCoderProfile';
+import { User } from '@/models/User';
+import { SystemLog } from '@/models/SystemLog';
 import { generateAIContext } from '@/services/core/dataFilter';
 import { generateWeeklyReview } from '@/services/ai/reviewerRouter';
 import { getLatestUserReview, saveAIReview } from '@/services/ai/reviewStorage';
@@ -44,6 +46,9 @@ export async function GET(request: Request) {
       const userId = profile.userId;
 
       try {
+        const userSettings = await User.findOne({ supabaseId: userId }).lean();
+        const mentorPrefs = userSettings?.mentorPrefs || {};
+
         // A. Load previous review memory (to evaluate previous goals & active roy_factor)
         const previousReview = await getLatestUserReview(userId);
         const currentRoyFactor = previousReview?.roy_factor || 0;
@@ -52,9 +57,12 @@ export async function GET(request: Request) {
         // B. Generate deterministic filtered delta context from platform snapshots
         const filteredPayload = await generateAIContext({
           id: userId,
-          is_pro: false, // Default tier (can be upgraded from user table)
+          is_pro: userSettings?.isPro || false, // Check real isPro status
           roy_factor: currentRoyFactor,
           previous_recommendation: previousTargets,
+          career_target: mentorPrefs.goal,
+          user_focus: mentorPrefs.focus,
+          strictness: mentorPrefs.strictness
         });
 
         // C. Call LLM Reasoning Engine (Llama 3.3 70B with Gemini fallback)
@@ -81,8 +89,22 @@ export async function GET(request: Request) {
       } catch (err: any) {
         console.error(`Error processing review for user ${userId}:`, err.message);
         errors.push(`User ${userId}: ${err.message}`);
+        
+        await SystemLog.create({
+          level: 'error',
+          source: 'cron-generate-reviews',
+          message: `Failed to process user ${userId}`,
+          meta: { error: err.message, userId }
+        });
       }
     }
+
+    await SystemLog.create({
+      level: errors.length > 0 ? 'warning' : 'info',
+      source: 'cron-generate-reviews',
+      message: `Batch completed. Processed ${generatedCount}/${profiles.length} users.`,
+      meta: { generatedCount, totalAttempted: profiles.length, errors }
+    });
 
     return NextResponse.json({
       success: true,

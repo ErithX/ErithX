@@ -6,6 +6,10 @@ export interface UserFilterConfig {
   admin_note?: string; // Optional note from Superadmin
   previous_recommendation?: string; // Last week's LLM advice to track compliance
   roy_factor?: number; // Ignorance streak
+  career_target?: string; // User selected career path (FAANG, Startup, etc)
+  user_focus?: string; // What the user wants the AI to focus on
+  strictness?: string; // Tone of the review
+  mentor_id?: string; // Optional mentor ID for progress tracking
 }
 
 // ----------------------------------------------------------------------
@@ -195,8 +199,10 @@ export async function generateAIContext(userConfig: UserFilterConfig) {
   // json intiializing
   const filteredJSON: any = {
     user_id: userConfig.id,
-    plan_type: userConfig.is_pro ? "paid" : "free",
     roy_factor: userConfig.roy_factor ?? 0,
+    career_target: userConfig.career_target || 'Balanced Generalist',
+    user_focus: userConfig.user_focus || '',
+    strictness: userConfig.strictness || 'Normal',
     generated_at: new Date().toISOString(),
     summary: {},
     calculations: {}

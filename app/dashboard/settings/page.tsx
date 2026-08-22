@@ -63,6 +63,7 @@ export default function SettingsPage() {
     quota: '3/4 Reviews Used',
     inactivityDays: 12
   });
+  const [isSavingMentor, setIsSavingMentor] = useState(false);
 
   const supabase = createClient();
 
@@ -111,6 +112,7 @@ export default function SettingsPage() {
             contestAlerts: data.profile.email_notifications !== false,
             weeklyDigest: data.profile.weekly_digest !== false,
             productUpdates: data.profile.product_updates === true,
+            mentorReview: data.profile.mentor_review_enabled !== false,
           });
           setProfileForm({
             full_name: data.profile.full_name || '',
@@ -118,6 +120,13 @@ export default function SettingsPage() {
             twitter_url: data.profile.twitter_url || '',
             linkedin_url: data.profile.linkedin_url || ''
           });
+          if (data.profile.mentorPrefs) {
+            setMentorPrefs({
+              goal: data.profile.mentorPrefs.goal || 'Balanced Generalist',
+              focus: data.profile.mentorPrefs.focus || '',
+              strictness: data.profile.mentorPrefs.strictness || 'Normal'
+            });
+          }
         }
       })
       .catch(() => {});
@@ -146,6 +155,28 @@ export default function SettingsPage() {
       showToast('Failed to update profile', 'error');
     } finally {
       setIsSavingProfile(false);
+    }
+  };
+
+  const saveMentorPrefs = async () => {
+    setIsSavingMentor(true);
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mentorPrefs
+        }),
+      });
+      if (res.ok) {
+        showToast('Mentor configuration saved! 🤖', 'success');
+      } else {
+        showToast('Failed to save mentor config', 'error');
+      }
+    } catch {
+      showToast('Failed to save mentor config', 'error');
+    } finally {
+      setIsSavingMentor(false);
     }
   };
 
@@ -570,8 +601,16 @@ export default function SettingsPage() {
                       ))}
                     </div>
                   </div>
-
                 </div>
+              </div>
+              <div className="px-6 py-4 border-t border-zinc-800 bg-zinc-900/30 flex items-center justify-end">
+                <button 
+                  onClick={saveMentorPrefs}
+                  disabled={isSavingMentor}
+                  className="px-4 py-2 rounded-md bg-white text-black text-sm font-medium hover:bg-zinc-200 transition-colors disabled:opacity-50"
+                >
+                  {isSavingMentor ? 'Saving...' : 'Save Configuration'}
+                </button>
               </div>
             </section>
 
