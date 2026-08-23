@@ -87,7 +87,12 @@ export default function RootLayout({
                   "founder": {
                     "@type": "Person",
                     "name": "Debjyoti Roy",
-                    "jobTitle": "Founder & Developer"
+                    "jobTitle": "Founder & Developer",
+                    "sameAs": [
+                      "https://github.com/user-no-18",
+                      "https://x.com/Debjyoti__",
+                      "https://www.linkedin.com/in/debjyotiroy018/"
+                    ]
                   }
                 }
               ]

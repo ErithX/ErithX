@@ -100,7 +100,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <div className="text-xs uppercase tracking-widest text-zinc-400 mb-1">Email Us</div>
-                <a href="mailto:hello@dsaquest.com" className="text-lg font-medium text-zinc-900 link-underline">hello@dsaquest.com</a>
+                <a href="mailto:founder@erithx.dev" className="text-lg font-medium text-zinc-900 link-underline">founder@erithx.dev</a>
                 <p className="text-sm text-zinc-500 mt-1">For general inquiries and support.</p>
               </div>
             </div>

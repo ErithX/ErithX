@@ -217,9 +217,9 @@ export default function AboutPage() {
     <section className="py-20 md:py-32">
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         <div className="text-center mb-16 scroll-reveal">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-4 block">The Builders</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-4 block">The Builder</span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-medium text-zinc-900 leading-[1.1] mb-4">
-            Meet the student team.
+            Meet the founder.
           </h2>
           <p className="text-base text-zinc-500 max-w-xl mx-auto">
             Independent, passionate, and dedicated to eliminating placement anxiety for engineering students.
@@ -227,77 +227,27 @@ export default function AboutPage() {
         </div>
 
         {/*  Team Grid Placeholder  */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex justify-center gap-6">
           
-          {/*  Team Member 1  */}
-          <div className="team-card bg-white rounded-2xl border border-zinc-100 overflow-hidden shadow-sm scroll-reveal">
-            <div className="aspect-[4/5] overflow-hidden bg-zinc-100">
-              <img src="https://picsum.photos/seed/dev1/400/500.jpg" className="w-full h-full object-cover img-grayscale" alt="Developer" />
+          {/*  Founder Card  */}
+          <div className="team-card bg-white rounded-2xl border border-zinc-100 overflow-hidden shadow-sm scroll-reveal max-w-sm w-full">
+            <div className="aspect-[4/5] overflow-hidden bg-zinc-100 flex items-center justify-center">
+              {/* BLANK IMAGE SECTION FOR YOUR ADDED IMAGE */}
+              <div className="text-zinc-400 text-sm font-medium">Your Image Here</div>
             </div>
             <div className="p-5">
-              <h4 className="font-medium text-zinc-900">Name Placeholder</h4>
-              <p className="text-xs text-emerald-600 font-medium mt-0.5">Frontend Developer</p>
-              <p className="text-xs text-zinc-500 mt-3 leading-relaxed">Built the core UI dashboard and contest tracking interfaces for Phase 1.</p>
+              <h4 className="font-medium text-zinc-900">Debjyoti Roy</h4>
+              <p className="text-xs text-emerald-600 font-medium mt-0.5">Founder & Developer</p>
+              <p className="text-xs text-zinc-500 mt-3 leading-relaxed">[Bio goes here]</p>
               <div className="flex items-center gap-3 mt-4 pt-4 border-t border-zinc-100">
                 <a href="#" className="text-zinc-400 hover:text-zinc-900 transition-colors"><Lucide.Github className="w-4 h-4" /></a>
                 <a href="#" className="text-zinc-400 hover:text-zinc-900 transition-colors"><Lucide.Linkedin className="w-4 h-4" /></a>
-              </div>
-            </div>
-          </div>
-
-          {/*  Team Member 2  */}
-          <div className="team-card bg-white rounded-2xl border border-zinc-100 overflow-hidden shadow-sm scroll-reveal" style={{ transitionDelay: '0.1s' }}>
-            <div className="aspect-[4/5] overflow-hidden bg-zinc-100">
-              <img src="https://picsum.photos/seed/dev2/400/500.jpg" className="w-full h-full object-cover img-grayscale" alt="Developer" />
-            </div>
-            <div className="p-5">
-              <h4 className="font-medium text-zinc-900">Name Placeholder</h4>
-              <p className="text-xs text-emerald-600 font-medium mt-0.5">Backend Developer</p>
-              <p className="text-xs text-zinc-500 mt-3 leading-relaxed">Architected the contest aggregation API and resource database logic.</p>
-              <div className="flex items-center gap-3 mt-4 pt-4 border-t border-zinc-100">
-                <a href="#" className="text-zinc-400 hover:text-zinc-900 transition-colors"><Lucide.Github className="w-4 h-4" /></a>
-                <a href="#" className="text-zinc-400 hover:text-zinc-900 transition-colors"><Lucide.Linkedin className="w-4 h-4" /></a>
-              </div>
-            </div>
-          </div>
-
-          {/*  Team Member 3  */}
-          <div className="team-card bg-white rounded-2xl border border-zinc-100 overflow-hidden shadow-sm scroll-reveal" style={{ transitionDelay: '0.2s' }}>
-            <div className="aspect-[4/5] overflow-hidden bg-zinc-100">
-              <img src="https://picsum.photos/seed/dev3/400/500.jpg" className="w-full h-full object-cover img-grayscale" alt="Developer" />
-            </div>
-            <div className="p-5">
-              <h4 className="font-medium text-zinc-900">Name Placeholder</h4>
-              <p className="text-xs text-emerald-600 font-medium mt-0.5">UI/UX Designer</p>
-              <p className="text-xs text-zinc-500 mt-3 leading-relaxed">Designed the minimalist ecosystem layouts and user experience flows.</p>
-              <div className="flex items-center gap-3 mt-4 pt-4 border-t border-zinc-100">
-                <a href="#" className="text-zinc-400 hover:text-zinc-900 transition-colors"><Lucide.Github className="w-4 h-4" /></a>
-                <a href="#" className="text-zinc-400 hover:text-zinc-900 transition-colors"><Lucide.Linkedin className="w-4 h-4" /></a>
-              </div>
-            </div>
-          </div>
-
-          {/*  Team Member 4  */}
-          <div className="team-card bg-white rounded-2xl border border-zinc-100 overflow-hidden shadow-sm scroll-reveal" style={{ transitionDelay: '0.3s' }}>
-            <div className="aspect-[4/5] overflow-hidden bg-zinc-100">
-              <img src="https://picsum.photos/seed/dev4/400/500.jpg" className="w-full h-full object-cover img-grayscale" alt="Developer" />
-            </div>
-            <div className="p-5">
-              <h4 className="font-medium text-zinc-900">Name Placeholder</h4>
-              <p className="text-xs text-emerald-600 font-medium mt-0.5">Full Stack Developer</p>
-              <p className="text-xs text-zinc-500 mt-3 leading-relaxed">Integrated platform scrapers and managed deployment infrastructure.</p>
-              <div className="flex items-center gap-3 mt-4 pt-4 border-t border-zinc-100">
-                <a href="#" className="text-zinc-400 hover:text-zinc-900 transition-colors"><Lucide.Github className="w-4 h-4" /></a>
-                <a href="#" className="text-zinc-400 hover:text-zinc-900 transition-colors"><Lucide.Linkedin className="w-4 h-4" /></a>
+                <a href="#" className="text-zinc-400 hover:text-zinc-900 transition-colors"><Lucide.Twitter className="w-4 h-4" /></a>
               </div>
             </div>
           </div>
 
         </div>
-        
-        <p className="text-center text-xs text-zinc-400 mt-12 italic max-w-lg mx-auto">
-          [Developer Team Profiles Placeholder - Scope: This section will display the names, specific technical roles like frontend or backend developers, personal contributions to the phase 1 features, and direct links to GitHub or LinkedIn profiles for all core student builders].
-        </p>
       </div>
     </section>
     )}
