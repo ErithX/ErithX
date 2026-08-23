@@ -126,7 +126,7 @@ export default function AboutPage() {
                 Our platform provides a direct solution by tracking high-quality live contests in one place and offering a dedicated resource hub. 
               </p>
               <p>
-                We bring together semester notes, career guidance, and production-ready project ideas—so you can spend less time searching and more time building real technical authority.
+                We bring together engineering blueprints, 2026 tech career roadmaps, and production-ready project guides—so you can spend less time searching and more time building real technical authority.
               </p>
             </div>
             {/*  Feature Pills  */}

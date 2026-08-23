@@ -36,48 +36,38 @@ export default function UserProfileCard({ user }: UserProfileCardProps) {
 
       {/* CTAs */}
       <div className="space-y-2">
-        <div className="text-xs font-semibold text-zinc-500 mb-2 px-1">Quick Actions</div>
+        <div className="text-[10px] uppercase tracking-widest text-zinc-600 font-semibold mb-3 px-1">Publish</div>
         
-        <Link href="/dashboard/write" className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
-          <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-            <PenLine className="w-4 h-4 text-emerald-400" />
+        <Link href="/dashboard/write" className="w-full flex items-center gap-3 p-3.5 rounded-xl border border-dashed border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/5 hover:border-emerald-500/20 transition-all text-left group">
+          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 border border-white/10 group-hover:border-emerald-500/30 transition-colors">
+            <PenLine className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Share your project story</div>
-            <div className="text-[10px] text-zinc-600">How you built it, what you learned, what went wrong — your struggle helps others.</div>
+            <div className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">System Architecture</div>
+            <div className="text-[10px] text-zinc-500 mt-0.5">Document infrastructure and design decisions.</div>
           </div>
-          <Plus className="w-4 h-4 text-zinc-600 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
+          <Plus className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 transition-colors flex-shrink-0" />
         </Link>
-        <Link href="/dashboard/write" className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
-          <div className="w-9 h-9 rounded-lg bg-orange-500/10 flex items-center justify-center flex-shrink-0">
-            <FileText className="w-4 h-4 text-orange-400" />
+        <Link href="/dashboard/write" className="w-full flex items-center gap-3 p-3.5 rounded-xl border border-dashed border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-500/5 hover:border-cyan-500/20 transition-all text-left group">
+          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 border border-white/10 group-hover:border-cyan-500/30 transition-colors">
+            <FileText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-cyan-400" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Upload your study notes</div>
-            <div className="text-[10px] text-zinc-600">That cheat sheet you made before exams? Someone else needs it right now.</div>
+            <div className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Engineering Blueprint</div>
+            <div className="text-[10px] text-zinc-500 mt-0.5">Share algorithms, patterns, or project blueprints.</div>
           </div>
-          <Plus className="w-4 h-4 text-zinc-600 group-hover:text-orange-400 transition-colors flex-shrink-0" />
+          <Plus className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 transition-colors flex-shrink-0" />
         </Link>
-        <Link href="/dashboard/write" className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
-          <div className="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-            <Share2 className="w-4 h-4 text-purple-400" />
+        <Link href="/dashboard/write" className="w-full flex items-center gap-3 p-3.5 rounded-xl border border-dashed border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/5 hover:border-purple-500/20 transition-all text-left group">
+          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 border border-white/10 group-hover:border-purple-500/30 transition-colors">
+            <Share2 className="w-3.5 h-3.5 text-zinc-400 group-hover:text-purple-400" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Share a useful link</div>
-            <div className="text-[10px] text-zinc-600">Found a great visualization tool or article? Share it with the community.</div>
+            <div className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Developer Resource</div>
+            <div className="text-[10px] text-zinc-500 mt-0.5">Curate high-signal tools and frameworks.</div>
           </div>
-          <Plus className="w-4 h-4 text-zinc-600 group-hover:text-purple-400 transition-colors flex-shrink-0" />
+          <Plus className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 transition-colors flex-shrink-0" />
         </Link>
-        <button className="contribute-btn w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-white/10 text-left group hover:bg-white/5 transition-all">
-          <div className="w-9 h-9 rounded-lg bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
-            <ImageIcon className="w-4 h-4 text-cyan-400" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">Draw a diagram or flowchart</div>
-            <div className="text-[10px] text-zinc-600">Your rough BST traversal sketch? It's clearer than any textbook paragraph.</div>
-          </div>
-          <Plus className="w-4 h-4 text-zinc-600 group-hover:text-cyan-400 transition-colors flex-shrink-0" />
-        </button>
       </div>
 
       {/* <div className="mt-4 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10 flex items-center gap-2">

@@ -9,8 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@react-email/components": "^1.0.12",
-    "@react-email/tailwind": "^2.0.7",
+    "@google-analytics/data": "^7.0.0",
+    "@google/genai": "^2.17.1",
+    "@google/generative-ai": "^0.24.1",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.8.0",
@@ -29,14 +30,16 @@
     "@tiptap/react": "^2.11.2",
     "@tiptap/starter-kit": "^2.11.2",
     "@tiptap/suggestion": "^2.11.2",
+    "date-fns": "^4.4.0",
     "highlight.js": "^11.11.1",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.562.0",
     "mongoose": "^9.7.3",
     "next": "^16.1.2",
+    "nodemailer": "^7.0.12",
     "react": "^19.2.3",
+    "react-datepicker": "^9.1.0",
     "react-dom": "^19.2.3",
-    "resend": "^6.22.0",
     "sharp": "^0.35.3",
     "tippy.js": "^6.3.7",
     "zustand": "^5.0.14"
@@ -51,5 +54,18 @@
     "eslint-config-next": "^16.1.2",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/user-no-18/contest-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/user-no-18/contest-tracker/issues"
+  },
+  "homepage": "https://github.com/user-no-18/contest-tracker#readme"
 }

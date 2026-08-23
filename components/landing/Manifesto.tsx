@@ -32,9 +32,6 @@ export default function Manifesto() {
                 </div>
               </div>
             </div>
-            
-            {/* Decorative element */}
-            <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full border border-emerald-500/20 float-anim hidden lg:block"></div>
           </div>
 
           {/* Right: Manifesto text */}

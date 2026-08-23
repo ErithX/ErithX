@@ -30,7 +30,12 @@ const UserSchema = new mongoose.Schema({
         default : ''  
     },
     isPro: { type: Boolean, default: false },
-    isVerified: { type: Boolean, default: false }
+    isVerified: { type: Boolean, default: false },
+    mentorPrefs: {
+        goal: { type: String, default: 'Balanced Generalist' },
+        focus: { type: String, default: '' },
+        strictness: { type: String, default: 'Normal' }
+    }
 },{timestamps : true});
 
 export const User = mongoose.models.User || mongoose.model('User' , UserSchema);

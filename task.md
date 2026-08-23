@@ -145,6 +145,27 @@ Remaining Vital tasks on 25/07/2026
 - [x] **Clean Bug Fixes & Telemetry Git Sync**
   - Stashed, wiped hurried commit, cleanly merged and pushed bug fixes to `origin/version-3`.
 
-## Version 3 Planning (The AI Reviewer)
+## Version 3 Execution (The AI Reviewer & Coder Identity Engine)
 - **Philosophy**: Build it from scratch optimally. This feature is Art, Mastery, Melody. Others should think it cannot be done by AI alone.
+- [x] **Milestone 1: Live Profile Linking & Real-Time Edge Verifier**
+  - Built `UserCoderProfile` MongoDB model & `/api/user/profiles` CRUD endpoint.
+  - Engineered `/api/user/profiles/verify` supporting real-time edge lookups for GitHub, LeetCode (GraphQL), and Codeforces.
+  - Implemented `<ProfileLinkModal />` with debounced micro-spinners, live verified badges, and real avatar previews.
+  - Integrated dynamic `<ConnectedProfilesCard />` on `/dashboard` with live sync indicators.
+- [ ] **Milestone 2: Platform Snapshot Scrapers & Deterministic Delta Engine**
+  - [x] Create MongoDB schemas (`models/PlatformStats.ts`) for LeetCode, Codeforces, GitHub, CodeChef.
+  - [x] Build API fetchers (`app/lib/platform-fetchers.ts`) for each platform.
+  - [x] Implement the Weekly Cron Job endpoint (`app/api/cron/fetch-stats/route.ts`) to fetch all users sequentially.
+  - [x] Deterministic progress rules filter (Δ active days, Δ contest rating, Δ hard/medium solves, slacking streaks).
+- [ ] **Milestone 3: AI Reviewer LLM Reasoning Engine & Superadmin Audit Hub**
+  - [x] Brutally honest senior engineer persona with dynamic tone variation and open loop assignments (`services/ai/prompts.ts`).
+  - [x] Multi-tier provider fallback router (Llama 3.3 70B ⇄ Gemini 2.5 Flash ⇄ GLM/Nemotron) (`services/ai/reviewerRouter.ts`).
+  - [x] AI Review database persistence layer, memory state tracking, and query service (`models/AIReview.ts`, `services/ai/reviewStorage.ts`).
+  - [x] Context assembler cron endpoint connecting platform snapshots + previous review memory into LLM router (`app/api/cron/generate-reviews/route.ts`).
+  - [ ] User review timeline card & Pro trend graph UI on `/dashboard`.
+- [ ] **Bonus Milestone: GitHub Weekly Tracking**
+  - [ ] Update `models/PlatformStats.ts` for GithubStats recent events.
+  - [ ] Update `app/lib/platform-fetchers.ts` to fetch `/events/public`.
+  - [ ] Update `services/core/dataFilter.ts` to calculate weekly/monthly contributions.
+  - [ ] Update docs.
 

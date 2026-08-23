@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing | DSA Quest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #09090b; color: #fff; overflow-x: hidden; position: relative; }
+    
+    /* Aurora Background */
+    .aurora-bg {
+      position: fixed; top: -10%; left: 20%; width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(16,185,129,0.15), transparent 70%);
+      filter: blur(80px); z-index: 0; pointer-events: none;
+    }
+    .aurora-bg-2 {
+      position: fixed; bottom: -10%; right: -10%; width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(34,211,238,0.12), transparent 70%);
+      filter: blur(80px); z-index: 0; pointer-events: none;
+    }
+
+    /* Glassmorphism */
+    .glass {
+      background: rgba(9,9,11,0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .grid-bg {
+      background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 32px 32px; z-index: 0; position: relative;
+    }
+
+    /* Pro Card Highlight Glow */
+    .pro-glow {
+      border: 1px solid rgba(16,185,129,0.3);
+      box-shadow: 0 0 40px rgba(16,185,129,0.1), inset 0 0 20px rgba(16,185,129,0.05);
+    }
+    
+    /* Toggle Switch */
+    .toggle-container {
+      width: 220px; height: 40px; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 999px;
+      position: relative; cursor: pointer; transition: all 0.3s ease;
+    }
+    .toggle-pill {
+      position: absolute; top: 4px; left: 4px; width: 100px; height: 32px;
+      background: rgba(255,255,255,0.1); border-radius: 999px;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .toggle-container.active .toggle-pill { transform: translateX(116px); background: linear-gradient(to right, #10b981, #22d3ee); }
+  </style>
+</head>
+<body class="min-h-screen grid-bg flex flex-col items-center">
+
+  <!-- Aurora Backgrounds -->
+  <div class="aurora-bg"></div>
+  <div class="aurora-bg-2"></div>
+
+  <!-- MAIN CONTENT -->
+  <main class="relative z-10 w-full max-w-5xl px-6 py-20 md:py-28">
+    
+    <!-- Header -->
+    <header class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-medium tracking-tight mb-4">
+        Simple pricing for <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">serious progress</span>
+      </h1>
+      <p class="text-zinc-400 max-w-lg mx-auto">Stop guessing. Get honest weekly feedback that actually pushes you forward.</p>
+    </header>
+
+    <!-- Monthly/Yearly Toggle -->
+    <div class="flex justify-center mb-12">
+      <div id="pricingToggle" class="toggle-container flex items-center justify-between px-6 text-xs font-medium text-zinc-400" onclick="togglePricing()">
+        <span class="z-10 w-full text-center">Monthly</span>
+        <span class="z-10 w-full text-center">Yearly (Save 2mo)</span>
+        <div class="toggle-pill"></div>
+      </div>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="grid md:grid-cols-2 gap-6 mb-20">
+      
+      <!-- FREE PLAN -->
+      <div class="glass rounded-2xl p-8 flex flex-col">
+        <div class="mb-6">
+          <h3 class="text-lg font-medium text-zinc-300 mb-2">Free</h3>
+          <div class="flex items-baseline gap-1 mb-1">
+            <span class="text-4xl font-semibold">₹0</span>
+            <span class="text-sm text-zinc-500">/ forever</span>
+          </div>
+          <p class="text-xs text-zinc-500">Best for: Students who want to try the system</p>
+        </div>
+
+        <button class="w-full py-3 rounded-lg border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white/5 transition-all mb-8">
+          Get Started
+        </button>
+
+        <ul class="space-y-3 text-sm text-zinc-400">
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-zinc-500 mt-0.5 flex-shrink-0"></i> Weekly AI Mentor Review (limited)</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-zinc-500 mt-0.5 flex-shrink-0"></i> Basic progress insights</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-zinc-500 mt-0.5 flex-shrink-0"></i> Contest tracking</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-zinc-500 mt-0.5 flex-shrink-0"></i> 160-character focus notes</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-zinc-500 mt-0.5 flex-shrink-0"></i> Last 2 weeks of report history</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-zinc-500 mt-0.5 flex-shrink-0"></i> Standard tone feedback</li>
+        </ul>
+      </div>
+
+      <!-- PRO PLAN -->
+      <div class="glass pro-glow rounded-2xl p-8 flex flex-col relative overflow-hidden">
+        <!-- Recommended Badge -->
+        <div class="absolute top-0 right-0 bg-gradient-to-r from-emerald-500 to-cyan-500 text-zinc-900 text-[10px] font-bold uppercase tracking-wider px-4 py-1 rounded-bl-lg">
+          Recommended
+        </div>
+
+        <div class="mb-6">
+          <h3 class="text-lg font-medium text-white mb-2">Pro</h3>
+          <div class="flex items-baseline gap-1 mb-1">
+            <span id="proPrice" class="text-4xl font-semibold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">₹499</span>
+            <span id="proPeriod" class="text-sm text-zinc-500">/ month</span>
+          </div>
+          <p id="proSubtext" class="text-xs text-zinc-500">Best for: Students serious about consistent growth</p>
+        </div>
+
+        <button class="w-full py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-zinc-900 text-sm font-bold hover:opacity-90 transition-all mb-8 flex items-center justify-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4"></i> Upgrade to Pro
+        </button>
+
+        <ul class="space-y-3 text-sm text-zinc-300">
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i> Unlimited AI Mentor Reviews</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i> Full direct & honest feedback</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i> 600-character focus notes (higher priority)</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i> Complete report history</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i> Advanced progress analytics</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i> Career target personalization</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i> Priority processing</li>
+          <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i> Inactivity protection tools</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="hidden md:block glass rounded-2xl p-8 mb-20">
+      <h3 class="text-lg font-medium mb-6 text-center text-zinc-300">Detailed Comparison</h3>
+      <div class="grid grid-cols-3 gap-4 text-sm">
+        <!-- Header -->
+        <div class="font-medium text-zinc-500 pb-4 border-b border-white/5">Feature</div>
+        <div class="font-medium text-zinc-500 pb-4 border-b border-white/5 text-center">Free</div>
+        <div class="font-medium text-emerald-400 pb-4 border-b border-white/5 text-center">Pro</div>
+        
+        <!-- Rows -->
+        <div class="py-3 border-b border-white/5 text-zinc-400">AI Mentor Reviews</div>
+        <div class="py-3 border-b border-white/5 text-center text-zinc-400">Limited</div>
+        <div class="py-3 border-b border-white/5 text-center text-white font-medium">Unlimited</div>
+
+        <div class="py-3 border-b border-white/5 text-zinc-400">Feedback Style</div>
+        <div class="py-3 border-b border-white/5 text-center text-zinc-400">Standard</div>
+        <div class="py-3 border-b border-white/5 text-center text-white font-medium">Direct & Honest</div>
+
+        <div class="py-3 border-b border-white/5 text-zinc-400">Focus Notes</div>
+        <div class="py-3 border-b border-white/5 text-center text-zinc-400">160 chars</div>
+        <div class="py-3 border-b border-white/5 text-center text-white font-medium">600 chars</div>
+
+        <div class="py-3 border-b border-white/5 text-zinc-400">Report History</div>
+        <div class="py-3 border-b border-white/5 text-center text-zinc-400">Last 2 weeks</div>
+        <div class="py-3 border-b border-white/5 text-center text-white font-medium">Full history</div>
+
+        <div class="py-3 border-b border-white/5 text-zinc-400">Career Target Personalization</div>
+        <div class="py-3 border-b border-white/5 text-center text-zinc-400">Basic</div>
+        <div class="py-3 border-b border-white/5 text-center text-white font-medium">Full</div>
+
+        <div class="py-3 border-b border-white/5 text-zinc-400">Progress Analytics</div>
+        <div class="py-3 border-b border-white/5 text-center text-zinc-400">Basic</div>
+        <div class="py-3 border-b border-white/5 text-center text-white font-medium">Advanced</div>
+
+        <div class="py-3 text-zinc-400">Priority Processing</div>
+        <div class="py-3 text-center text-zinc-400"><i data-lucide="x" class="w-4 h-4 inline-block"></i></div>
+        <div class="py-3 text-center text-white font-medium"><i data-lucide="check" class="w-4 h-4 inline-block text-emerald-400"></i></div>
+      </div>
+    </div>
+
+    <!-- WHY PRO EXISTS -->
+    <div class="text-center max-w-xl mx-auto mb-12">
+      <h2 class="text-xl font-medium text-white mb-4">Why Pro exists</h2>
+      <p class="text-sm text-zinc-400 leading-relaxed mb-3">
+        Free helps you experience the system. Pro removes limits so the mentor can actually hold you accountable every week.
+      </p>
+      <p class="text-xs text-zinc-500 italic">Most students who stay consistent upgrade within the first month.</p>
+    </div>
+
+    <!-- Trust Line -->
+    <div class="flex items-center justify-center gap-2 text-xs text-zinc-600">
+      <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+      Cancel anytime, no questions asked.
+    </div>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // Pricing Toggle Logic
+    function togglePricing() {
+      const container = document.getElementById('pricingToggle');
+      const price = document.getElementById('proPrice');
+      const period = document.getElementById('proPeriod');
+      const subtext = document.getElementById('proSubtext');
+      
+      container.classList.toggle('active');
+      
+      if (container.classList.contains('active')) {
+        // Yearly
+        price.innerText = "₹4,999";
+        period.innerText = "/ year";
+        subtext.innerText = "Best for: Students serious about consistent growth (Save 2 months!)";
+      } else {
+        // Monthly
+        price.innerText = "₹499";
+        period.innerText = "/ month";
+        subtext.innerText = "Best for: Students serious about consistent growth";
+      }
+    }
+  </script>
+</body>
+</html>

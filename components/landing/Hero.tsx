@@ -17,9 +17,9 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg pt-[56px] pb-8">
       {/* Background effects */}
-      <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at top right, rgba(6,78,59,0.25), #09090b 60%)'}}></div>
-      <div className="absolute top-20 right-1/4 w-64 h-64 md:w-96 md:h-96 rounded-full opacity-10" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(60px)'}}></div>
-      <div className="absolute bottom-0 left-1/4 w-[250px] h-[250px] md:w-[500px] md:h-[500px] rounded-full opacity-[0.02]" style={{ background: 'radial-gradient(circle, #a1a1aa, transparent 70%)', filter: 'blur(80px)' }}></div>
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at top left, rgba(6,78,59,0.1), #09090b 70%)' }}></div>
+      <div className="absolute top-0 right-1/4 w-[300px] h-[300px] md:w-[700px] md:h-[700px] rounded-full opacity-[0.04]" style={{ background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(100px)' }}></div>
+      <div className="absolute bottom-0 left-1/4 w-[250px] h-[250px] md:w-[500px] md:h-[500px] rounded-full opacity-[0.03]" style={{ background: 'radial-gradient(circle, #3f3f46, transparent 70%)', filter: 'blur(80px)' }}></div>
 
       {/* ========================================= */}
       {/* DESKTOP FULL-HEIGHT ORGANIC IMAGE (RIGHT) */}
@@ -32,26 +32,12 @@ export default function Hero() {
           src="/landing/hero-bg.png"
           fill
           className="object-cover"
-          alt="ErithX Platform Dashboard Preview showing upcoming contests and analytics"
+          alt="DSA Quest Platform Dashboard Preview showing upcoming contests and analytics"
           priority
         />
         {/* Color overlay blending */}
-        <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/40 via-transparent to-zinc-900/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent"></div>
-
-        {/* Image Label */}
-        {/* <div className="absolute bottom-10 left-10 right-10">
-          <div className="glass rounded-xl p-4 flex items-center gap-3 backdrop-blur-md">
-            <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-              <LayoutDashboard className="w-5 h-5 text-emerald-400" />
-            </div>
-            <div className="flex-1">
-              <div className="text-sm font-medium text-white">Unified Dashboard</div>
-              <div className="text-[10px] text-zinc-300">Contests, notes, projects — one view</div>
-            </div>
-            <svg className="w-4 h-4 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
-          </div>
-        </div> */}
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/80 via-transparent to-zinc-950/60"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/40 to-transparent"></div>
       </div>
 
 
@@ -64,21 +50,19 @@ export default function Hero() {
 
           {/* LEFT: Minimal Text Content */}
           <div className="animate-in text-center lg:text-left flex flex-col items-center lg:items-start py-20 lg:py-0">
-            <div className="flex items-center gap-2 mb-6 mt-4 justify-center lg:justify-start">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
-              <span className="text-xs font-medium text-emerald-400 tracking-wider uppercase">Next-Gen Engineering Platform</span>
-            </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.05]">
+
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.05]">
+              <span className="block text-sm md:text-base text-white/90 font-medium tracking-wider mb-4 mt-4"> NEXT-GEN ENGINEERING EDUCATION PLATFORM</span>
               Your Coding<br />Era Starts<br />Now.
             </h1>
-            
-            <p className="text-base text-zinc-400 leading-relaxed mb-4 max-w-lg mx-auto lg:mx-0">
-              Track every coding contest, master System Architecture, and build project blueprints. 
-              The one ecosystem for engineers who want to win.
+
+            <p className="text-lg text-zinc-400 leading-relaxed mb-4 max-w-lg mx-auto lg:mx-0">
+              Stop hoarding 50 tabs and missing deadlines. Track every coding contest, steal the best CS notes, and flex your hustle.
+              Built for software engineering students who actually want to win.
             </p>
             <p className="text-sm text-zinc-500 mb-10 max-w-lg mx-auto lg:mx-0">
-              Preparation with intent, not burnout.
+              Preparation with intent, not burnout. One all-in-one ecosystem for contests, notes, projects, and the community that gets it.
             </p>
 
             <div className="flex items-center justify-center lg:justify-start gap-4 flex-wrap mb-8 w-full">
@@ -95,10 +79,10 @@ export default function Hero() {
             {/* Social proof strip */}
             <div className="flex items-center justify-center lg:justify-start gap-4 w-full">
               <div className="flex -space-x-2">
-                <Image src="https://picsum.photos/seed/herouser1/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="ErithX community student avatar 1" />
-                <Image src="https://picsum.photos/seed/herouser2/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="ErithX community student avatar 2" />
-                <Image src="https://picsum.photos/seed/herouser3/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="ErithX community student avatar 3" />
-                <Image src="https://picsum.photos/seed/herouser4/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="ErithX community student avatar 4" />
+                <Image src="https://picsum.photos/seed/herouser1/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="DSA Quest community student avatar 1" />
+                <Image src="https://picsum.photos/seed/herouser2/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="DSA Quest community student avatar 2" />
+                <Image src="https://picsum.photos/seed/herouser3/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="DSA Quest community student avatar 3" />
+                <Image src="https://picsum.photos/seed/herouser4/40/40.jpg" width={32} height={32} className="rounded-full border-2 border-zinc-950 object-cover" alt="DSA Quest community student avatar 4" />
               </div>
               <div className="text-left">
                 <div className="text-xs font-medium text-white">2,400+ students</div>
