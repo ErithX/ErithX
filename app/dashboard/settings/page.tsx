@@ -9,7 +9,6 @@ import {
   Shield, AlertOctagon, CheckCircle, AlertCircle, PlusCircle, X,
   Github, Linkedin, ArrowUpRight, Check, Twitter, Loader2, Sparkles, Bot, Info, ArrowRight
 } from 'lucide-react';
-import ProBadge from '@/components/profile/ProBadge';
 import ProfileBanner from '@/components/profile/ProfileBanner';
 import CodingProfilesSettings from '@/components/settings/CodingProfilesSettings';
 
@@ -407,7 +406,6 @@ export default function SettingsPage() {
                     <h2 className="text-xl font-medium text-zinc-100">Public Profile</h2>
                     <p className="text-sm text-zinc-400 mt-1">This is how others will see you on the platform.</p>
                   </div>
-                  <ProBadge type="pro" />
                 </div>
                 
                 <div className="space-y-6 mt-8">
