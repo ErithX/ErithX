@@ -1,28 +1,17 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { CardType, CardLevel } from '@/components/dashboard/AchievementCard';
 import { createClient } from '@/app/lib/supabase/client';
-
 import DashboardNavbar from '@/components/dashboard/DashboardNavbar';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
-import UserProfileCard from '@/components/dashboard/UserProfileCard';
+import WeeklyReviewCard from '@/components/dashboard/WeeklyReviewCard';
+import GiveBackCard from '@/components/dashboard/GiveBackCard';
 import UpcomingContestsCard from '@/components/dashboard/UpcomingContestsCard';
 import ConnectedProfilesStatus from '@/components/dashboard/ConnectedProfilesStatus';
-import WeeklyReviewCard from '@/components/dashboard/WeeklyReviewCard';
-
-// Components hidden for Phase 1
-// import AchievementSection from '@/components/dashboard/AchievementSection';
-// import SkillMapCard from '@/components/dashboard/SkillMapCard';
-// import RecentActivityCard from '@/components/dashboard/RecentActivityCard';
-
+import AccountSettingsCard from '@/components/dashboard/AccountSettingsCard';
 import { useAuthStore } from '@/store/authStore';
 
 export default function DashboardPage() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentLevel, setCurrentLevel] = useState<CardLevel>('gold');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentType, setCurrentType] = useState<CardType>('transformation');
   const { user, loading } = useAuthStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -51,7 +40,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#09090b] grid-bg">
       {/* Navbar */}
       <DashboardNavbar 
         user={user} 
@@ -62,44 +51,38 @@ export default function DashboardPage() {
         handleLogout={handleLogout} 
       />
 
-      {/* Main */}
-      <main className="pt-20 pb-16 px-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Greeting */}
+      {/* Main Content */}
+      <main className="relative pt-24 pb-20 z-10">
+        <div className="max-w-7xl mx-auto px-6">
+          
+          {/* Header */}
           <DashboardHeader user={user} />
 
-          {/* Two Column */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-            {/* Left 2/3 */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Profile + Contributions */}
-              <UserProfileCard user={user} />
-
-              {/* Weekly Review Preview Card */}
+          {/* Dashboard Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+            
+            {/* Left Column (2/3 width) */}
+            <div className="lg:col-span-2 flex flex-col gap-6">
               <WeeklyReviewCard />
-
-              {/* Connected Profiles Status Strip (v3) */}
-              <ConnectedProfilesStatus />
+              <GiveBackCard />
             </div>
 
-
-            {/* Right 1/3 */}
-            <div className="space-y-6">
-              {/* Upcoming Contests */}
+            {/* Right Column (1/3 width) - Sticky */}
+            <div className="flex flex-col gap-5 lg:sticky lg:top-20">
               <UpcomingContestsCard />
-
-              {/* Skill Map (Hidden for Phase 1) */}
-              {/* <SkillMapCard /> */}
-
-              {/* Activity (Hidden for Phase 1) */}
-              {/* <RecentActivityCard /> */}
+              <ConnectedProfilesStatus />
+              <AccountSettingsCard />
             </div>
+
           </div>
         </div>
       </main>
-
+      
+      {/* Footer */}
       <footer className="border-t border-white/5 py-6 px-6 mt-12">
-        <div className="max-w-7xl mx-auto text-center text-[10px] text-zinc-600">© 2025 DSA Quest. Built for students, backed by pros.</div>
+        <div className="max-w-7xl mx-auto text-center text-[10px] text-zinc-600">
+          © {new Date().getFullYear()} DSA Quest. Built for students, backed by pros.
+        </div>
       </footer>
     </div>
   );

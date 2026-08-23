@@ -165,8 +165,17 @@ body {
 .thin-scrollbar::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.5) !important; border-radius: 4px; }
 .thin-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.8) !important; }
 
-.glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); }
-.glass:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); }
+.glass { 
+  background: rgba(9,9,11,0.6); 
+  backdrop-filter: blur(16px); 
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.08); 
+  transition: all 0.3s ease;
+}
+.glass:hover { 
+  background: rgba(9,9,11,0.7); 
+  border-color: rgba(255,255,255,0.12);
+}
 .gradient-text { background: linear-gradient(to right, #ffffff, #a1a1aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .gradient-text-hero { background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 50%, rgba(52, 211, 153, 0.7) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
@@ -358,6 +367,34 @@ body {
 .image-mask { mask-image: linear-gradient(to bottom, black 70%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%); }
 .marquee { display: flex; animation: marquee 30s linear infinite; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.scroll-reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+.scroll-reveal { opacity: 0; transform: translateY(40px);  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
+/* Dashboard V2 Utilities */
+.grid-bg { 
+  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); 
+  background-size: 32px 32px; 
+  z-index: 0;
+  position: relative;
+}
+
+.gradient-text { 
+  background: linear-gradient(to right, #ffffff, #a1a1aa); 
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent;
+}
+
+.hover-underline { position: relative; }
+.hover-underline::after {
+  content: ''; position: absolute; bottom: -2px; left: 0;
+  width: 0; height: 1px; background: currentColor;
+  transition: width 0.3s ease;
+}
+.hover-underline:hover::after { width: 100%; }
+
+.card-lift { transition: transform 0.3s ease; }
+.card-lift:hover { transform: translateY(-2px); }
+
+.give-back-card { transition: all 0.3s ease; }
+.give-back-card:hover { transform: translateY(-2px); }
+.scroll-reveal.visible { opacity: 1; transform: translateY(0); }
