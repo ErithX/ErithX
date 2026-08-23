@@ -81,7 +81,7 @@ export default function DashboardPage() {
       {/* Footer */}
       <footer className="border-t border-white/5 py-6 px-6 mt-12">
         <div className="max-w-7xl mx-auto text-center text-[10px] text-zinc-600">
-          © {new Date().getFullYear()} DSA Quest. Built for students, backed by pros.
+          © {new Date().getFullYear()} ErithX. Built for students, backed by pros.
         </div>
       </footer>
     </div>

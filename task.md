@@ -49,6 +49,8 @@
   - `[x]` Rewrite `app/robots.ts`.
   - `[x]` Create `public/llms.txt`.
   - `[x]` Add Schema Markup (`json-ld`) to `app/page.tsx` and `app/faq/page.tsx`.
+  - [x] Fix dummy PRO badge removal on `Settings` page.
+  - [x] Safely merge `version-3` to `main` branch.
   - `[x]` Fix H1 tags in dashboard pages.
 - [x] **Dynamic Resource Metadata**
   - `[x]` Create `app/resources/[id]/layout.tsx` to handle dynamic metadata for resources.

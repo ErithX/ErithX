@@ -1,6 +1,7 @@
 import React from 'react';
 import { Zap, Twitter, Github, Linkedin } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -9,10 +10,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-10">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-7 h-7 rounded bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                <Zap className="w-3.5 h-3.5 text-emerald-400" />
-              </div>
-              <span className="font-semibold text-sm">ErithX</span>
+              <Image src="/newLogo.png" alt="ErithX Logo" width={120} height={32} className="h-8 w-auto object-contain" />
             </div>
             <p className="text-xs text-zinc-500 leading-relaxed">The student-first platform for CS engineering. Built with intent, not burnout.</p>
           </div>
