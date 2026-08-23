@@ -15,8 +15,14 @@ interface Contest {
 }
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+const ENABLE_EMAILS = process.env.ENABLE_EMAIL_SERVICE === 'true';
 
 export async function sendWelcomeEmail(userEmail: string, userName: string, upcomingContests?: Contest[], topResource?: any) {
+  if (!ENABLE_EMAILS) {
+    console.log(`[KILL SWITCH] Emails are currently disabled. Skipped Welcome Email to ${userEmail}`);
+    return { success: true, skipped: true };
+  }
+
   if (!resend) {
     console.warn(`[EMAIL DISABLED] No RESEND_API_KEY. Blocked Welcome email to ${userEmail}`);
     return { success: true };
@@ -39,6 +45,11 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, upco
 }
 
 export async function sendMentorReportEmail(userEmail: string, userName: string, projectTitle: string, aiFeedbackText: string) {
+  if (!ENABLE_EMAILS) {
+    console.log(`[KILL SWITCH] Emails are currently disabled. Skipped Mentor Report Email to ${userEmail}`);
+    return { success: true, skipped: true };
+  }
+
   if (!resend) {
     console.warn(`[EMAIL DISABLED] No RESEND_API_KEY. Blocked Mentor email to ${userEmail}`);
     return { success: true };
@@ -74,6 +85,11 @@ export async function sendDailyContestDigest(
     return { success: true, skipped: true };
   }
 
+  if (!ENABLE_EMAILS) {
+    console.log(`[KILL SWITCH] Emails are currently disabled. Skipped Digest Email to ${userEmail}`);
+    return { success: true, skipped: true };
+  }
+
   if (!resend) {
     console.warn(`[EMAIL DISABLED] No RESEND_API_KEY. Blocked Digest email to ${userEmail}`);
     return { success: true };
@@ -104,6 +120,11 @@ export async function sendContestAlert(
   contest: Contest,
   subjectLine?: string
 ) {
+  if (!ENABLE_EMAILS) {
+    console.log(`[KILL SWITCH] Emails are currently disabled. Skipped Alert Email to ${userEmail}`);
+    return { success: true, skipped: true };
+  }
+
   if (!resend) {
     console.warn(`[EMAIL DISABLED] No RESEND_API_KEY. Blocked Alert email to ${userEmail}`);
     return { success: true };
@@ -135,6 +156,11 @@ export async function sendProductUpdate(
   updateSummary: string,
   updateUrl?: string
 ) {
+  if (!ENABLE_EMAILS) {
+    console.log(`[KILL SWITCH] Emails are currently disabled. Skipped Product Update Email to ${userEmail}`);
+    return { success: true, skipped: true };
+  }
+
   if (!resend) {
     console.warn(`[EMAIL DISABLED] No RESEND_API_KEY. Blocked Product Update email to ${userEmail}`);
     return { success: true };

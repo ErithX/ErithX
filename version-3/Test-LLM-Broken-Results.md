@@ -1,0 +1,11 @@
+# LLM Mentor Reliability & Redundancy Tests\n\n## test_user_redundant_check\n\n**CRITICAL ERROR CAUGHT:** `LLM Error: {"error":{"code":"1113","message":"Insufficient balance or no resource package. Please recharge."}}`\n*(This demonstrates the try-catch block successfully preventing a total crash)*\n\n---\n## test_user_broken_data\n\n**Model Used:** `gemini-3.5-flash`\n**Career Target:** `FAANG / Top Product`\n**Roy Factor Input:** `0`\n**Time Taken:** 11.41s\n**Tokens:** 1027\n\n### Target Set For Next Week:\n> Connect active coding platforms and solve at least 5 Easy and 3 Medium problems on arrays/strings to establish a baseline.\n\n### Review Text:\nYou claim your target is FAANG and top product companies, yet your profile here is a complete ghost town. There is absolutely zero activity tracked across any platform. No LeetCode, no GitHub, no competitive programming.
+
+If you are actually working hard in secret and just haven't linked your profiles, fix that immediately. A software engineer who cannot manage their own data integration is not a great look for a top-tier tech role. We cannot measure what we do not track.
+
+If the reality is that you simply haven't done any work this week, we need to talk. You cannot build the problem-solving depth required for high-paying engineering roles out of thin air. Wishing for a top-tier offer without writing code is just daydreaming.
+
+FAANG interviews demand clean mental models, solid data structures knowledge, and the ability to write production-grade code under pressure. You cannot master trees, graphs, and dynamic programming if you aren't even consistently solving basic array problems.
+
+We need to establish a baseline immediately. I do not care if you start small, but you must start. For next week, I want to see actual proof of life on your dashboard.
+
+Your task is simple: connect your active coding profiles so your progress actually syncs. If you don't have active accounts, create them. Solve 5 Easy and 3 Medium problems on arrays or strings this week. No excuses, just get some green squares on the board. Let's see some actual data next week so we have something real to evaluate.\n\n### Internal Output:\n- **Roy Factor Update:** 0\n- **Hidden Summary:** User is a 'Ghost' with 0 overall progress score. No active platforms found. Target is FAANG.\n\n---\n
