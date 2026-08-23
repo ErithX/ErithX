@@ -181,6 +181,66 @@ export async function sendProductUpdate(
   }
 }
 
+// --- LEGACY HELPERS FOR RAW HTML EMAILS ---
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const UNSUBSCRIBE_URL = `${APP_URL}/dashboard/settings`;
+const PHYSICAL_ADDRESS = 'ErithX, India';
+const SENDER_NAME = 'ErithX';
+
+function emailWrapper(content: string): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background-color:#f4f5f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f5f7;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#ffffff;border-radius:8px;border:1px solid #e5e7eb;overflow:hidden;">
+          ${content}
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+function emailFooter(): string {
+  return `
+    <tr>
+      <td style="padding:24px 32px;background-color:#f9fafb;border-top:1px solid #e5e7eb;">
+        <p style="margin:0 0 8px 0;font-size:12px;color:#6b7280;line-height:1.6;text-align:center;">
+          You received this because you have an account on ErithX.
+          <br>
+          <a href="${UNSUBSCRIBE_URL}" style="color:#3b82f6;text-decoration:underline;">Manage email preferences</a>
+        </p>
+        <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.6;text-align:center;">
+          ${SENDER_NAME} &middot; ${PHYSICAL_ADDRESS}
+        </p>
+      </td>
+    </tr>`;
+}
+
+async function sendEmail({ to, subject, html }: { to: string, subject: string, html: string }) {
+  if (!ENABLE_EMAILS) return { success: true };
+  if (!resend) return { success: true };
+  try {
+    const data = await resend.emails.send({
+      from: 'ErithX Mentor <mentor@erithx.dev>',
+      to,
+      subject,
+      html,
+    });
+    return { success: true, data };
+  } catch (error) {
+    console.error('sendEmail failed:', error);
+    return { success: false, error };
+  }
+}
+
 // --- MENTOR WEEKLY REVIEW EMAIL ---
 
 export async function sendWeeklyReviewEmail(

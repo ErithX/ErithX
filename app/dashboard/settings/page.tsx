@@ -562,7 +562,6 @@ export default function SettingsPage() {
                           </div>
                         )}
                       </div>
-                      <ProBadge type="pro" />
                     </div>
                     <p className="text-xs text-zinc-500">Provide direct context on what you are struggling with to guide the AI Review.</p>
                     <div className="relative">

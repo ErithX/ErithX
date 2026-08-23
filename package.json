@@ -12,6 +12,8 @@
     "@google-analytics/data": "^7.0.0",
     "@google/genai": "^2.17.1",
     "@google/generative-ai": "^0.24.1",
+    "@react-email/components": "^1.0.12",
+    "@react-email/tailwind": "^2.0.7",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.8.0",
@@ -40,6 +42,7 @@
     "react": "^19.2.3",
     "react-datepicker": "^9.1.0",
     "react-dom": "^19.2.3",
+    "resend": "^6.22.0",
     "sharp": "^0.35.3",
     "tippy.js": "^6.3.7",
     "zustand": "^5.0.14"
