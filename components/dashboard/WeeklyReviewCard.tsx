@@ -24,9 +24,10 @@ export default function WeeklyReviewCard() {
   useEffect(() => {
     async function fetchData() {
       try {
+        const timestamp = new Date().getTime();
         const [res, profilesRes] = await Promise.all([
-          fetch('/api/user/reviews/latest'),
-          fetch('/api/user/profiles')
+          fetch(`/api/user/reviews/latest?t=${timestamp}`, { cache: 'no-store' }),
+          fetch(`/api/user/profiles?t=${timestamp}`, { cache: 'no-store' })
         ]);
         
         if (res.ok) {

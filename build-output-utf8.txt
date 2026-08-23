@@ -1,0 +1,114 @@
+﻿
+> contest-tracker@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.2.12 (Turbopack)
+node.exe : ΓÜá The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: 
+https://nextjs.org/docs/messages/middleware-to-proxy
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\DEBJYOTI ROY\AppData\R ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ΓÜá The "middle...leware-to-proxy:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+- Environments: .env
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 4 errors:
+./components/dashboard/UpcomingContestsCard.tsx:4:1
+Module not found: Can't resolve '@/app/lib/api'
+  [90m2 |[0m [36mimport[0m { [33mCalendar[0m, [33mUsers[0m, [33mArrowRight[0m } [36mfrom[0m 
+[32m'lucide-react'[0m;
+  [90m3 |[0m [36mimport[0m { [33mContest[0m } [36mfrom[0m [32m'@/types/contest'[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { fetchUpcomingContests } [36mfrom[0m [32m'@/app/lib/api'[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m
+  [90m6 |[0m [36mexport[0m [36mdefault[0m [36mfunction[0m [33mUpcomingContestsCard[0m() {
+  [90m7 |[0m   [36mconst[0m [contests, setContests] = useState<[33mContest[0m[]>([]);
+
+Import map: aliased to relative './app/lib/api' inside of [project]/
+
+
+Import traces:
+  Client Component Browser:
+    ./components/dashboard/UpcomingContestsCard.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/dashboard/UpcomingContestsCard.tsx [Client Component SSR]
+    ./app/dashboard/page.tsx [Client Component SSR]
+    ./app/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./app/api/user/bug/route.ts:3:1
+Module not found: Can't resolve '@/app/lib/db'
+  [90m1 |[0m [36mimport[0m { [33mNextResponse[0m } [36mfrom[0m [32m'next/server'[0m;
+  [90m2 |[0m [36mimport[0m { createClient } [36mfrom[0m [32m'@/utils/supabase/server'[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { connectToDatabase } [36mfrom[0m [32m'@/app/lib/db'[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m { [33mBugReport[0m } [36mfrom[0m [32m'@/models/BugReport'[0m;
+  [90m5 |[0m
+  [90m6 |[0m [36mexport[0m [36masync[0m [36mfunction[0m [33mPOST[0m(req: [33mRequest[0m) {
+
+Import map: aliased to relative './app/lib/db' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./components/dashboard/ConnectedProfilesStatus.tsx:4:1
+Module not found: Can't resolve '@/utils/supabase/client'
+  [90m2 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m'next/link'[0m;
+  [90m3 |[0m [36mimport[0m { [33mSettings2[0m, [33mPlusCircle[0m } [36mfrom[0m [32m'lucide-react'[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { createClient } [36mfrom[0m [32m'@/utils/supabase/client'[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m [36mimport[0m { [33mLeetCodeIcon[0m, [33mCodeforcesIcon[0m } [36mfrom[0m [32m'./Icons'[0m; 
+[90m// Assuming we create these or use ...[0m
+  [90m6 |[0m
+  [90m7 |[0m [36mexport[0m [36mdefault[0m [36mfunction[0m [33mConnectedProfilesStatus[0m() {
+
+Import map: aliased to relative './utils/supabase/client' inside of [project]/
+
+
+Import traces:
+  Client Component Browser:
+    ./components/dashboard/ConnectedProfilesStatus.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/dashboard/ConnectedProfilesStatus.tsx [Client Component SSR]
+    ./app/dashboard/page.tsx [Client Component SSR]
+    ./app/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./app/api/user/bug/route.ts:2:1
+Module not found: Can't resolve '@/utils/supabase/server'
+  [90m1 |[0m [36mimport[0m { [33mNextResponse[0m } [36mfrom[0m [32m'next/server'[0m;
+[31m[1m>[0m [90m2 |[0m [36mimport[0m { createClient } [36mfrom[0m [32m'@/utils/supabase/server'[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m3 |[0m [36mimport[0m { connectToDatabase } [36mfrom[0m [32m'@/app/lib/db'[0m;
+  [90m4 |[0m [36mimport[0m { [33mBugReport[0m } [36mfrom[0m [32m'@/models/BugReport'[0m;
+  [90m5 |[0m
+
+Import map: aliased to relative './utils/supabase/server' inside of [project]/
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (./components/dashboard/UpcomingContestsCard.tsx:4:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./app/api/user/bug/route.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./components/dashboard/ConnectedProfilesStatus.tsx:4:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./app/api/user/bug/route.ts:2:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)

@@ -307,30 +307,11 @@ function ReportsContent() {
       try {
         setLoading(true);
 
-        const cached = sessionStorage.getItem('dashboard_reviews_cache');
-        if (cached) {
-          const data = JSON.parse(cached);
-          if (data && data.reviews && data.reviews.length > 0) {
-            setReviewsList(data.reviews);
-            let target = data.reviews[0];
-            if (targetId) {
-              const f = data.reviews.find((r: ReviewItem) => r._id === targetId);
-              if (f) target = f;
-            } else if (targetDate) {
-              const f = data.reviews.find((r: ReviewItem) => new Date(r.week_start_date || r.created_at).toISOString().startsWith(targetDate));
-              if (f) target = f;
-            }
-            setSelectedReview(target);
-            setLoading(false);
-            return;
-          }
-        }
-
-        const res = await fetch('/api/user/reviews');
+        const timestamp = new Date().getTime();
+        const res = await fetch(`/api/user/reviews?t=${timestamp}`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           if (data.success && data.reviews && data.reviews.length > 0) {
-            sessionStorage.setItem('dashboard_reviews_cache', JSON.stringify(data));
             setReviewsList(data.reviews);
             
             let target = data.reviews[0];

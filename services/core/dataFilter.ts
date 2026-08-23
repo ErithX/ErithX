@@ -52,17 +52,23 @@ function getLeetCodeMetrics(lcStats: any, degradeSeverity: string[], totalDegrad
   const topTopics = (lcStats.topTags || []).slice(0, 3).map((t: any) => t.tag);
 
   // Degradation rules
-  if (deltaSolved === 0) {
-    degradeSeverity.push("0 LeetCode problems solved this week.");
-    totalDegradeScore.value += 20;
-  }
-  if (ratingDelta < -10) {
-    degradeSeverity.push(`LeetCode rating dropped by ${Math.abs(ratingDelta)} points.`);
-    totalDegradeScore.value += 15;
-  }
-  if (parseFloat(easyRatio) > 80 && deltaSolved > 10) {
-     degradeSeverity.push(`High volume of problems solved (${deltaSolved}), but ${easyRatio}% were Easy difficulty.`);
-     totalDegradeScore.value += 10;
+  if (history.length === 1) {
+    // This is the baseline week, so we don't have a previous snapshot to compare against.
+    // We shouldn't penalize them for '0 solved this week' because we don't actually know.
+    // We just established their baseline total today.
+  } else {
+    if (deltaSolved === 0) {
+      degradeSeverity.push("0 LeetCode problems solved this week.");
+      totalDegradeScore.value += 20;
+    }
+    if (ratingDelta < -10) {
+      degradeSeverity.push(`LeetCode rating dropped by ${Math.abs(ratingDelta)} points.`);
+      totalDegradeScore.value += 15;
+    }
+    if (parseFloat(easyRatio) > 80 && deltaSolved > 10) {
+       degradeSeverity.push(`High volume of problems solved (${deltaSolved}), but ${easyRatio}% were Easy difficulty.`);
+       totalDegradeScore.value += 10;
+    }
   }
 
   // Raw History Payload

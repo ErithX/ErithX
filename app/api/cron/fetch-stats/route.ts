@@ -39,9 +39,9 @@ export async function GET(request: Request) {
     // We only fetch users who have weekly_digest enabled or are recently active.
     // Since you have <100 users, we can just fetch all users with linked accounts.
     const { data: users, error } = await supabase
-      .from('users') // Assuming your table is named 'users' or 'profiles' based on your design
+      .from('user_profiles') 
       .select('id, leetcode_url, codeforces_url, codechef_url, github_username')
-      .not('leetcode_url', 'is', null) // Filter for users with at least some linked URL
+      .not('leetcode_url', 'is', null) 
       .limit(100);
 
     if (error) {
