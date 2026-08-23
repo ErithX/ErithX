@@ -16,6 +16,8 @@ export interface IAIReview extends Document {
   week_start_date?: Date;
   email_sent: boolean;
   email_sent_at?: Date;
+  is_acknowledged?: boolean;
+  acknowledged_at?: Date;
   created_at: Date;
 }
 
@@ -35,6 +37,8 @@ const AIReviewSchema = new Schema<IAIReview>({
   week_start_date: { type: Date, index: true },
   email_sent: { type: Boolean, default: false },
   email_sent_at: { type: Date },
+  is_acknowledged: { type: Boolean, default: false },
+  acknowledged_at: { type: Date },
   created_at: { type: Date, default: Date.now, index: true },
 });
 
