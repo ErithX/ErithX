@@ -40,7 +40,8 @@ export default function WeeklyReviewCard() {
         if (profilesRes.ok) {
           const pData = await profilesRes.json();
           if (pData.success && pData.platforms) {
-            setProfileCount(Object.keys(pData.platforms).length);
+            const validProfiles = Object.values(pData.platforms).filter((p: any) => p && p.handle).length;
+            setProfileCount(validProfiles);
           }
         }
       } catch (err) {
