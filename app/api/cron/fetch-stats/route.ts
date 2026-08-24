@@ -26,6 +26,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function GET(request: Request) {
+  return NextResponse.json({ status: "Automation currently disabled until QStash migration" }, { status: 200 });
   try {
     // 1. Verify Cron Secret to prevent unauthorized triggers
     const authHeader = request.headers.get('authorization');

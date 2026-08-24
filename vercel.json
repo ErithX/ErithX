@@ -3,14 +3,6 @@
     {
       "path": "/api/cron/send-emails",
       "schedule": "0 21 * * *"
-    },
-    {
-      "path": "/api/cron/fetch-stats",
-      "schedule": "0 2 * * 0"
-    },
-    {
-      "path": "/api/cron/generate-reviews",
-      "schedule": "15 2 * * 0"
     }
   ]
 }

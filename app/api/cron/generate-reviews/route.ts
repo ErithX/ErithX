@@ -11,6 +11,7 @@ export const maxDuration = 60; // 60s max execution time for serverless
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
+  return NextResponse.json({ status: "Automation currently disabled until QStash migration" }, { status: 200 });
   try {
     // 1. Verify Cron Authorization (Secret check)
     const authHeader = request.headers.get('authorization');
