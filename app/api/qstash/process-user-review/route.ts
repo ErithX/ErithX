@@ -195,12 +195,12 @@ async function handler(request: Request) {
 
     // 4. Trigger Email
     // CRITICAL FAILSAFE: During testing, DO NOT send emails to anyone except the admin.
-    if (userSettings?.email === 'debjyoti2409@gmail.com') {
+    if (userSettings?.email?.trim().toLowerCase() === 'debjyoti2409@gmail.com') {
       console.log(`Failsafe passed: Ready to send email to ${userSettings.email}`);
-      const userName = userSettings.fullName?.split(' ')[0] || 'Developer';
+      const userName = userSettings.name?.split(' ')[0] || 'Developer';
       await sendWeeklyReviewEmail(userSettings.email, userName, llmResponse.hidden_summary);
     } else {
-      console.warn(`Failsafe blocked: Prevented sending email to ${userSettings?.email || 'unknown'} during testing.`);
+      console.warn(`Failsafe blocked: Prevented sending email to "${userSettings?.email}" (supabaseId: ${userId}) during testing.`);
     }
 
     return NextResponse.json({ success: true, message: `Processed ${userId} successfully.` });

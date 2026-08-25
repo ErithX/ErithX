@@ -15,7 +15,7 @@ interface Contest {
 }
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
-const ENABLE_EMAILS = process.env.ENABLE_EMAIL_SERVICE === 'true';
+const ENABLE_EMAILS = process.env.ENABLE_EMAIL_SERVICE?.toLowerCase() === 'true';
 
 export async function sendWelcomeEmail(userEmail: string, userName: string, upcomingContests?: Contest[], topResource?: any) {
   if (!ENABLE_EMAILS) {
@@ -251,7 +251,7 @@ export async function sendWeeklyReviewEmail(
   reviewText: string
 ) {
   // DOUBLE PROTECTION FAILSAFE (Enforced at the email service level)
-  if (userEmail !== 'debjyoti2409@gmail.com') {
+  if (userEmail?.trim().toLowerCase() !== 'debjyoti2409@gmail.com') {
     console.warn(`[DOUBLE PROTECTION] Blocked sending Weekly Performance Email to ${userEmail}. Only admin is allowed during testing.`);
     return { success: true, skipped: true };
   }
