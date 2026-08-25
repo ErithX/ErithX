@@ -64,7 +64,6 @@ export async function GET(request: Request) {
     }
 
     // 4. Publish a job to QStash for each valid user
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://erithx.dev';
     const cleanAppUrl = appUrl.endsWith('/') ? appUrl.slice(0, -1) : appUrl;
 
     const publishPromises = profiles.map(profile => {
