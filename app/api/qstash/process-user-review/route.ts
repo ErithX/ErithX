@@ -7,6 +7,7 @@ import { SystemLog } from '@/models/SystemLog';
 import { generateAIContext } from '@/services/core/dataFilter';
 import { generateWeeklyReview } from '@/services/ai/reviewerRouter';
 import { getLatestUserReview, saveAIReview } from '@/services/ai/reviewStorage';
+import { sendWeeklyReviewEmail } from '@/app/lib/email/emailService';
 import { 
   LeetCodeStats, 
   CodeforcesStats, 
@@ -192,11 +193,12 @@ async function handler(request: Request) {
       statsSnapshot: filteredPayload,
     });
 
-    // 4. Trigger Email (Placeholder for the Email Redesign System)
+    // 4. Trigger Email
     // CRITICAL FAILSAFE: During testing, DO NOT send emails to anyone except the admin.
     if (userSettings?.email === 'debjyoti2409@gmail.com') {
       console.log(`Failsafe passed: Ready to send email to ${userSettings.email}`);
-      // TODO: await sendWeeklyReviewEmail(userSettings.email, llmResponse);
+      const userName = userSettings.fullName?.split(' ')[0] || 'Developer';
+      await sendWeeklyReviewEmail(userSettings.email, userName, llmResponse.hidden_summary);
     } else {
       console.warn(`Failsafe blocked: Prevented sending email to ${userSettings?.email || 'unknown'} during testing.`);
     }

@@ -243,57 +243,55 @@ async function sendEmail({ to, subject, html }: { to: string, subject: string, h
 
 // --- MENTOR WEEKLY REVIEW EMAIL ---
 
+import WeeklyPerformanceEmail from './templates/WeeklyPerformanceEmail';
+
 export async function sendWeeklyReviewEmail(
   userEmail: string,
   userName: string,
-  reviewHook: string
+  reviewText: string
 ) {
-  // A serious, professional subject line
-  const subject = `DSA Quest Mentor Review: Weekly Performance Update for ${userName}`;
-  
-  const html = emailWrapper(`
-    <tr>
-      <td style="padding:32px 32px 24px 32px;">
-        <h1 style="margin:0 0 8px 0;font-size:22px;color:#111827;font-weight:700;">Weekly Mentor Review</h1>
-        <p style="margin:0;font-size:14px;color:#6b7280;">Your performance analysis is ready.</p>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding:0 32px 24px 32px;">
-        <p style="margin:0 0 16px 0;font-size:15px;color:#374151;line-height:1.6;">
-          Hey ${userName},
-        </p>
-        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border:1px solid #e5e7eb;border-left:4px solid #3b82f6;border-radius:4px;overflow:hidden;margin-bottom:24px;background-color:#f9fafb;">
-          <tr>
-            <td style="padding:20px;">
-              <p style="margin:0;font-size:15px;color:#374151;line-height:1.6;font-style:italic;">
-                "${reviewHook}"
-              </p>
-            </td>
-          </tr>
-        </table>
-        <table role="presentation" cellpadding="0" cellspacing="0">
-          <tr>
-            <td style="background-color:#111827;border-radius:6px;">
-              <a href="${APP_URL}/dashboard" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;">
-                View Your Full Report
-              </a>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding:0 32px 24px 32px;">
-        <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
-          You are receiving this automated mentor review because it is enabled for your account.
-        </p>
-      </td>
-    </tr>
-    ${emailFooter()}
-  `);
+  // DOUBLE PROTECTION FAILSAFE (Enforced at the email service level)
+  if (userEmail !== 'debjyoti2409@gmail.com') {
+    console.warn(`[DOUBLE PROTECTION] Blocked sending Weekly Performance Email to ${userEmail}. Only admin is allowed during testing.`);
+    return { success: true, skipped: true };
+  }
 
-  return sendEmail({ to: userEmail, subject, html });
+  if (!ENABLE_EMAILS) {
+    console.log(`[KILL SWITCH] Emails are currently disabled. Skipped Weekly Performance Email to ${userEmail}`);
+    return { success: true, skipped: true };
+  }
+
+  if (!resend) {
+    console.warn(`[EMAIL DISABLED] No RESEND_API_KEY. Blocked Weekly Performance email to ${userEmail}`);
+    return { success: true };
+  }
+
+  // Extract a 150-200 character clean preview snippet for the email blockquote
+  // Remove markdown bolding (**) and trim to the first sentence or two.
+  const cleanText = reviewText.replace(/\*\*/g, '').trim();
+  const firstSentenceMatch = cleanText.match(/^.*?[.!?](?:\s|$)/);
+  const previewSnippet = firstSentenceMatch 
+    ? firstSentenceMatch[0].trim() 
+    : cleanText.substring(0, 150) + '...';
+
+  const subject = `Your weekly performance analysis is ready, ${userName}`;
+
+  try {
+    const data = await resend.emails.send({
+      from: 'ErithX Core <mentor@erithx.dev>',
+      to: userEmail,
+      subject,
+      react: WeeklyPerformanceEmail({ 
+        userName, 
+        previewTextContent: previewSnippet 
+      }) as React.ReactElement,
+    });
+    console.log(`Weekly Performance Email sent to ${userEmail}`, data);
+    return { success: true, data };
+  } catch (error) {
+    console.error(`Failed to send Weekly Performance Email to ${userEmail}`, error);
+    return { success: false, error };
+  }
 }
 
 // --- SUSPENSION & REACTIVATION EMAILS ---
