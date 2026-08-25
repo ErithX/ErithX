@@ -74,12 +74,21 @@ export async function GET(request: Request) {
 
     const results = await Promise.allSettled(publishPromises);
     
+    const errors: any[] = [];
+    results.forEach((r, idx) => {
+      if (r.status === 'rejected') {
+        console.error(`Failed to publish job ${idx}:`, r.reason);
+        errors.push(r.reason?.message || r.reason);
+      }
+    });
+
     const successful = results.filter(r => r.status === 'fulfilled').length;
     const failed = results.filter(r => r.status === 'rejected').length;
 
     return NextResponse.json({
       success: true,
       message: `Triggered ${successful} review jobs in QStash. Failed to trigger ${failed}.`,
+      errors,
       totalEligible: profiles.length
     });
 
