@@ -193,7 +193,13 @@ async function handler(request: Request) {
     });
 
     // 4. Trigger Email (Placeholder for the Email Redesign System)
-    // TODO: await sendWeeklyReviewEmail(userSettings.email, llmResponse);
+    // CRITICAL FAILSAFE: During testing, DO NOT send emails to anyone except the admin.
+    if (userSettings?.email === 'debjyoti2409@gmail.com') {
+      console.log(`Failsafe passed: Ready to send email to ${userSettings.email}`);
+      // TODO: await sendWeeklyReviewEmail(userSettings.email, llmResponse);
+    } else {
+      console.warn(`Failsafe blocked: Prevented sending email to ${userSettings?.email || 'unknown'} during testing.`);
+    }
 
     return NextResponse.json({ success: true, message: `Processed ${userId} successfully.` });
   } catch (err: any) {
