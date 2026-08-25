@@ -196,14 +196,16 @@ async function handler(request: Request) {
     // 4. Trigger Email
     // CRITICAL FAILSAFE: During testing, DO NOT send emails to anyone except the admin.
     let emailStatus = "Not attempted";
-    if (userSettings?.email?.trim().toLowerCase() === 'debjyoti2409@gmail.com') {
-      console.log(`Failsafe passed: Ready to send email to ${userSettings.email}`);
-      const userName = userSettings.name?.split(' ')[0] || 'Developer';
-      const res = await sendWeeklyReviewEmail(userSettings.email, userName, llmResponse.hidden_summary);
+    const targetEmail = userSettings?.email || profile.userEmail;
+    const targetName = userSettings?.name?.split(' ')[0] || 'Developer';
+
+    if (targetEmail?.trim().toLowerCase() === 'debjyoti2409@gmail.com') {
+      console.log(`Failsafe passed: Ready to send email to ${targetEmail}`);
+      const res = await sendWeeklyReviewEmail(targetEmail, targetName, llmResponse.hidden_summary);
       emailStatus = res.success ? "Sent successfully" : (res.skipped ? "Skipped by service" : "Failed to send");
     } else {
-      console.warn(`Failsafe blocked: Prevented sending email to "${userSettings?.email}" (supabaseId: ${userId}) during testing.`);
-      emailStatus = `Blocked by failsafe for email: ${userSettings?.email}`;
+      console.warn(`Failsafe blocked: Prevented sending email to "${targetEmail}" (supabaseId: ${userId}) during testing.`);
+      emailStatus = `Blocked by failsafe for email: ${targetEmail}`;
     }
 
     return NextResponse.json({ 
@@ -228,4 +230,6 @@ async function handler(request: Request) {
 
 // verifySignatureAppRouter checks the Upstash-Signature header 
 // to ensure only QStash can call this endpoint
-export const POST = verifySignatureAppRouter(handler);
+export const POST = process.env.NODE_ENV === 'development' 
+  ? handler 
+  : verifySignatureAppRouter(handler);

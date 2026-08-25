@@ -20,6 +20,7 @@ export default function WeeklyReviewCard() {
   const [review, setReview] = useState<LatestReviewData | null>(null);
   const [loading, setLoading] = useState(true);
   const [profileCount, setProfileCount] = useState(0);
+  const [platforms, setPlatforms] = useState<any>({});
 
   useEffect(() => {
     async function fetchData() {
@@ -40,6 +41,7 @@ export default function WeeklyReviewCard() {
         if (profilesRes.ok) {
           const pData = await profilesRes.json();
           if (pData.success && pData.platforms) {
+            setPlatforms(pData.platforms);
             const validProfiles = Object.values(pData.platforms).filter((p: any) => p && p.handle).length;
             setProfileCount(validProfiles);
           }
@@ -68,20 +70,35 @@ export default function WeeklyReviewCard() {
 
   if (!review) {
     if (profileCount >= 2) {
+      const leetcodeSolved = platforms?.leetcode?.statsSummary?.totalSolved || 'N/A';
+      // Fallback to publicRepos if contributions are not tracked directly in statsSummary
+      const githubContributions = platforms?.github?.statsSummary?.contributions || platforms?.github?.statsSummary?.publicRepos || 'N/A'; 
+      const codeforcesRating = platforms?.codeforces?.statsSummary?.rating || 'N/A';
+
       return (
-        <div className="glass card-lift rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center py-20 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
-          <div className="relative z-10 flex flex-col items-center">
-            <Activity className="w-12 h-12 text-emerald-400 mb-6 animate-pulse" strokeWidth={1.5} />
-            <h3 className="text-2xl font-light tracking-wide text-white mb-4">Baseline Initiated</h3>
-            <p className="text-base text-zinc-300 max-w-md leading-relaxed font-light mb-8">
-              System calibration is underway. Your first personalized AI Growth Playbook will be ready within 7 days.
+        <div className="glass card-lift rounded-2xl p-8 md:p-12 flex flex-col justify-center relative overflow-hidden text-left min-h-[350px]">
+          <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
+          <div className="relative z-10 w-full max-w-2xl">
+            <h3 className="text-2xl font-light tracking-wide text-white mb-4">Baseline ready</h3>
+            
+            <p className="text-base text-zinc-300 leading-relaxed font-light mb-6">
+              Your profiles are connected and your starting point is set.<br />
+              <span className="font-medium mt-4 inline-block text-white">Current snapshot:</span><br />
+              LeetCode: {leetcodeSolved} problems<br />
+              GitHub: {githubContributions} contributions<br />
+              Codeforces: {codeforcesRating} rating
             </p>
+
+            <p className="text-sm text-zinc-400 leading-relaxed font-light mb-8">
+              From this week onward, the system will track what you actually improve — not just how much you solve. It looks at consistency, difficulty, and whether you follow through on focus areas.<br /><br />
+              <span className="text-zinc-300 font-medium">Stay consistent.</span> If targets keep getting ignored, reviews become stricter over time. You can set your own focus and goals anytime from Settings.
+            </p>
+
             <Link 
               href="/dashboard/settings#ai-mentoring" 
-              className="px-6 py-3 rounded-full bg-white/5 border border-white/10 text-zinc-300 text-sm tracking-wide hover:bg-white/10 hover:text-white transition-all backdrop-blur-md"
+              className="inline-block px-6 py-3 rounded-full bg-white/5 border border-white/10 text-zinc-300 text-sm tracking-wide hover:bg-white/10 hover:text-white transition-all backdrop-blur-md"
             >
-              Personalize AI Mentoring
+              See how reviews work
             </Link>
           </div>
         </div>
@@ -93,15 +110,15 @@ export default function WeeklyReviewCard() {
         <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-zinc-500/10 blur-3xl pointer-events-none"></div>
         <div className="relative z-10 flex flex-col items-center">
           <Target className="w-12 h-12 text-zinc-500 mb-6" strokeWidth={1.5} />
-          <h3 className="text-2xl font-light tracking-wide text-white mb-4">Awaiting Signal</h3>
+          <h3 className="text-2xl font-light tracking-wide text-white mb-4">Let’s build your baseline</h3>
           <p className="text-base text-zinc-400 max-w-md leading-relaxed font-light mb-8">
-            To generate an accurate AI Growth Playbook, please connect at least 2 profiles to establish your baseline.
+            Connect at least two profiles so the system can understand where you currently stand and start tracking real progress.
           </p>
           <Link 
             href="/dashboard/settings#connections" 
             className="px-6 py-3 rounded-full bg-white/5 border border-white/10 text-zinc-300 text-sm tracking-wide hover:bg-white/10 hover:text-white transition-all backdrop-blur-md"
           >
-            Link Data Sources
+            Connect Profiles
           </Link>
         </div>
       </div>
