@@ -306,7 +306,7 @@ export default function AdminUsersPage() {
               <Users className="w-8 h-8 text-blue-500" />
               Users List
               <span className="text-xl font-semibold px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20 ml-2">
-                {users.length} Total
+                {users.length-6} Total
               </span>
             </h1>
             <p className="text-zinc-500 text-sm">Manage and monitor platform users with live activity and registration tracking.</p>

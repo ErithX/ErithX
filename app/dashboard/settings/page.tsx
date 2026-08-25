@@ -242,6 +242,7 @@ export default function SettingsPage() {
           email_notifications: prefs.contestAlerts,
           weekly_digest: prefs.weeklyDigest,
           product_updates: prefs.productUpdates,
+          mentor_review_enabled: prefs.mentorReview,
         }),
       });
       if (res.ok) {
@@ -672,7 +673,7 @@ export default function SettingsPage() {
                         onChange={(e) => {
                           const next = { ...notifPrefs, mentorReview: e.target.checked };
                           setNotifPrefs(next);
-                          // saveNotifPrefs(next); // Implement later
+                          saveNotifPrefs(next);
                         }}
                       />
                       <div className="toggle-label w-10 h-5 bg-zinc-800 rounded-full border border-zinc-700 transition-colors duration-200 ease-in-out"></div>

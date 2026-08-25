@@ -76,6 +76,7 @@ export async function PATCH(request: Request) {
     if (body.email_notifications !== undefined) updates.email_notifications = body.email_notifications;
     if (body.weekly_digest !== undefined) updates.weekly_digest = body.weekly_digest;
     if (body.product_updates !== undefined) updates.product_updates = body.product_updates;
+    if (body.mentor_review_enabled !== undefined) updates.mentor_review_enabled = body.mentor_review_enabled;
     if (body.company !== undefined) updates.company = body.company;
     if (body.job_title !== undefined) updates.job_title = body.job_title;
     if (body.bio !== undefined) updates.bio = body.bio;
