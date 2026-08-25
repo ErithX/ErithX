@@ -195,15 +195,22 @@ async function handler(request: Request) {
 
     // 4. Trigger Email
     // CRITICAL FAILSAFE: During testing, DO NOT send emails to anyone except the admin.
+    let emailStatus = "Not attempted";
     if (userSettings?.email?.trim().toLowerCase() === 'debjyoti2409@gmail.com') {
       console.log(`Failsafe passed: Ready to send email to ${userSettings.email}`);
       const userName = userSettings.name?.split(' ')[0] || 'Developer';
-      await sendWeeklyReviewEmail(userSettings.email, userName, llmResponse.hidden_summary);
+      const res = await sendWeeklyReviewEmail(userSettings.email, userName, llmResponse.hidden_summary);
+      emailStatus = res.success ? "Sent successfully" : (res.skipped ? "Skipped by service" : "Failed to send");
     } else {
       console.warn(`Failsafe blocked: Prevented sending email to "${userSettings?.email}" (supabaseId: ${userId}) during testing.`);
+      emailStatus = `Blocked by failsafe for email: ${userSettings?.email}`;
     }
 
-    return NextResponse.json({ success: true, message: `Processed ${userId} successfully.` });
+    return NextResponse.json({ 
+      success: true, 
+      message: `Processed ${userId} successfully.`,
+      email_status: emailStatus 
+    });
   } catch (err: any) {
     console.error(`Error processing QStash webhook:`, err.message);
     
