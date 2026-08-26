@@ -64,3 +64,5 @@ test-*.mjs
 test_*.mjs
 ga_report_output.json
 
+# Untracked UI
+public/UI/

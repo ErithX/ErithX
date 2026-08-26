@@ -1,8 +1,9 @@
+
 "use client";
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Target, ArrowUpRight, ArrowRight, Activity } from 'lucide-react';
+import { Target, ArrowUpRight, ArrowRight, Activity, Sparkles, SlidersHorizontal, Link2 } from 'lucide-react'; // <-- Added missing icons here
 import { formatDistanceToNow } from 'date-fns';
 
 interface LatestReviewData {
@@ -68,62 +69,121 @@ export default function WeeklyReviewCard() {
     );
   }
 
+  // --- CASE 1: NO REVIEW YET, BUT PROFILES ARE CONNECTED ---
   if (!review) {
     if (profileCount >= 2) {
       const leetcodeSolved = platforms?.leetcode?.statsSummary?.totalSolved || 'N/A';
-      // Fallback to publicRepos if contributions are not tracked directly in statsSummary
       const githubContributions = platforms?.github?.statsSummary?.contributions || platforms?.github?.statsSummary?.publicRepos || 'N/A'; 
       const codeforcesRating = platforms?.codeforces?.statsSummary?.rating || 'N/A';
 
+      const statsPhrases = [];
+      if (platforms?.leetcode?.handle) statsPhrases.push(`solved ${leetcodeSolved} problems on LeetCode`);
+      if (platforms?.github?.handle) statsPhrases.push(`made ${githubContributions} contributions on GitHub`);
+      if (platforms?.codeforces?.handle) statsPhrases.push(`achieved a ${codeforcesRating} rating on Codeforces`);
+
+      let statsSentence = '';
+      if (statsPhrases.length > 0) {
+        if (statsPhrases.length === 1) {
+          statsSentence = `Currently, you've ${statsPhrases[0]}.`;
+        } else if (statsPhrases.length === 2) {
+          statsSentence = `Currently, you've ${statsPhrases[0]} and ${statsPhrases[1]}.`;
+        } else {
+          statsSentence = `Currently, you've ${statsPhrases[0]}, ${statsPhrases[1]}, and ${statsPhrases[2]}.`;
+        }
+      }
+
       return (
-        <div className="glass card-lift rounded-2xl p-8 md:p-12 flex flex-col justify-center relative overflow-hidden text-left min-h-[350px]">
-          <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
+        <div className="glass card-lift rounded-2xl p-8 md:p-10 relative overflow-hidden text-left min-h-[400px]">
+          {/* Ambient glow */}
+          <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none"></div>
+          
           <div className="relative z-10 w-full max-w-2xl">
-            <h3 className="text-2xl font-light tracking-wide text-white mb-4">Baseline ready</h3>
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-emerald-400" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-medium tracking-tight text-white">You're IN.</h3>
+            </div>
             
-            <p className="text-base text-zinc-300 leading-relaxed font-light mb-6">
-              Your profiles are connected and your starting point is set.<br />
-              <span className="font-medium mt-4 inline-block text-white">Current snapshot:</span><br />
-              LeetCode: {leetcodeSolved} problems<br />
-              GitHub: {githubContributions} contributions<br />
-              Codeforces: {codeforcesRating} rating
+            <p className="text-base text-zinc-300 leading-relaxed font-light mb-8">
+              Your profiles are synced. {statsSentence} Now, let's move beyond just solving problems.
             </p>
 
-            <p className="text-sm text-zinc-400 leading-relaxed font-light mb-8">
-              From this week onward, the system will track what you actually improve — not just how much you solve. It looks at consistency, difficulty, and whether you follow through on focus areas.<br /><br />
-              <span className="text-zinc-300 font-medium">Stay consistent.</span> If targets keep getting ignored, reviews become stricter over time. You can set your own focus and goals anytime from Settings.
-            </p>
+            {/* Scannable Feature Points */}
+            <div className="grid sm:grid-cols-3 gap-4 mb-8">
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                <div className="flex items-center gap-2 mb-2 text-zinc-300">
+                  <Activity className="w-4 h-4 text-emerald-400" strokeWidth={2} />
+                  <span className="text-xs font-medium uppercase tracking-wider">Real Progress</span>
+                </div>
+                <p className="text-[11px] text-zinc-500 leading-relaxed">We track difficulty & consistency, not just volume.</p>
+              </div>
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                <div className="flex items-center gap-2 mb-2 text-zinc-300">
+                  <Target className="w-4 h-4 text-cyan-400" strokeWidth={2} />
+                  <span className="text-xs font-medium uppercase tracking-wider">Strict Tracking</span>
+                </div>
+                <p className="text-[11px] text-zinc-500 leading-relaxed">Ignore your focus areas, and reviews get stricter over time.</p>
+              </div>
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                <div className="flex items-center gap-2 mb-2 text-zinc-300">
+                  <SlidersHorizontal className="w-4 h-4 text-purple-400" strokeWidth={2} />
+                  <span className="text-xs font-medium uppercase tracking-wider">Customizable</span>
+                </div>
+                <p className="text-[11px] text-zinc-500 leading-relaxed">Set your own focus and goals anytime from Preferences.</p>
+              </div>
+            </div>
 
+            {/* Preferences Callout */}
+            <div className="flex items-center gap-2 mb-8 text-sm text-zinc-400">
+              <SlidersHorizontal className="w-4 h-4 text-zinc-500" />
+              <span>
+                Want to change what matters? Set your focus areas in{' '}
+                <Link href="/dashboard/settings#ai-mentoring" className="text-emerald-400 hover:underline font-medium">
+                  Preferences
+                </Link>.
+              </span>
+            </div>
+
+            {/* High-Impact Action Button */}
             <Link 
-              href="/dashboard/settings#ai-mentoring" 
-              className="inline-block px-6 py-3 rounded-full bg-white/5 border border-white/10 text-zinc-300 text-sm tracking-wide hover:bg-white/10 hover:text-white transition-all backdrop-blur-md"
+              href="/dashboard/docs/how-it-works" 
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all group"
             >
-              See how reviews work
+              Maximize Your Results
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
       );
     }
     
+    // --- CASE 2: NOT ENOUGH PROFILES CONNECTED ---
     return (
-      <div className="glass card-lift rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center py-20 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-zinc-500/10 blur-3xl pointer-events-none"></div>
-        <div className="relative z-10 flex flex-col items-center">
-          <Target className="w-12 h-12 text-zinc-500 mb-6" strokeWidth={1.5} />
-          <h3 className="text-2xl font-light tracking-wide text-white mb-4">Let’s build your baseline</h3>
-          <p className="text-base text-zinc-400 max-w-md leading-relaxed font-light mb-8">
-            Connect at least two profiles so the system can understand where you currently stand and start tracking real progress.
+      <div className="glass card-lift rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center py-20 relative overflow-hidden min-h-[400px]">
+        <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-zinc-500/5 blur-3xl pointer-events-none"></div>
+        <div className="relative z-10 flex flex-col items-center max-w-md">
+          <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+            <Link2 className="w-6 h-6 text-zinc-400" strokeWidth={1.5} />
+          </div>
+          <h3 className="text-2xl md:text-3xl font-medium tracking-tight text-white mb-4">Let's get you IN.</h3>
+          <p className="text-base text-zinc-400 leading-relaxed font-light mb-8">
+            Connect at least two profiles so the system can understand where you stand. We don't just track how much you solve—we track how you improve.
           </p>
           <Link 
             href="/dashboard/settings#connections" 
-            className="px-6 py-3 rounded-full bg-white/5 border border-white/10 text-zinc-300 text-sm tracking-wide hover:bg-white/10 hover:text-white transition-all backdrop-blur-md"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all group"
           >
             Connect Profiles
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>
     );
   }
+
+  // --- CASE 3: REVIEW EXISTS (SHOW TEASER) ---
 
   const getPercentile = (id: string, factor: number) => {
     const hash = Array.from(id).reduce((acc, char) => acc + char.charCodeAt(0), 0);

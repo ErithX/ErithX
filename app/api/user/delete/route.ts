@@ -3,6 +3,11 @@ import { createClient } from '@/app/lib/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
 import connectToDatabase from '@/app/lib/mongodb';
 import { User } from '@/models/User';
+import AIReview from '@/models/AIReview';
+import { UserCoderProfile } from '@/models/UserCoderProfile';
+import { LeetCodeStats, CodeforcesStats, GithubStats, CodeChefStats } from '@/models/PlatformStats';
+import { Notification } from '@/models/Notification';
+import { UserActivity } from '@/models/UserActivity';
 
 export async function DELETE() {
   try {
@@ -38,6 +43,18 @@ export async function DELETE() {
         }
       }
     );
+
+    // 3.5. HARD DELETE private associated data
+    await Promise.all([
+      AIReview.deleteMany({ user_id: user.id }),
+      UserCoderProfile.deleteMany({ userId: user.id }),
+      LeetCodeStats.deleteMany({ userId: user.id }),
+      CodeforcesStats.deleteMany({ userId: user.id }),
+      GithubStats.deleteMany({ userId: user.id }),
+      CodeChefStats.deleteMany({ userId: user.id }),
+      Notification.deleteMany({ userId: user.id }),
+      UserActivity.deleteMany({ userId: user.id }),
+    ]);
 
     // 4. Delete from Supabase Auth & Public tables
     // We delete the public profile so they don't show up in search/rankings
