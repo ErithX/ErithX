@@ -364,5 +364,20 @@ Remaining Vital tasks on 25/07/2026
 - [x] Implement `app/docs/page.tsx` (Introduction)
 - [x] Implement `app/docs/performance-analysis/page.tsx`
 - [x] Implement `app/docs/contest-tracker/page.tsx`
-- [x] Implement `app/docs/creator-studio/page.tsx`
 - [x] Implement `app/docs/notifications/page.tsx`
+
+## Future Features & Polish (Backlog)
+- [ ] **Social Sharing Feature**
+  - Add a feature for users to share their achievements on LinkedIn, X, and other platforms.
+  - Must include dynamic auto-generated images and default pre-written text.
+- [ ] **Bug Report Feature**
+  - Verify if `BugReport` model is fully integrated into the UI.
+  - Ensure users have an accessible way to submit reports from anywhere on the platform.
+- [ ] **AI Reviewer System Prompt Fix ("Balanced Generalist")**
+  - Modify `services/ai/prompts.ts` so the AI stops repeating the exact phrase "you want to balance everything".
+  - Ensure the AI evaluates a balanced generalist naturally without sounding repetitive or artificial.
+- [ ] **Global Focus Score**
+  - Develop a proprietary "Global Focus Score" metric that synthesizes multi-platform data into a single trademark metric for ErithX.
+- [ ] **LLM Adaptation for New Users (Historical Data)**
+  - Modify the LLM context assembler to detect brand-new users.
+  - For new users, analyze their *historical data* (past months) rather than just the *current week's* data, preventing the AI from being overly harsh on their first review.

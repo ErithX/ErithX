@@ -45,6 +45,17 @@ export const metadata: Metadata = {
     title: "ErithX - 1-Click Google Calendar Contest Sync & Placement Prep",
     description: "Track coding contests from 10+ platforms with 1-Click Google Calendar sync. Practical career readiness & project blueprints with zero burnout.",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png" },
+    ],
+  },
+  manifest: "/site.webmanifest",
   robots: {
     index: true,
     follow: true,
@@ -59,8 +70,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/png" href="/favicon.png?v=3" />
-        <link rel="manifest" href="/site.webmanifest" />
        <meta name="google-site-verification" content="4KfpDK0yjbk36wT5FagXAX1r2DHchla3Haf3g0q_F1c" />
         
         {/* SEO Schema Markup - explicitly linking the platform to the founder */}
