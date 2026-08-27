@@ -81,39 +81,8 @@ export async function sendDailyContestDigest(
   topResource?: any
 ) {
   // FEATURE TEMPORARILY DISABLED
-  console.log(`[FEATURE DISABLED] Daily contest digest is temporarily disabled. Skipped for ${userEmail}`);
+  console.log(`[FEATURE DISABLED] Daily contest digest is temporarily disabled. Skipped for ${userEmail}`, { userName, contests, subjectLine, topResource });
   return { success: true, skipped: true };
-
-  if (!contests || contests.length === 0) {
-    console.log(`No contests for ${userEmail}, skipping digest`);
-    return { success: true, skipped: true };
-  }
-
-  if (!ENABLE_EMAILS) {
-    console.log(`[KILL SWITCH] Emails are currently disabled. Skipped Digest Email to ${userEmail}`);
-    return { success: true, skipped: true };
-  }
-
-  if (!resend) {
-    console.warn(`[EMAIL DISABLED] No RESEND_API_KEY. Blocked Digest email to ${userEmail}`);
-    return { success: true };
-  }
-
-  const subject = subjectLine || `${contests.length} contest${contests.length > 1 ? 's' : ''} starting soon on ErithX`;
-  
-  try {
-    const data = await resend.emails.send({
-      from: 'ErithX Contests <contest@erithx.dev>',
-      to: userEmail,
-      subject,
-      react: DigestEmail({ userName, contests, topResource }) as React.ReactElement,
-    });
-    console.log(`Digest Email sent to ${userEmail}`, data);
-    return { success: true, data };
-  } catch (error) {
-    console.error(`Failed to send Digest Email to ${userEmail}`, error);
-    return { success: false, error };
-  }
 }
 
 // --- CONTEST ALERT (24h before a specific contest) ---
