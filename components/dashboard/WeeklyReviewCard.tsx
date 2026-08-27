@@ -140,7 +140,7 @@ export default function WeeklyReviewCard() {
               <SlidersHorizontal className="w-4 h-4 text-zinc-500" />
               <span>
                 Want to change what matters? Set your focus areas in{' '}
-                <Link href="/dashboard/settings#ai-mentoring" className="text-emerald-400 hover:underline font-medium">
+                <Link href="/dashboard/settings#ai-mentor" className="text-emerald-400 hover:underline font-medium">
                   Preferences
                 </Link>.
               </span>
@@ -148,7 +148,7 @@ export default function WeeklyReviewCard() {
 
             {/* High-Impact Action Button */}
             <Link 
-              href="/dashboard/docs/how-it-works" 
+              href="/dashboard/docs/performance-analysis" 
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all group"
             >
               Maximize Your Results
@@ -219,7 +219,7 @@ export default function WeeklyReviewCard() {
               </div>
               <div>
                 <h2 className="font-medium text-lg text-white">Your Growth Playbook</h2>
-                <p className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">AI REVIEW • RECENT</p>
+                <p className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">PERFORMANCE REVIEW • RECENT</p>
               </div>
             </div>
             <span className="hidden sm:flex items-center gap-2 text-xs text-zinc-500 group-hover:text-white transition-colors">
@@ -246,7 +246,7 @@ export default function WeeklyReviewCard() {
                 </div>
                 {/* Tooltip */}
                 <div className="absolute left-0 bottom-full mb-2 w-48 bg-zinc-900 border border-white/10 text-zinc-300 text-[10px] p-2 rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-xl leading-relaxed">
-                  Score increases when you lock in your weekly AI playbook.
+                  Score increases when you lock in your weekly performance playbook.
                 </div>
               </div>
               <div className="flex items-baseline gap-1">

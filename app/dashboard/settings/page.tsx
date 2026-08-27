@@ -371,7 +371,7 @@ export default function SettingsPage() {
                   Profile
                 </button>
                 <button onClick={() => scrollTo('ai-mentor')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all ${activeSection === 'ai-mentor' ? 'active' : ''}`}>
-                  AI Mentor Engine
+                  Performance engine
                 </button>
                 <button onClick={() => scrollTo('connections')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all ${activeSection === 'connections' ? 'active' : ''}`}>
                   Coding Profiles
@@ -496,12 +496,12 @@ export default function SettingsPage() {
               </div>
             </section>
 
-            {/* AI MENTOR CONFIGURATION */}
+            {/* Customize your experience */}
             <section id="ai-mentor" className="max-w-4xl border border-zinc-800 rounded-lg bg-black overflow-hidden relative">
               <div className="p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
                   <div>
-                    <h2 className="text-xl font-medium text-white">AI Mentor Configuration</h2>
+                    <h2 className="text-xl font-medium text-white">Customize your experience</h2>
                     <p className="text-sm text-zinc-400 mt-0.5">Calibrate how the senior engineering LLM analyzes your progress.</p>
                   </div>
                 </div>
