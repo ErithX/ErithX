@@ -148,7 +148,7 @@ export default function WeeklyReviewCard() {
 
             {/* High-Impact Action Button */}
             <Link 
-              href="/dashboard/docs/performance-analysis" 
+              href="/docs/performance-analysis" 
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all group"
             >
               Maximize Your Results
