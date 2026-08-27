@@ -80,6 +80,10 @@ export async function sendDailyContestDigest(
   subjectLine?: string,
   topResource?: any
 ) {
+  // FEATURE TEMPORARILY DISABLED
+  console.log(`[FEATURE DISABLED] Daily contest digest is temporarily disabled. Skipped for ${userEmail}`);
+  return { success: true, skipped: true };
+
   if (!contests || contests.length === 0) {
     console.log(`No contests for ${userEmail}, skipping digest`);
     return { success: true, skipped: true };
