@@ -121,7 +121,7 @@ export default function SettingsPage() {
           });
           if (data.profile.mentorPrefs) {
             setMentorPrefs({
-              goal: data.profile.mentorPrefs.goal || 'Balanced Generalist',
+              goal: data.profile.mentorPrefs.goal || 'I want to balance everything',
               focus: data.profile.mentorPrefs.focus || '',
               strictness: data.profile.mentorPrefs.strictness || 'Normal'
             });
@@ -533,7 +533,7 @@ export default function SettingsPage() {
                     <label className="text-sm font-medium text-zinc-200">Primary Career Target</label>
                     <p className="text-xs text-zinc-500">The mentor will tailor problem recommendations and strictness to this path.</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-                      {['FAANG / Top Product', 'Startups & Building', 'Competitive Programming', 'Balanced Generalist', 'Custom Path'].map(goal => (
+                      {['FAANG / Top Product', 'Startups & Building', 'Competitive Programming', 'I want to balance everything', 'Custom Path'].map(goal => (
                         <label key={goal} className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${mentorPrefs.goal === goal ? 'bg-zinc-800 border-zinc-600' : 'bg-black border-zinc-800 hover:border-zinc-700'}`}>
                           <input 
                             type="radio" 

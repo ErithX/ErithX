@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema({
     isPro: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
     mentorPrefs: {
-        goal: { type: String, default: 'Balanced Generalist' },
+        goal: { type: String, default: 'I want to balance everything' },
         focus: { type: String, default: '' },
         strictness: { type: String, default: 'Normal' }
     }

@@ -206,7 +206,7 @@ export async function generateAIContext(userConfig: UserFilterConfig) {
   const filteredJSON: any = {
     user_id: userConfig.id,
     roy_factor: userConfig.roy_factor ?? 0,
-    career_target: userConfig.career_target || 'Balanced Generalist',
+    career_target: userConfig.career_target || 'I want to balance everything',
     user_focus: userConfig.user_focus || '',
     strictness: userConfig.strictness || 'Normal',
     generated_at: new Date().toISOString(),
