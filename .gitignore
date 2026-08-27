@@ -66,3 +66,4 @@ ga_report_output.json
 
 # Untracked UI
 public/UI/
+fetch_ga4.py

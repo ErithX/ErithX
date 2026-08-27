@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
-import * as Lucide from 'lucide-react';
+import { Mail, MessageCircle, Twitter, Github, Linkedin, CheckCircle2, ArrowRight } from 'lucide-react';
 
 export default function ContactPage() {
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function ContactPage() {
           <div className="space-y-6">
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center flex-shrink-0 mt-1">
-                <Lucide.Mail className="w-4 h-4 text-zinc-600" />
+                <Mail className="w-4 h-4 text-zinc-600" />
               </div>
               <div>
                 <div className="text-xs uppercase tracking-widest text-zinc-400 mb-1">Email Us</div>
@@ -107,7 +107,7 @@ export default function ContactPage() {
 
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center flex-shrink-0 mt-1">
-                <Lucide.MessageCircle className="w-4 h-4 text-zinc-600" />
+                <MessageCircle className="w-4 h-4 text-zinc-600" />
               </div>
               <div>
                 <div className="text-xs uppercase tracking-widest text-zinc-400 mb-1">Community</div>
@@ -122,13 +122,13 @@ export default function ContactPage() {
             <div className="text-xs uppercase tracking-widest text-zinc-400 mb-4">Follow the journey</div>
             <div className="flex items-center gap-3">
               <a href="#" className="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-900 text-zinc-600 hover:text-white flex items-center justify-center transition-colors duration-300">
-                <Lucide.Twitter className="w-4 h-4" />
+                <Twitter className="w-4 h-4" />
               </a>
               <a href="#" className="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-900 text-zinc-600 hover:text-white flex items-center justify-center transition-colors duration-300">
-                <Lucide.Github className="w-4 h-4" />
+                <Github className="w-4 h-4" />
               </a>
               <a href="#" className="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-900 text-zinc-600 hover:text-white flex items-center justify-center transition-colors duration-300">
-                <Lucide.Linkedin className="w-4 h-4" />
+                <Linkedin className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function ContactPage() {
             {status === "SUCCESS" ? (
               <div className="flex flex-col items-center justify-center text-center py-12">
                 <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-6">
-                  <Lucide.CheckCircle2 className="w-8 h-8 text-emerald-600" />
+                  <CheckCircle2 className="w-8 h-8 text-emerald-600" />
                 </div>
                 <h3 className="font-display text-3xl font-medium text-zinc-900 mb-3">Message Sent!</h3>
                 <p className="text-sm text-zinc-500 max-w-xs mb-8">
@@ -187,7 +187,7 @@ export default function ContactPage() {
 
                 <button type="submit" className="submit-btn w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-zinc-900 text-white text-sm font-semibold">
                   Send Message
-                  <Lucide.ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </form>
             )}

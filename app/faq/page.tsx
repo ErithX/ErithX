@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
-import * as Lucide from 'lucide-react';
+import { HelpCircle, Plus, ArrowRight } from 'lucide-react';
 
 export default function FaqPage() {
   useEffect(() => {
@@ -67,7 +67,7 @@ export default function FaqPage() {
       {/*  Overlay Text Content  */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 pb-12 md:pb-16 w-full">
         <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-6 shadow-[0_0_30px_rgba(255,255,255,0.05)] text-zinc-300">
-          <Lucide.HelpCircle className="w-4 h-4 text-emerald-400" />
+          <HelpCircle className="w-4 h-4 text-emerald-400" />
           <span className="text-xs font-semibold tracking-wider uppercase">Support Center</span>
         </div>
         
@@ -93,7 +93,7 @@ export default function FaqPage() {
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What is ErithX?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+                <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
             <div className="answer-content px-6 sm:px-8">
@@ -108,7 +108,7 @@ export default function FaqPage() {
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Is this platform free to use?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+                <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
             <div className="answer-content px-6 sm:px-8">
@@ -123,7 +123,7 @@ export default function FaqPage() {
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Can I add contests to my personal calendar?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+                <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
             <div className="answer-content px-6 sm:px-8">
@@ -138,7 +138,7 @@ export default function FaqPage() {
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How do I connect my LeetCode, GitHub, or Codeforces accounts?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+                <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
             <div className="answer-content px-6 sm:px-8">
@@ -153,7 +153,7 @@ export default function FaqPage() {
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Why should I connect my coding profiles?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+                <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
             <div className="answer-content px-6 sm:px-8">
@@ -169,7 +169,7 @@ export default function FaqPage() {
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What resources can I find here?</h2>
 
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+                <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
             <div className="answer-content px-6 sm:px-8">
@@ -184,7 +184,7 @@ export default function FaqPage() {
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How do I log in to the platform?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+                <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
             <div className="answer-content px-6 sm:px-8">
@@ -199,7 +199,7 @@ export default function FaqPage() {
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How do you use my email address?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+                <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
             <div className="answer-content px-6 sm:px-8">
@@ -214,7 +214,7 @@ export default function FaqPage() {
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How can I request to delete my account and data?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+                <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
             <div className="answer-content px-6 sm:px-8">
@@ -229,7 +229,7 @@ export default function FaqPage() {
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What features are coming in the future?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+                <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
             <div className="answer-content px-6 sm:px-8">
@@ -244,7 +244,7 @@ export default function FaqPage() {
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How can I report a bug or give feedback?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Lucide.Plus className="w-4 h-4 text-zinc-600" />
+                <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
             <div className="answer-content px-6 sm:px-8">
@@ -259,7 +259,7 @@ export default function FaqPage() {
         {/*  Still have questions? CTA  */}
         <div className="mt-16 text-center bg-zinc-50 border border-zinc-100 rounded-2xl p-10">
           <div className="w-12 h-12 rounded-xl bg-white border border-zinc-200 flex items-center justify-center mx-auto mb-5 shadow-sm">
-            <Lucide.HelpCircle className="w-5 h-5 text-emerald-600" />
+            <HelpCircle className="w-5 h-5 text-emerald-600" />
           </div>
           <h3 className="font-display text-2xl font-medium text-zinc-900 mb-2">Still have questions?</h3>
           <p className="text-sm text-zinc-500 mb-6 max-w-sm mx-auto">
@@ -267,7 +267,7 @@ export default function FaqPage() {
           </p>
           <a href="#" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-800 transition-colors">
             Contact Support
-            <Lucide.ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>
 
