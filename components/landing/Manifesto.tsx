@@ -36,10 +36,10 @@ export default function Manifesto() {
 
           {/* Right: Manifesto text */}
           <div className="lg:col-span-7 scroll-reveal">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The Anti-Noise Philosophy</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The anti-noise philosophy</span>
             <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-6 leading-[1.1]">
-              The ultimate software<br/>
-              <span className="gradient-text">engineering platform.</span>
+              A system, not<br/>
+              <span className="gradient-text">another dashboard.</span>
             </h2>
             
             <div className="space-y-5 text-zinc-400 text-sm leading-relaxed">
@@ -47,10 +47,7 @@ export default function Manifesto() {
                 The internet is full of bootcamps screaming &quot;100 days, 14 hours, no excuses.&quot; That&apos;s not education. That&apos;s burnout disguised as discipline.
               </p>
               <p>
-                ErithX exists because Gen Z engineering students deserve a platform that understands them — one that speaks to their emotion, their ambition, their real pain points. Not a sterile portal built by people who forgot what being a student feels like.
-              </p>
-              <p className="text-white font-medium">
-                We focus on preparation with enjoyment, passion, and intent. Not rote grinding. Not guilt-driven streaks. Just a system that makes winning feel inevitable.
+                ErithX exists for students who want progress, not padding. We don&apos;t care about your total problems solved or your longest streak. We care whether your effort is moving you toward the engineer you want to become.
               </p>
             </div>
 
@@ -61,21 +58,21 @@ export default function Manifesto() {
                   <HeartPulse className="w-4 h-4 text-emerald-400" />
                 </div>
                 <div className="text-xs font-medium mb-1">Intent over volume</div>
-                <div className="text-[10px] text-zinc-500 leading-relaxed">2 hours of focus beats 10 hours of doom-scrolling tabs.</div>
+                <div className="text-[10px] text-zinc-500 leading-relaxed">Two hours of focused work beats ten hours of doom-scrolling through easy problems.</div>
               </div>
               <div className="glass rounded-xl p-4">
                 <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-3">
                   <Sparkles className="w-4 h-4 text-cyan-400" />
                 </div>
                 <div className="text-xs font-medium mb-1">Joy over guilt</div>
-                <div className="text-[10px] text-zinc-500 leading-relaxed">Celebrate progress. Stop punishing yourself for missing a day.</div>
+                <div className="text-[10px] text-zinc-500 leading-relaxed">Missed a day? Understand why, repair the plan, and continue. No shame, no fake motivation.</div>
               </div>
               <div className="glass rounded-xl p-4">
                 <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-3">
                   <Target className="w-4 h-4 text-purple-400" />
                 </div>
                 <div className="text-xs font-medium mb-1">Clarity over chaos</div>
-                <div className="text-[10px] text-zinc-500 leading-relaxed">Know what to do next, always. No more 50-tab confusion.</div>
+                <div className="text-[10px] text-zinc-500 leading-relaxed">Know what to do next, always. No more 50-tab confusion or random grinding.</div>
               </div>
             </div>
           </div>

@@ -1,13 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { config } from 'dotenv';
 import fs from 'fs';
-
-// Try loading .env.local first (which usually has the prod DB), fallback to .env
-if (fs.existsSync('.env.local')) {
-  config({ path: '.env.local' });
-} else {
-  config({ path: '.env' });
-}
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -20,43 +12,43 @@ const HTML_CONTENT_TEMPLATE = (userName) => `
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="margin:0;padding:0;background-color:#08080a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#08080a;">
+<body style="margin:0;padding:0;background-color:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9fafb;">
     <tr>
       <td align="center" style="padding:48px 16px;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#09090b;border-radius:12px;border:1px solid rgba(255,255,255,0.05);overflow:hidden;box-shadow: 0 0 40px rgba(0,0,0,0.5);">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#ffffff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
           <tr>
             <td style="padding:40px 40px 24px 40px; text-align: center;">
-              <img src="https://erithx.dev/newLogo.png" alt="ErithX" style="height:28px; width:auto; display:inline-block;">
+              <h2 style="margin:0;font-size:24px;color:#111827;font-weight:700;letter-spacing:-0.5px;">Erith<span style="color:#10b981;">X</span></h2>
             </td>
           </tr>
           <tr>
             <td style="padding:0 40px 40px 40px;">
-              <p style="margin:0 0 16px 0;font-size:16px;color:#d4d4d8;line-height:1.6;">
+              <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
                 Hi ${userName},
               </p>
-              <p style="margin:0 0 16px 0;font-size:16px;color:#d4d4d8;line-height:1.6;">
+              <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
                 You knew us as DSA Quest, a simple contest tracker. But tracking contests isn't enough to guarantee real growth.
               </p>
-              <p style="margin:0 0 24px 0;font-size:18px;color:#ffffff;line-height:1.6;font-weight:600;">
+              <p style="margin:0 0 24px 0;font-size:18px;color:#111827;line-height:1.6;font-weight:600;">
                 We've evolved into ErithX.
               </p>
-              <p style="margin:0 0 16px 0;font-size:16px;color:#d4d4d8;line-height:1.6;">
+              <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
                 ErithX is now your personal engineering mentor.
               </p>
-              <p style="margin:0 0 24px 0;font-size:16px;color:#d4d4d8;line-height:1.6;">
+              <p style="margin:0 0 24px 0;font-size:16px;color:#374151;line-height:1.6;">
                 Every Sunday evening, we'll review your actual work across LeetCode, Codeforces, and GitHub. We'll send you a friendly, honest breakdown of your week to help you focus on what really matters—making real progress, not just staying busy.
               </p>
               
-              <div style="background-color:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:24px; margin-bottom:32px;">
+              <div style="background-color:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:24px; margin-bottom:32px;">
                 <p style="margin:0 0 16px 0;font-size:14px;color:#10b981;line-height:1.6;font-weight:600;text-transform:uppercase;letter-spacing:1px;">
                   Action required to get started
                 </p>
-                <p style="margin:0 0 16px 0;font-size:15px;color:#a1a1aa;line-height:1.6;">
+                <p style="margin:0 0 16px 0;font-size:15px;color:#4b5563;line-height:1.6;">
                   To prepare for your first weekly review, please connect your coding profiles:
                 </p>
-                <ol style="margin:0;padding-left:20px;font-size:15px;color:#a1a1aa;line-height:1.8;">
-                  <li>Log in to your <a href="https://erithx.dev/dashboard" style="color:#10b981;text-decoration:none;">dashboard</a></li>
+                <ol style="margin:0;padding-left:20px;font-size:15px;color:#4b5563;line-height:1.8;">
+                  <li>Log in to your <a href="https://erithx.dev/dashboard" style="color:#10b981;text-decoration:none;font-weight:500;">dashboard</a></li>
                   <li>Navigate to <b>Settings &rarr; Coding Profiles</b></li>
                   <li>Connect your accounts</li>
                 </ol>
@@ -70,13 +62,13 @@ const HTML_CONTENT_TEMPLATE = (userName) => `
                 </tr>
               </table>
 
-              <p style="margin:0 0 24px 0;font-size:16px;color:#d4d4d8;line-height:1.6;">
+              <p style="margin:0 0 24px 0;font-size:16px;color:#374151;line-height:1.6;">
                 We look forward to helping you prepare with intent.
               </p>
 
-              <p style="margin:0;font-size:15px;color:#a1a1aa;line-height:1.6;">
+              <p style="margin:0;font-size:15px;color:#6b7280;line-height:1.6;">
                 Best regards,<br>
-                <span style="color:#d4d4d8;">The ErithX Team</span><br>
+                <span style="color:#374151;font-weight:500;">The ErithX Team</span><br>
                 <a href="https://erithx.dev" style="color:#10b981;text-decoration:none;">erithx.dev</a>
               </p>
             </td>
@@ -148,7 +140,7 @@ async function main() {
     const payload = chunk.map(u => ({
       from: 'ErithX <founder@erithx.dev>',
       to: [u.email],
-      subject: 'Welcome to the new ErithX ✨',
+      subject: 'A personal hello from ErithX 👋',
       html: HTML_CONTENT_TEMPLATE(u.name)
     }));
 

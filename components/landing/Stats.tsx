@@ -19,12 +19,12 @@ export default function Stats() {
             <div className="text-[10px] uppercase tracking-widest text-zinc-500">Platforms Tracked</div>
           </div>
           <div className="scroll-reveal" style={{ transitionDelay: '0.2s' }}>
-            <div className="text-5xl font-semibold mb-2 text-cyan-400">89</div>
-            <div className="text-[10px] uppercase tracking-widest text-zinc-500">Verified Pros</div>
+            <div className="text-5xl font-semibold mb-2 text-cyan-400">Weekly</div>
+            <div className="text-[10px] uppercase tracking-widest text-zinc-500">Performance Reviews</div>
           </div>
           <div className="scroll-reveal" style={{ transitionDelay: '0.3s' }}>
-            <div className="text-5xl font-semibold mb-2 text-purple-400">100%</div>
-            <div className="text-[10px] uppercase tracking-widest text-zinc-500">Free & Ad-Free</div>
+            <div className="text-5xl font-semibold mb-2 text-purple-400">Free</div>
+            <div className="text-[10px] uppercase tracking-widest text-zinc-500">To Start</div>
           </div>
         </div>
       </div>

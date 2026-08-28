@@ -8,7 +8,7 @@ export default function Testimonials() {
         <div className="text-center mb-16 scroll-reveal">
           <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">Student Voices</span>
           <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Their words, not ours.</h2>
-          <p className="text-sm text-zinc-500 max-w-lg mx-auto">Real stories from students who stopped grinding and started winning.</p>
+          <p className="text-sm text-zinc-500 max-w-lg mx-auto">Real stories from students who stopped random grinding and started building evidence of progress.</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
@@ -22,7 +22,7 @@ export default function Testimonials() {
               <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
             </div>
             <p className="text-sm text-zinc-300 leading-relaxed mb-6">
-              &quot;I used to open 30 tabs every morning trying to track contests. ErithX replaced all of them. The milestone cards actually got me a recruiter DM on LinkedIn.&quot;
+              &quot;I used to open 30 tabs every morning trying to track contests and my progress. ErithX replaced all of them. The weekly review showed me I was padding easy problems, and the milestone cards actually got me a recruiter DM on LinkedIn.&quot;
             </p>
             <div className="flex items-center gap-3 pt-4 border-t border-white/5">
               <img src="https://picsum.photos/seed/test1/48/48.jpg" className="w-10 h-10 rounded-full object-cover" alt="Arjun Mehta" />
@@ -43,7 +43,7 @@ export default function Testimonials() {
               <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
             </div>
             <p className="text-sm text-zinc-300 leading-relaxed mb-6">
-              &quot;Every other platform feels like it&apos;s built for some imaginary student. This one gets it. The Gen Z pain points, the AI-era anxiety, the burnout culture — all addressed.&quot;
+              &quot;Every other platform feels like it’s built for some imaginary student. This one gets it. The honest weekly feedback, the focus on real progress, and the no‑guilt approach finally made consistency feel possible.&quot;
             </p>
             <div className="flex items-center gap-3 pt-4 border-t border-white/5">
               <img src="https://picsum.photos/seed/test2/48/48.jpg" className="w-10 h-10 rounded-full object-cover" alt="Sneha Reddy" />
@@ -64,7 +64,7 @@ export default function Testimonials() {
               <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
             </div>
             <p className="text-sm text-zinc-300 leading-relaxed mb-6">
-              &quot;Cracked Google SDE this year. The interview experience blogs from actual SDEs were gold. The streak system kept me consistent without making me feel guilty on off-days.&quot;
+              &quot;Cracked Google SDE this year. The interview experience blogs from actual SDEs were gold. The weekly reports kept me consistent without making me feel guilty on off‑days.&quot;
             </p>
             <div className="flex items-center gap-3 pt-4 border-t border-white/5">
               <img src="https://picsum.photos/seed/test3/48/48.jpg" className="w-10 h-10 rounded-full object-cover" alt="Vikram Singh" />
