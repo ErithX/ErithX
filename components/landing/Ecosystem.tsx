@@ -1,196 +1,131 @@
 import React from 'react';
 import Image from 'next/image';
 import { Bell, CalendarCheck, Filter, BookCopy, Download, BadgeCheck, Library, Users, Layers } from 'lucide-react';
+import Link from 'next/link';
+import AuthCTAButton from './AuthCTAButton';
 
 export default function Ecosystem() {
   return (
-    <section id="ecosystem" className="py-24 px-6 relative">
+    <>
+      <section id="ecosystem" className="py-24 px-6 relative">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 scroll-reveal">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The Complete Resource Vault</span>
-          <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Coding Contests & Study Resources.<br /><span className="text-zinc-500">Zero fluff.</span></h2>
-          <p className="text-sm text-zinc-500 max-w-xl mx-auto">The premier collection of contest trackers, semester study materials, engineering PDFs, and precise tech roadmaps. Built for modern engineers.</p>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">The core system</span>
+          <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">A weekly review that actually reads your behavior.</h2>
+          <p className="text-sm text-zinc-500 max-w-xl mx-auto">ErithX doesn’t just show totals. It studies how you work: your consistency, the topics you avoid, how often you stay in your comfort zone, and whether your projects match your goals. Every week, you get a direct report and a focused plan for the next 7 days.</p>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid md:grid-cols-6 gap-5 auto-rows-[220px]">
-
-          {/* Card 1: Contest Tracker (Large) */}
-          <div className="bento-card md:col-span-4 rounded-2xl overflow-hidden relative group border border-white/5">
-            <Image src="/landing/contest-tracker-banner.avif" fill className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Ultimate Contest Calendar showing active coding competitions" />
+        <div className="grid md:grid-cols-6 gap-5">
+          {/* Card 1: Core System Features (Large) */}
+          <div className="bento-card md:col-span-6 rounded-2xl overflow-hidden relative group border border-white/5">
             <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-transparent"></div>
-            <div className="relative z-10 p-7 h-full flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="relative flex h-2 w-2">
-                    <span className="live-pulse absolute inline-flex h-full w-full rounded-full bg-red-500"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                  </span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-red-400">Ultimate Contest Calendar</span>
+            <div className="relative z-10 p-8 h-full flex flex-col md:flex-row gap-8 items-center justify-between">
+              <div className="flex-1 space-y-6">
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="glass rounded-xl p-5">
+                    <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4">
+                      <Layers className="w-5 h-5 text-emerald-400" />
+                    </div>
+                    <div className="text-sm font-medium mb-2">Behavior over numbers</div>
+                    <div className="text-xs text-zinc-400 leading-relaxed">We don’t care if you solved 500 problems. We care whether you’re getting harder, more consistent, and closer to your target.</div>
+                  </div>
+                  <div className="glass rounded-xl p-5">
+                    <div className="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
+                      <BadgeCheck className="w-5 h-5 text-cyan-400" />
+                    </div>
+                    <div className="text-sm font-medium mb-2">Trends over snapshots</div>
+                    <div className="text-xs text-zinc-400 leading-relaxed">Your activity is compared week to week. The system notices when you slow down, when you improve, and when you’re just padding easy tasks.</div>
+                  </div>
+                  <div className="glass rounded-xl p-5">
+                    <div className="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-4">
+                      <Filter className="w-5 h-5 text-purple-400" />
+                    </div>
+                    <div className="text-sm font-medium mb-2">Plans over panic</div>
+                    <div className="text-xs text-zinc-400 leading-relaxed">No random grinding. Each review ends with clear targets: what to solve, what to build, and what contests to attend.</div>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-medium tracking-tight mb-2">Never miss a coding contest</h3>
-                <p className="text-xs text-zinc-400 leading-relaxed max-w-md">Track global competitive programming events across LeetCode, Codeforces, CodeChef, and 10+ platforms. Integrated timezone support and direct registration links.</p>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1.5">
-                  <Bell className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-[10px] text-zinc-400">1-Click Calendar Sync</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CalendarCheck className="w-3.5 h-3.5 text-cyan-400" />
-                  <span className="text-[10px] text-zinc-400">Timezone smart</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Filter className="w-3.5 h-3.5 text-purple-400" />
-                  <span className="text-[10px] text-zinc-400">Filter by platform</span>
+                <div className="pt-4">
+                  <AuthCTAButton className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all">
+                    Start my first weekly review
+                  </AuthCTAButton>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Card 2: Milestone Cards -> High-Quality Free PDF Notes */}
-          <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5">
-            <Image src="/landing/study-notes.jpg" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Premium PDF Notes for B.Tech students" />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent"></div>
-            <div className="relative z-10 p-5 h-full flex flex-col justify-between">
-              <div>
-                <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-2">
-                  <BookCopy className="w-4 h-4 text-emerald-400" />
-                </div>
-                <h3 className="text-[17px] font-medium mb-1">Premium Free PDFs</h3>
-                <p className="text-[11px] text-zinc-400 leading-tight">High-quality, meticulously structured B.Tech notes. Stop searching Google.</p>
-              </div>
-              {/* Mini preview */}
-              <div className="glass rounded-lg p-2.5 mt-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-md bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
-                    <Download className="w-3 h-3 text-yellow-500" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[10px] font-semibold truncate">OS & DBMS Notes</div>
-                    <div className="text-[8px] text-zinc-500">Instant PDF Access</div>
-                  </div>
-                  <BadgeCheck className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 3: Notes Hub (Image) */}
-          <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5">
-            <Image src="/landing/notes-hub-marquee.avif" fill className="object-cover opacity-40 group-hover:scale-105 transition-transform duration-500" alt="B.Tech Previous Year Question Papers Archive" />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
-            <div className="relative z-10 p-6 h-full flex flex-col justify-end">
-              <div className="w-9 h-9 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center mb-3">
-                <Library className="w-4 h-4 text-orange-400" />
-              </div>
-              <h3 className="text-lg font-medium mb-1">B.Tech PYQs Archive</h3>
-              <p className="text-[11px] text-zinc-400 leading-relaxed">Previous year question papers, sorted by semester and university.</p>
-            </div>
-          </div>
-
-          {/* Card 4: Project Monitor -> Elite Project Roadmaps */}
-          <div className="bento-card md:col-span-4 rounded-2xl overflow-hidden relative group border border-white/5">
-            <Image src="/landing/project-roadmaps.png" fill className="object-cover opacity-25 group-hover:opacity-35 transition-opacity" alt="Elite Project Architecture Guides and Roadmaps" />
-            <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/70 to-transparent"></div>
-            <div className="relative z-10 p-7 h-full flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-3 block">Project Architecture Guides</span>
-                <h3 className="text-2xl font-medium tracking-tight mb-2">Build products, not tutorials.</h3>
-                <p className="text-xs text-zinc-400 leading-relaxed max-w-md">Access elite project guidelines that explain exactly how to architect AI applications, distributed systems, and real-time backend services for your portfolio.</p>
-              </div>
-              {/* Roadmap progress bar style */}
-              <div className="space-y-2 max-w-sm">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] text-zinc-400">Microservices System Blueprint</span>
-                    <span className="text-[10px] text-emerald-400 font-medium">Free PDF</span>
-                  </div>
-                  <div className="h-1 rounded-full bg-white/5 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full" style={{ width: '100%' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] text-zinc-400">RAG AI Application Guide</span>
-                    <span className="text-[10px] text-cyan-400 font-medium">Available</span>
-                  </div>
-                  <div className="h-1 rounded-full bg-white/5 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" style={{ width: '100%' }}></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 5: Community & Studio */}
-          <div className="bento-card md:col-span-2 rounded-2xl overflow-hidden relative group border border-white/5">
-            <Image src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop" fill className="object-cover opacity-35 group-hover:scale-105 transition-transform duration-500" alt="Creator Studio and Engineering Playbooks" />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
-            <div className="relative z-10 p-6 h-full flex flex-col justify-end">
-              <div className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center mb-3">
-                <Users className="w-4 h-4 text-purple-400" />
-              </div>
-              <h3 className="text-lg font-medium mb-1">Creator Studio & Playbooks</h3>
-              <p className="text-[11px] text-zinc-400 leading-relaxed mb-3">Peer-reviewed engineering breakdowns, system architecture guides, and project blueprints.</p>
-              <div className="flex -space-x-2">
-                <Image src="https://picsum.photos/seed/comm1/32/32.jpg" width={24} height={24} className="rounded-full border-2 border-zinc-950 object-cover" alt="Community member 1" />
-                <Image src="https://picsum.photos/seed/comm2/32/32.jpg" width={24} height={24} className="rounded-full border-2 border-zinc-950 object-cover" alt="Community member 2" />
-                <Image src="https://picsum.photos/seed/comm3/32/32.jpg" width={24} height={24} className="rounded-full border-2 border-zinc-950 object-cover" alt="Community member 3" />
-                <div className="w-6 h-6 rounded-full border-2 border-zinc-950 bg-white/5 flex items-center justify-center">
-                  <span className="text-[8px] text-zinc-400 font-medium">+86</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 6: Roadmaps */}
+          {/* Card 2: Contest intelligence */}
           <div className="bento-card md:col-span-3 rounded-2xl overflow-hidden relative group border border-white/5">
-            <Image src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop" fill className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Tech Career Roadmaps for Software Engineers" />
-            <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-950/80 to-transparent"></div>
-            <div className="relative z-10 p-6 h-full flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">Tech Career Roadmaps 2026</span>
-                <h3 className="text-xl font-medium mb-2">Built for the modern market</h3>
-                <p className="text-xs text-zinc-400 leading-relaxed max-w-xs">Trendy tech stacks, genuine career advice, and high-quality study materials that match what top companies actually expect today.</p>
+            <Image src="/landing/contest-tracker-banner.avif" fill className="object-cover opacity-30 group-hover:opacity-40 transition-opacity" alt="Contest intelligence" />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent"></div>
+            <div className="relative z-10 p-7 h-full flex flex-col justify-end min-h-[360px]">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-red-400 mb-3 block">Contest intelligence</span>
+              <h3 className="text-2xl font-medium tracking-tight mb-2">Never miss the right contest.</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed mb-6">Track coding contests across 10+ platforms, including LeetCode, Codeforces, CodeChef, AtCoder, and more. Filter by platform and level, add your favorite rounds to Google Calendar in one click, and get an email alert before each contest.</p>
+              
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-md bg-emerald-500/10 flex items-center justify-center">
+                    <Filter className="w-3.5 h-3.5 text-emerald-400" />
+                  </div>
+                  <span className="text-xs text-zinc-300">10+ platforms in one calendar</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-md bg-cyan-500/10 flex items-center justify-center">
+                    <CalendarCheck className="w-3.5 h-3.5 text-cyan-400" />
+                  </div>
+                  <span className="text-xs text-zinc-300">1‑click Google Calendar sync</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-md bg-purple-500/10 flex items-center justify-center">
+                    <Bell className="w-3.5 h-3.5 text-purple-400" />
+                  </div>
+                  <span className="text-xs text-zinc-300">Email reminders before your favorite contests</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="px-2 py-1 rounded bg-white/5 text-[10px] text-zinc-400">#ai-engineering</div>
-                <div className="px-2 py-1 rounded bg-white/5 text-[10px] text-zinc-400">#system-design</div>
-                <div className="px-2 py-1 rounded bg-white/5 text-[10px] text-zinc-400">#web3</div>
+              
+              <div>
+                <Link href="/contests" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-white/10 text-white text-sm font-medium hover:bg-white/5 transition-all">
+                  Browse upcoming contests
+                </Link>
               </div>
             </div>
           </div>
 
-          {/* Card 7: Personal Monitor -> Elite Study Materials */}
+          {/* Card 3: Resources */}
           <div className="bento-card md:col-span-3 rounded-2xl overflow-hidden relative group border border-white/5">
-            <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at top right, rgba(168,85,247,0.1), transparent 70%)' }}></div>
-            <div className="relative z-10 p-5 h-full flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center">
-                    <Layers className="w-4 h-4 text-purple-400" />
+            <Image src="/landing/project-roadmaps.png" fill className="object-cover opacity-25 group-hover:opacity-35 transition-opacity" alt="Resources" />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent"></div>
+            <div className="relative z-10 p-7 h-full flex flex-col justify-end min-h-[360px]">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-3 block">Resources</span>
+              <h3 className="text-2xl font-medium tracking-tight mb-2">Focused articles for the 2026 market.</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed mb-6">A small, curated set of articles on career strategy, system design, and how to stand out beyond college. No endless lists. Just high‑signal pieces that match the way ErithX thinks about growth.</p>
+              
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-md bg-emerald-500/10 flex items-center justify-center">
+                    <BookCopy className="w-3.5 h-3.5 text-emerald-400" />
                   </div>
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-purple-400">Resource Database</span>
+                  <span className="text-xs text-zinc-300">How to use LeetCode tags that no one tells</span>
                 </div>
-                <h3 className="text-lg font-medium mb-1.5">Everything you need.</h3>
-                <p className="text-[11px] text-zinc-400 leading-tight max-w-xs line-clamp-2">Direct access to a vast, constantly updated repository of university notes, technical interview breakdowns, and algorithmic cheatsheets.</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-md bg-cyan-500/10 flex items-center justify-center">
+                    <Library className="w-3.5 h-3.5 text-cyan-400" />
+                  </div>
+                  <span className="text-xs text-zinc-300">System design actually needed for entry level in 2026</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-md bg-purple-500/10 flex items-center justify-center">
+                    <Users className="w-3.5 h-3.5 text-purple-400" />
+                  </div>
+                  <span className="text-xs text-zinc-300">What to do beyond college: build in public, network, document</span>
+                </div>
               </div>
-              {/* Mini stats */}
-              <div className="grid grid-cols-3 gap-1.5 mt-2">
-                <div className="glass rounded-lg p-1.5 text-center">
-                  <div className="text-sm font-semibold text-emerald-400">100+</div>
-                  <div className="text-[8px] text-zinc-500">Free PDFs</div>
-                </div>
-                <div className="glass rounded-lg p-1.5 text-center">
-                  <div className="text-sm font-semibold text-cyan-400">20+</div>
-                  <div className="text-[8px] text-zinc-500">Roadmaps</div>
-                </div>
-                <div className="glass rounded-lg p-1.5 text-center">
-                  <div className="text-sm font-semibold text-purple-400">A+</div>
-                  <div className="text-[8px] text-zinc-500">Quality Notes</div>
-                </div>
+
+              <div>
+                <Link href="/resources" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-white/10 text-white text-sm font-medium hover:bg-white/5 transition-all">
+                  Explore resources
+                </Link>
               </div>
             </div>
           </div>
@@ -198,5 +133,6 @@ export default function Ecosystem() {
         </div>
       </div>
     </section>
+    </>
   );
 }

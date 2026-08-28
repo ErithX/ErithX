@@ -1,9 +1,8 @@
-"use client";
-
 import React from 'react';
 import Image from 'next/image';
 import { Zap, PlayCircle, LayoutDashboard, Users, Flame, Award } from 'lucide-react';
 import Link from 'next/link';
+import AuthCTAButton from './AuthCTAButton';
 
 export default function Hero() {
   // Updated Organic SVG path: Narrower top, wider bottom, with soft gradient fade
@@ -15,7 +14,8 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg pt-[56px] pb-8">
+    <>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg pt-[56px] pb-8">
       {/* Background effects */}
       <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at top right, rgba(6,78,59,0.25), #09090b 60%)'}}></div>
       <div className="absolute top-20 right-1/4 w-64 h-64 md:w-96 md:h-96 rounded-full opacity-10" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(60px)'}}></div>
@@ -66,31 +66,34 @@ export default function Hero() {
           <div className="animate-in text-center lg:text-left flex flex-col items-center lg:items-start py-20 lg:py-0">
             <div className="flex items-center gap-2 mb-6 mt-4 justify-center lg:justify-start">
               <span className="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
-              <span className="text-xs font-medium text-emerald-400 tracking-wider uppercase">Next-Gen Engineering Platform</span>
+              <span className="text-xs font-medium text-emerald-400 tracking-wider uppercase">Built for serious engineering students</span>
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.05]">
-              Your Coding<br />Era Starts<br />Now.
+              Your coding<br />era needs<br />direction.
             </h1>
             
             <p className="text-base text-zinc-400 leading-relaxed mb-4 max-w-lg mx-auto lg:mx-0">
-              Track every coding contest, master System Architecture, and build project blueprints. 
-              The one ecosystem for engineers who want to win.
+              ErithX connects your LeetCode, Codeforces, and GitHub activity and turns it into an honest weekly review. No vanity stats. No fake motivation. Just a clear picture of where you’re improving, where you’re hiding, and exactly what to do next.
             </p>
             <p className="text-sm text-zinc-500 mb-10 max-w-lg mx-auto lg:mx-0">
               Preparation with intent, not burnout.
             </p>
 
-            <div className="flex items-center justify-center lg:justify-start gap-4 flex-wrap mb-8 w-full">
-              <Link href="/resources" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5">
+            <div className="flex items-center justify-center lg:justify-start gap-4 flex-wrap mb-4 w-full">
+              <AuthCTAButton className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5">
                 <Users className="w-4 h-4" />
-                Browse Study Resources
-              </Link>
+                Start my first weekly review
+              </AuthCTAButton>
               <Link href="/contests" className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white/5 transition-all">
                 <LayoutDashboard className="w-4 h-4" />
                 Track Coding Contests
               </Link>
             </div>
+            
+            <p className="text-xs text-zinc-500 mb-8 max-w-lg mx-auto lg:mx-0 text-center lg:text-left">
+              Connect your profiles in minutes. Get your first plan this week.
+            </p>
 
             {/* Social proof strip */}
             <div className="flex items-center justify-center lg:justify-start gap-4 w-full">
@@ -102,7 +105,7 @@ export default function Hero() {
               </div>
               <div className="text-left">
                 <div className="text-xs font-medium text-white">2,400+ students</div>
-                <div className="text-[10px] text-zinc-500">building their era right now</div>
+                <div className="text-[10px] text-zinc-500">building their era with weekly performance reviews.</div>
               </div>
             </div>
           </div>
@@ -121,5 +124,6 @@ export default function Hero() {
         </div>
       </div>
     </section>
+    </>
   );
 }
