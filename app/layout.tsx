@@ -80,6 +80,7 @@ export default function RootLayout({
                   "@id": "https://erithx.dev/#website",
                   "url": "https://erithx.dev/",
                   "name": "ErithX",
+                  "alternateName": ["Erith X"],
                   "publisher": {
                     "@id": "https://erithx.dev/#organization"
                   }
