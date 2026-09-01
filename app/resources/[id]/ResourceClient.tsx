@@ -522,8 +522,11 @@ export default function ResourceClient({
               </div>
             ))}
 
+            {/* SEO Content for Crawlers (Visually hidden but perfectly readable by bots/screen readers) */}
+            <div className="sr-only" dangerouslySetInnerHTML={{ __html: cleanContent || doc.content }} />
+
             {/* ARTICLE BODY */}
-            <div className={`article-body tiptap ${getFontSizeClass()} mt-8`}>
+            <div className={`article-body tiptap ${getFontSizeClass()} mt-8`} aria-hidden="true">
               <TiptapEditor content={cleanContent || doc.content} readOnly />
             </div>
             {/* Author Card */}
