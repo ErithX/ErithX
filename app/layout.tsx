@@ -26,7 +26,16 @@ export const metadata: Metadata = {
     template: "%s | ErithX"
   },
   description: "The zero-noise digital sanctuary for software engineering students. Track LeetCode, Codeforces & 10+ contest platforms with 1-Click Google Calendar sync, project blueprints with PDFs, and burnout-free placement prep.",
-  keywords: "All in one software engineering platform, Computer science student ecosystem, Full stack engineering preparation platform, Complete tech career readiness hub, Next gen engineering education portal, Comprehensive coding companion website, Practical career readiness portal, Self taught software engineer launchpad, AI era developer training platform, Software engineering placement gateway, ErithX, ErithX platform, ErithX official website, ErithX portal, ErithX roadmap, add coding contest to google calendar, competitive programming calendar integration, sync leetcode contests to calendar, coding contest calendar, dsa contest calendar, clist alternative, codeclock alternative, 1-click google calendar sync contests, project blueprints with pdfs, burnout free coding prep",
+  keywords: [
+    "weekly DSA progress review", "DSA progress tracker for students", "LeetCode weekly progress report", 
+    "Codeforces rating trend tracker", "GitHub + LeetCode weekly report", "DSA performance review for students", 
+    "honest weekly review for DSA grinding", "weekly plan for DSA preparation", "DSA habit tracker for students", 
+    "LeetCode Codeforces GitHub progress tracker", "coding contest tracker for students", 
+    "LeetCode Codeforces contest calendar", "1-click add coding contests to Google Calendar", 
+    "track coding contests in one place", "coding contest calendar with email reminders", 
+    "ErithX", "ErithX weekly review", "ErithX contest tracker", "ErithX for DSA students", 
+    "self improvement system for engineering students"
+  ].join(", "),
   authors: [{ name: "ErithX Team" }],
   creator: "ErithX",
   openGraph: {
@@ -68,6 +77,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
        <meta name="google-site-verification" content="4KfpDK0yjbk36wT5FagXAX1r2DHchla3Haf3g0q_F1c" />
+       
+       <script dangerouslySetInnerHTML={{ __html: `document.documentElement.classList.add('js-enabled');` }} />
         
         {/* SEO Schema Markup - explicitly linking the platform to the founder */}
         <Script id="schema-org" type="application/ld+json" strategy="afterInteractive">

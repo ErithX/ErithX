@@ -34,6 +34,7 @@
     "@tiptap/suggestion": "^2.11.2",
     "@upstash/qstash": "^2.11.3",
     "date-fns": "^4.4.0",
+    "framer-motion": "^13.1.1",
     "highlight.js": "^11.11.1",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.562.0",
@@ -45,6 +46,7 @@
     "react-dom": "^19.2.3",
     "resend": "^6.22.0",
     "sharp": "^0.35.3",
+    "simple-icons": "^16.29.0",
     "tippy.js": "^6.3.7",
     "zustand": "^5.0.14"
   },

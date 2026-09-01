@@ -135,7 +135,7 @@ export default function Navbar({ darkMode, setDarkMode }: NavbarProps = {}) {
                   </span>
                 </button>
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-[#09090b] border border-white/10 rounded-xl shadow-2xl py-1 z-50 animate-in fade-in slide-in-from-top-2">
+                  <div className="absolute right-0 mt-2 w-48 bg-[#09090b]/90 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl py-1 z-50 animate-in fade-in slide-in-from-top-2">
                     <div className="px-4 py-3 border-b border-white/10">
                       <p className="text-xs text-white font-medium truncate mb-0.5">{user.user_metadata?.full_name || 'User'}</p>
                       <p className="text-[10px] text-zinc-400 truncate">{user.email}</p>

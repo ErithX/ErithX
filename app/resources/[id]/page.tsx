@@ -44,17 +44,20 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   // Generate a brief description from content if none provided
   let description = doc.title;
   if (doc.content) {
-    // Strip HTML tags for description and get first 150 chars
+    // Strip HTML tags for description and get first 120 chars
     const plainText = doc.content.replace(/<[^>]+>/g, '').trim();
-    description = plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
+    description = plainText.length > 120 ? plainText.substring(0, 120) + '...' : plainText;
   }
+  
+  // Clean up trailing period if exists, then add the standard suffix
+  description = `${description.replace(/\.$/, '')}. Part of ErithX Resources, a curated set of articles for DSA students.`;
 
   return {
-    title: `${doc.title} | ErithX Resources`,
+    title: `${doc.title} – ErithX Resources`,
     description: description,
     keywords: doc.tags || [],
     openGraph: {
-      title: doc.title,
+      title: `${doc.title} – ErithX Resources`,
       description: description,
       type: 'article',
       publishedTime: doc.createdAt,

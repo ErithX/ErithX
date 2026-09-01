@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { Activity, Swords, Code2, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Introduction | ErithX Docs',
-  description: 'Learn how ErithX tracks your coding progress and analyzes your weekly performance.',
+  title: 'Platform Documentation – ErithX',
+  description: 'Official documentation for ErithX. Learn how contest aggregation, 1‑click Google Calendar sync, and the weekly review system work under the hood.',
 };
 
 export default function DocsIntroductionPage() {

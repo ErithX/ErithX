@@ -1,60 +1,156 @@
-# /contests keywords
-**Title:** Live Coding Contests Calendar
-**Description:** See all upcoming coding contests from LeetCode, Codeforces, CodeChef, and HackerRank in one simple calendar.
+Homepage Keywords (focus: weekly performance review + some contest tracker)
+Primary – weekly performance review
+
+weekly DSA progress review
+
+DSA progress tracker for students
+
+LeetCode weekly progress report
+
+Codeforces rating trend tracker
+
+GitHub + LeetCode weekly report
+
+DSA performance review for students
+
+honest weekly review for DSA grinding
+
+weekly plan for DSA preparation
+
+DSA habit tracker for students
+
+LeetCode Codeforces GitHub progress tracker
+
+Secondary – contest tracker (supporting homepage)
+
+coding contest tracker for students
+
+LeetCode Codeforces contest calendar
+
+1‑click add coding contests to Google Calendar
+
+track coding contests in one place
+
+coding contest calendar with email reminders
+
+Brand / identity
+
+ErithX
+
+ErithX weekly review
+
+ErithX contest tracker
+
+ErithX for DSA students
+
+self improvement system for engineering students
+
+Use these mainly in:
+
+Homepage <title> and <meta description> (already updated).
+
+H1/H2 headings and first 2–3 paragraphs.
+
+FAQ / “How it works” section text.
+
+/contests Page Keywords (finalized)
+You already rank here; this set keeps it focused on contest‑tracker intent.
 
 DSA contest today
-dsa contest online
-dsa contest platform 
-codechef dsa contest
-dsa contest gfg
-dsa coding contest
-dsa contest tracker online
-coding contest tracker 
+
+DSA contest online
+
+DSA contest platform
+
+CodeChef DSA contest
+
+DSA contest GFG
+
+DSA coding contest
+
+DSA contest tracker online
+
+coding contest tracker
+
 coding competition
 
-# /resources keywords
-**Title:** Discover Verified Tech Resources
-**Description:** Get free computer science notes, past year university question papers (PYQs), and simple guides for interview preparation.
+LeetCode contest calendar with Google sync
 
-Engineering education resource hub
-Software engineering study materials library
-Computer science learning feed
-All in one tech education platform
-Full stack developer learning directory
-Tech roadmaps and study notes hub
-BTech CSE complete resource library
-Free engineering PDF notes download
-Tech career guidance and roadmaps feed
-Computer science university PYQ database
-Latest tech blogs and trends 2026
-System design and coding study materials
-UI UX and backend developer resources
-Download engineering semester notes
-Browse computer science study materials
-AI era software engineering roadmaps
-Self taught developer resource archive
-Engineering semester exam suggestions repository
-Step by step tech career roadmaps
-Curated data structures and algorithms notes
-AI tools and frameworks learning hub
-Engineering previous year question papers collection
+Codeforces contest calendar with email reminder
 
-# /landing keywords
-**Title:** ErithX | Turn Career Prep Into a Game You Love to Win
-**Description:** Make coding practice engaging. Track live contests from major platforms, get clear study notes, and prepare for your placement exams.
+track coding contests in one place
 
-All in one software engineering platform
-Computer science student ecosystem
-Full stack engineering preparation platform
-Complete tech career readiness hub
-Next gen engineering education portal
-Comprehensive coding companion website
-BTech CSE complete student portal
-Self taught software engineer launchpad
-AI era developer training platform
-College engineering to tech career gateway
-ErithX
-ErithX platform
-ErithX official website
-ErithX portal
-ErithX roadmap
+coding contest tracker for students
+
+add coding contests to Google Calendar
+
+LeetCode Codeforces contest tracker
+
+best contest calendar for DSA students
+
+weekly coding contest schedule for students
+
+AtCoder contest calendar for students
+
+HackerRank coding contest schedule
+
+Use these in:
+
+Page title & meta (already updated).
+
+H1 (“Coding Contest Calendar – LeetCode, Codeforces, CodeChef | ErithX” style).
+
+Intro paragraph and small FAQ on the contests page.
+
+/resources Page Keywords (finalized)
+Focused on “curated articles”, not notes/PYQs/library.
+
+Primary – resources page itself
+
+DSA strategy articles for students
+
+system design for entry level SDE 2026
+
+how to use LeetCode tags effectively
+
+weekly DSA preparation plan
+
+career roadmap for SDE students
+
+how to stand out beyond college coding
+
+build in public as a student developer
+
+project ideas for DSA students
+
+ErithX resources
+
+ErithX articles
+
+focused tech articles for students
+
+modern DSA learning resources
+
+Secondary – article‑level long tails (for /resources/[id])
+
+Use these as targets for individual articles, not all on one page:
+
+how to use LeetCode tags that no one tells
+
+system design actually needed for entry level in 2026
+
+what to do beyond college coding and projects
+
+how to create a weekly DSA study plan
+
+how to stop padding easy LeetCode problems
+
+how to improve Codeforces rating as a beginner
+
+how to build non tutorial projects for resume
+
+how to prepare for SDE interviews in 2026
+
+how to use GitHub to stand out as a student
+
+how to balance college and DSA preparation

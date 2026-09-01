@@ -12,19 +12,19 @@ export default function Stats() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div className="scroll-reveal">
             <div className="text-5xl font-semibold mb-2 gradient-text-hero">2.4K+</div>
-            <div className="text-[10px] uppercase tracking-widest text-zinc-500">Active Students</div>
+            <div className="text-[10px] uppercase tracking-widest text-zinc-500">active students</div>
           </div>
           <div className="scroll-reveal" style={{ transitionDelay: '0.1s' }}>
             <div className="text-5xl font-semibold mb-2 text-emerald-400">10+</div>
-            <div className="text-[10px] uppercase tracking-widest text-zinc-500">Platforms Tracked</div>
+            <div className="text-[10px] uppercase tracking-widest text-zinc-500">coding platforms tracked</div>
           </div>
           <div className="scroll-reveal" style={{ transitionDelay: '0.2s' }}>
             <div className="text-5xl font-semibold mb-2 text-cyan-400">Weekly</div>
-            <div className="text-[10px] uppercase tracking-widest text-zinc-500">Performance Reviews</div>
+            <div className="text-[10px] uppercase tracking-widest text-zinc-500">performance reviews for every user</div>
           </div>
           <div className="scroll-reveal" style={{ transitionDelay: '0.3s' }}>
             <div className="text-5xl font-semibold mb-2 text-purple-400">Free</div>
-            <div className="text-[10px] uppercase tracking-widest text-zinc-500">To Start</div>
+            <div className="text-[10px] uppercase tracking-widest text-zinc-500">to start</div>
           </div>
         </div>
       </div>

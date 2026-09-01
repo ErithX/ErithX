@@ -358,6 +358,9 @@ body {
 .image-mask { mask-image: linear-gradient(to bottom, black 70%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%); }
 .marquee { display: flex; animation: marquee 30s linear infinite; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.scroll-reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* SSR Progressive Enhancement Scroll Reveal */
+.js-enabled .sr { opacity: 0; transform: translateY(48px); }
+.js-enabled .sr.is-visible { opacity: 1; transform: translateY(0); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+
 

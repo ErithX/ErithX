@@ -4,8 +4,16 @@ import { Resource } from '@/models/Resource';
 import ResourcesClient from './ResourcesClient';
 
 export const metadata: Metadata = {
-  title: 'ErithX | Resources Feed',
-  description: 'Discover verified tech resources, guides, and study materials for your competitive programming journey.',
+  title: 'Focused Tech Resources for DSA Students – ErithX',
+  description: 'Read curated articles on DSA strategy, system design, and career growth for 2026. Built to complement your weekly ErithX review, not replace it.',
+  keywords: [
+    "DSA strategy articles for students", "system design for entry level SDE 2026", 
+    "how to use LeetCode tags effectively", "weekly DSA preparation plan", 
+    "career roadmap for SDE students", "how to stand out beyond college coding", 
+    "build in public as a student developer", "project ideas for DSA students", 
+    "ErithX resources", "ErithX articles", "focused tech articles for students", 
+    "modern DSA learning resources"
+  ].join(", "),
 };
 
 export const revalidate = 60; // Revalidate every 60 seconds

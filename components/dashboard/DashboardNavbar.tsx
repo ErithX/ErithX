@@ -54,7 +54,7 @@ export default function DashboardNavbar({
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 rounded-xl glass shadow-2xl py-1 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 mt-2 w-48 rounded-xl bg-[#09090b]/90 backdrop-blur-md border border-white/10 shadow-2xl py-1 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="px-4 py-3 border-b border-white/5 bg-white/[0.02]">
                     <p className="text-sm font-medium text-white truncate">
                       {user.user_metadata?.full_name || 'User'}

@@ -12,7 +12,7 @@ import ScrollRevealProvider from '@/components/landing/ScrollRevealProvider';
 
 export const metadata: Metadata = {
   title: 'ErithX | Turn Career Prep Into a Game You Love to Win',
-  description: 'Make coding practice engaging. Track live contests from major platforms, get clear study notes, and prepare for your placement exams.',
+  description: 'ErithX connects your LeetCode, Codeforces, and GitHub activity and gives you an honest weekly review plus a focused plan. Track coding contests with 1‑click Google Calendar sync and prepare for tech roles with intent.',
 };
 
 export default function Home() {
@@ -54,7 +54,7 @@ export default function Home() {
           <PlatformMarquee />
           <Manifesto />
           <Ecosystem />
-          <Journey />
+          {/* <Journey /> */}
           <Stats />
           <Testimonials />
           <CTA />

@@ -96,160 +96,264 @@ export default function FaqPage() {
                 <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
-            <div className="answer-content px-6 sm:px-8">
+            <div className="answer-content px-6 sm:px-8 pb-6">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                It is a modern engineering platform designed to help students track high-quality coding contests, access academic resources, and prepare for tech careers without the boring grind. We focus on preparation with intent, not burnout.
+                ErithX is a modern self-improvement system for engineering students. It helps you track high-quality coding contests, access focused resources, and get honest weekly performance reviews based on your LeetCode, Codeforces, and GitHub activity. We focus on preparation with intent, not burnout.
               </p>
             </div>
           </details>
 
           {/*  Item 2  */}
-          <details className="faq-item group">
+          <details className="faq-item group border-t border-zinc-100">
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Is this platform free to use?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
-            <div className="answer-content px-6 sm:px-8">
+            <div className="answer-content px-6 sm:px-8 pb-6">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                Yes, all the features available in Phase 1, including the contest tracker and the resource hub, are completely free for students. We believe in building an accessible ecosystem without paywalls.
+                Yes, all core features available now — including the contest tracker, resource hub, and weekly performance reviews — are completely free for students. Optional premium features may be added in the future.
               </p>
             </div>
           </details>
 
-          {/*  Item 2.5 (Calendar Sync)  */}
-          <details className="faq-item group">
+          {/*  Item 3  */}
+          <details className="faq-item group border-t border-zinc-100">
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Can I add contests to my personal calendar?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
-            <div className="answer-content px-6 sm:px-8">
+            <div className="answer-content px-6 sm:px-8 pb-6">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                Yes! Every contest on our tracker comes with a 1-click 'Add to Calendar' button. You can instantly sync any LeetCode, Codeforces, or CodeChef event directly to your Google Calendar, Apple Calendar, or Outlook so you never miss a start time.
+                Yes. Every contest on our tracker comes with a 1‑click "Add to Calendar" button. You can instantly sync LeetCode, Codeforces, CodeChef, and other events directly to your Google Calendar so you never miss a start time.
               </p>
             </div>
           </details>
 
-          {/*  Item 2.6 (Connecting Coding Profiles)  */}
-          <details className="faq-item group">
+          {/*  Item 4  */}
+          <details className="faq-item group border-t border-zinc-100">
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How do I connect my LeetCode, GitHub, or Codeforces accounts?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
-            <div className="answer-content px-6 sm:px-8">
+            <div className="answer-content px-6 sm:px-8 pb-6">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                Navigate to your <strong>Dashboard ➔ Settings ➔ Coding Profiles</strong>. Simply paste your profile URL or username for LeetCode, GitHub, or Codeforces. Our edge verification engine will automatically check and sync your profile with zero manual saving required.
+                Navigate to <strong>Dashboard → Settings → Coding Profiles</strong>. Paste your profile URL or username for LeetCode, GitHub, or Codeforces. The system will automatically verify and sync your profile without requiring passwords or manual logs.
               </p>
             </div>
           </details>
 
-          {/*  Item 2.7 (Why Connect Profiles)  */}
-          <details className="faq-item group">
+          {/*  Item 5  */}
+          <details className="faq-item group border-t border-zinc-100">
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Why should I connect my coding profiles?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
-            <div className="answer-content px-6 sm:px-8">
+            <div className="answer-content px-6 sm:px-8 pb-6">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                Connecting your profiles powers your AI Progress Reviewer. It automatically monitors your contest rating deltas, problem-solving velocity, and GitHub project commits to deliver brutally honest weekly feedback without requiring manual progress logs or passwords.
+                Connecting your profiles powers your weekly performance review. The system monitors your contest activity, problem-solving patterns, and GitHub commits to generate honest feedback and a focused plan for the next 7 days — no manual progress logging needed.
               </p>
             </div>
           </details>
 
-          {/*  Item 3  */}
-          <details className="faq-item group">
+          {/*  Item 6  */}
+          <details className="faq-item group border-t border-zinc-100">
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What resources can I find here?</h2>
-
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
-            <div className="answer-content px-6 sm:px-8">
+            <div className="answer-content px-6 sm:px-8 pb-6">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                We provide curated engineering blueprints, system architecture PDFs, 2026 tech career roadmaps, and production-ready project guides to help you build real technical authority. All resources are curated by verified engineers and contributors.
+                ErithX Resources is a small, modern collection of focused articles on career strategy, system design, and standing out beyond college. It's curated to complement your weekly review, not to act like a giant academic library.
               </p>
             </div>
           </details>
 
-          {/*  Item 4  */}
-          <details className="faq-item group">
+          {/*  Item 7  */}
+          <details className="faq-item group border-t border-zinc-100">
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How do I log in to the platform?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
-            <div className="answer-content px-6 sm:px-8">
+            <div className="answer-content px-6 sm:px-8 pb-6">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                You can easily sign up or log in using your existing Google account through our secure Supabase authentication. No need to remember another password—just one click and you're in.
+                You can sign up or log in using your existing Google account through our secure authentication. No need to remember another password — just one click and you're in.
               </p>
             </div>
           </details>
 
-          {/*  Item 5  */}
-          <details className="faq-item group">
+          {/*  Item 8  */}
+          <details className="faq-item group border-t border-zinc-100">
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How do you use my email address?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
-            <div className="answer-content px-6 sm:px-8">
+            <div className="answer-content px-6 sm:px-8 pb-6">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                We only use your email to create your account and send you regular contest alerts. We never sell or share your data with anyone else. Your privacy is paramount to us.
+                We use your email to create your account, send contest alerts, and deliver your weekly performance review. We never sell or share your data with anyone else.
               </p>
             </div>
           </details>
 
-          {/*  Item 6  */}
-          <details className="faq-item group">
+          {/*  Item 9  */}
+          <details className="faq-item group border-t border-zinc-100">
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How can I request to delete my account and data?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
-            <div className="answer-content px-6 sm:px-8">
+            <div className="answer-content px-6 sm:px-8 pb-6">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                If you want to delete your account or remove your email from our system, simply send an email to <a href="mailto:debjyoti2409@gmail.com" className="text-emerald-600 font-medium underline">debjyoti2409@gmail.com</a> and we will process it immediately. We believe in the right to be forgotten.
+                If you want to delete your account or remove your data from our system, send an email to <a href="mailto:hello@erithx.dev" className="text-emerald-600 font-medium underline hover:text-emerald-500">hello@erithx.dev</a> and we will process it as soon as possible.
               </p>
             </div>
           </details>
 
-          {/*  Item 7  */}
-          <details className="faq-item group">
+          {/*  Item 10  */}
+          <details className="faq-item group border-t border-zinc-100">
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What features are coming in the future?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
-            <div className="answer-content px-6 sm:px-8">
+            <div className="answer-content px-6 sm:px-8 pb-6">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                We are working on an analytics hub to track true skill growth, hidden hiring challenge alerts, and professional profile cards to share on social media. The grand vision is to become the definitive starter pack for every tech student.
+                The weekly performance review system is already live (in beta). Coming soon: growth visualization cards, deeper analytics, and optional 1:1 mentorship sessions for users who consistently follow their plans.
               </p>
             </div>
           </details>
 
-          {/*  Item 8  */}
-          <details className="faq-item group">
+          {/*  Item 11  */}
+          <details className="faq-item group border-t border-zinc-100">
             <summary className="flex items-center justify-between p-6 sm:p-8">
               <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How can I report a bug or give feedback?</h2>
               <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <Plus className="w-4 h-4 text-zinc-600" />
               </div>
             </summary>
-            <div className="answer-content px-6 sm:px-8">
+            <div className="answer-content px-6 sm:px-8 pb-6">
               <p className="text-sm text-zinc-600 leading-relaxed">
-                You can reach out to us directly via our support email or connect with us on our social media links listed on the Contact Us page. We are an independent project and actively listen to community feedback to shape our roadmap.
+                You can reach out via <a href="mailto:hello@erithx.dev" className="text-emerald-600 font-medium underline hover:text-emerald-500">hello@erithx.dev</a> or connect with us through the social links on the Contact page. We're an independent project and actively use feedback to shape the roadmap.
+              </p>
+            </div>
+          </details>
+
+          {/*  Item 12  */}
+          <details className="faq-item group border-t border-zinc-100">
+            <summary className="flex items-center justify-between p-6 sm:p-8">
+              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How does the weekly performance review work?</h2>
+              <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                <Plus className="w-4 h-4 text-zinc-600" />
+              </div>
+            </summary>
+            <div className="answer-content px-6 sm:px-8 pb-6">
+              <p className="text-sm text-zinc-600 leading-relaxed">
+                Once your profiles are connected, the system studies your activity each week: consistency, problem mix, topic gaps, contest behavior, and project alignment. At the end of the week, you get a review with honest feedback and clear targets for the next 7 days.
+              </p>
+            </div>
+          </details>
+
+          {/*  Item 13  */}
+          <details className="faq-item group border-t border-zinc-100">
+            <summary className="flex items-center justify-between p-6 sm:p-8">
+              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What if I keep ignoring the system's targets?</h2>
+              <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                <Plus className="w-4 h-4 text-zinc-600" />
+              </div>
+            </summary>
+            <div className="answer-content px-6 sm:px-8 pb-6">
+              <p className="text-sm text-zinc-600 leading-relaxed">
+                The system expects you to take its suggestions seriously. If you ignore targets for 3–4 weeks in a row, your access to performance reviews may be suspended based on your past behavior. You can submit a reactivation request, but approval takes at least 24–48 hours.
+              </p>
+            </div>
+          </details>
+
+          {/*  Item 14  */}
+          <details className="faq-item group border-t border-zinc-100">
+            <summary className="flex items-center justify-between p-6 sm:p-8">
+              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Is the weekly review always correct?</h2>
+              <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                <Plus className="w-4 h-4 text-zinc-600" />
+              </div>
+            </summary>
+            <div className="answer-content px-6 sm:px-8 pb-6">
+              <p className="text-sm text-zinc-600 leading-relaxed">
+                The review system is live but still in beta. It's designed to study patterns and give useful direction, but it can make mistakes. Treat it as a strong signal, not absolute truth. If something feels off, use your judgment and adjust.
+              </p>
+            </div>
+          </details>
+
+          {/*  Item 15  */}
+          <details className="faq-item group border-t border-zinc-100">
+            <summary className="flex items-center justify-between p-6 sm:p-8">
+              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Can I use ErithX if I'm a beginner or already advanced?</h2>
+              <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                <Plus className="w-4 h-4 text-zinc-600" />
+              </div>
+            </summary>
+            <div className="answer-content px-6 sm:px-8 pb-6">
+              <p className="text-sm text-zinc-600 leading-relaxed">
+                Yes. If you're a beginner, the system focuses on building consistency and good habits. If you're advanced, it looks for subtler patterns like topic avoidance, contest strategy, and whether your projects match your target role.
+              </p>
+            </div>
+          </details>
+
+          {/*  Item 16  */}
+          <details className="faq-item group border-t border-zinc-100">
+            <summary className="flex items-center justify-between p-6 sm:p-8">
+              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Do you provide courses or video tutorials?</h2>
+              <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                <Plus className="w-4 h-4 text-zinc-600" />
+              </div>
+            </summary>
+            <div className="answer-content px-6 sm:px-8 pb-6">
+              <p className="text-sm text-zinc-600 leading-relaxed">
+                No. ErithX is not a course platform. It's a weekly review and planning system with a small set of focused articles. The goal is to guide your own work, not replace it with videos.
+              </p>
+            </div>
+          </details>
+
+          {/*  Item 17  */}
+          <details className="faq-item group border-t border-zinc-100">
+            <summary className="flex items-center justify-between p-6 sm:p-8">
+              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What platforms do you support for contests?</h2>
+              <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                <Plus className="w-4 h-4 text-zinc-600" />
+              </div>
+            </summary>
+            <div className="answer-content px-6 sm:px-8 pb-6">
+              <p className="text-sm text-zinc-600 leading-relaxed">
+                We track contests across major platforms like LeetCode, Codeforces, CodeChef, and others. The contest page shows upcoming rounds with direct links and 1‑click calendar sync.
+              </p>
+            </div>
+          </details>
+
+          {/*  Item 18  */}
+          <details className="faq-item group border-t border-zinc-100">
+            <summary className="flex items-center justify-between p-6 sm:p-8">
+              <h2 className="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How do I contact support?</h2>
+              <div className="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                <Plus className="w-4 h-4 text-zinc-600" />
+              </div>
+            </summary>
+            <div className="answer-content px-6 sm:px-8 pb-6">
+              <p className="text-sm text-zinc-600 leading-relaxed">
+                For any issues, questions, or feedback, email us at <a href="mailto:hello@erithx.dev" className="text-emerald-600 font-medium underline hover:text-emerald-500">hello@erithx.dev</a>. We try to reply as soon as possible.
               </p>
             </div>
           </details>

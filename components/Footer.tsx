@@ -14,9 +14,9 @@ export default function Footer() {
   }
 
   return (
-    <footer className="w-full bg-[#09090b] border-t border-white/5 py-12 px-6 mt-auto">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
-        <div className="flex flex-col gap-4 max-w-sm">
+    <footer className={`w-full bg-[#09090b] py-12 px-6 mt-auto ${pathname === '/' ? '' : 'border-t border-white/5'}`}>
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
+        <div className="flex flex-col gap-4 max-w-sm shrink-0">
           <Link href="/" className="flex items-center gap-2.5">
             <Image src="/newLogo.png" alt="ErithX Logo" width={150} height={48} className="h-10 w-auto object-contain" />
           </Link>
@@ -25,7 +25,7 @@ export default function Footer() {
           </p>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 xl:gap-12 w-full lg:w-auto flex-1 lg:max-w-[850px] lg:justify-end">
           {/* Contests Navigation */}
           <div className="flex flex-col gap-3">
             <h3 className="font-semibold text-white text-xs uppercase tracking-wider text-emerald-400">Contests Hub</h3>
