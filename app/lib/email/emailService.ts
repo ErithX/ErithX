@@ -223,11 +223,6 @@ export async function sendWeeklyReviewEmail(
   userName: string,
   reviewText: string
 ) {
-  // DOUBLE PROTECTION FAILSAFE (Enforced at the email service level)
-  if (userEmail?.trim().toLowerCase() !== 'debjyoti2409@gmail.com') {
-    console.warn(`[DOUBLE PROTECTION] Blocked sending Weekly Performance Email to ${userEmail}. Only admin is allowed during testing.`);
-    return { success: true, skipped: true };
-  }
 
   if (!ENABLE_EMAILS) {
     console.log(`[KILL SWITCH] Emails are currently disabled. Skipped Weekly Performance Email to ${userEmail}`);
@@ -239,13 +234,28 @@ export async function sendWeeklyReviewEmail(
     return { success: true };
   }
 
-  // Extract a 150-200 character clean preview snippet for the email blockquote
-  // Remove markdown bolding (**) and trim to the first sentence or two.
-  const cleanText = reviewText.replace(/\*\*/g, '').trim();
-  const firstSentenceMatch = cleanText.match(/^.*?[.!?](?:\s|$)/);
-  const previewSnippet = firstSentenceMatch 
-    ? firstSentenceMatch[0].trim() 
-    : cleanText.substring(0, 150) + '...';
+  // Extract a 2-3 sentence (200-320 chars) rich teaser snippet for the email blockquote
+  // Remove markdown headers, bolding (**), and extract substantive opening sentences
+  const cleanText = reviewText
+    .replace(/^#+\s.*$/gm, '')
+    .replace(/\*\*/g, '')
+    .trim();
+
+  const sentences = cleanText.match(/[^.!?]+[.!?]+(?:\s|$)/g) || [];
+  let previewSnippet = '';
+
+  if (sentences.length > 0) {
+    for (let i = 0; i < Math.min(3, sentences.length); i++) {
+      const candidate = (previewSnippet ? previewSnippet + ' ' : '') + sentences[i].trim();
+      if (candidate.length > 360 && previewSnippet.length > 100) break;
+      previewSnippet = candidate;
+    }
+  }
+
+  if (!previewSnippet || previewSnippet.length < 40) {
+    previewSnippet = cleanText.substring(0, 260).trim();
+    if (cleanText.length > 260) previewSnippet += '...';
+  }
 
   const subject = `Your weekly performance analysis is ready, ${userName}`;
 

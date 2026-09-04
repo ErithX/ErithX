@@ -46,6 +46,21 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  async redirects() {
+    return [
+      {
+        source: '/dashboard/review',
+        destination: '/dashboard/reports',
+        permanent: false,
+      },
+      {
+        source: '/dashboard/reviews',
+        destination: '/dashboard/reports',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

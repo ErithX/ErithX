@@ -5,6 +5,7 @@ import { createClient } from '@/app/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { Check, X, Eye, FileText, AlertTriangle } from 'lucide-react';
 import TiptapEditor from '@/components/editor/TiptapEditor';
+import AdminSidebar from '@/components/admin/AdminSidebar';
 
 interface PendingDoc {
   _id: string;
@@ -123,13 +124,26 @@ export default function AdminReviewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-white p-6 md:p-12 selection:bg-emerald-800 selection:text-white">
-      <div className="max-w-5xl mx-auto">
-        
-        <header className="mb-12">
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Review Queue</h1>
-          <p className="text-zinc-500 text-sm">Review and approve pending user submissions.</p>
-        </header>
+    <div className="min-h-screen bg-[#09090b] text-white selection:bg-zinc-800 selection:text-white font-sans flex flex-col">
+      {/* Top Header Bar */}
+      <header className="border-b border-zinc-800/80 bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-30 px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+          <span className="text-sm font-semibold tracking-tight text-white">ErithX Admin</span>
+          <span className="text-zinc-600 font-mono text-xs">/</span>
+          <span className="text-xs text-zinc-400 font-medium">Content Approvals</span>
+        </div>
+      </header>
+
+      {/* Main Split Layout: Sidebar + Workspace */}
+      <div className="flex flex-1">
+        <AdminSidebar activeTab="review" />
+
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto max-w-5xl">
+          <header className="mb-8">
+            <h1 className="text-2xl font-bold tracking-tight mb-1">Content Review Queue</h1>
+            <p className="text-zinc-500 text-xs">Review, verify, and approve community submitted blueprints and articles.</p>
+          </header>
 
         {documents.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 bg-white/5 rounded-2xl border border-white/10 border-dashed text-zinc-500">
@@ -184,7 +198,7 @@ export default function AdminReviewPage() {
             ))}
           </div>
         )}
-
+        </main>
       </div>
 
       {/* Reject Modal */}

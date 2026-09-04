@@ -1,9 +1,8 @@
-import { NextResponse } from 'next/server';
-import { verifySignatureAppRouter } from '@upstash/qstash/nextjs';
+import { NextRequest, NextResponse } from 'next/server';
+import { requireSuperadmin } from '@/app/lib/superadmin';
 import connectToDatabase from '@/app/lib/mongodb';
 import { UserCoderProfile } from '@/models/UserCoderProfile';
 import { User } from '@/models/User';
-import { SystemLog } from '@/models/SystemLog';
 import { generateAIContext } from '@/services/core/dataFilter';
 import { generateWeeklyReview } from '@/services/ai/reviewerRouter';
 import { getLatestUserReview, saveAIReview } from '@/services/ai/reviewStorage';
@@ -11,26 +10,27 @@ import { sendWeeklyReviewEmail } from '@/app/lib/email/emailService';
 import { 
   LeetCodeStats, 
   CodeforcesStats, 
-  GithubStats, 
-  CodeChefStats 
+  GithubStats 
 } from '@/models/PlatformStats';
 import { 
   fetchLeetCodeStats, 
   fetchCodeforcesStats, 
-  fetchGithubStats,
-  fetchCodeChefStats
+  fetchGithubStats 
 } from '@/app/lib/platform-fetchers';
 
-export const maxDuration = 60; // 60s max execution time per user for serverless
+export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
-async function handler(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
-    const userId = body.userId;
+    const admin = await requireSuperadmin();
+    if (!admin) {
+      return NextResponse.json({ error: 'Unauthorized: Superadmin access required.' }, { status: 403 });
+    }
 
+    const { userId, adminNote, sendEmail } = await req.json();
     if (!userId) {
-      return NextResponse.json({ error: 'Missing userId in payload' }, { status: 400 });
+      return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
     }
 
     await connectToDatabase();
@@ -40,12 +40,12 @@ async function handler(request: Request) {
     const userSettings = await User.findOne({ supabaseId: userId }).lean();
     
     if (!profile) {
-      return NextResponse.json({ error: 'Coder profile not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Coder profile not found for user' }, { status: 404 });
     }
 
     const mentorPrefs = userSettings?.mentorPrefs || {};
-    
-    // 2. Fetch all platforms concurrently
+
+    // 2. Fetch all platforms concurrently to get fresh live stats
     const fetchPromises: Promise<any>[] = [];
 
     // 2a. LeetCode
@@ -155,18 +155,16 @@ async function handler(request: Request) {
         }).catch(err => console.error(`Codeforces fetch error for ${userId}:`, err))
       );
     }
-    
-    // Wait for all data fetching to complete (Takes ~3-5 seconds parallel instead of ~15s sequentially)
+
     await Promise.allSettled(fetchPromises);
 
     // 3. AI Generation Phase
-    // A. Load previous review memory (to evaluate previous goals & active roy_factor)
     const previousReview = await getLatestUserReview(userId);
     const currentRoyFactor = previousReview?.roy_factor || 0;
     const previousTargets = previousReview?.targets_set || '';
 
-    // B. Generate deterministic filtered delta context from platform snapshots
-    const userAdminNote = body.adminNote || profile?.pendingAdminNote;
+    // Final Admin Note decision:
+    const userAdminNote = adminNote || profile?.pendingAdminNote;
     let finalAdminNote = userAdminNote;
     if (!finalAdminNote && !previousReview) {
       finalAdminNote = "First Review / Baseline Diagnostic: This user recently connected their profile. Welcome them warmly to ErithX. Do NOT criticize them for 0 delta or inactivity this week since tracking just began. Instead, evaluate their lifetime stats (total solved, rating, easy/medium/hard ratio) and prescribe their first weekly targets.";
@@ -183,11 +181,9 @@ async function handler(request: Request) {
       admin_note: finalAdminNote
     });
 
-    // C. Call LLM Reasoning Engine (Gemini/Llama)
     const llmResponse = await generateWeeklyReview(filteredPayload);
 
-    // D. Save new review document with updated targets & roy_factor
-    await saveAIReview({
+    const savedReview = await saveAIReview({
       userId,
       reviewText: llmResponse.review_text,
       hiddenSummary: llmResponse.hidden_summary,
@@ -206,41 +202,40 @@ async function handler(request: Request) {
       await UserCoderProfile.updateOne({ userId }, { $set: { pendingAdminNote: '' } });
     }
 
-    // 4. Trigger Email
-    let emailStatus = "Not attempted";
-    const targetEmail = userSettings?.email || profile.userEmail;
-    const targetName = userSettings?.name?.split(' ')[0] || 'Developer';
-
-    if (targetEmail) {
-      const res = await sendWeeklyReviewEmail(targetEmail, targetName, llmResponse.review_text);
-      emailStatus = res.success ? "Sent successfully" : (res.skipped ? "Skipped by service" : "Failed to send");
-    } else {
-      console.warn(`No target email found for userId: ${userId}`);
-      emailStatus = "Missing target email";
+    // 4. Optional Email Sending
+    let emailStatus = "Skipped (Draft Mode)";
+    if (sendEmail === true) {
+      const targetEmail = userSettings?.email || profile.userEmail;
+      const targetName = userSettings?.name?.split(' ')[0] || 'Developer';
+      if (targetEmail) {
+        const res = await sendWeeklyReviewEmail(targetEmail, targetName, llmResponse.hidden_summary);
+        emailStatus = res.success ? "Sent successfully" : "Failed to send";
+        if (res.success) {
+          savedReview.email_sent = true;
+          savedReview.email_sent_at = new Date();
+          await savedReview.save();
+        }
+      }
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      message: `Processed ${userId} successfully.`,
-      email_status: emailStatus 
+    return NextResponse.json({
+      success: true,
+      review: {
+        id: savedReview._id.toString(),
+        generatedText: savedReview.generated_text,
+        targetsSet: savedReview.targets_set,
+        hiddenSummary: savedReview.hidden_summary,
+        modelUsed: savedReview.model_used,
+        promptTokensUsed: savedReview.prompt_tokens_used,
+        adminNote: savedReview.admin_note,
+        emailSent: savedReview.email_sent,
+        createdAt: savedReview.created_at
+      },
+      statsSnapshot: filteredPayload,
+      emailStatus
     });
   } catch (err: any) {
-    console.error(`Error processing QStash webhook:`, err.message);
-    
-    await SystemLog.create({
-      level: 'error',
-      source: 'qstash-worker-reviews',
-      message: `Failed to process user review in worker`,
-      meta: { error: err.message }
-    });
-
-    // We return a 500 so QStash knows the job failed and schedules a retry
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error('Error generating review manually:', err);
+    return NextResponse.json({ error: err.message || 'Internal error' }, { status: 500 });
   }
 }
-
-// verifySignatureAppRouter checks the Upstash-Signature header 
-// to ensure only QStash can call this endpoint
-export const POST = process.env.NODE_ENV === 'development' 
-  ? handler 
-  : verifySignatureAppRouter(handler);

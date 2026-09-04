@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { Users, Loader2, AlertTriangle, Search, Clock, Mail, Shield, Activity, CalendarPlus, Swords, Download, Sparkles } from 'lucide-react';
 import { formatLastSeen } from '@/app/lib/lastSeenUtils';
+import AdminSidebar from '@/components/admin/AdminSidebar';
 
 
 function formatTimeAgo(dateStr: string) {
@@ -126,9 +128,23 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-white p-6 md:p-12 selection:bg-blue-800 selection:text-white">
-      <div className="max-w-6xl mx-auto">
-        {/* Engagement Analytics Cards */}
+    <div className="min-h-screen bg-[#09090b] text-white selection:bg-zinc-800 selection:text-white font-sans flex flex-col">
+      {/* Top Header Bar */}
+      <header className="border-b border-zinc-800/80 bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-30 px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+          <span className="text-sm font-semibold tracking-tight text-white">ErithX Admin</span>
+          <span className="text-zinc-600 font-mono text-xs">/</span>
+          <span className="text-xs text-zinc-400 font-medium">Users & Telemetry</span>
+        </div>
+      </header>
+
+      {/* Main Split Layout: Sidebar + Workspace */}
+      <div className="flex flex-1">
+        <AdminSidebar activeTab="users" />
+
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto max-w-7xl">
+          {/* Engagement Analytics Cards */}
         {metrics && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             {/* Calendar Syncs */}
@@ -299,136 +315,7 @@ export default function AdminUsersPage() {
             )}
           </section>
         )}
-
-        <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight mb-2 flex items-center gap-3">
-              <Users className="w-8 h-8 text-blue-500" />
-              Users List
-              <span className="text-xl font-semibold px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20 ml-2">
-                {users.length-6} Total
-              </span>
-            </h1>
-            <p className="text-zinc-500 text-sm">Manage and monitor platform users with live activity and registration tracking.</p>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-zinc-300 focus:outline-none focus:border-blue-500 transition-colors w-full sm:w-auto cursor-pointer"
-            >
-              <option value="lastActive" className="bg-zinc-900 text-white">Sort: Last Active</option>
-              <option value="newestJoined" className="bg-zinc-900 text-white">Sort: Newest Joined</option>
-              <option value="oldestJoined" className="bg-zinc-900 text-white">Sort: Oldest Joined</option>
-              <option value="lastSignIn" className="bg-zinc-900 text-white">Sort: Last Login</option>
-            </select>
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-              <input
-                type="text"
-                placeholder="Search name or email..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500 transition-colors w-full"
-              />
-            </div>
-          </div>
-        </header>
-
-
-        {sortedAndFilteredUsers.length === 0 ? (
-
-          <div className="flex flex-col items-center justify-center py-20 bg-white/5 rounded-2xl border border-white/10 border-dashed text-zinc-500">
-            <Users className="w-12 h-12 mb-4 text-blue-500/50" />
-            <p>No users found.</p>
-          </div>
-        ) : (
-          <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-white/5 border-b border-white/10 text-zinc-400">
-                  <tr>
-                    <th className="p-4 font-medium">User</th>
-                    <th className="p-4 font-medium">Contact</th>
-                    <th className="p-4 font-medium">Activity Status</th>
-                    <th className="p-4 font-medium">Last Login</th>
-                    <th className="p-4 font-medium">Joined Date</th>
-                    <th className="p-4 font-medium">Provider</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/10">
-                  {sortedAndFilteredUsers.map((user) => {
-                    const isOnline = user.lastSeen && (Date.now() - new Date(user.lastSeen).getTime()) < 90000;
-                    const avatarSrc = user.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email || user.id}`;
-                    return (
-                      <tr key={user.id} className="hover:bg-white/[0.02] transition-colors">
-                        <td className="p-4">
-                          <div className="flex items-center gap-3">
-                            <div className="relative">
-                              <img 
-                                src={avatarSrc} 
-                                alt="Avatar" 
-                                referrerPolicy="no-referrer"
-                                className="w-10 h-10 rounded-full border border-white/10 object-cover bg-zinc-800"
-                                onError={(e) => {
-                                  e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email || user.id}`;
-                                }}
-                              />
-                              {isOnline && (
-                                <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-[#09090b] rounded-full shadow-[0_0_8px_rgba(16,185,129,0.8)]" title="Online now" />
-                              )}
-                            </div>
-                            <div>
-                              <div className="font-semibold text-white flex items-center gap-2">
-                                {user.fullName || "Unnamed User"}
-                              </div>
-                              <div className="text-xs text-zinc-500 font-mono" title="User ID">{user.id.substring(0, 8)}...</div>
-                            </div>
-                          </div>
-                        </td>
-
-                        <td className="p-4">
-                          <div className="flex items-center gap-2 text-zinc-300">
-                            <Mail className="w-4 h-4 text-zinc-500" />
-                            {user.email || "No email"}
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <div className="flex items-center gap-1.5 font-medium text-xs">
-                            {formatLastSeen(user.lastSeen)}
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <div className="text-zinc-300 text-xs font-mono">
-                            {user.lastSignInAt ? new Date(user.lastSignInAt).toLocaleString() : "Never"}
-                          </div>
-                        </td>
-                        <td className="p-4 text-zinc-400 text-xs">
-                          {new Date(user.createdAt).toLocaleDateString()}
-                        </td>
-                        <td className="p-4">
-
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 w-max ${
-                          user.provider === "google"
-                            ? "bg-rose-500/10 text-rose-400 border border-rose-500/20"
-                            : user.provider === "github"
-                              ? "bg-zinc-800 text-zinc-300 border border-zinc-700"
-                              : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                        }`}>
-                          {user.provider === "google" && <span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span>}
-                          {user.provider === "github" && <span className="w-1.5 h-1.5 rounded-full bg-zinc-400"></span>}
-                          <span className="capitalize">{user.provider || "unknown"}</span>
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
+        </main>
       </div>
     </div>
   );

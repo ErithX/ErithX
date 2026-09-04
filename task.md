@@ -340,6 +340,9 @@ Remaining Vital tasks on 25/07/2026
   - [x] Multi-tier provider fallback router (Llama 3.3 70B ⇄ Gemini 2.5 Flash ⇄ GLM/Nemotron) (`services/ai/reviewerRouter.ts`).
   - [x] AI Review database persistence layer, memory state tracking, and query service (`models/AIReview.ts`, `services/ai/reviewStorage.ts`).
   - [x] Context assembler cron endpoint connecting platform snapshots + previous review memory into LLM router (`app/api/cron/generate-reviews/route.ts`).
+  - [x] Unblock Performance Reviews in Production (Enabled DB flags across all 41 users & removed testing email failsafes).
+  - [x] Superadmin AI Review Studio & Zero-Risk Verification Pipeline (`/dashboard/admin/reviews` - interactive custom admin note injection, on-demand dry-run generator, live review editor, and verified email dispatcher).
+  - [x] Unified Admin Suite Centralization & Minimalist Dark Overhaul (Engineered `<AdminSidebar />`, unified `/dashboard/admin/reviews`, `/users`, `/review`, and `/superadmin` into `/settings` pitch black minimal aesthetic with Roy Factor tracking & past review history switcher).
   - [ ] User review timeline card & Pro trend graph UI on `/dashboard`.
 - [ ] **Bonus Milestone: GitHub Weekly Tracking**
   - [ ] Update `models/PlatformStats.ts` for GithubStats recent events.

@@ -150,4 +150,25 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      - Sequential Batch Execution: Fetches active verified coder profiles and processes users sequentially with a 1.2s inter-user pacing throttle to respect LLM RPM boundaries.
      - Closed-Loop Memory Assembly: Queries `getLatestUserReview()` for previous target evaluation, computes weekly $\Delta$ across LeetCode/Codeforces/GitHub using `generateAIContext()`, feeds the payload into `generateWeeklyReview()`, and writes immutable weekly records with updated `roy_factor` ignorance streaks via `saveAIReview()`.
 
+27. Performance Analytics & Weekly Review Production Unblocking:
+   - Challenge: During test-flight verification of the AI Reviewer and QStash worker, hardcoded admin-only failsafes (`debjyoti2409@gmail.com`) and default `mentor_review_enabled = false` flags prevented 40+ onboarded users from triggering weekly review pipelines and receiving automated performance delta emails.
+   - Solution: 
+     - Database State Alignment: Synchronized Supabase `user_profiles` setting `mentor_review_enabled = true` and `receive_review_emails = true` across all registered users.
+     - Failsafe De-escalation: Removed hardcoded email filter strings from `app/api/qstash/process-user-review/route.ts` and `app/lib/email/emailService.ts`, shifting delivery authorization to environment kill switches (`ENABLE_EMAIL_SERVICE=true`) and user opt-in preferences.
+
+28. Zero-Risk AI Review Verification & Admin Note Calibration Architecture:
+   - Challenge: Automated blind email delivery of generative AI reviews risks sending generic, robotic, or overly harsh feedback to students, degrading platform trust. Furthermore, administrators had no non-invasive mechanism to inject high-priority personalized advice (e.g. praising a Knight rating or steering away from comfort zones) or verify/edit generated review outputs prior to delivery.
+   - Solution: Engineered the Superadmin Review Studio (`/dashboard/admin/reviews`) with a decoupled 3-phase execution model:
+     - Persisted Admin Directive: Injected `pendingAdminNote` into `models/UserCoderProfile.ts`, automatically consumed by `generateAIContext()` and prioritized by the LLM system prompt.
+     - Safe On-Demand Dry-Run: Implemented `/api/admin/reviews/generate` which fetches live platform deltas, executes the multi-tier LLM inference router, and persists draft reviews to MongoDB with `email_sent = false`.
+     - In-Studio Audit & Manual Dispatch: Provided live review inspection and full text editing with a manual `/api/admin/reviews/send` dispatch trigger, ensuring 100% human-in-the-loop confidence before any email touches student inboxes.
+
+29. Unified Admin Suite Centralization & Minimalist Dark Overhaul:
+   - Challenge: Admin tools were fragmented across disconnected routes (`/superadmin`, `/dashboard/admin/users`, `/dashboard/admin/review`, `/dashboard/admin/reviews`) with clashing visual languages (an outdated cartoon-shadow Fredoka theme on superadmin versus modern dark mode elsewhere). In addition, administrators lacked visibility into historical reviews, Roy factor trends over time, and could not easily re-generate fresh drafts.
+   - Solution: 
+     - Universal Admin Navigation (`components/admin/AdminSidebar.tsx`): Built a shared, responsive sidebar adhering to the `/settings` pitch black (`#09090b`), thin typography, and subtle border system (`#27272a`).
+     - Multi-Review Historical Timeline: Upgraded `app/api/admin/reviews/route.ts` to return all historical reviews, active Roy factor scores, and total generation counts per user.
+     - Interactive Review History Switcher: Added week-by-week pill selection in `/dashboard/admin/reviews` to inspect past feedback, targets, and admin notes.
+     - High-Visibility Regeneration: Embedded prominent `[ 🔄 Regenerate Review ]` actions in both the user card header and the review inspector toolbar for frictionless iteration.
+
 

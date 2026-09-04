@@ -19,6 +19,7 @@ export interface IUserCoderProfile extends Document {
     codeforces?: IPlatformProfile;
   };
   otherUrls: string[];
+  pendingAdminNote?: string;
   lastSnapshotAt?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -52,6 +53,7 @@ const UserCoderProfileSchema = new Schema<IUserCoderProfile>({
     codeforces: { type: PlatformProfileSchema, default: null }
   },
   otherUrls: { type: [String], default: [] },
+  pendingAdminNote: { type: String, trim: true, default: '' },
   lastSnapshotAt: { type: Date }
 }, { timestamps: true });
 
