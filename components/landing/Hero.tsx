@@ -1,10 +1,8 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Zap, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
 import AuthCTAButton from './AuthCTAButton';
 import HeroConstellation from './HeroConstellation';
 
@@ -59,7 +57,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          <p className="mt-4 text-xs text-zinc-500 sr" style={{ transitionDelay: '360ms' }}>
+          <p className="mt-4 text-xs text-zinc-400 sr" style={{ transitionDelay: '360ms' }}>
             Connect your profiles in minutes. Get your first plan this week.
           </p>
         </div>

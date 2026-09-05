@@ -384,3 +384,14 @@ Remaining Vital tasks on 25/07/2026
 - [ ] **LLM Adaptation for New Users (Historical Data)**
   - Modify the LLM context assembler to detect brand-new users.
   - For new users, analyze their *historical data* (past months) rather than just the *current week's* data, preventing the AI from being overly harsh on their first review.
+
+## Mobile PageSpeed & Core Web Vitals Optimization (Completed)
+- [x] Fix LCP bottleneck (5.6s -> <1.5s) in `HeroConstellation.tsx` by pre-rendering words in DOM instead of sequential setTimeout mounting.
+- [x] Remove non-composited `filter: drop-shadow(...)` animation from hero constellation text.
+- [x] Remove speculative 52 KiB `/api/resources` and `/api/contests` preloads from `app/page.tsx`.
+- [x] Optimize Google Tag Manager / Analytics script loading with `strategy="lazyOnload"` in `app/layout.tsx`.
+- [x] Localize external constellation icons into `/public/landing/icons/` to eliminate remote requests and cache TTL warnings.
+- [x] Fix mobile menu button missing accessible name (`aria-label`) in `components/Navbar.tsx` (Accessibility + Agentic browsing).
+- [x] Fix color contrast failures in `Hero.tsx`, `PlatformMarquee.tsx`, and `Footer.tsx` (WCAG AA compliance).
+- [x] Upgrade `public/llms.txt` to strict markdown link format and canonical `erithx.dev` domain.
+- [x] Update `tsconfig.json` target to `ES2022` to eliminate ~14 KiB of legacy polyfills.

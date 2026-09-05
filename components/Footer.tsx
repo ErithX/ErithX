@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Zap } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 export default function Footer() {
@@ -61,7 +60,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-zinc-400">
           © {new Date().getFullYear()} ErithX. All rights reserved. Built for competitive programmers & CS students.
         </p>
       </div>

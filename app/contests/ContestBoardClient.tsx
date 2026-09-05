@@ -537,7 +537,7 @@ export default function ContestBoardClient({ initialContests }: { initialContest
       </section>
 
       {/* EMAIL SIGNUP SECTION */}
-      <section id="community" className="py-24 px-6 relative">
+      {/* <section id="community" className="py-24 px-6 relative">
         <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at bottom, rgba(6,78,59,0.15), #09090b 60%)'}}></div>
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="max-w-2xl mx-auto">
@@ -551,7 +551,7 @@ export default function ContestBoardClient({ initialContests }: { initialContest
               <h2 className="text-2xl md:text-3xl font-medium tracking-tight mb-3">Get Alerts Before Others Do</h2>
               <p className="text-sm text-zinc-500 mb-8 max-w-md mx-auto">One email per day. Zero spam. Unsubscribe anytime. Join 2,000+ students who never miss a contest.</p>
 
-              {/* Newsletter form hidden for now
+              Newsletter form hidden for now
               <form onSubmit={handleEmailSignup} className="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto">
                 <div className="relative flex-1 w-full">
                   <Mail className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -562,7 +562,7 @@ export default function ContestBoardClient({ initialContests }: { initialContest
                   Activate Alerts
                 </button>
               </form>
-              */}
+             
 
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium">
                 <Clock className="w-4 h-4" />
@@ -593,7 +593,7 @@ export default function ContestBoardClient({ initialContests }: { initialContest
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
 
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />

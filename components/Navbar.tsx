@@ -200,6 +200,7 @@ export default function Navbar({ darkMode, setDarkMode }: NavbarProps = {}) {
 
             {/* Mobile Menu Button */}
             <button 
+              aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               className="md:hidden p-2 text-zinc-400 hover:text-white transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >

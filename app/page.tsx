@@ -4,7 +4,6 @@ import Hero from '@/components/landing/Hero';
 import PlatformMarquee from '@/components/landing/PlatformMarquee';
 import Manifesto from '@/components/landing/Manifesto';
 import Ecosystem from '@/components/landing/Ecosystem';
-import Journey from '@/components/landing/Journey';
 import Stats from '@/components/landing/Stats';
 import Testimonials from '@/components/landing/Testimonials';
 import CTA from '@/components/landing/CTA';
@@ -40,9 +39,6 @@ export default function Home() {
   };
   return (
     <div className="min-h-screen bg-[#09090b] text-white selection:bg-emerald-500/30 selection:text-white">
-      {/* Prefetch resources and contests API data so it's instantly available when navigating */}
-      <link rel="preload" href="/api/resources" as="fetch" crossOrigin="anonymous" />
-      <link rel="preload" href="/api/contests" as="fetch" crossOrigin="anonymous" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
