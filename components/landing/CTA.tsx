@@ -26,7 +26,7 @@ export default function CTA() {
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReduce(mq.matches);
-    if (mq.matches) { setCount(2400); setInView(true); }
+    if (mq.matches) { setCount(400); setInView(true); }
 
     const el = sectionRef.current;
     if (!el) return;
@@ -64,7 +64,7 @@ export default function CTA() {
     let raf = 0;
     const tick = (now: number) => {
       const p = Math.min(1, (now - start) / dur);
-      setCount(Math.round((1 - Math.pow(1 - p, 3)) * 2400));
+      setCount(Math.round((1 - Math.pow(1 - p, 3)) * 400));
       if (p < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -176,7 +176,7 @@ export default function CTA() {
           Join{' '}
           <span className="font-medium tabular-nums text-zinc-100">
             <span aria-hidden>{count.toLocaleString('en-US')}+</span>
-            <span className="sr-only">2,400+</span>
+            <span className="sr-only">400+</span>
           </span>{' '}
           engineering students using ErithX to turn random grinding into focused progress. Free to
           start, with optional premium features coming soon.
