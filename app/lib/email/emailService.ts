@@ -28,7 +28,9 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, upco
     return { success: false, skipped: true, error: 'RESEND_API_KEY is not configured' };
   }
 
-  const senderEmail = process.env.RESEND_FROM_EMAIL || 'Debjyoti <debjyoti@erithx.dev>';
+  const senderEmail = process.env.RESEND_FROM_EMAIL || 'Debjyoti <founder@erithx.dev>';
+
+  const subject = `Hey ${userName || 'Coder'} — a quick note before your first Sunday review`;
 
   let lastError: any = null;
   // Try up to 2 attempts with a 300ms backoff for transient network glitches
@@ -37,7 +39,7 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, upco
       const data = await resend.emails.send({
         from: senderEmail,
         to: userEmail,
-        subject: 'Welcome to ErithX ✨',
+        subject,
         react: WelcomeEmail({ userName }) as React.ReactElement,
       });
 
