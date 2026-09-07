@@ -25,23 +25,38 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, upco
 
   if (!resend) {
     console.warn(`[EMAIL DISABLED] No RESEND_API_KEY. Blocked Welcome email to ${userEmail}`);
-    return { success: true };
+    return { success: false, skipped: true, error: 'RESEND_API_KEY is not configured' };
   }
 
-  try {
-    const data = await resend.emails.send({
-      from: 'Debjyoti <debjyoti@erithx.dev>',
-      to: userEmail,
-      subject: 'Welcome to ErithX ✨',
-      react: WelcomeEmail({ userName }) as React.ReactElement,
-    });
+  const senderEmail = process.env.RESEND_FROM_EMAIL || 'Debjyoti <debjyoti@erithx.dev>';
 
-    console.log(`Welcome Email sent to ${userEmail}`, data);
-    return { success: true, data };
-  } catch (error) {
-    console.error(`Failed to send Welcome Email to ${userEmail}`, error);
-    return { success: false, error };
+  let lastError: any = null;
+  // Try up to 2 attempts with a 300ms backoff for transient network glitches
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const data = await resend.emails.send({
+        from: senderEmail,
+        to: userEmail,
+        subject: 'Welcome to ErithX ✨',
+        react: WelcomeEmail({ userName }) as React.ReactElement,
+      });
+
+      if (data.error) {
+        throw new Error(data.error.message || 'Resend error sending email');
+      }
+
+      console.log(`Welcome Email sent to ${userEmail}`, data);
+      return { success: true, data };
+    } catch (error: any) {
+      lastError = error?.message || error;
+      console.error(`Attempt ${attempt} failed to send Welcome Email to ${userEmail}:`, error);
+      if (attempt < 2) {
+        await new Promise(res => setTimeout(res, 300));
+      }
+    }
   }
+
+  return { success: false, error: lastError };
 }
 
 export async function sendMentorReportEmail(userEmail: string, userName: string, projectTitle: string, aiFeedbackText: string) {

@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { sendWelcomeEmail } from '@/app/lib/email/emailService'
-import dbConnect from '@/app/lib/mongodb'
-import { Resource } from '@/models/Resource'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -51,9 +49,21 @@ export async function GET(request: Request) {
         const createdAt = new Date(profile.created_at)
         const now = new Date()
         const secondsSinceCreation = (now.getTime() - createdAt.getTime()) / 1000
-        const isNewUser = secondsSinceCreation < 60;
+        const isNewUser = secondsSinceCreation < 300; // 5 minute window for OAuth redirect completion
 
-        if (isNewUser) {
+        // Check if user has already received a welcome email
+        const { data: welcomeLog } = await supabase
+          .from('email_logs')
+          .select('id')
+          .eq('user_id', data.user.id)
+          .eq('email_type', 'welcome')
+          .eq('status', 'sent')
+          .limit(1)
+          .maybeSingle();
+
+        const shouldSendWelcome = (isNewUser || !profile.role) && !welcomeLog;
+
+        if (shouldSendWelcome) {
           console.log('🎉 New user detected! Setting role and sending welcome email...')
           // SECURITY: Validate role to prevent privilege escalation
           const urlRole = searchParams.get('role');
@@ -62,78 +72,52 @@ export async function GET(request: Request) {
           if (urlRole && allowedRoles.includes(urlRole)) {
             finalRole = urlRole;
             await supabase.auth.updateUser({ data: { role: urlRole } });
-            await supabase.from('user_profiles').update({ role: urlRole }).eq('id', data.user.id);
+            await supabase.from('user_profiles').update({ 
+              role: urlRole,
+              mentor_review_enabled: true,
+              receive_review_emails: true,
+            }).eq('id', data.user.id);
           } else if (!finalRole) {
             // Default to student if no valid role provided
             finalRole = 'student';
             await supabase.auth.updateUser({ data: { role: 'student' } });
-            await supabase.from('user_profiles').update({ role: 'student' }).eq('id', data.user.id);
+            await supabase.from('user_profiles').update({ 
+              role: 'student',
+              mentor_review_enabled: true,
+              receive_review_emails: true,
+            }).eq('id', data.user.id);
           }
           
           const userEmail = data.user.email!
           const userName = data.user.user_metadata?.full_name || 'Coder';
 
-          // Send welcome email (fire-and-forget)
-          (async () => {
-            let upcomingContests = [];
-            let topResource = null;
-            try {
-              // Fetch some upcoming contests
-              const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-              const contestsRes = await fetch(`${appUrl}/api/contests`);
-              if (contestsRes.ok) {
-                const contestsData = await contestsRes.json();
-                if (contestsData.success && contestsData.contests) {
-                  const now = new Date();
-                  const tomorrow = new Date(now.getTime() + 48 * 60 * 60 * 1000); // next 48 hours
-                  upcomingContests = contestsData.contests.filter((c: any) => {
-                    const st = new Date(c.startTime);
-                    return st >= now && st <= tomorrow;
-                  });
-                }
-              }
-
-              // Fetch top resource
-              await dbConnect();
-              const resources = await Resource.find({ status: 'published' })
-                .sort({ views: -1, upvotes: -1, createdAt: -1 })
-                .limit(5)
-                .lean();
-              if (resources && resources.length > 0) {
-                // pick random from top 5
-                topResource = resources[Math.floor(Math.random() * resources.length)];
-              }
-            } catch (err) {
-              console.error('Error fetching data for welcome email:', err);
+          // Send welcome email directly with await to guarantee completion before serverless container freeze
+          try {
+            const result = await sendWelcomeEmail(userEmail, userName);
+            if (result.success && !result.skipped) {
+              console.log(`Welcome email sent to ${userEmail}`);
+              await supabase.from('email_logs').insert({
+                user_id: data.user.id,
+                email_type: 'welcome',
+                recipient_email: userEmail,
+                subject: 'Welcome to ErithX ✨',
+                status: 'sent',
+                sent_at: new Date().toISOString(),
+              });
+            } else if (!result.skipped) {
+              console.error(`Failed to send welcome email to ${userEmail}:`, result.error);
+              await supabase.from('email_logs').insert({
+                user_id: data.user.id,
+                email_type: 'welcome',
+                recipient_email: userEmail,
+                subject: 'Welcome to ErithX ✨',
+                status: 'failed',
+                error_message: JSON.stringify(result.error || 'Unknown error'),
+              });
             }
-
-            sendWelcomeEmail(userEmail, userName, upcomingContests, topResource)
-              .then((result) => {
-                if (result.success) {
-                  console.log(`Welcome email sent to ${userEmail}`)
-                  void supabase.from('email_logs').insert({
-                    user_id: data.user.id,
-                    email_type: 'welcome',
-                    recipient_email: userEmail,
-                    subject: 'Welcome to ErithX ✨',
-                    status: 'sent',
-                    sent_at: new Date().toISOString(),
-                  })
-                } else {
-                  console.error(`Failed to send welcome email to ${userEmail}`)
-                  void supabase.from('email_logs').insert({
-                    user_id: data.user.id,
-                    email_type: 'welcome',
-                    recipient_email: userEmail,
-                    subject: 'Welcome to ErithX ✨',
-                    status: 'failed',
-                    error_message: JSON.stringify(result.error),
-                  })
-                }
-              })
-              .catch((err: any) => console.error('Welcome email error:', err))
-          })();
-
+          } catch (err: any) {
+            console.error('Welcome email execution error:', err);
+          }
         } else {
           console.log('👤 Existing user logging in, ignoring modal role and using existing role')
           // Existing user, use their existing role from the database/metadata

@@ -272,8 +272,22 @@ Remaining Vital tasks on 25/07/2026
 
 ## Backlog (For Later Implementation)
 - `[ ]` Refactor main `/resources` feed page to Server-Side Rendering (SSR) to eliminate initial loading spinner.
- [x] Add the Calender data related frontend implementation plan
  [x] Execute the Calendar data related frontend implementation plan
+
+## Soft Internal Linking Architecture (September 2026)
+- [x] **Modular Sunday Review Components (`components/SundayReview/`)**
+  - Built `useNextSunday.ts`: Live appointment countdown calculating relative Sunday date label (`Tonight` / `Sun, Sep 13`).
+  - Refined `SundayReviewCard.tsx`: Streamlined, Linear-grade sidebar card stripped of redundant 7-day progress bars and duplicate date labels, delivering a calm, high-converting digital sanctuary aesthetic.
+  - Refined `SundayReviewInline.tsx`: Minimalist horizontal reading-flow callout with balanced 2-column layout and zero distracting animations.
+- [x] **Resource Detail Page Soft Linking (`app/resources/[id]/ResourceClient.tsx`)**
+  - Moved `<SundayReviewCard />` into the sticky Right Sidebar directly below Resource Info for high visibility without reading disruption.
+  - Eliminated intrusive mid-article DOM portal insertion and duplicate bottom banner to protect editorial integrity and reading flow.
+  - Standardized CTA copy to "Start my first weekly review" with human-friendly appointment phrasing in Geist Sans.
+- [x] **Resources Feed Page (`app/resources/ResourcesClient.tsx`)**
+  - Integrated `<SundayReviewCard className="lg:sticky lg:top-24" />` in the feed sidebar so it sticks smoothly alongside the masonry grid.
+  - Retained clean mobile preview card for responsive mobile visitors.
+- [x] **Contest Board Clean Polish (`app/contests/ContestBoardClient.tsx`)**
+  - Kept competition list zero-noise and clean; highlighted Sunday Review in the bottom portal vision section with direct link to `/docs/performance-analysis`.
 
 Remaining Vital tasks on 25/07/2026
 
@@ -388,10 +402,30 @@ Remaining Vital tasks on 25/07/2026
 ## Mobile PageSpeed & Core Web Vitals Optimization (Completed)
 - [x] Fix LCP bottleneck (5.6s -> <1.5s) in `HeroConstellation.tsx` by pre-rendering words in DOM instead of sequential setTimeout mounting.
 - [x] Remove non-composited `filter: drop-shadow(...)` animation from hero constellation text.
-- [x] Remove speculative 52 KiB `/api/resources` and `/api/contests` preloads from `app/page.tsx`.
+- [x] Replace blocking HTML <link rel="preload"> with non-blocking deferred idle prefetching (`ContestPrefetch.tsx` via `requestIdleCallback`) so `/api/contests` is warm in browser cache without blocking initial mobile LCP.
 - [x] Optimize Google Tag Manager / Analytics script loading with `strategy="lazyOnload"` in `app/layout.tsx`.
 - [x] Localize external constellation icons into `/public/landing/icons/` to eliminate remote requests and cache TTL warnings.
 - [x] Fix mobile menu button missing accessible name (`aria-label`) in `components/Navbar.tsx` (Accessibility + Agentic browsing).
 - [x] Fix color contrast failures in `Hero.tsx`, `PlatformMarquee.tsx`, and `Footer.tsx` (WCAG AA compliance).
 - [x] Upgrade `public/llms.txt` to strict markdown link format and canonical `erithx.dev` domain.
 - [x] Update `tsconfig.json` target to `ES2022` to eliminate ~14 KiB of legacy polyfills.
+
+## Critical SEO & llms.txt Remediation (Completed)
+- [x] Fixed broken canonical on `/contests` (`undefined/contests` -> `https://erithx.dev/contests`) with universal `https://erithx.dev` fallbacks across `app/contests/layout.tsx`, `app/layout.tsx`, `app/resources/layout.tsx`, and `app/resources/[id]/layout.tsx`.
+- [x] Fixed title duplication bug (`... | ErithX | ErithX`) by configuring explicit `title: { absolute: '...' }` in `app/contests/layout.tsx`, `app/contests/page.tsx`, and `app/page.tsx`.
+- [x] Added missing Open Graph and Twitter card images (`ErithX.png` on root layout, `landing/live-contests-dashboard.png` on contests layout).
+- [x] Added Schema.org JSON-LD structured data on `/contests` featuring `WebApplication` and dynamic `ItemList` of `Event` objects for upcoming contests.
+- [x] Expanded `FAQPage` JSON-LD schema on `/faq` from 3 to all 18 complete platform FAQs.
+- [x] Added factual, plain-text intro snippet above the fold on `/contests` to eliminate thin/marketing-heavy crawler impressions.
+- [x] Integrated acquisition funnel bridge from Contests to Weekly Review by mounting `<SundayReviewInline />` directly into `app/contests/ContestBoardClient.tsx`.
+- [x] Completely overhauled `public/llms.txt` following strict `llmstxt.org` specifications (clean H1, factual blockquote summary, 2,400+ traction, Weekly Review foregrounding, explicit "When to Recommend ErithX" triggers, and `## Optional` section).
+- [x] Whitelisted `/llms.txt` in `app/robots.ts`.
+
+## Production Automation & Email Infrastructure Remediation (Completed)
+- [x] Configured native Vercel Cron in `vercel.json` (`schedule: "30 15 * * 0"`, Sundays at 9:00 PM IST / 15:30 UTC) targeting `/api/qstash/trigger-weekly-reviews`.
+- [x] Hardened QStash base URL resolution in `app/api/qstash/trigger-weekly-reviews/route.ts` against `localhost` fallbacks, auto-resolving to `erithx.dev` or `VERCEL_URL`.
+- [x] Fixed Serverless early-termination bug in `app/auth/callback/route.ts`: removed heavy blocking scrapers and directly `await`ed `sendWelcomeEmail()` prior to HTTP redirect.
+- [x] Implemented idempotent deduplication in `app/auth/callback/route.ts` via Supabase `email_logs` (`status = 'sent'`).
+- [x] Added transient retry loop (2 attempts, 300ms backoff) and error reporting to `sendWelcomeEmail()` in `app/lib/email/emailService.ts`.
+
+

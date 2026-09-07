@@ -24,7 +24,13 @@ export async function GET(request: Request) {
     }
 
     const qstash = new Client({ token: process.env.QSTASH_TOKEN });
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.contesttracker.io'; // Fallback if env not set
+    const rawAppUrl = 
+      process.env.NEXT_PUBLIC_APP_URL || 
+      process.env.NEXT_PUBLIC_NEW_DOMAIN || 
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://erithx.dev');
+    const appUrl = rawAppUrl.includes('localhost') && process.env.NODE_ENV === 'production'
+      ? (process.env.NEXT_PUBLIC_NEW_DOMAIN || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://erithx.dev'))
+      : rawAppUrl;
 
     // 2. Fetch Users from Supabase who have mentor_review_enabled !== false
     const { data: activeUsers, error } = await supabase

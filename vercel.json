@@ -1,2 +1,8 @@
 {
+  "crons": [
+    {
+      "path": "/api/qstash/trigger-weekly-reviews",
+      "schedule": "30 15 * * 0"
+    }
+  ]
 }
