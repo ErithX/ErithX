@@ -27,8 +27,9 @@ export default function Footer() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 xl:gap-12 w-full lg:w-auto flex-1 lg:max-w-[850px] lg:justify-end">
           {/* Contests Navigation */}
           <div className="flex flex-col gap-3">
-            <h3 className="font-semibold text-white text-xs uppercase tracking-wider text-emerald-400">Contests Hub</h3>
+            <h3 className="font-semibold text-white text-xs uppercase tracking-wider text-emerald-400">Contests & Reviews</h3>
             <Link href="/contests" className="text-sm text-zinc-400 hover:text-white transition-colors">Coding Contests Tracker</Link>
+            <Link href="/docs/performance-analysis" className="text-sm text-zinc-400 hover:text-white transition-colors">Sunday Performance Review</Link>
             <Link href="/features" className="text-sm text-zinc-400 hover:text-white transition-colors">Features & 1-Click Calendar Sync</Link>
             <Link href="/docs" className="text-sm text-zinc-400 hover:text-white transition-colors">Platform Docs & Guides</Link>
             <Link href="/faq" className="text-sm text-zinc-400 hover:text-white transition-colors">Platform & Contest FAQ</Link>

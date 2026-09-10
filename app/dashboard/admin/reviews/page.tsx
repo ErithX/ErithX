@@ -298,7 +298,9 @@ export default function AdminReviewsStudioPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          reviewId: activeReview.id
+          reviewId: activeReview.id,
+          generatedText: editableReviewText,
+          targetsSet: editableTargets
         })
       });
       const data = await res.json();
@@ -308,7 +310,13 @@ export default function AdminReviewsStudioPage() {
           if (u.userId === selectedUserId) {
             const updatedReviews = (u.reviews || []).map(r => 
               r.id === activeReview.id 
-                ? { ...r, emailSent: true, emailSentAt: new Date().toISOString() } 
+                ? { 
+                    ...r, 
+                    generatedText: editableReviewText,
+                    targetsSet: editableTargets,
+                    emailSent: true, 
+                    emailSentAt: new Date().toISOString() 
+                  } 
                 : r
             );
             return {

@@ -31,7 +31,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       .replace(/\s+/g, ' ')
       .trim();
 
-    const canonicalUrl = `${process.env.NEXT_PUBLIC_NEW_DOMAIN}/resources/${doc._id}`;
+    const baseUrl = process.env.NEXT_PUBLIC_NEW_DOMAIN || 'https://erithx.dev';
+    const canonicalUrl = `${baseUrl}/resources/${doc.slug || doc._id}`;
     const tagsKeywords = doc.tags && doc.tags.length > 0 ? doc.tags.join(', ') : 'DSA, Computer Science';
 
     return {
@@ -92,6 +93,8 @@ export default async function ResourceDetailLayout({
         .replace(/\s+/g, ' ')
         .trim();
 
+      const baseUrl = process.env.NEXT_PUBLIC_NEW_DOMAIN || 'https://erithx.dev';
+
       jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'TechArticle',
@@ -105,11 +108,11 @@ export default async function ResourceDetailLayout({
         'publisher': {
           '@type': 'Organization',
           'name': 'ErithX',
-          'url': process.env.NEXT_PUBLIC_NEW_DOMAIN,
+          'url': baseUrl,
         },
         'datePublished': doc.createdAt ? new Date(doc.createdAt).toISOString() : undefined,
         'dateModified': doc.updatedAt ? new Date(doc.updatedAt).toISOString() : undefined,
-        'mainEntityOfPage': `${process.env.NEXT_PUBLIC_NEW_DOMAIN}/resources/${doc._id}`,
+        'mainEntityOfPage': `${baseUrl}/resources/${doc.slug || doc._id}`,
         'keywords': doc.tags ? doc.tags.join(', ') : undefined,
       };
     }

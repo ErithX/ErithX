@@ -75,6 +75,23 @@ export default function PlatformDropdown({
 
                 <div className="grid gap-1">
                   <Link 
+                    href="/docs/performance-analysis" 
+                    onClick={onClose}
+                    className="group p-2.5 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all block"
+                  >
+                    <div className="flex items-center justify-between text-sm font-semibold text-zinc-100 group-hover:text-white">
+                      <span className="flex items-center gap-1.5">
+                        <span>Weekly Progress Review</span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">SUNDAY</span>
+                      </span>
+                      <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 opacity-60 group-hover:opacity-100" />
+                    </div>
+                    <p className="text-xs text-zinc-400 group-hover:text-zinc-300 mt-0.5">
+                      Sunday habit check-ins, rating shifts & 7-day focus.
+                    </p>
+                  </Link>
+
+                  <Link 
                     href="/contests" 
                     onClick={onClose}
                     className="group p-2.5 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all block"

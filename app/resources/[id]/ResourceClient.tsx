@@ -14,6 +14,7 @@ import { ResourceItem } from '@/components/ResourceCard';
 import ProBadge from '@/components/profile/ProBadge';
 import TiptapEditor from '@/components/editor/TiptapEditor';
 import RelatedResources from '@/components/RelatedResources';
+import SundayReviewCard from '@/components/SundayReview/SundayReviewCard';
 
 export default function ResourceClient({ 
   initialDoc, 
@@ -98,33 +99,32 @@ export default function ResourceClient({
     pdfNodes.forEach(node => node.remove());
     setCleanContent(parsedDoc.body.innerHTML);
 
-    // 2. TOC EXTRACTION (Polling to wait for Tiptap DOM)
+    // 2. TOC EXTRACTION (Polling for Tiptap DOM)
     let attempts = 0;
     const interval = setInterval(() => {
       attempts++;
-      const articleBody = document.querySelector('.article-body');
-      if (articleBody) {
-        const headings = Array.from(articleBody.querySelectorAll('h2, h3'));
-        if (headings.length > 0) {
-          const newToc = headings.map((heading: any) => {
-            if (!heading.id) {
-              heading.id = heading.innerText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-            }
-            return {
-              id: heading.id,
-              text: heading.innerText,
-              level: parseInt(heading.tagName.substring(1), 10)
-            };
-          });
-          setToc(newToc);
-          clearInterval(interval);
-          return;
-        }
+      const headings = Array.from(document.querySelectorAll('.article-body h2, .article-body h3'));
+      if (headings.length > 0) {
+        const newToc = headings.map((heading: any) => {
+          if (!heading.id) {
+            heading.id = heading.innerText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+          }
+          return {
+            id: heading.id,
+            text: heading.innerText,
+            level: parseInt(heading.tagName.substring(1), 10)
+          };
+        });
+        setToc(newToc);
+        clearInterval(interval);
+        return;
       }
       if (attempts > 30) clearInterval(interval); // Give up after 3 seconds
     }, 100);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+    };
   }, [doc?.content]);
 
   useEffect(() => {
@@ -529,6 +529,7 @@ export default function ResourceClient({
             <div className={`article-body tiptap ${getFontSizeClass()} mt-8`} aria-hidden="true">
               <TiptapEditor content={cleanContent || doc.content} readOnly />
             </div>
+
             {/* Author Card */}
             <div className="mt-14 p-6 rounded-2xl glass flex items-start gap-4 flex-wrap">
               <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-2xl overflow-hidden shrink-0">
@@ -705,6 +706,11 @@ export default function ResourceClient({
 
 
             </div>
+          </div>
+
+          {/* Weekly Review Card */}
+          <div className="mb-5">
+            <SundayReviewCard />
           </div>
 
           <RelatedResources currentDocId={doc._id} currentTags={doc.tags || []} />

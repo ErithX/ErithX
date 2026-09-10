@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized: Superadmin access required.' }, { status: 403 });
     }
 
-    const { reviewId } = await req.json();
+    const { reviewId, generatedText, targetsSet } = await req.json();
     if (!reviewId) {
       return NextResponse.json({ error: 'Missing reviewId' }, { status: 400 });
     }
@@ -23,6 +23,14 @@ export async function POST(req: NextRequest) {
     const review = await AIReview.findById(reviewId);
     if (!review) {
       return NextResponse.json({ error: 'Review not found' }, { status: 404 });
+    }
+
+    // Save edited response directly to database so student dashboard & email are 100% updated
+    if (generatedText !== undefined && generatedText.trim().length > 0) {
+      review.generated_text = generatedText;
+    }
+    if (targetsSet !== undefined && targetsSet.trim().length > 0) {
+      review.targets_set = targetsSet;
     }
 
     const supabaseAdmin = getSupabaseAdminClient();

@@ -11,7 +11,8 @@ import BlogsCard, { BlogItem } from '@/components/BlogsCard';
 import ResourceCard, { ResourceItem } from '@/components/ResourceCard';
 import CreatorPopup from '@/components/CreatorPopup';
 import Navbar from '@/components/Navbar';
-import ProBadge from '@/components/profile/ProBadge';
+import Footer from '@/components/Footer';
+import SundayReviewCard from '@/components/SundayReview/SundayReviewCard';
 
 export type FeedItem = BlogItem | ResourceItem;
 
@@ -110,6 +111,11 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
       {/* FEED SECTION */}
       <section id="feed" className="px-6 pb-24">
         <div className="max-w-7xl mx-auto">
+          {/* Mobile-Only Sunday Review */}
+          <div className="lg:hidden mb-8">
+            <SundayReviewCard />
+          </div>
+
           {/* Filters */}
           <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
             <div className="flex items-center gap-2 flex-wrap">
@@ -185,7 +191,10 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
 
 
             {/* Sidebar */}
-            <div className="hidden lg:block w-72 flex-shrink-0 space-y-6">
+            <aside className="hidden lg:block w-72 flex-shrink-0 sticky top-24 self-start space-y-6">
+              {/* Minimalist Sunday Review Card */}
+              <SundayReviewCard />
+
               {/* Trending Tags */}
               <div className="glass rounded-xl p-5">
                 <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4 flex items-center gap-2">
@@ -280,10 +289,11 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
                   })()}
                 </div>
               </div>
-            </div>
+            </aside>
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }
