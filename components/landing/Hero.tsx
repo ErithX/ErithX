@@ -50,6 +50,7 @@ export default function Hero() {
             </AuthCTAButton>
             <Link
               href="/contests"
+              prefetch={true}
               className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-5 sm:px-6 py-2.5 sm:py-3 text-[14px] sm:text-sm font-semibold sm:font-medium text-zinc-300 transition-colors hover:bg-white/5"
             >
               Track coding contests

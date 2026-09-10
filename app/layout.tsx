@@ -41,18 +41,27 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: process.env.NEXT_PUBLIC_NEW_DOMAIN,
+    url: process.env.NEXT_PUBLIC_NEW_DOMAIN || "https://erithx.dev",
     siteName: "ErithX",
-    title: "ErithX - 1-Click Calendar Sync, Contest Tracker & Career Readiness Hub",
-    description: "Never miss a coding contest! Track LeetCode, Codeforces, CodeChef & 10+ platforms with 1-Click Google Calendar sync. Project blueprints with PDFs & zero-burnout placement prep.",
+    title: "ErithX — Coding Contests, 1-Click Calendar Sync & Weekly Performance Review",
+    description: "Never miss a coding contest! Track LeetCode, Codeforces, CodeChef & 10+ platforms with 1-Click Google Calendar sync, automated weekly reviews, and practical engineering resources.",
+    images: [
+      {
+        url: "https://erithx.dev/ErithX.png",
+        width: 1489,
+        height: 656,
+        alt: "ErithX — Coding Contests, 1-Click Calendar Sync & Weekly Performance Review",
+      },
+    ],
   },
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_NEW_DOMAIN,
+    canonical: process.env.NEXT_PUBLIC_NEW_DOMAIN || "https://erithx.dev",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ErithX - 1-Click Google Calendar Contest Sync & Placement Prep",
-    description: "Track coding contests from 10+ platforms with 1-Click Google Calendar sync. Practical career readiness & project blueprints with zero burnout.",
+    title: "ErithX — Coding Contests, 1-Click Calendar Sync & Weekly Performance Review",
+    description: "Track coding contests from 10+ platforms with 1-Click Google Calendar sync, automated weekly reviews, and practical engineering resources.",
+    images: ["https://erithx.dev/ErithX.png"],
   },
   icons: {
     icon: [
