@@ -38,7 +38,7 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      - Centralized Logic: `DsaContestCard.tsx` consumes the singleton clock to compute its string, falling back to a static render if the clock hasn't hydrated yet.
 
 8. Selective Googlebot API Access in robots.ts:
-   - Challenge: Google Search Console reported `Page resources 1/32 couldn't be loaded - Googlebot blocked by robots.txt` for XHR requests to `https://contest-tracker-zms3.vercel.app/api/contests` when rendering public pages like `/contests`. Because `robots.ts` previously disallowed all `/api` and `/api/` paths universally, Googlebot refused to execute client-side XHR fetches during page rendering.
+   - Challenge: Google Search Console reported `Page resources 1/32 couldn't be loaded - Googlebot blocked by robots.txt` for XHR requests to `https://contest-tracker-zms3.vercel.app/api/contests` when rendering public pages like `/contests`. Because `robots.txt` previously disallowed all `/api` and `/api/` paths universally, Googlebot refused to execute client-side XHR fetches during page rendering.
    - Solution: Configured path-specific `allow` rules in `app/robots.ts` for public data endpoints required during page rendering (`/api/contests`, `/api/resources`).
      - Standard Googlebot robots.txt parsing evaluates the longest (most specific) matching prefix rule.
      - `Allow: /api/contests` (length 13) takes precedence over `Disallow: /api/` (length 5) for contest fetches.
@@ -79,7 +79,7 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      - Interaction Polish: Created a hit-box hover bridge to prevent cursor flicker when transitioning between trigger button and menu, and updated mobile drawers to reflect categorized sectioning.
 
 15. Next.js Dev Server Deadlock & Infinite Compilation Freeze:
-   - Challenge: The local development server (`next dev`) hung indefinitely when attempting to load `http://localhost:3000`. Memory usage ballooned to 2.6 GB, Node CPU time exceeded 300 seconds, and the server froze at `○ Compiling / ...` without outputting any runtime errors. Standard clearing attempts (deleting `.next`, clearing node_modules, PC restarts, changing ports) did not resolve the issue.
+   - Challenge: The local development server (`next dev`) hung indefinitely when attempting to load `http://localhost:3000`. Memory usage ballooned to 2.6 GB, Node CPU time exceeded 300 seconds, and the server froze at `â—‹ Compiling / ...` without outputting any runtime errors. Standard clearing attempts (deleting `.next`, clearing node_modules, PC restarts, changing ports) did not resolve the issue.
    - Root Causes:
      1. **Self-Referential Infinite Component Import Loop**: `components/Navbar.tsx` contained an accidental duplicate copy of a page component (`FeaturesPage`) which imported `Navbar` from `@/components/Navbar` (itself). When `app/page.tsx` or any page imported `@/components/Navbar`, Node server evaluation entered an infinite recursive loop, freezing compilation.
      2. **Unconditional Outbound Middleware Auth Call**: `middleware.ts` executed `await supabase.auth.getUser()` on *every single request* (including the public `/` route and static assets). Network/proxy latencies on external HTTPS calls to Supabase blocked incoming localhost requests.
@@ -121,7 +121,7 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
    - Solution: Engineered a non-blocking, throttled presence engine.
      - Client Hook (`UserHeartbeat.tsx`): Runs inside `AuthProvider`, listening for active authenticated sessions. It dispatches a lightweight POST request immediately on tab focus and every 45 seconds while active, while pausing entirely when the browser tab is hidden (`document.hidden`).
      - Server Endpoint (`/api/user/heartbeat`): Atomically stamps `user_profiles.last_seen = now()` using authenticated Supabase context.
-     - Multi-Dimensional Sorting & Status: Enhanced the Superadmin user dashboard with sorting dimensions (`Last Active`, `Newest Joined`, `Oldest Joined`, `Last Sign In`) and live pulse indicators (`🟢 Online` for users active within 90s).
+     - Multi-Dimensional Sorting & Status: Enhanced the Superadmin user dashboard with sorting dimensions (`Last Active`, `Newest Joined`, `Oldest Joined`, `Last Sign In`) and live pulse indicators (`ðŸŸ¢ Online` for users active within 90s).
 
 23. Zero-Overhead High-Intent Platform Engagement Telemetry:
    - Challenge: We needed to detect critical user behavior (Contest Google Calendar Syncs, Outbound Contest Participation clicks, and Project Blueprint PDF downloads) directly within our own internal Superadmin dashboard without incurring database row bloat, table locks, or slowing client click-through speeds.
@@ -135,7 +135,7 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
    - Challenge: In Version 3, students link multiple competitive programming and developer profiles (GitHub, LeetCode, Codeforces). Relying on unverified text inputs leads to broken scraper jobs, 404s, and hallucinated stats. Conversely, slow synchronous lookups cause UI freezing on form submission.
    - Solution: Built a real-time edge resolver and MongoDB identity schema.
      - Fast Edge Verifier (`/api/user/profiles/verify`): Implemented debounced (400ms) URL/handle normalization that queries official public endpoints (GitHub REST API, LeetCode GraphQL `matchedUser`, and Codeforces `user.info`) in sub-500ms.
-     - Instant Visual Feedback (`ProfileLinkModal.tsx`): Displays verified badges (`🟢 VERIFIED`), real platform avatars, display names, and top stats (solved count, rating, public repos) instantly before submission.
+     - Instant Visual Feedback (`ProfileLinkModal.tsx`): Displays verified badges (`ðŸŸ¢ VERIFIED`), real platform avatars, display names, and top stats (solved count, rating, public repos) instantly before submission.
      - Coder Identity Model (`models/UserCoderProfile.ts`): Stores verified handles, profile URLs, avatars, and verification timestamps in MongoDB with bidirectional synchronization to Supabase `user_profiles`.
 
 25. Deterministic AI Review Persistence & Memory State Ingestion:
@@ -169,7 +169,7 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      - Universal Admin Navigation (`components/admin/AdminSidebar.tsx`): Built a shared, responsive sidebar adhering to the `/settings` pitch black (`#09090b`), thin typography, and subtle border system (`#27272a`).
      - Multi-Review Historical Timeline: Upgraded `app/api/admin/reviews/route.ts` to return all historical reviews, active Roy factor scores, and total generation counts per user.
      - Interactive Review History Switcher: Added week-by-week pill selection in `/dashboard/admin/reviews` to inspect past feedback, targets, and admin notes.
-     - High-Visibility Regeneration: Embedded prominent `[ 🔄 Regenerate Review ]` actions in both the user card header and the review inspector toolbar for frictionless iteration.
+     - High-Visibility Regeneration: Embedded prominent `[ ðŸ”„ Regenerate Review ]` actions in both the user card header and the review inspector toolbar for frictionless iteration.
 
 30. Production Canonical Resolution & Multi-Entity Search Engine Structured Data:
    - Challenge: Due to reliance on unvalidated environment variables (`process.env.NEXT_PUBLIC_NEW_DOMAIN`), canonical link tags across `/contests`, `/resources`, and `/resources/[id]` rendered literally as `<link rel="canonical" href="undefined/contests"/>` when environment variables were not passed down to static site generation builds. This actively degraded indexing signals in Google Search Console. Furthermore, the contest calendar lacked Schema.org structured data to declare its nature as a WebApplication and dynamic ItemList of scheduled competition events.
@@ -187,3 +187,10 @@ Technical Challenges in Building a Global User Profile Page (Interview Discussio
      - Resilient Production Base URL Fallback: Hardened `cleanAppUrl` resolution in `trigger-weekly-reviews/route.ts` against `localhost` fallbacks by chaining `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_NEW_DOMAIN`, `VERCEL_URL`, and `https://erithx.dev`.
      - Serverless Email Lifecycle Guarantee: Stripped unused contest scraping and MongoDB resource queries from `app/auth/callback/route.ts`, and directly `await`ed `sendWelcomeEmail()` (<300ms total latency) prior to the redirect response.
      - Idempotent Email Deduplication & Retries: Replaced the brittle 60-second creation window with deterministic verification against Supabase `email_logs` (`status = 'sent'`), and added a 2-attempt retry loop with exponential backoff for transient Resend network drops.
+
+32. Auth Callback Schema Divergence & Strict Idempotent Welcome Email Pipeline:
+   - Challenge: Welcome emails failed to trigger upon user signup because `app/auth/callback/route.ts` executed `.select('created_at, role')` on the Supabase `user_profiles` table. Because `role` does not exist as a column on `user_profiles` (it is stored in `auth.users.user_metadata.role`), Postgres threw error `42703 (column user_profiles.role does not exist)`. This returned a `null` profile object, causing the subsequent `if (profile)` block containing `sendWelcomeEmail` to be completely bypassed on every signup. Furthermore, inserting into `email_logs` using the client-side public anon key was blocked by Postgres Row-Level Security (error 42501).
+   - Solution:
+     - Eliminated Schema Dependency: Removed non-existent `role` column queries from `user_profiles`. User identity, signup timestamps, and roles are now resolved directly from `data.user` (`data.user.email`, `data.user.created_at`, `data.user.user_metadata.role`).
+     - Service Role Admin Separation: Utilized `getSupabaseAdminClient()` (service role key) for checking and persisting audit records to `email_logs` and updating user profile review flags, bypassing RLS restrictions securely on serverless runtime.
+     - Strict Idempotency Guard: Implemented an atomic lookup on `email_logs` checking for existing `status = 'sent'` welcome records by either `user_id` or `recipient_email` before dispatch, guaranteeing that multi-device logins, callback refreshes, or subsequent sign-ins never trigger duplicate welcome emails.

@@ -427,5 +427,7 @@ Remaining Vital tasks on 25/07/2026
 - [x] Fixed Serverless early-termination bug in `app/auth/callback/route.ts`: removed heavy blocking scrapers and directly `await`ed `sendWelcomeEmail()` prior to HTTP redirect.
 - [x] Implemented idempotent deduplication in `app/auth/callback/route.ts` via Supabase `email_logs` (`status = 'sent'`).
 - [x] Added transient retry loop (2 attempts, 300ms backoff) and error reporting to `sendWelcomeEmail()` in `app/lib/email/emailService.ts`.
+- [x] Resolved Postgres schema divergence in `app/auth/callback/route.ts` (removed non-existent `user_profiles.role` query, moved role to `user_metadata.role`, used `getSupabaseAdminClient` to bypass RLS, ensuring authentic WelcomeEmail template dispatches with strict idempotency).
+- [x] Successfully dispatched authentic Welcome Emails to recent users (`shreyansh.tiwari8@gmail.com`, `harshit2k9@gmail.com`, `namankashyap114@gmail.com`) and verified live idempotency skips in Supabase `email_logs`.
 
 
