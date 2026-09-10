@@ -7,7 +7,9 @@ import { applyContestRules } from "@/app/api/contests/algorithm";
 import { mapApiContests } from "@/app/utils/contestFetch";
 
 export const metadata: Metadata = {
-  title: 'Coding Contest Calendar – LeetCode, Codeforces, CodeChef | ErithX',
+  title: {
+    absolute: 'Coding Contest Calendar – LeetCode, Codeforces, CodeChef | ErithX',
+  },
   description: 'Track upcoming coding contests across LeetCode, Codeforces, CodeChef, AtCoder and more. Add contests to Google Calendar in one click and get email reminders before they start. Built for engineering students.',
   keywords: [
     "DSA contest today", "DSA contest online", "DSA contest platform", "CodeChef DSA contest", 
@@ -56,8 +58,68 @@ async function getInitialContests() {
 
 export default async function ContestsPage() {
   const initialContests = await getInitialContests();
+
+  const contestStructuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebApplication',
+        '@id': 'https://erithx.dev/contests#webapp',
+        name: 'ErithX Coding Contest Calendar',
+        url: 'https://erithx.dev/contests',
+        applicationCategory: 'DeveloperApplication',
+        operatingSystem: 'All',
+        browserRequirements: 'Requires JavaScript. Requires HTML5.',
+        description: 'Real-time competitive programming calendar and contest tracker for LeetCode, Codeforces, CodeChef, AtCoder, and more. Features 1-click Google Calendar sync and timezone conversion.',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+        },
+      },
+      {
+        '@type': 'ItemList',
+        '@id': 'https://erithx.dev/contests#itemlist',
+        name: 'Upcoming Coding Contests',
+        description: 'Schedule of upcoming competitive programming contests with dates, platforms, and registration links.',
+        numberOfItems: initialContests.length,
+        itemListOrder: 'https://schema.org/ItemListOrderAscending',
+        itemListElement: initialContests.slice(0, 30).map((contest, index) => {
+          const startDateObj = new Date(contest.startDate);
+          const endDateIso = !isNaN(startDateObj.getTime()) && contest.duration
+            ? new Date(startDateObj.getTime() + contest.duration * 60 * 1000).toISOString()
+            : undefined;
+
+          return {
+            '@type': 'ListItem',
+            position: index + 1,
+            item: {
+              '@type': 'Event',
+              name: contest.title,
+              description: `${contest.platform} contest: ${contest.title}`,
+              startDate: contest.startDate,
+              endDate: endDateIso,
+              eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+              eventStatus: 'https://schema.org/EventScheduled',
+              url: contest.url,
+              organizer: {
+                '@type': 'Organization',
+                name: contest.platform,
+              },
+            },
+          };
+        }),
+      },
+    ],
+  };
   
   return (
-    <ContestBoardClient initialContests={initialContests} />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contestStructuredData) }}
+      />
+      <ContestBoardClient initialContests={initialContests} />
+    </>
   );
 }

@@ -13,7 +13,11 @@ import { contestFetch } from '@/app/utils/contestFetch';
 import { createClient } from '@/app/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import Link from 'next/link';
 import { useAuthStore } from '@/store/authStore';
+import ContestHero from '@/components/contests/ContestHero';
+import SundayReviewInline from '@/components/SundayReview/SundayReviewInline';
 
 const INITIAL_CONTEST_DATA: Contest[] = [];
 
@@ -162,132 +166,31 @@ export default function ContestBoardClient({ initialContests }: { initialContest
       <Navbar />
 
       {/* HERO SECTION */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden grid-bg">
-        <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at top, rgba(6,78,59,0.25), #09090b 60%)'}}></div>
-        <div className="absolute top-0 left-1/3 w-[300px] h-[300px] md:w-[600px] md:h-[600px] rounded-full opacity-[0.07]" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)', filter: 'blur(80px)'}}></div>
-        <div className="absolute bottom-0 right-1/4 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.05]" style={{background: 'radial-gradient(circle, #06b6d4, transparent 70%)', filter: 'blur(60px)'}}></div>
-
-
-
-        <div className="max-w-6xl w-full mx-auto px-6 relative z-10 pt-20 pb-28">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-8">
-              <span className="relative flex h-2 w-2">
-                <span className="live-pulse absolute inline-flex h-full w-full rounded-full bg-red-500"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-              </span>
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">{liveCount} Contests Live Now</span>
-            </div>
-
-            <h1 className="text-4xl md:text-7xl font-medium tracking-tighter mb-6 gradient-text-hero leading-[1.1]">
-              Never Miss a<br/>Contest Again
-            </h1>
-            <p className="text-base md:text-lg text-zinc-400 leading-relaxed mb-4 max-w-xl mx-auto">
-              Track every coding contest, hackathon, and interview sprint across 
-              <span className="text-white font-medium"> 10+ platforms</span> — with alerts that reach your inbox 
-              <span className="text-emerald-400 font-medium"> before anyone else</span>.
-            </p>
-            <p className="text-sm text-zinc-500 mb-10">
-              Join 2,000+ students who never miss an opportunity.
-            </p>
-
-            <div className="flex items-center justify-center gap-4 flex-wrap">
-              <a href="#contests" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-zinc-900 text-sm font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5">
-                <Trophy className="w-4 h-4" />
-                View Live Contests
-              </a>
-              <a href="#community" className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white/5 transition-all">
-                <BellRing className="w-4 h-4" />
-                Get Email Alerts
-              </a>
-            </div>
-
-            <div className="mt-5 opacity-70 hover:opacity-100 transition-opacity overflow-hidden relative w-full mask-edges">
-              <div className="flex items-center gap-12 animate-marquee py-2">
-                <span className="text-[10px] uppercase tracking-widest text-zinc-500 mr-4 font-bold shrink-0">TRACKING</span>
-                {['leetcode', 'codeforces', 'codechef', 'hackerrank', 'hackerearth', 'geeksforgeeks', 'topcoder', 'kaggle', 'google', 'meta', 'apple'].map((platform, i) => (
-                  platform === 'atcoder' ? (
-                    <div key={i} className="flex items-center gap-1.5 shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]">
-                      
-                      <span className="font-bold text-zinc-300 text-sm tracking-tight">AtCoder</span>
-                    </div>
-                  ) : (
-                    <img 
-                      key={i} 
-                      src={`https://cdn.simpleicons.org/${platform}`} 
-                      alt={platform} 
-                      className="h-6 w-auto shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]" 
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                    />
-                  )
-                ))}
-                {/* Duplicate for infinite effect */}
-                {['leetcode', 'codeforces', 'codechef', 'hackerrank', 'hackerearth', 'geeksforgeeks', 'topcoder', 'kaggle', 'google', 'meta', 'apple'].map((platform, i) => (
-                  platform === 'atcoder' ? (
-                    <div key={i + 'dup'} className="flex items-center gap-1.5 shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]">
-                      <div className="bg-zinc-800 border border-zinc-700 text-white text-[10px] font-black px-1.5 py-0.5 rounded-sm">AC</div>
-                      <span className="font-bold text-zinc-300 text-sm tracking-tight">AtCoder</span>
-                    </div>
-                  ) : (
-                    <img 
-                      key={i + 'dup'} 
-                      src={`https://cdn.simpleicons.org/${platform}`} 
-                      alt={platform} 
-                      className="h-6 w-auto shrink-0 transition-all hover:scale-110 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]" 
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                    />
-                  )
-                ))}
-              </div>
-              <style>{`
-                .mask-edges {
-                  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-                  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-                }
-                @keyframes marquee {
-                  0% { transform: translateX(0); }
-                  100% { transform: translateX(-50%); }
-                }
-                .animate-marquee {
-                  display: flex;
-                  width: max-content;
-                  animation: marquee 25s linear infinite;
-                }
-                .animate-marquee:hover {
-                  animation-play-state: paused;
-                }
-              `}</style>
-            </div>
-          </div>
-        </div>
-
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-          <span className="text-[9px] uppercase tracking-widest text-zinc-600">Scroll to explore</span>
-          <div className="w-5 h-8 rounded-full border border-zinc-700 flex items-start justify-center p-1">
-            <div className="w-1 h-2 rounded-full bg-zinc-500 countdown-tick"></div>
-          </div>
-        </div>
-      </section>
+      <ContestHero liveCount={liveCount} />
 
       {/* LIVE CONTESTS SECTION */}
-      <section id="contests" className="py-24 px-6 relative">
+      <section id="contests" className="pt-12 pb-24 px-6 relative">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
             <div className="w-full">
-              <div className="flex items-center gap-2 mb-3">
+              <div className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.15)] backdrop-blur-sm">
                 <span className="relative flex h-2 w-2">
                   <span className="live-pulse absolute inline-flex h-full w-full rounded-full bg-red-500"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                 </span>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-red-400">Live & Upcoming</span>
               </div>
-              <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
+              <div className="flex items-center justify-between flex-wrap gap-4 mb-4">
                 <h2 className="text-3xl font-medium tracking-tight">Live & Upcoming Coding Competitions Dashboard</h2>
                 <button onClick={refreshContests} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg glass text-xs font-medium text-zinc-400 hover:text-white transition-all">
                   <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
                   Refresh
                 </button>
               </div>
+              <p className="text-sm text-zinc-400 max-w-3xl leading-relaxed mb-6">
+                Real-time competitive programming calendar aggregating active and upcoming rounds from LeetCode, Codeforces, CodeChef, AtCoder, HackerRank, and GeeksforGeeks. Start times automatically convert to your local browser timezone. Click &ldquo;Add to Calendar&rdquo; to export events directly to Google Calendar or Apple iCal with direct challenge links and built-in alerts.
+              </p>
+
 
               {/* Advanced Filter Bar */}
               <div className="flex flex-col gap-4 mb-6 bg-transparent">
@@ -383,6 +286,9 @@ export default function ContestBoardClient({ initialContests }: { initialContest
               </div>
             </div>
           )}
+
+          {/* INTERNAL ACQUISITION BRIDGE: SUNDAY REVIEW */}
+          <SundayReviewInline className="my-8" />
 
           {/* STARTING SOON SECTION */}
           {upcomingContests.length > 0 && (
@@ -494,22 +400,27 @@ export default function ContestBoardClient({ initialContests }: { initialContest
               </div>
             </div>
 
-            <div className="feature-card glass rounded-2xl p-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.04]" style={{background: 'radial-gradient(circle, #06b6d4, transparent 70%)'}}></div>
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
-                <Route className="w-5 h-5 text-cyan-400" />
+            <div className="feature-card glass rounded-2xl p-6 relative overflow-hidden group hover:border-emerald-500/30 transition-all">
+              <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.04]" style={{background: 'radial-gradient(circle, #10b981, transparent 70%)'}}></div>
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4">
+                <Route className="w-5 h-5 text-emerald-400" />
               </div>
-              <h3 className="text-lg font-medium mb-2">Personalized Guidance</h3>
-              <p className="text-xs text-zinc-500 leading-relaxed mb-4">No generic roadmaps — every journey is different. Share your profiles and get custom weekly progress check-ins with focused study suggestions.</p>
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 px-2 py-1 rounded bg-cyan-500/10 border border-cyan-500/20">
-                  <Check className="w-3 h-3 text-cyan-400" />
-                  <span className="text-[10px] text-cyan-400 font-medium">Weekly Review</span>
+              <h3 className="text-lg font-medium mb-2 text-white">Sunday Performance Review</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed mb-4">Don’t just compete and forget. Connect your handles to get an honest review every Sunday at 9 PM: why your rating moved, where you got stuck, and what topics to practice next.</p>
+              <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-white/5">
+                <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1 px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/20">
+                    <Check className="w-3 h-3 text-emerald-400" />
+                    <span className="text-[10px] text-emerald-400 font-medium">Sunday 9 PM</span>
+                  </div>
+                  <div className="flex items-center gap-1 px-2 py-1 rounded bg-white/5 border border-white/5">
+                    <Target className="w-3 h-3 text-zinc-400" />
+                    <span className="text-[10px] text-zinc-400 font-medium">Rating Shifts</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 px-2 py-1 rounded bg-white/5 border border-white/5">
-                  <Target className="w-3 h-3 text-zinc-400" />
-                  <span className="text-[10px] text-zinc-400 font-medium">Custom Path</span>
-                </div>
+                <Link href="/docs/performance-analysis" className="text-[11px] font-medium text-emerald-400 hover:text-emerald-300 transition-colors">
+                  How it works →
+                </Link>
               </div>
             </div>
 
@@ -597,6 +508,7 @@ export default function ContestBoardClient({ initialContests }: { initialContest
 
 
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
+     
     </div>
   );
 }
