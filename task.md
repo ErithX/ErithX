@@ -429,5 +429,6 @@ Remaining Vital tasks on 25/07/2026
 - [x] Added transient retry loop (2 attempts, 300ms backoff) and error reporting to `sendWelcomeEmail()` in `app/lib/email/emailService.ts`.
 - [x] Resolved Postgres schema divergence in `app/auth/callback/route.ts` (removed non-existent `user_profiles.role` query, moved role to `user_metadata.role`, used `getSupabaseAdminClient` to bypass RLS, ensuring authentic WelcomeEmail template dispatches with strict idempotency).
 - [x] Successfully dispatched authentic Welcome Emails to recent users (`shreyansh.tiwari8@gmail.com`, `harshit2k9@gmail.com`, `namankashyap114@gmail.com`) and verified live idempotency skips in Supabase `email_logs`.
-
-
+- [x] Removed Provider column from `app/superadmin/page.tsx` table and search filters.
+- [x] Resolved cross-database desynchronization in `app/api/admin/reviews/route.ts`: filtered deleted Supabase users and auto-pruned orphaned MongoDB `UserCoderProfile` records.
+- [x] Dispatched humanized, zero-fluff Profile Reminder V2 ("We still can't track your progress.") to all 39 unconnected users via Resend with verified SPF, DKIM, and single DMARC.

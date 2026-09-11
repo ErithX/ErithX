@@ -36,9 +36,25 @@ export async function GET(req: NextRequest) {
     const supaMap = new Map();
     supaUsers?.forEach(u => supaMap.set(u.id, u));
 
-    // 3. Fetch all AI Reviews for each user (to support history timeline and Roy factor tracking)
+    // Filter out orphaned profiles (users deleted from Supabase) and asynchronously prune them from MongoDB
+    const orphanUserIds: string[] = [];
+    const activeProfiles = coderProfiles.filter(cp => {
+      if (!supaMap.has(cp.userId)) {
+        orphanUserIds.push(cp.userId);
+        return false;
+      }
+      return true;
+    });
+
+    if (orphanUserIds.length > 0) {
+      UserCoderProfile.deleteMany({ userId: { $in: orphanUserIds } })
+        .exec()
+        .catch(err => console.error('Failed to prune orphaned UserCoderProfiles:', err));
+    }
+
+    // 3. Fetch all AI Reviews for each active user (to support history timeline and Roy factor tracking)
     const usersWithReviews = await Promise.all(
-      coderProfiles.map(async (cp: any) => {
+      activeProfiles.map(async (cp: any) => {
         const supaUser = supaMap.get(cp.userId);
         const allUserReviews = await AIReview.find({ user_id: cp.userId })
           .sort({ created_at: -1 })

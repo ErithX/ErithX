@@ -64,8 +64,7 @@ export default function SuperadminPage() {
     return users.filter(
       (u) =>
         (u.fullName && u.fullName.toLowerCase().includes(q)) ||
-        (u.email && u.email.toLowerCase().includes(q)) ||
-        (u.provider && u.provider.toLowerCase().includes(q))
+        (u.email && u.email.toLowerCase().includes(q))
     );
   }, [users, searchQuery]);
 
@@ -117,7 +116,7 @@ export default function SuperadminPage() {
             <div>
               <h1 className="text-xl font-bold tracking-tight text-white">Users Directory</h1>
               <p className="text-xs text-zinc-500 mt-0.5">
-                {users.length} registered accounts across Google and GitHub authentication
+                {users.length -7} Total User
               </p>
             </div>
 
@@ -171,7 +170,6 @@ export default function SuperadminPage() {
                       <th className="py-3 px-4">Signed Up</th>
                       <th className="py-3 px-4">Last Login</th>
                       <th className="py-3 px-4">Last Seen</th>
-                      <th className="py-3 px-4">Provider</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-900">
@@ -195,11 +193,6 @@ export default function SuperadminPage() {
                         <td className="py-3 px-4 text-zinc-500 font-mono text-[11px]">{formatDate(user.createdAt)}</td>
                         <td className="py-3 px-4 text-zinc-500 font-mono text-[11px]">{formatDate(user.lastSignInAt)}</td>
                         <td className="py-3 px-4 text-zinc-400 font-mono text-[11px]">{formatLastSeen(user.lastSeen)}</td>
-                        <td className="py-3 px-4">
-                          <span className="px-2 py-0.5 rounded text-[10px] bg-zinc-900 border border-zinc-800 text-zinc-300 capitalize">
-                            {user.provider || "email"}
-                          </span>
-                        </td>
                       </tr>
                     ))}
                   </tbody>
