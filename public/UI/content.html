@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mastering Dynamic Programming — ErithX</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <style>
+            * {
+                font-family: 'Inter', sans-serif;
+            }
+            body {
+                background: #09090b;
+                color: #fff;
+            }
+            ::selection {
+                background-color: rgb(6, 78, 59);
+                color: white;
+            }
+            ::-webkit-scrollbar {
+                width: 6px;
+            }
+            ::-webkit-scrollbar-track {
+                background: #09090b;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #27272a;
+                border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #3f3f46;
+            }
+
+            /* Reading progress bar */
+            #progressBar {
+                transition: width 50ms linear;
+            }
+
+            /* Glass */
+            .glass {
+                background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            /* ---- ARTICLE TYPOGRAPHY ---- */
+            .article-body {
+                font-size: 17px;
+                line-height: 1.85;
+                color: #d4d4d8;
+                max-width: 100%;
+            }
+            .article-body h1 {
+                font-size: 2em;
+                font-weight: 600;
+                color: #fff;
+                margin: 2.5em 0 0.6em;
+                letter-spacing: -0.02em;
+                line-height: 1.2;
+            }
+            .article-body h2 {
+                font-size: 1.5em;
+                font-weight: 600;
+                color: #fff;
+                margin: 2em 0 0.5em;
+                letter-spacing: -0.01em;
+                line-height: 1.3;
+                padding-bottom: 0.3em;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            }
+            .article-body h3 {
+                font-size: 1.25em;
+                font-weight: 600;
+                color: #e4e4e7;
+                margin: 1.8em 0 0.4em;
+                line-height: 1.4;
+            }
+            .article-body h4 {
+                font-size: 1.1em;
+                font-weight: 600;
+                color: #d4d4d8;
+                margin: 1.5em 0 0.3em;
+            }
+            .article-body p {
+                margin: 0 0 1.4em;
+            }
+            .article-body strong {
+                color: #fff;
+                font-weight: 600;
+            }
+            .article-body em {
+                color: #a1a1aa;
+                font-style: italic;
+            }
+            .article-body a {
+                color: #34d399;
+                text-decoration: underline;
+                text-underline-offset: 3px;
+                text-decoration-color: rgba(52, 211, 153, 0.3);
+                transition: text-decoration-color 150ms;
+            }
+            .article-body a:hover {
+                text-decoration-color: rgba(52, 211, 153, 0.7);
+            }
+
+            /* Lists */
+            .article-body ul,
+            .article-body ol {
+                margin: 0 0 1.4em;
+                padding-left: 1.5em;
+            }
+            .article-body ul {
+                list-style: none;
+                padding-left: 0;
+            }
+            .article-body ul li {
+                position: relative;
+                padding-left: 1.4em;
+                margin-bottom: 0.5em;
+            }
+            .article-body ul li::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0.7em;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: #10b981;
+            }
+            .article-body ol {
+                list-style: decimal;
+            }
+            .article-body ol li {
+                margin-bottom: 0.5em;
+                padding-left: 0.3em;
+            }
+            .article-body ol li::marker {
+                color: #10b981;
+                font-weight: 600;
+            }
+
+            /* Blockquote */
+            .article-body blockquote {
+                border-left: 3px solid #10b981;
+                padding: 0.8em 1.2em;
+                margin: 1.5em 0;
+                background: rgba(16, 185, 129, 0.04);
+                border-radius: 0 8px 8px 0;
+                color: #a1a1aa;
+            }
+            .article-body blockquote p {
+                margin-bottom: 0;
+            }
+            .article-body blockquote strong {
+                color: #34d399;
+            }
+
+            /* Code */
+            .article-body code {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.85em;
+                background: rgba(255, 255, 255, 0.06);
+                padding: 0.15em 0.4em;
+                border-radius: 4px;
+                color: #34d399;
+            }
+            .article-body pre {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                border-radius: 12px;
+                padding: 1.2em 1.5em;
+                margin: 1.5em 0;
+                overflow-x: auto;
+            }
+            .article-body pre code {
+                background: none;
+                padding: 0;
+                font-size: 0.82em;
+                color: #d4d4d8;
+                line-height: 1.7;
+            }
+
+            /* Horizontal rule */
+            .article-body hr {
+                border: none;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.06);
+                margin: 2.5em 0;
+            }
+
+            /* Image */
+            .article-body img {
+                border-radius: 12px;
+                margin: 1.5em 0;
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                max-width: 100%;
+            }
+            .article-body figure {
+                margin: 2em 0;
+            }
+            .article-body figcaption {
+                text-align: center;
+                font-size: 0.75em;
+                color: #71717a;
+                margin-top: 0.6em;
+            }
+
+            /* Table */
+            .article-body table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 1.5em 0;
+                font-size: 0.9em;
+            }
+            .article-body th {
+                background: rgba(255, 255, 255, 0.04);
+                text-align: left;
+                padding: 0.7em 1em;
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                font-weight: 600;
+                color: #fff;
+                font-size: 0.85em;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            .article-body td {
+                padding: 0.6em 1em;
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                color: #a1a1aa;
+            }
+
+            /* Diagram container */
+            .diagram-container {
+                background: rgba(16, 185, 129, 0.02);
+                border: 1px solid rgba(16, 185, 129, 0.1);
+                border-radius: 16px;
+                padding: 2em;
+                margin: 2em 0;
+                text-align: center;
+            }
+            .diagram-container svg {
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* Callout boxes */
+            .callout {
+                padding: 1.2em 1.5em;
+                border-radius: 12px;
+                margin: 1.5em 0;
+                display: flex;
+                gap: 1em;
+                align-items: flex-start;
+            }
+            .callout-tip {
+                background: rgba(16, 185, 129, 0.05);
+                border: 1px solid rgba(16, 185, 129, 0.12);
+            }
+            .callout-warning {
+                background: rgba(234, 179, 8, 0.05);
+                border: 1px solid rgba(234, 179, 8, 0.12);
+            }
+            .callout-info {
+                background: rgba(6, 182, 212, 0.05);
+                border: 1px solid rgba(6, 182, 212, 0.12);
+            }
+            .callout-icon {
+                flex-shrink: 0;
+                margin-top: 0.1em;
+            }
+            .callout-content {
+                flex: 1;
+            }
+            .callout-content p {
+                margin: 0;
+                font-size: 0.9em;
+                line-height: 1.7;
+            }
+            .callout-content strong {
+                display: block;
+                margin-bottom: 0.3em;
+            }
+
+            /* TOC */
+            .toc-link {
+                transition: all 150ms ease;
+                border-left: 2px solid transparent;
+            }
+            .toc-link:hover {
+                color: #fff;
+                border-left-color: rgba(255, 255, 255, 0.2);
+                background: rgba(255, 255, 255, 0.03);
+            }
+            .toc-link.active {
+                color: #34d399;
+                border-left-color: #10b981;
+                background: rgba(16, 185, 129, 0.05);
+            }
+
+            /* Recommend card */
+            .rec-card {
+                transition: all 200ms ease;
+            }
+            .rec-card:hover {
+                transform: translateY(-2px);
+                background: rgba(255, 255, 255, 0.06);
+                border-color: rgba(255, 255, 255, 0.12);
+            }
+
+            /* Toast */
+            .toast {
+                animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+            }
+            @keyframes toastIn {
+                from {
+                    transform: translateY(20px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes toastOut {
+                from {
+                    opacity: 1;
+                }
+                to {
+                    opacity: 0;
+                }
+            }
+
+            /* Smooth heading anchors */
+            .article-body h1[id],
+            .article-body h2[id],
+            .article-body h3[id] {
+                scroll-margin-top: 80px;
+            }
+
+            @media(max-width: 1024px) {
+                .article-body {
+                    font-size: 16px;
+                }
+                .article-body h1 {
+                    font-size: 1.7em;
+                }
+                .article-body h2 {
+                    font-size: 1.35em;
+                }
+            }
+        </style>
+    </head>
+    <body
+        class="min-h-screen">
+
+        <!-- Toast Container -->
+        <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2"></div>
+
+        <!-- Reading Progress Bar -->
+        <div class="fixed top-0 left-0 w-full h-[3px] z-[60] bg-transparent">
+            <div id="progressBar" class="h-full bg-emerald-500" style="width:0%;"></div>
+        </div>
+
+        <!-- NAVBAR -->
+        <nav class="fixed top-0 w-full z-50 border-b border-white/5" style="background:rgba(9,9,11,0.9);backdrop-filter:blur(12px);">
+            <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <a href="#" class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                            <i data-lucide="zap" class="w-4 h-4 text-emerald-400"></i>
+                        </div>
+                        <span class="font-semibold text-sm tracking-tight">ErithX</span>
+                    </a>
+                    <div class="hidden md:flex items-center gap-1 text-xs text-zinc-600">
+                        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                        <a href="#" class="hover:text-zinc-400 transition-colors">Resources</a>
+                        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                        <span class="text-zinc-400">Dynamic Programming</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="showToast('Bookmark saved! 📌','success')" class="p-2 rounded-lg hover:bg-white/5 transition-colors text-zinc-400 hover:text-white" title="Bookmark">
+                        <i data-lucide="bookmark" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="handleShare()" class="p-2 rounded-lg hover:bg-white/5 transition-colors text-zinc-400 hover:text-white" title="Share">
+                        <i data-lucide="share-2" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="toggleFont()" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:bg-white/5 transition-colors text-zinc-400 hover:text-white text-xs" title="Toggle font size">
+                        <i data-lucide="type" class="w-3.5 h-3.5"></i>
+                        <span id="fontLabel">Aa</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MAIN LAYOUT -->
+        <div
+            class="pt-14 flex">
+
+            <!-- LEFT: Table of Contents (sticky) -->
+            <aside class="hidden xl:block w-56 flex-shrink-0 sticky top-14 h-[calc(100vh-56px)] overflow-y-auto py-8 pl-6">
+                <div class="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-3 px-3">On this page</div>
+                <nav id="tocNav" class="space-y-0.5 text-[13px]">
+                    <a href="#what-is-dp" class="toc-link block px-3 py-1.5 text-zinc-500 rounded-r-md">What is DP?</a>
+                    <a href="#two-patterns" class="toc-link block px-3 py-1.5 text-zinc-500 rounded-r-md">Two Core Patterns</a>
+                    <a href="#memoization" class="toc-link block px-3 py-1.5 text-zinc-500 rounded-r-md pl-6">Memoization</a>
+                    <a href="#tabulation" class="toc-link block px-3 py-1.5 text-zinc-500 rounded-r-md pl-6">Tabulation</a>
+                    <a href="#state-diagram" class="toc-link block px-3 py-1.5 text-zinc-500 rounded-r-md">State Transition Diagram</a>
+                    <a href="#classic-problems" class="toc-link block px-3 py-1.5 text-zinc-500 rounded-r-md">Classic Problems</a>
+                    <a href="#fibonacci" class="toc-link block px-3 py-1.5 text-zinc-500 rounded-r-md pl-6">Fibonacci</a>
+                    <a href="#knapsack" class="toc-link block px-3 py-1.5 text-zinc-500 rounded-r-md pl-6">0/1 Knapsack</a>
+                    <a href="#lcs" class="toc-link block px-3 py-1.5 text-zinc-500 rounded-r-md pl-6">Longest Common Subsequence</a>
+                    <a href="#complexity-table" class="toc-link block px-3 py-1.5 text-zinc-500 rounded-r-md">Complexity Cheat Sheet</a>
+                    <a href="#practice-roadmap" class="toc-link block px-3 py-1.5 text-zinc-500 rounded-r-md">Practice Roadmap</a>
+                </nav>
+            </aside>
+
+            <!-- CENTER: Article -->
+            <main class="flex-1 min-w-0">
+                <article
+                    class="max-w-3xl mx-auto px-6 py-12">
+
+                    <!-- Type badge + meta -->
+                    <div class="flex items-center gap-3 mb-6 flex-wrap">
+                        <span class="px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 bg-orange-500/10 text-orange-400 border border-orange-500/20">
+                            <i data-lucide="file-text" class="w-3 h-3"></i>PDF Study Material
+                        </span>
+                        <span class="text-[10px] text-zinc-600">•</span>
+                        <span class="text-xs text-zinc-500 flex items-center gap-1">
+                            <i data-lucide="clock" class="w-3 h-3"></i>15 min read
+                        </span>
+                        <span class="text-[10px] text-zinc-600">•</span>
+                        <span class="text-xs text-zinc-500">June 24, 2026</span>
+                    </div>
+
+                    <!-- Title -->
+                    <h1 class="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] mb-5">
+                        Mastering Dynamic Programming: A Visual Guide
+                    </h1>
+
+                    <!-- Subtitle -->
+                    <p class="text-lg text-zinc-400 leading-relaxed mb-8 max-w-2xl">
+                        Complete DP cheat sheet covering all major patterns — from Fibonacci to Matrix Chain Multiplication with state transition diagrams.
+                    </p>
+
+                    <!-- Author + Actions row -->
+                    <div class="flex items-center justify-between mb-10 pb-8 border-b border-white/5 flex-wrap gap-4">
+                        <div class="flex items-center gap-3">
+                            <img src="https://picsum.photos/seed/pro1/80/80.jpg" class="w-11 h-11 rounded-full object-cover border border-white/10">
+                            <div>
+                                <div class="text-sm font-medium flex items-center gap-1.5">
+                                    Priya Sharma
+                                    <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>
+                                </div>
+                                <div class="text-xs text-zinc-500">SDE @ Google • 42 pages • 3.8 MB</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="handleUpvote(this)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-xs text-zinc-400 hover:bg-white/10 transition-all">
+                                <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
+                                <span class="upvote-count">521</span>
+                            </button>
+                            <button onclick="showToast('Saved to bookmarks! 📌','success')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-xs text-zinc-400 hover:bg-white/10 transition-all">
+                                <i data-lucide="bookmark" class="w-3.5 h-3.5"></i>
+                                Save
+                            </button>
+                            <button onclick="handleShare()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-xs text-zinc-400 hover:bg-white/10 transition-all">
+                                <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="flex flex-wrap gap-2 mb-10">
+                        <span class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 border border-white/5">#dp</span>
+                        <span class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 border border-white/5">#cheatsheet</span>
+                        <span class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 border border-white/5">#interview-prep</span>
+                        <span class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 border border-white/5">#dynamic-programming</span>
+                        <span class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 border border-white/5">#patterns</span>
+                    </div>
+
+                    <!-- PDF Download Banner -->
+                    <div class="flex items-center justify-between p-4 rounded-xl bg-orange-500/5 border border-orange-500/10 mb-12">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-12 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="file-text" class="w-5 h-5 text-orange-400"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium">Download the full PDF</div>
+                                <div class="text-xs text-zinc-500">42 pages • 3.8 MB • Includes all diagrams & code</div>
+                            </div>
+                        </div>
+                        <button onclick="showToast('PDF download started! 📄','success')" class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-medium hover:bg-orange-500/20 transition-all flex-shrink-0">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            Download PDF
+                        </button>
+                    </div>
+
+                    <!-- ==================== ARTICLE BODY ==================== -->
+                    <div class="article-body" id="articleBody">
+
+                        <h2 id="what-is-dp">What is Dynamic Programming?</h2>
+
+                        <p>Dynamic Programming (DP) is an optimization technique that solves complex problems by breaking them into
+                            <strong>overlapping subproblems</strong>
+                            and storing their solutions to avoid redundant computation. Think of it as
+                            <em>"remembering past work so you don't repeat it."</em>
+                        </p>
+
+                        <p>The key insight is simple: if you've already computed the answer to a subproblem,
+                            <strong>store it</strong>. The next time you need it, just look it up instead of computing it again.</p>
+
+                        <div class="callout callout-tip">
+                            <div class="callout-icon">
+                                <i data-lucide="lightbulb" class="w-5 h-5 text-emerald-400"></i>
+                            </div>
+                            <div class="callout-content">
+                                <strong class="text-emerald-400">Core Principle</strong>
+                                <p>DP applies when a problem has
+                                    <strong>Overlapping Subproblems</strong>
+                                    (same subproblems solved multiple times) AND
+                                    <strong>Optimal Substructure</strong>
+                                    (optimal solution can be built from optimal solutions of subproblems).</p>
+                            </div>
+                        </div>
+
+                        <h2 id="two-patterns">Two Core Patterns</h2>
+
+                        <p>Every DP problem can be solved using one of two approaches. Understanding both is essential because some problems are naturally easier with one vs. the other.</p>
+
+                        <h3 id="memoization">1. Top-Down (Memoization)</h3>
+
+                        <p>Start from the main problem and recursively break it down.
+                            <strong>Cache every result</strong>
+                            before returning. This is usually the more intuitive approach — you write the natural recursive solution first, then add caching.</p>
+
+                        <pre><code># Fibonacci with Memoization
+def fib(n, memo={}):
+    if n in memo:
+        return memo[n]
+    if n &lt;= 1:
+        return n
+    
+    memo[n] = fib(n-1, memo) + fib(n-2, memo)
+    return memo[n]
+
+print(fib(50))  # Runs instantly!</code></pre>
+
+                        <h3 id="tabulation">2. Bottom-Up (Tabulation)</h3>
+
+                        <p>Start from the smallest subproblems and build up to the final answer. Fill a table iteratively. This is often more efficient because it eliminates recursion overhead and is easier to space-optimize.</p>
+
+                        <pre><code># Fibonacci with Tabulation
+def fib(n):
+    if n &lt;= 1:
+        return n
+    
+    dp = [0] * (n + 1)
+    dp[1] = 1
+    
+    for i in range(2, n + 1):
+        dp[i] = dp[i-1] + dp[i-2]
+    
+    return dp[n]
+
+print(fib(50))  # Also instant, O(n) space</code></pre>
+
+                        <div class="callout callout-info">
+                            <div class="callout-icon">
+                                <i data-lucide="info" class="w-5 h-5 text-cyan-400"></i>
+                            </div>
+                            <div class="callout-content">
+                                <strong class="text-cyan-400">Space Optimization</strong>
+                                <p>For Fibonacci, notice that
+                                    <code>dp[i]</code>
+                                    only depends on
+                                    <code>dp[i-1]</code>
+                                    and
+                                    <code>dp[i-2]</code>. You don't need the full array — just two variables. This reduces space from
+                                    <strong>O(n)</strong>
+                                    to
+                                    <strong>O(1)</strong>.</p>
+                            </div>
+                        </div>
+
+                        <h2 id="state-diagram">State Transition Diagram</h2>
+
+                        <p>Understanding
+                            <strong>state transitions</strong>
+                            is the single most important skill in DP. A "state" is a set of variables that completely defines a subproblem. The transition tells you how to move from one state to the next.</p>
+
+                        <div class="diagram-container">
+                            <svg
+                                viewbox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" class="mx-auto" style="max-width:600px;">
+                                <!-- Title -->
+                                <text x="350" y="28" text-anchor="middle" fill="#a1a1aa" font-size="12" font-family="Inter" font-weight="600" letter-spacing="0.1em">FIBONACCI STATE TRANSITION</text>
+
+                                <!-- State nodes -->
+                                <g>
+                                    <!-- fib(n-2) -->
+                                    <rect x="60" y="130" width="120" height="50" rx="12" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.25)" stroke-width="1.5"/>
+                                    <text x="120" y="160" text-anchor="middle" fill="#34d399" font-size="14" font-family="JetBrains Mono" font-weight="500">fib(n-2)</text>
+
+                                    <!-- fib(n-1) -->
+                                    <rect x="290" y="130" width="120" height="50" rx="12" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.25)" stroke-width="1.5"/>
+                                    <text x="350" y="160" text-anchor="middle" fill="#34d399" font-size="14" font-family="JetBrains Mono" font-weight="500">fib(n-1)</text>
+
+                                    <!-- fib(n) -->
+                                    <rect x="520" y="130" width="120" height="50" rx="12" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                                    <text x="580" y="160" text-anchor="middle" fill="#ffffff" font-size="14" font-family="JetBrains Mono" font-weight="600">fib(n)</text>
+                                </g>
+
+                                <!-- Arrows -->
+                                <defs>
+                                    <marker id="arrowhead" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+                                        <polygon points="0 0, 8 3, 0 6" fill="#10b981"/>
+                                    </marker>
+                                </defs>
+                                <line x1="180" y1="155" x2="285" y2="155" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrowhead)" stroke-dasharray="6,3"/>
+                                <line x1="180" y1="145" x2="515" y2="145" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrowhead)" opacity="0.5"/>
+                                <line
+                                x1="410" y1="155" x2="515" y2="155" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+                                <!-- Labels on arrows -->
+                                <text x="232" y="148" text-anchor="middle" fill="#71717a" font-size="10" font-family="Inter">store</text>
+                                <text x="462" y="148" text-anchor="middle" fill="#71717a" font-size="10" font-family="Inter">store</text>
+
+                                <!-- Plus symbol -->
+                                <text x="468" y="140" text-anchor="middle" fill="#10b981" font-size="18" font-weight="700">+</text>
+
+                                <!-- Formula -->
+                                <rect x="200" y="250" width="300" height="44" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                                <text x="350" y="277" text-anchor="middle" fill="#d4d4d8" font-size="13" font-family="JetBrains Mono">dp[n] = dp[n-1] + dp[n-2]</text>
+                                <line x1="350" y1="180" x2="350" y2="248" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="4,4"/>
+                            </svg>
+                        </div>
+
+                        <h2 id="classic-problems">Classic DP Problems</h2>
+
+                        <h3 id="fibonacci">Fibonacci Sequence</h3>
+
+                        <p>The simplest DP problem. Each number is the sum of the two before it. Despite its simplicity, it perfectly demonstrates why memoization matters — without it, the naive recursive solution has
+                            <strong>O(2ⁿ)</strong>
+                            time complexity.</p>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Approach</th>
+                                    <th>Time</th>
+                                    <th>Space</th>
+                                    <th>When to Use</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Naive Recursion</td>
+                                    <td>O(2ⁿ)</td>
+                                    <td>O(n)</td>
+                                    <td>Never for large n</td>
+                                </tr>
+                                <tr>
+                                    <td>Memoization</td>
+                                    <td>O(n)</td>
+                                    <td>O(n)</td>
+                                    <td>When you think recursively</td>
+                                </tr>
+                                <tr>
+                                    <td>Tabulation</td>
+                                    <td>O(n)</td>
+                                    <td>O(n)</td>
+                                    <td>When you want iterative</td>
+                                </tr>
+                                <tr>
+                                    <td>Space-Optimized</td>
+                                    <td>O(n)</td>
+                                    <td>
+                                        <strong>O(1)</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Always preferred</strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3 id="knapsack">0/1 Knapsack</h3>
+
+                        <p>Given items with weights and values, pick the maximum value combination that fits in a knapsack of capacity W. Each item can be picked
+                            <strong>at most once</strong>
+                            (that's the "0/1").</p>
+
+                        <p>The state is defined by two variables:
+                            <code>(i, w)</code>
+                            — considering items
+                            <code>0..i</code>
+                            with remaining capacity
+                            <code>w</code>. The transition is a choice:
+                            <strong>take the item or skip it</strong>.</p>
+
+                        <div class="diagram-container">
+                            <svg viewbox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" class="mx-auto" style="max-width:620px;">
+                                <text x="350" y="24" text-anchor="middle" fill="#a1a1aa" font-size="12" font-family="Inter" font-weight="600" letter-spacing="0.1em">0/1 KNAPSACK: DECISION TREE</text>
+
+                                <!-- Root node -->
+                                <rect x="280" y="50" width="140" height="44" rx="10" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                                <text x="350" y="77" text-anchor="middle" fill="#fff" font-size="12" font-family="JetBrains Mono">dp(i, W)</text>
+
+                                <!-- Take branch -->
+                                <line x1="310" y1="94" x2="160" y2="150" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+                                <rect x="60" y="150" width="190" height="44" rx="10" fill="rgba(16,185,129,0.06)" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+                                <text x="155" y="177" text-anchor="middle" fill="#34d399" font-size="11" font-family="JetBrains Mono">val[i] + dp(i+1, W-wt[i])</text>
+                                <text x="220" y="138" text-anchor="middle" fill="#10b981" font-size="10" font-family="Inter" font-weight="600">TAKE</text>
+
+                                <!-- Skip branch -->
+                                <line x1="390" y1="94" x2="540" y2="150" stroke="#71717a" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+                                <rect x="450" y="150" width="190" height="44" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                                <text x="545" y="177" text-anchor="middle" fill="#a1a1aa" font-size="11" font-family="JetBrains Mono">dp(i+1, W)</text>
+                                <text x="480" y="138" text-anchor="middle" fill="#71717a" font-size="10" font-family="Inter" font-weight="600">SKIP</text>
+
+                                <!-- Max node -->
+                                <line x1="155" y1="194" x2="280" y2="238" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                                <line x1="545" y1="194" x2="420" y2="238" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                                <rect x="270" y="230" width="160" height="36" rx="8" fill="rgba(234,179,8,0.06)" stroke="rgba(234,179,8,0.2)" stroke-width="1"/>
+                                <text x="350" y="253" text-anchor="middle" fill="#facc15" font-size="12" font-family="JetBrains Mono">max(take, skip)</text>
+                            </svg>
+                        </div>
+
+                        <pre><code># 0/1 Knapsack - Bottom-Up
+def knapsack(values, weights, W):
+    n = len(values)
+    dp = [[0] * (W + 1) for _ in range(n + 1)]
+    
+    for i in range(1, n + 1):
+        for w in range(W + 1):
+            # Skip item i
+            dp[i][w] = dp[i-1][w]
+            # Take item i (if it fits)
+            if weights[i-1] &lt;= w:
+                dp[i][w] = max(dp[i][w], 
+                    values[i-1] + dp[i-1][w - weights[i-1]])
+    
+    return dp[n][W]</code></pre>
+
+                        <h3 id="lcs">Longest Common Subsequence</h3>
+
+                        <p>Given two strings, find the length of the longest subsequence present in both. A subsequence is a sequence that appears in the same relative order, but not necessarily contiguous.</p>
+
+                        <p>State:
+                            <code>(i, j)</code>
+                            — comparing
+                            <code>text1[0..i]</code>
+                            with
+                            <code>text2[0..j]</code>. If characters match, extend the LCS. If they don't, take the max of skipping one character from either string.</p>
+
+                        <div class="callout callout-warning">
+                            <div class="callout-icon">
+                                <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-400"></i>
+                            </div>
+                            <div class="callout-content">
+                                <strong class="text-yellow-400">Common Mistake</strong>
+                                <p>Don't confuse
+                                    <strong>subsequence</strong>
+                                    with
+                                    <strong>substring</strong>. A substring must be contiguous; a subsequence just needs to maintain relative order. "ACE" is a valid subsequence of "ABCDE" but not a substring.</p>
+                            </div>
+                        </div>
+
+                        <pre><code># LCS - Bottom-Up
+def lcs(text1, text2):
+    m, n = len(text1), len(text2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if text1[i-1] == text2[j-1]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    
+    return dp[m][n]</code></pre>
+
+                        <h2 id="complexity-table">Complexity Cheat Sheet</h2>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Problem</th>
+                                    <th>State</th>
+                                    <th>Transition</th>
+                                    <th>Time</th>
+                                    <th>Space</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Fibonacci</td>
+                                    <td>
+                                        <code>dp[n]</code>
+                                    </td>
+                                    <td>
+                                        <code>dp[n] = dp[n-1] + dp[n-2]</code>
+                                    </td>
+                                    <td>O(n)</td>
+                                    <td>O(1)*</td>
+                                </tr>
+                                <tr>
+                                    <td>0/1 Knapsack</td>
+                                    <td>
+                                        <code>dp[i][w]</code>
+                                    </td>
+                                    <td>
+                                        <code>max(skip, take)</code>
+                                    </td>
+                                    <td>O(nW)</td>
+                                    <td>O(nW)</td>
+                                </tr>
+                                <tr>
+                                    <td>LCS</td>
+                                    <td>
+                                        <code>dp[i][j]</code>
+                                    </td>
+                                    <td>
+                                        <code>match ? +1 : max(..)</code>
+                                    </td>
+                                    <td>O(mn)</td>
+                                    <td>O(mn)</td>
+                                </tr>
+                                <tr>
+                                    <td>LIS</td>
+                                    <td>
+                                        <code>dp[i]</code>
+                                    </td>
+                                    <td>
+                                        <code>max(dp[j]+1)</code>
+                                    </td>
+                                    <td>O(n²)</td>
+                                    <td>O(n)</td>
+                                </tr>
+                                <tr>
+                                    <td>Matrix Chain</td>
+                                    <td>
+                                        <code>dp[i][j]</code>
+                                    </td>
+                                    <td>
+                                        <code>min over k</code>
+                                    </td>
+                                    <td>O(n³)</td>
+                                    <td>O(n²)</td>
+                                </tr>
+                                <tr>
+                                    <td>Coin Change</td>
+                                    <td>
+                                        <code>dp[amount]</code>
+                                    </td>
+                                    <td>
+                                        <code>min over coins</code>
+                                    </td>
+                                    <td>O(nW)</td>
+                                    <td>O(W)</td>
+                                </tr>
+                                <tr>
+                                    <td>Edit Distance</td>
+                                    <td>
+                                        <code>dp[i][j]</code>
+                                    </td>
+                                    <td>
+                                        <code>min(insert,del,replace)</code>
+                                    </td>
+                                    <td>O(mn)</td>
+                                    <td>O(mn)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>
+                            <em>* Space-optimized version. Naive tabulation is O(n).</em>
+                        </p>
+
+                        <h2 id="practice-roadmap">Practice Roadmap</h2>
+
+                        <p>Don't jump into hard problems immediately. Build your pattern recognition muscle with this structured order:</p>
+
+                        <ol>
+                            <li>
+                                <strong>Week 1-2: Linear DP</strong>
+                                — Fibonacci, Climbing Stairs, House Robber, Coin Change</li>
+                            <li>
+                                <strong>Week 3-4: 2D DP</strong>
+                                — 0/1 Knapsack, LCS, Edit Distance, Grid Paths</li>
+                            <li>
+                                <strong>Week 5-6: String DP</strong>
+                                — Palindrome Subsequence, Word Break, Regex Matching</li>
+                            <li>
+                                <strong>Week 7-8: Advanced</strong>
+                                — Matrix Chain MCM, Burst Balloons, DP on Trees, DP with Bitmask</li>
+                        </ol>
+
+                        <div class="callout callout-tip">
+                            <div class="callout-icon">
+                                <i data-lucide="target" class="w-5 h-5 text-emerald-400"></i>
+                            </div>
+                            <div class="callout-content">
+                                <strong class="text-emerald-400">Pro Tip</strong>
+                                <p>For every DP problem, follow this ritual: (1) Identify the state, (2) Write the recurrence, (3) Identify base cases, (4) Decide top-down vs bottom-up, (5) Code it.
+                                    <strong>Never memorize solutions — memorize the process.</strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <p>
+                            <em>This article is part of the ErithX Expert Knowledge Hub — curated by verified industry professionals. Download the full 42-page PDF for all diagrams, code, and practice problems.</em>
+                        </p>
+
+                    </div>
+                    <!-- ==================== END ARTICLE BODY ==================== -->
+
+                    <!-- Author Card -->
+                    <div class="mt-14 p-6 rounded-2xl glass flex items-start gap-4 flex-wrap">
+                        <img src="https://picsum.photos/seed/pro1/96/96.jpg" class="w-14 h-14 rounded-full object-cover border border-white/10">
+                        <div class="flex-1 min-w-[200px]">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-sm font-medium">Priya Sharma</span>
+                                <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">PRO</span>
+                            </div>
+                            <p class="text-xs text-zinc-500 mb-3">Software Engineer at Google • 5+ years of interviewing experience • Passionate about making DSA accessible to everyone</p>
+                            <div class="flex items-center gap-3">
+                                <a href="#" class="text-xs text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1">
+                                    <i data-lucide="twitter" class="w-3 h-3"></i>
+                                    Follow
+                                </a>
+                                <span class="text-zinc-700">•</span>
+                                <span class="text-xs text-zinc-500">47 resources published</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Engagement Bar -->
+                    <div class="mt-10 flex items-center justify-between py-6 border-t border-b border-white/5 flex-wrap gap-4">
+                        <div class="flex items-center gap-3">
+                            <button onclick="handleUpvote(this)" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-sm text-zinc-400 hover:bg-white/10 transition-all">
+                                <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                                <span class="upvote-count">521</span>
+                                <span class="hidden sm:inline">Upvotes</span>
+                            </button>
+                            <button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-sm text-zinc-400 hover:bg-white/10 transition-all">
+                                <i data-lucide="message-square" class="w-4 h-4"></i>
+                                89 Comments
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="showToast('Saved to bookmarks! 📌','success')" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-sm text-zinc-400 hover:bg-white/10 transition-all">
+                                <i data-lucide="bookmark" class="w-4 h-4"></i>
+                                Save
+                            </button>
+                            <button onclick="handleShare()" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-sm text-zinc-400 hover:bg-white/10 transition-all">
+                                <i data-lucide="share-2" class="w-4 h-4"></i>
+                                Share
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Comments Section -->
+                    <div class="mt-10">
+                        <h3 class="text-lg font-medium mb-6">Discussion (89)</h3>
+                        <div class="flex items-start gap-3 mb-8">
+                            <div class="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="user" class="w-4 h-4 text-zinc-500"></i>
+                            </div>
+                            <div class="flex-1">
+                                <textarea rows="3" placeholder="Share your thoughts..." class="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-sm text-zinc-300 placeholder:text-zinc-600 outline-none focus:border-emerald-500/30 transition-colors resize-none leading-relaxed"></textarea>
+                                <div class="flex justify-end mt-2">
+                                    <button onclick="showToast('Comment posted! 💬','success')" class="px-4 py-1.5 rounded-lg bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">Post Comment</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sample comments -->
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-3">
+                                <img src="https://picsum.photos/seed/commenter1/40/40.jpg" class="w-9 h-9 rounded-full object-cover flex-shrink-0">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-sm font-medium">Arjun M.</span>
+                                        <span class="text-[10px] text-zinc-600">3h ago</span>
+                                    </div>
+                                    <p class="text-sm text-zinc-400 leading-relaxed">The state transition diagram is exactly what I needed. I've been struggling to visualize how DP states connect — this makes it click. Any chance you could do one for Matrix Chain Multiplication?</p>
+                                    <div class="flex items-center gap-3 mt-2">
+                                        <button class="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1">
+                                            <i data-lucide="arrow-up" class="w-3 h-3"></i>24</button>
+                                        <button class="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Reply</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <img src="https://picsum.photos/seed/commenter2/40/40.jpg" class="w-9 h-9 rounded-full object-cover flex-shrink-0">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-sm font-medium">Sneha R.</span>
+                                        <span class="text-[10px] text-zinc-600">5h ago</span>
+                                    </div>
+                                    <p class="text-sm text-zinc-400 leading-relaxed">Downloaded the PDF — the practice roadmap at the end is gold. Week 3-4 is exactly where I'm stuck. Starting the 2D DP section today 🚀</p>
+                                    <div class="flex items-center gap-3 mt-2">
+                                        <button class="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1">
+                                            <i data-lucide="arrow-up" class="w-3 h-3"></i>18</button>
+                                        <button class="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Reply</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </article>
+            </main>
+
+            <!-- RIGHT: Recommendations (sticky) -->
+            <aside
+                class="hidden lg:block w-72 flex-shrink-0 sticky top-14 h-[calc(100vh-56px)] overflow-y-auto py-8 pr-6">
+                <!-- Resource Info -->
+                <div class="glass rounded-xl p-4 mb-5">
+                    <div class="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-3">Resource Info</div>
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-zinc-500">Type</span>
+                            <span class="text-xs text-orange-400 font-medium">PDF + Article</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-zinc-500">Pages</span>
+                            <span class="text-xs text-zinc-300">42</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-zinc-500">File Size</span>
+                            <span class="text-xs text-zinc-300">3.8 MB</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-zinc-500">Read Time</span>
+                            <span class="text-xs text-zinc-300">15 min</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-zinc-500">Published</span>
+                            <span class="text-xs text-zinc-300">Jun 24, 2026</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-zinc-500">Views</span>
+                            <span class="text-xs text-zinc-300">3,247</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Resources -->
+                <div class="mb-5">
+                    <div class="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-3 px-1">Related Resources</div>
+                    <div class="space-y-3">
+
+                        <a href="#" class="rec-card block p-3 rounded-xl glass">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Blog</span>
+                                <span class="text-[9px] text-zinc-600">8 min read</span>
+                            </div>
+                            <h4 class="text-xs font-medium leading-snug mb-1.5 line-clamp-2">Why Graph Problems Terrify Beginners (And Shouldn't)</h4>
+                            <div class="flex items-center gap-1.5 text-[10px] text-zinc-500">
+                                <i data-lucide="arrow-up" class="w-3 h-3"></i>178
+                                <span class="text-zinc-700">•</span>
+                                <span>Ankit G.</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="rec-card block p-3 rounded-xl glass">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-orange-500/10 text-orange-400 border border-orange-500/20">PDF</span>
+                                <span class="text-[9px] text-zinc-600">78 pages</span>
+                            </div>
+                            <h4 class="text-xs font-medium leading-snug mb-1.5 line-clamp-2">System Design Primer: Distributed Systems Notes</h4>
+                            <div class="flex items-center gap-1.5 text-[10px] text-zinc-500">
+                                <i data-lucide="arrow-up" class="w-3 h-3"></i>445
+                                <span class="text-zinc-700">•</span>
+                                <span>Rahul V.</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="rec-card block p-3 rounded-xl glass">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20">Image</span>
+                                <span class="text-[9px] text-zinc-600">Flowchart</span>
+                            </div>
+                            <h4 class="text-xs font-medium leading-snug mb-1.5 line-clamp-2">Sorting Algorithms Comparison Chart</h4>
+                            <div class="flex items-center gap-1.5 text-[10px] text-zinc-500">
+                                <i data-lucide="arrow-up" class="w-3 h-3"></i>334
+                                <span class="text-zinc-700">•</span>
+                                <span>Meera P.</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="rec-card block p-3 rounded-xl glass">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Blog</span>
+                                <span class="text-[9px] text-zinc-600">12 min read</span>
+                            </div>
+                            <h4 class="text-xs font-medium leading-snug mb-1.5 line-clamp-2">How I Cracked Google SDE Interview: Real Experience</h4>
+                            <div class="flex items-center gap-1.5 text-[10px] text-zinc-500">
+                                <i data-lucide="arrow-up" class="w-3 h-3"></i>891
+                                <span class="text-zinc-700">•</span>
+                                <span>Sarah C.</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="rec-card block p-3 rounded-xl glass">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Link</span>
+                                <span class="text-[9px] text-zinc-600">neetcode.io</span>
+                            </div>
+                            <h4 class="text-xs font-medium leading-snug mb-1.5 line-clamp-2">NeetCode 150 — The Ultimate Blind 75 Expansion</h4>
+                            <div class="flex items-center gap-1.5 text-[10px] text-zinc-500">
+                                <i data-lucide="arrow-up" class="w-3 h-3"></i>198
+                                <span class="text-zinc-700">•</span>
+                                <span>Ankit G.</span>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div>
+                    <div class="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-3 px-1">Tags</div>
+                    <div class="flex flex-wrap gap-1.5">
+                        <a href="#" class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors">#dp</a>
+                        <a href="#" class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors">#cheatsheet</a>
+                        <a href="#" class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors">#interview-prep</a>
+                        <a href="#" class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors">#dynamic-programming</a>
+                        <a href="#" class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors">#patterns</a>
+                        <a href="#" class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors">#knapsack</a>
+                        <a href="#" class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors">#lcs</a>
+                        <a href="#" class="px-2 py-1 rounded text-[10px] bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors">#fibonacci</a>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="border-t border-white/5 py-8 px-6">
+            <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-zinc-800 flex items-center justify-center">
+                        <i data-lucide="zap" class="w-3 h-3 text-emerald-400"></i>
+                    </div>
+                    <span class="text-[10px] text-zinc-600">© 2025 ErithX. Built for students, backed by pros.</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="#" class="text-zinc-600 hover:text-zinc-400 transition-colors">
+                        <i data-lucide="twitter" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#" class="text-zinc-600 hover:text-zinc-400 transition-colors">
+                        <i data-lucide="github" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#" class="text-zinc-600 hover:text-zinc-400 transition-colors">
+                        <i data-lucide="linkedin" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            // ============= READING PROGRESS BAR =============
+            window.addEventListener('scroll', () => {
+                const article = document.getElementById('articleBody');
+                if (! article) 
+                    return;
+                
+                const rect = article.getBoundingClientRect();
+                const articleHeight = article.offsetHeight;
+                const viewportHeight = window.innerHeight;
+                const scrolled = viewportHeight - rect.top;
+                const progress = Math.min(Math.max(scrolled / articleHeight, 0), 1);
+                document.getElementById('progressBar').style.width = (progress * 100) + '%';
+            });
+
+            // ============= TABLE OF CONTENTS - ACTIVE TRACKING =============
+            function updateTOC() {
+                const headings = document.querySelectorAll('.article-body h2[id], .article-body h3[id]');
+                const tocLinks = document.querySelectorAll('#tocNav .toc-link');
+                let activeId = '';
+
+                headings.forEach(h => {
+                    const rect = h.getBoundingClientRect();
+                    if (rect.top<= 120) {
+      activeId = h.id;
+    }
+  });
+
+  tocLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === '#' + activeId) {
+                            link.classList.add('active');
+                        }
+                    }) 
+                    
+                }
+                window.addEventListener('scroll', updateTOC);
+
+                // ============= FONT SIZE TOGGLE =============
+                    let fontLevel = 0;
+                const fontSizes = [17, 19, 15];
+                const fontLabels = ['Aa', 'Aa+', 'Aa-'];
+
+                function toggleFont() {
+                    fontLevel = (fontLevel + 1) % 3;
+                    document.querySelector('.article-body').style.fontSize = fontSizes[fontLevel] + 'px';
+                    document.getElementById('fontLabel').textContent = fontLabels[fontLevel];
+                    showToast(`Font size: ${
+                        fontSizes[fontLevel]
+                    }px`, 'success');
+                }
+
+                // ============= UPVOTE =============
+                function handleUpvote(btn) {
+                    const count = btn.querySelector('.upvote-count');
+                    const current = parseInt(count.textContent);
+                    if (btn.classList.contains('upvoted')) {
+                        count.textContent = current - 1;
+                        btn.classList.remove('upvoted');
+                        btn.style.background = '';
+                        btn.style.borderColor = '';
+                        btn.style.color = '';
+                    } else {
+                        count.textContent = current + 1;
+                        btn.classList.add('upvoted');
+                        btn.style.background = 'rgba(16,185,129,0.1)';
+                        btn.style.borderColor = 'rgba(16,185,129,0.2)';
+                        btn.style.color = '#34d399';
+                    }
+                }
+
+                // ============= SHARE =============
+                function handleShare() {
+                    if (navigator.share) {
+                        navigator.share({title: 'Mastering Dynamic Programming: A Visual Guide', url: window.location.href});
+                    } else {
+                        navigator.clipboard.writeText(window.location.href);
+                        showToast('Link copied to clipboard! 🔗', 'success');
+                    }
+                }
+
+                // ============= TOAST =============
+                function showToast(message, type = 'success') {
+                    const container = document.getElementById('toast-container');
+                    const toast = document.createElement('div');
+                    const bgColor = type === 'success' ? 'rgba(16,185,129,0.1)' : 'rgba(249,115,22,0.1)';
+                    const borderColor = type === 'success' ? 'rgba(16,185,129,0.2)' : 'rgba(249,115,22,0.2)';
+                    const textColor = type === 'success' ? '#34d399' : '#fb923c';
+
+                    toast.className = 'toast';
+                    toast.innerHTML = `
+    <div class="px-4 py-3 rounded-xl backdrop-blur-md text-xs font-medium flex items-center gap-2" style="background:${bgColor};border:1px solid ${borderColor};color:${textColor};">
+      <i data-lucide="${
+                        type === 'success' ? 'check-circle' : 'alert-circle'
+                    }" class="w-4 h-4"></i>
+      ${message}
+    </div>
+  `;
+                    container.appendChild(toast);
+                    lucide.createIcons();
+                    setTimeout(() => toast.remove(), 3000);
+                }
+
+                // ============= INIT =============
+                    lucide.createIcons();
+                </script>
+
+            </body>
+        </html>
+        </html>
+    </body>
+</html>

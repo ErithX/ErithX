@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Submitted Preview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .confetti { position: absolute; pointer-events: none; }
+    .c-1 { width: 8px; height: 8px; background: #ff5b5b; transform: rotate(45deg); top: 15%; left: 10%; }
+    .c-2 { width: 6px; height: 6px; background: #3b82f6; border-radius: 50%; top: 20%; left: 30%; }
+    .c-3 { width: 10px; height: 10px; background: #fbbf24; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); top: 35%; left: 15%; }
+    .c-4 { width: 8px; height: 8px; background: #34d399; transform: rotate(15deg); top: 10%; right: 25%; }
+    .c-5 { width: 7px; height: 7px; background: #8b5cf6; border-radius: 50%; top: 30%; right: 10%; }
+    .c-6 { width: 8px; height: 8px; background: #fbbf24; transform: rotate(45deg); top: 50%; left: 5%; }
+    .c-7 { width: 6px; height: 6px; background: #ff5b5b; border-radius: 50%; top: 60%; right: 15%; }
+    .c-8 { width: 10px; height: 10px; border: 2px solid #8b5cf6; border-radius: 50%; top: 15%; left: 45%; }
+    .wave-bg {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 80px; z-index: 0;
+      background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg"><path d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z" fill="%23f8fafc"/></svg>') no-repeat bottom;
+      background-size: cover;
+    }
+  </style>
+</head>
+<body class="bg-[#f1f5f9] text-[#1e293b] h-screen flex items-center justify-center p-4 overflow-hidden">
+
+  <!-- Reduced max-width to max-w-3xl and padding -->
+  <div class="max-w-[850px] w-full bg-white rounded-[2rem] shadow-xl overflow-hidden relative flex flex-col max-h-[90vh]">
+    
+    <!-- Top Section (White background with confetti) -->
+    <div class="p-6 md:p-8 relative flex-1">
+      <!-- Confetti -->
+      <div class="confetti c-1"></div><div class="confetti c-2"></div><div class="confetti c-3"></div>
+      <div class="confetti c-4"></div><div class="confetti c-5"></div><div class="confetti c-6"></div>
+      <div class="confetti c-7"></div><div class="confetti c-8"></div>
+      
+      <div class="grid md:grid-cols-2 gap-4 items-center relative z-10 h-full">
+        
+        <!-- Left Content -->
+        <div class="space-y-3">
+          <div class="w-12 h-12 bg-[#22c55e] rounded-full flex items-center justify-center shadow-[0_8px_20px_rgba(34,197,94,0.3)] mb-4">
+            <i class="ph-bold ph-check text-white text-xl"></i>
+          </div>
+
+          <div>
+            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-[#1e293b] leading-tight">
+              Your Form <br/>
+              <span class="text-[#22c55e]">Submitted!</span>
+            </h1>
+            <p class="text-slate-500 text-xs md:text-sm leading-relaxed max-w-[280px] mt-3">
+              Thank you for reaching out. We've received your information and will get back to you soon.
+            </p>
+            <div class="mt-4 pt-4">
+              <p class="font-bold text-[#4f46e5] text-sm flex items-center gap-1">
+                Hello there! 👋
+              </p>
+              <p class="text-slate-400 text-xs mt-1">
+                We're excited to connect with you.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Illustration -->
+        <div class="relative h-[180px] md:h-[240px] flex items-center justify-center">
+          <img 
+            src="../public/form-submission-2.webp" 
+            class="object-contain w-full h-full" 
+            alt="Success Illustration" 
+          />
+        </div>
+      </div>
+      
+      <div class="wave-bg"></div>
+    </div>
+
+    <!-- Bottom Section (Light Grayish/Blueish background) -->
+    <div class="bg-[#f8fafc] px-6 md:px-8 pb-8 pt-4 relative z-10">
+      <div class="flex items-center justify-center gap-3 mb-6">
+        <i class="ph-bold ph-arrow-right text-[#22c55e] text-xs"></i>
+        <h3 class="text-[#1e293b] font-bold text-[11px] tracking-wider uppercase">Here's what happens next</h3>
+        <i class="ph-bold ph-arrow-left text-[#22c55e] text-xs"></i>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3">
+        <!-- Card 1 -->
+        <div class="bg-white border border-slate-100 rounded-xl p-4 shadow-sm flex flex-col items-center text-center">
+          <div class="w-8 h-8 bg-emerald-50 rounded-full flex items-center justify-center mb-2">
+            <i class="ph-fill ph-envelope-simple text-[#22c55e] text-lg"></i>
+          </div>
+          <h4 class="font-bold text-[#1e293b] text-[11px] mb-1">Confirmation Email</h4>
+          <p class="text-slate-400 text-[9px] leading-relaxed">
+            You will receive a confirmation email shortly.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white border border-slate-100 rounded-xl p-4 shadow-sm flex flex-col items-center text-center">
+          <div class="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center mb-2">
+            <i class="ph-fill ph-clock text-blue-500 text-lg"></i>
+          </div>
+          <h4 class="font-bold text-[#1e293b] text-[11px] mb-1">Our Team Reviews</h4>
+          <p class="text-slate-400 text-[9px] leading-relaxed">
+            We'll review your details and get in touch.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white border border-slate-100 rounded-xl p-4 shadow-sm flex flex-col items-center text-center">
+          <div class="w-8 h-8 bg-purple-50 rounded-full flex items-center justify-center mb-2">
+            <i class="ph-fill ph-chat-circle-dots text-purple-500 text-lg"></i>
+          </div>
+          <h4 class="font-bold text-[#1e293b] text-[11px] mb-1">Stay Updated</h4>
+          <p class="text-slate-400 text-[9px] leading-relaxed">
+            We'll keep you updated on the next steps.
+          </p>
+        </div>
+      </div>
+
+      <!-- Back to Home Button -->
+      <div class="mt-6 text-center">
+        <a href="#" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#5d5fef] hover:bg-[#4b4dcf] text-white text-xs font-bold transition-all shadow-[0_4px_14px_rgba(93,95,239,0.39)]">
+          Back to Home
+          <i class="ph-bold ph-arrow-right"></i>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

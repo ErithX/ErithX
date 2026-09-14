@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Writing — ErithX</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <style>
+            * {
+                font-family: 'Inter', sans-serif;
+            }
+            body {
+                background: #09090b;
+                color: #fff;
+                overflow-x: hidden;
+            }
+
+            /* The Ambient "Ava" Green Light */
+            .ambient-glow {
+                position: fixed;
+                bottom: -20%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 1200px;
+                height: 800px;
+                background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.03) 40%, transparent 70%);
+                pointer-events: none;
+                z-index: 0;
+                filter: blur(40px);
+            }
+
+            /* Subtle dot grid overlay for texture */
+            .grid-texture {
+                position: fixed;
+                inset: 0;
+                background-image: radial-gradient(rgba(255,255,255,0.015) 1px, transparent 1px);
+                background-size: 24px 24px;
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            /* Custom Scrollbar */
+            ::-webkit-scrollbar {
+                width: 4px;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
+            }
+
+            /* Selection */
+            ::selection {
+                background-color: rgba(16, 185, 129, 0.3);
+                color: white;
+            }
+
+            /* Custom Caret */
+            .editor-container {
+                caret-color: #10b981;
+            }
+
+            /* Typography inside editor */
+            .editor-content {
+                font-size: 20px;
+                line-height: 1.7;
+                color: #d4d4d8;
+                letter-spacing: -0.01em;
+            }
+            .editor-content h1 {
+                font-size: 48px;
+                line-height: 1.1;
+                font-weight: 700;
+                color: #fff;
+                margin-top: 2rem;
+                margin-bottom: 1rem;
+                letter-spacing: -0.03em;
+            }
+            .editor-content h2 {
+                font-size: 32px;
+                line-height: 1.2;
+                font-weight: 600;
+                color: #fff;
+                margin-top: 2.5rem;
+                margin-bottom: 1rem;
+                letter-spacing: -0.02em;
+            }
+            .editor-content h3 {
+                font-size: 24px;
+                line-height: 1.3;
+                font-weight: 600;
+                color: #e4e4e7;
+                margin-top: 2rem;
+                margin-bottom: 0.8rem;
+            }
+            .editor-content p {
+                margin-bottom: 1.5rem;
+            }
+            .editor-content blockquote {
+                border-left: 3px solid rgba(16, 185, 129, 0.5);
+                padding-left: 1.5rem;
+                margin: 2rem 0;
+                font-style: italic;
+                color: #a1a1aa;
+            }
+            .editor-content pre {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                border-radius: 12px;
+                padding: 1.5rem;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 14px;
+                color: #34d399;
+                overflow-x: auto;
+                margin: 2rem 0;
+            }
+            .editor-content code {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.85em;
+                background: rgba(255, 255, 255, 0.06);
+                padding: 0.2em 0.4em;
+                border-radius: 4px;
+                color: #34d399;
+            }
+
+            /* Placeholder effect */
+            [contenteditable][data-placeholder]:empty::before {
+                content: attr(data-placeholder);
+                color: #52525b;
+                pointer-events: none;
+                display: block;
+            }
+
+            /* Floating Toolbar */
+            .floating-toolbar {
+                position: absolute;
+                display: flex;
+                align-items: center;
+                gap: 2px;
+                padding: 6px;
+                background: rgba(20, 20, 23, 0.8);
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 10px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                opacity: 0;
+                transform: translateY(10px) scale(0.95);
+                transition: opacity 150ms ease, transform 150ms ease;
+                pointer-events: none;
+                z-index: 50;
+            }
+            .floating-toolbar.active {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                pointer-events: auto;
+            }
+            .toolbar-btn {
+                padding: 6px;
+                border-radius: 6px;
+                color: #a1a1aa;
+                transition: all 150ms ease;
+                cursor: pointer;
+            }
+            .toolbar-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+            }
+
+            /* Blinking cursor for terminal vibe */
+            @keyframes blink {
+                0,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0;
+                }
+            }
+            .cursor-blink {
+                animation: blink 1s step-end infinite;
+            }
+        </style>
+    </head>
+    <body
+        class="min-h-screen">
+
+        <!-- Ambient Background Elements -->
+        <div class="grid-texture"></div>
+        <div class="ambient-glow"></div>
+
+        <!-- Floating Toolbar (Appears on text selection) -->
+        <div id="floatingToolbar" class="floating-toolbar">
+            <button class="toolbar-btn" title="Bold">
+                <i data-lucide="bold" class="w-4 h-4"></i>
+            </button>
+            <button class="toolbar-btn" title="Italic">
+                <i data-lucide="italic" class="w-4 h-4"></i>
+            </button>
+            <button class="toolbar-btn" title="Underline">
+                <i data-lucide="underline" class="w-4 h-4"></i>
+            </button>
+            <div class="w-px h-5 bg-white/10 mx-1"></div>
+            <button class="toolbar-btn" title="Heading 1">
+                <i data-lucide="heading-1" class="w-4 h-4"></i>
+            </button>
+            <button class="toolbar-btn" title="Heading 2">
+                <i data-lucide="heading-2" class="w-4 h-4"></i>
+            </button>
+            <div class="w-px h-5 bg-white/10 mx-1"></div>
+            <button class="toolbar-btn" title="Quote">
+                <i data-lucide="quote" class="w-4 h-4"></i>
+            </button>
+            <button class="toolbar-btn" title="Code">
+                <i data-lucide="code" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+        <!-- Editor Container -->
+        <main
+            class="relative z-10 min-h-screen flex flex-col items-center px-6 py-20">
+
+            <!-- The Writing Canvas -->
+            <div
+                class="editor-container w-full max-w-2xl bg-transparent rounded-2xl">
+
+                <!-- Document Type Tag (Terminal Vibe) -->
+                <div class="mb-12 flex items-center gap-2 mono text-xs text-zinc-600 uppercase tracking-widest">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500/50"></span>
+                    <span>document.dsa</span>
+                    <span class="text-zinc-700">·</span>
+                    <span>draft</span>
+                </div>
+
+                <!-- Title Area -->
+                <h1 contenteditable="true" class="editor-content outline-none text-4xl md:text-5xl font-bold text-white tracking-tighter mb-6 w-full" data-placeholder="Title..."></h1>
+
+                <!-- Body Content Area -->
+                <div
+                    contenteditable="true" class="editor-content outline-none w-full pb-20" data-placeholder="Start writing your masterpiece...">
+                    <!-- Example content to show off typography -->
+                    <h2>The Anatomy of a Great Algorithm</h2>
+                    <p>When we think about writing, we often focus on the
+                        <strong>clarity of the message</strong>. But the environment in which we write matters just as much. This editor is designed to be weightless, letting your thoughts float above the ambient glow of the data beneath.</p>
+
+                    <blockquote>Writing is thinking. To write well is to think clearly. That's why it's so hard.</blockquote>
+
+                    <h3>Code as Poetry</h3>
+                    <p>There is a terminal-like purity in clean code. Notice how the syntax feels part of the environment, not foreign to it.</p>
+
+                    <pre><code>def explore_universe():
+    while True:
+        yield beauty</code></pre>
+
+                    <p>Select this text to see the glassmorphic, floating toolbar appear. It feels native, yet entirely modern.</p>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Minimalist Terminal Status Bar -->
+        <footer class="fixed bottom-0 left-0 right-0 z-20 backdrop-blur-md bg-black/30 border-t border-white/5">
+            <div class="max-w-3xl mx-auto px-6 py-2.5 flex items-center justify-between mono text-[10px] uppercase tracking-widest text-zinc-500">
+                <div class="flex items-center gap-4">
+                    <span class="flex items-center gap-1.5">
+                        <i data-lucide="circle" class="w-2 h-2 fill-emerald-500 text-emerald-500"></i>
+                        Saved
+                    </span>
+                    <span class="hidden sm:inline">Words:
+                        <span id="wordCount" class="text-zinc-300">0</span>
+                    </span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="hidden sm:inline">Markdown: ON</span>
+                    <span class="flex items-center">
+                        Editor Ready
+                        <span class="cursor-blink ml-1 text-emerald-400">_</span>
+                    </span>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            lucide.createIcons();
+
+            const editor = document.querySelector('.editor-content[contenteditable="true"]:not([class*="text-4xl"])');
+            const title = document.querySelector('h1[contenteditable="true"]');
+            const toolbar = document.getElementById('floatingToolbar');
+            const wordCountEl = document.getElementById('wordCount');
+
+            // Word Count Logic
+            function updateWordCount() {
+                const text = title.innerText + ' ' + editor.innerText;
+                const words = text.trim().split(/\s+/).filter(word => word.length > 0).length;
+                wordCountEl.textContent = words;
+            }
+
+            document.addEventListener('input', updateWordCount);
+            updateWordCount();
+
+            // Floating Toolbar Logic
+            document.addEventListener('selectionchange', () => {
+                const selection = window.getSelection();
+
+                // Check if selection is inside our editor
+                if (! selection.isCollapsed && editor.contains(selection.anchorNode)) {
+                    const range = selection.getRangeAt(0);
+                    const rect = range.getBoundingClientRect();
+
+                    // Position toolbar above selection
+                    const toolbarWidth = toolbar.offsetWidth;
+                    let left = rect.left + (rect.width / 2) - (toolbarWidth / 2);
+
+                    // Keep toolbar within viewport
+                    if (left < 10) 
+                        left = 10;
+                    
+                    if (left + toolbarWidth > window.innerWidth - 10) 
+                        left = window.innerWidth - toolbarWidth - 10;
+                    
+
+                    const top = rect.top + window.scrollY - toolbar.offsetHeight - 12;
+
+                    toolbar.style.left = `${left}px`;
+                    toolbar.style.top = `${top}px`;
+                    toolbar.classList.add('active');
+                } else {
+                    toolbar.classList.remove('active');
+                }
+            });
+
+            // Click outside to hide toolbar
+            document.addEventListener('click', (e) => {
+                if (! toolbar.contains(e.target)) { // Delay to allow selection to register
+                    setTimeout(() => {
+                        if (window.getSelection().isCollapsed) {
+                            toolbar.classList.remove('active');
+                        }
+                    }, 10);
+                }
+            });
+        </script>
+    </body>
+</html>

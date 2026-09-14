@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Privacy Policy — ErithX</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            * {
+                font-family: 'Inter', sans-serif;
+                -webkit-tap-highlight-color: transparent;
+            }
+            body {
+                background: #09090b;
+                color: #d4d4d8;
+                overflow-x: hidden;
+            }
+            ::selection {
+                background-color: rgb(6, 78, 59);
+                color: white;
+            }
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+            ::-webkit-scrollbar-track {
+                background: #09090b;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #27272a;
+                border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #3f3f46;
+            }
+
+            .grid-bg {
+                background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+                background-size: 32px 32px;
+            }
+
+            /* Smooth anchor scrolling offset for fixed headers */
+            section[id] {
+                scroll-margin-top: 80px;
+            }
+
+            .link-underline {
+                position: relative;
+                display: inline-block;
+            }
+            .link-underline::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 1px;
+                bottom: -1px;
+                left: 0;
+                background: #34d399;
+                transform: scaleX(0);
+                transform-origin: right;
+                transition: transform 0.4s ease;
+            }
+            .link-underline:hover::after {
+                transform: scaleX(1);
+                transform-origin: left;
+            }
+        </style>
+    </head>
+    <body class="min-h-screen">
+
+        <main
+            class="relative">
+            <!-- Background effect -->
+            <div class="absolute inset-0 grid-bg opacity-50"></div>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full opacity-[0.04]" style="background:radial-gradient(circle, #10b981, transparent 70%);filter:blur(80px);"></div>
+
+            <div
+                class="relative z-10 max-w-3xl mx-auto px-6 sm:px-8 py-20 md:py-32">
+
+                <!-- Header -->
+                <header class="mb-16 pb-10 border-b border-white/5">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Legal Document</span>
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tighter text-white mb-4">
+                        Privacy Policy
+                    </h1>
+                    <p class="text-sm text-zinc-500">
+                        Last updated: June 24, 2026
+                    </p>
+                </header>
+
+                <!-- Intro -->
+                <div class="mb-16 text-base text-zinc-400 leading-relaxed">
+                    <p>
+                        At ErithX, accessible from dsaquest.com, the privacy of our visitors is one of our main priorities. This Privacy Policy document outlines the types of information that is collected and recorded by ErithX and how we use it.
+                    </p>
+                    <p class="mt-4">
+                        By using our platform, you hereby consent to our Privacy Policy and agree to its terms.
+                    </p>
+                </div>
+
+                <!-- Sections -->
+                <div
+                    class="space-y-16">
+
+                    <!-- 1. Information We Collect -->
+                    <section id="information-we-collect">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                <i data-lucide="database" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-semibold text-white tracking-tight">1. Information We Collect</h2>
+                        </div>
+                        <div class="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
+                            <p>
+                                We believe in minimal data collection. We only collect your
+                                <span class="text-zinc-200 font-medium">email address</span>
+                                when you log in to our platform.
+                            </p>
+                            <p>
+                                We do not collect sensitive personal information such as phone numbers, physical addresses, or payment details. Our goal is to provide a safe, frictionless experience.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- 2. How We Collect Data -->
+                    <section id="how-we-collect">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                <i data-lucide="log-in" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-semibold text-white tracking-tight">2. How We Collect Data</h2>
+                        </div>
+                        <div class="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
+                            <p>
+                                We collect your email address automatically when you choose to sign up or log in using
+                                <span class="text-zinc-200 font-medium">Google Authentication</span>. This process is securely handled by our backend infrastructure partner, Supabase.
+                            </p>
+                            <p>
+                                We do not use invasive tracking cookies to monitor your behavior across other websites. If we implement analytics in the future to understand platform usage, it will be strictly anonymized.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- 3. Why We Need Your Data -->
+                    <section id="why-we-need-data">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                <i data-lucide="mail" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-semibold text-white tracking-tight">3. Why We Need Your Data</h2>
+                        </div>
+                        <div class="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
+                            <p>
+                                The email address we collect is used solely for the following operational purposes:
+                            </p>
+                            <ul class="space-y-2 list-disc list-inside text-zinc-400">
+                                <li>To create and authenticate your user account.</li>
+                                <li>To send you regular contest alerts so you never miss an opportunity.</li>
+                                <li>To send critical updates regarding your account or our terms of service.</li>
+                            </ul>
+                            <p>
+                                We do not use your email for unsolicited marketing, spam, or promotional newsletters from third parties.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- 4. Data Sharing & Disclosure -->
+                    <section id="data-sharing">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                <i data-lucide="lock" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-semibold text-white tracking-tight">4. Data Sharing & Disclosure</h2>
+                        </div>
+                        <div class="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
+                            <p>
+                                We do not share, sell, rent, or trade your personal data with anyone. Your email address is kept strictly internal and is only used to deliver the core features of ErithX.
+                            </p>
+                            <p>
+                                We may share data only if legally compelled to do so by law enforcement or government agencies, though this is highly unlikely for a platform that only stores an email address.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- 5. Data Security -->
+                    <section id="data-security">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                <i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-semibold text-white tracking-tight">5. Data Security</h2>
+                        </div>
+                        <div class="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
+                            <p>
+                                Your data is securely stored and protected by
+                                <span class="text-zinc-200 font-medium">Supabase</span>, an enterprise-grade backend provider that handles all our authentication and database security measures.
+                            </p>
+                            <p>
+                                Supabase employs robust security protocols, including encryption at rest and in transit, ensuring that your email address is protected against unauthorized access, alteration, or disclosure.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- 6. Your Rights -->
+                    <section id="your-rights">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                <i data-lucide="user-check" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-semibold text-white tracking-tight">6. Your Data Rights</h2>
+                        </div>
+                        <div class="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
+                            <p>
+                                You have complete control over your data. Under standard data protection principles, you have the right to:
+                            </p>
+                            <ul class="space-y-2 list-disc list-inside text-zinc-400">
+                                <li>Access the data we hold about you (specifically, your email address).</li>
+                                <li>Request correction of any inaccurate personal data.</li>
+                                <li>Request the deletion of your account and data from our system.</li>
+                            </ul>
+                            <p>
+                                If you wish to exercise any of these rights, simply contact us, and we will process your request immediately without unnecessary delay.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- 7. Changes to This Policy -->
+                    <section id="policy-changes">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                <i data-lucide="refresh-cw" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-semibold text-white tracking-tight">7. Changes to This Policy</h2>
+                        </div>
+                        <div class="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
+                            <p>
+                                We may update our Privacy Policy from time to time as our platform evolves. Any changes will reflect our ongoing commitment to privacy and security.
+                            </p>
+                            <p>
+                                We will notify you of any major changes by posting the new Privacy Policy directly on this page and updating the "Last updated" date at the top. You are advised to review this page periodically for any updates.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- 8. Contact Information -->
+                    <section id="contact">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-semibold text-white tracking-tight">8. Contact Information</h2>
+                        </div>
+                        <div class="space-y-4 pl-2 sm:pl-11 text-sm text-zinc-400 leading-relaxed">
+                            <p>
+                                If you have any questions about this Privacy Policy, or if you wish to request the deletion of your email and account data, please reach out to us directly.
+                            </p>
+                            <div class="mt-4 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10">
+                                <i data-lucide="mail" class="w-4 h-4 text-emerald-400"></i>
+                                <a href="mailto:debjyoti2409@gmail.com" class="text-zinc-200 font-medium link-underline">debjyoti2409@gmail.com</a>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+
+                <!-- Footer Note -->
+                <footer class="mt-20 pt-8 border-t border-white/5 text-center">
+                    <p class="text-[10px] uppercase tracking-widest text-zinc-600">
+                        © 2026 ErithX. Built for students, backed by pros.
+                    </p>
+                </footer>
+
+            </div>
+        </main>
+
+        <script>
+            // ============= INIT ICONS =============
+            lucide.createIcons();
+        </script>
+
+    </body>
+</html>

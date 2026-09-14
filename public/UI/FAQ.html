@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FAQs — ErithX | Coding Contest Tracking & Resources</title>
+        <meta
+        name="description" content="Find answers to common questions about ErithX. Learn how to track coding contests, access semester notes, manage your account, and prepare for tech careers.">
+
+        <!-- SEO: FAQ Schema for Rich Snippets in Google Search -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "What is ErithX?",
+                    "acceptedAnswer": { "@type": "Answer", "text": "ErithX is a modern engineering platform designed to help students track high-quality coding contests, access academic resources, and prepare for tech careers without the boring grind." }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Is this platform free to use?",
+                    "acceptedAnswer": { "@type": "Answer", "text": "Yes, all the features available in Phase 1, including the contest tracker and the resource hub, are completely free for students." }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "What resources can I find here?",
+                    "acceptedAnswer": { "@type": "Answer", "text": "We provide university semester notes, career guidance materials, and production-ready project ideas to help you build a strong portfolio." }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "How do I log in to the platform?",
+                    "acceptedAnswer": { "@type": "Answer", "text": "You can easily sign up or log in using your existing Google account through our secure Supabase authentication." }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "How do you use my email address?",
+                    "acceptedAnswer": { "@type": "Answer", "text": "We only use your email to create your account and send you regular contest alerts. We never sell or share your data with anyone else." }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "How can I request to delete my account and data?",
+                    "acceptedAnswer": { "@type": "Answer", "text": "If you want to delete your account or remove your email from our system, simply send an email to debjyoti2409@gmail.com and we will process it immediately." }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "What features are coming in the future?",
+                    "acceptedAnswer": { "@type": "Answer", "text": "We are working on an analytics hub to track true skill growth, hidden hiring challenge alerts, and professional profile cards to share on social media." }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "How can I report a bug or give feedback?",
+                    "acceptedAnswer": { "@type": "Answer", "text": "You can reach out to us directly via our support email or connect with us on our social media links listed on the Contact Us page." }
+                  }
+                ]
+              }
+        </script>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            * {
+                font-family: 'Inter', sans-serif;
+                -webkit-tap-highlight-color: transparent;
+            }
+            body {
+                background: #ffffff;
+                color: #18181b;
+                overflow-x: hidden;
+            }
+            .font-display {
+                font-family: 'Fraunces', serif;
+                letter-spacing: -0.02em;
+            }
+            ::selection {
+                background-color: #d1fae5;
+                color: #065f46;
+            }
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+            ::-webkit-scrollbar-track {
+                background: #ffffff;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #e4e4e7;
+                border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #d4d4d8;
+            }
+
+            /* Hide default details marker */
+            details summary::-webkit-details-marker {
+                display: none;
+            }
+            details summary {
+                list-style: none;
+                cursor: pointer;
+            }
+
+            /* Accordion smooth animation */
+            details[open] summary .accordion-icon {
+                transform: rotate(45deg);
+            }
+            .accordion-icon {
+                transition: transform 0.3s ease;
+            }
+
+            details .answer-content {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease, padding 0.4s ease;
+            }
+            details[open] .answer-content {
+                max-height: 300px;
+                padding-bottom: 1.5rem;
+            }
+
+            .faq-item {
+                transition: all 300ms ease;
+                border-bottom: 1px solid #f4f4f5;
+            }
+            .faq-item:hover {
+                background-color: #fafafa;
+            }
+        </style>
+    </head>
+    <body class="min-h-screen">
+
+        <main>
+
+            <!-- 1. HERO SECTION WITH TOP IMAGE -->
+            <section class="relative w-full h-[45vh] min-h-[340px] flex items-end overflow-hidden">
+                <img
+                src="https://picsum.photos/seed/faqhero/1600/800.jpg" class="absolute inset-0 w-full h-full object-cover" alt="Frequently Asked Questions">
+
+                <!-- Gradient Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent"></div>
+
+                <!-- Overlay Text Content -->
+                <div class="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 pb-12 md:pb-16 w-full">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-white/90">Support Center</span>
+                    </div>
+
+                    <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-medium text-white mb-4 leading-[1.05]">
+                        Frequently asked
+                        <em class="font-normal text-emerald-400">questions.</em>
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-zinc-200 leading-relaxed max-w-xl">
+                        Everything you need to know about ErithX, contest tracking, and your account.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 2. FAQ ACCORDION SECTION -->
+            <section class="py-20 md:py-32">
+                <div
+                    class="max-w-3xl mx-auto px-6 sm:px-8">
+
+                    <!-- SEO-friendly Accordion using native HTML details/summary -->
+                    <div
+                        class="bg-white rounded-2xl border border-zinc-100 overflow-hidden shadow-sm">
+
+                        <!-- Item 1 -->
+                        <details class="faq-item group" open>
+                            <summary class="flex items-center justify-between p-6 sm:p-8">
+                                <h2 class="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What is ErithX?</h2>
+                                <div class="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                                    <i data-lucide="plus" class="w-4 h-4 text-zinc-600"></i>
+                                </div>
+                            </summary>
+                            <div class="answer-content px-6 sm:px-8">
+                                <p class="text-sm text-zinc-600 leading-relaxed">
+                                    It is a modern engineering platform designed to help students track high-quality coding contests, access academic resources, and prepare for tech careers without the boring grind. We focus on preparation with intent, not burnout.
+                                </p>
+                            </div>
+                        </details>
+
+                        <!-- Item 2 -->
+                        <details class="faq-item group">
+                            <summary class="flex items-center justify-between p-6 sm:p-8">
+                                <h2 class="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">Is this platform free to use?</h2>
+                                <div class="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                                    <i data-lucide="plus" class="w-4 h-4 text-zinc-600"></i>
+                                </div>
+                            </summary>
+                            <div class="answer-content px-6 sm:px-8">
+                                <p class="text-sm text-zinc-600 leading-relaxed">
+                                    Yes, all the features available in Phase 1, including the contest tracker and the resource hub, are completely free for students. We believe in building an accessible ecosystem without paywalls.
+                                </p>
+                            </div>
+                        </details>
+
+                        <!-- Item 3 -->
+                        <details class="faq-item group">
+                            <summary class="flex items-center justify-between p-6 sm:p-8">
+                                <h2 class="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What resources can I find here?</h2>
+                                <div class="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                                    <i data-lucide="plus" class="w-4 h-4 text-zinc-600"></i>
+                                </div>
+                            </summary>
+                            <div class="answer-content px-6 sm:px-8">
+                                <p class="text-sm text-zinc-600 leading-relaxed">
+                                    We provide university semester notes, career guidance materials, and production-ready project ideas to help you build a strong portfolio. All resources are curated by verified industry professionals and top students.
+                                </p>
+                            </div>
+                        </details>
+
+                        <!-- Item 4 -->
+                        <details class="faq-item group">
+                            <summary class="flex items-center justify-between p-6 sm:p-8">
+                                <h2 class="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How do I log in to the platform?</h2>
+                                <div class="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                                    <i data-lucide="plus" class="w-4 h-4 text-zinc-600"></i>
+                                </div>
+                            </summary>
+                            <div class="answer-content px-6 sm:px-8">
+                                <p class="text-sm text-zinc-600 leading-relaxed">
+                                    You can easily sign up or log in using your existing Google account through our secure Supabase authentication. No need to remember another password—just one click and you're in.
+                                </p>
+                            </div>
+                        </details>
+
+                        <!-- Item 5 -->
+                        <details class="faq-item group">
+                            <summary class="flex items-center justify-between p-6 sm:p-8">
+                                <h2 class="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How do you use my email address?</h2>
+                                <div class="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                                    <i data-lucide="plus" class="w-4 h-4 text-zinc-600"></i>
+                                </div>
+                            </summary>
+                            <div class="answer-content px-6 sm:px-8">
+                                <p class="text-sm text-zinc-600 leading-relaxed">
+                                    We only use your email to create your account and send you regular contest alerts. We never sell or share your data with anyone else. Your privacy is paramount to us.
+                                </p>
+                            </div>
+                        </details>
+
+                        <!-- Item 6 -->
+                        <details class="faq-item group">
+                            <summary class="flex items-center justify-between p-6 sm:p-8">
+                                <h2 class="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How can I request to delete my account and data?</h2>
+                                <div class="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                                    <i data-lucide="plus" class="w-4 h-4 text-zinc-600"></i>
+                                </div>
+                            </summary>
+                            <div class="answer-content px-6 sm:px-8">
+                                <p class="text-sm text-zinc-600 leading-relaxed">
+                                    If you want to delete your account or remove your email from our system, simply send an email to
+                                    <a href="mailto:debjyoti2409@gmail.com" class="text-emerald-600 font-medium underline">debjyoti2409@gmail.com</a>
+                                    and we will process it immediately. We believe in the right to be forgotten.
+                                </p>
+                            </div>
+                        </details>
+
+                        <!-- Item 7 -->
+                        <details class="faq-item group">
+                            <summary class="flex items-center justify-between p-6 sm:p-8">
+                                <h2 class="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">What features are coming in the future?</h2>
+                                <div class="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                                    <i data-lucide="plus" class="w-4 h-4 text-zinc-600"></i>
+                                </div>
+                            </summary>
+                            <div class="answer-content px-6 sm:px-8">
+                                <p class="text-sm text-zinc-600 leading-relaxed">
+                                    We are working on an analytics hub to track true skill growth, hidden hiring challenge alerts, and professional profile cards to share on social media. The grand vision is to become the definitive starter pack for every tech student.
+                                </p>
+                            </div>
+                        </details>
+
+                        <!-- Item 8 -->
+                        <details class="faq-item group">
+                            <summary class="flex items-center justify-between p-6 sm:p-8">
+                                <h2 class="font-display text-lg sm:text-xl font-medium text-zinc-900 pr-4">How can I report a bug or give feedback?</h2>
+                                <div class="accordion-icon flex-shrink-0 w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center">
+                                    <i data-lucide="plus" class="w-4 h-4 text-zinc-600"></i>
+                                </div>
+                            </summary>
+                            <div class="answer-content px-6 sm:px-8">
+                                <p class="text-sm text-zinc-600 leading-relaxed">
+                                    You can reach out to us directly via our support email or connect with us on our social media links listed on the Contact Us page. We are an independent project and actively listen to community feedback to shape our roadmap.
+                                </p>
+                            </div>
+                        </details>
+
+                    </div>
+
+                    <!-- Still have questions? CTA -->
+                    <div class="mt-16 text-center bg-zinc-50 border border-zinc-100 rounded-2xl p-10">
+                        <div class="w-12 h-12 rounded-xl bg-white border border-zinc-200 flex items-center justify-center mx-auto mb-5 shadow-sm">
+                            <i data-lucide="help-circle" class="w-5 h-5 text-emerald-600"></i>
+                        </div>
+                        <h3 class="font-display text-2xl font-medium text-zinc-900 mb-2">Still have questions?</h3>
+                        <p class="text-sm text-zinc-500 mb-6 max-w-sm mx-auto">
+                            Can't find the answer you're looking for? Please reach out to our team.
+                        </p>
+                        <a href="#" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-800 transition-colors">
+                            Contact Support
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+        <script>
+            // ============= INIT ICONS =============
+            lucide.createIcons();
+
+            // ============= ACCORDION SINGLE-OPEN BEHAVIOR (Optional but clean) =============
+            document.querySelectorAll('details').forEach((detail) => {
+                detail.addEventListener('toggle', (e) => {
+                    if (detail.open) { // Close all other open details
+                        document.querySelectorAll('details').forEach((d) => {
+                            if (d !== detail && d.open) 
+                                d.open = false;
+                            
+                        });
+                    }
+                });
+            });
+        </script>
+
+    </body>
+</html>
