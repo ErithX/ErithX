@@ -89,7 +89,7 @@ function getLeetCodeMetrics(lcStats: any, degradeSeverity: string[], totalDegrad
     acceptance_rate: lcStats.overview?.acceptanceRate || 0,
     active_days_this_week: activeDays,
     top_topics_focus: topTopics,
-    status: deltaSolved > 5 ? (ratingDelta > 0 ? "Thriving" : "Grinding") : (deltaSolved > 0 ? "Active" : "Stagnant"),
+    status: deltaSolved > 5 ? (ratingDelta > 0 ? "Thriving" : "High Volume") : (deltaSolved > 0 ? "Active" : "Inactive"),
     history: rawHistory
   };
 }
@@ -155,27 +155,23 @@ function getGithubMetrics(ghStats: any, degradeSeverity: string[], totalDegradeS
   const topLang = ghStats.topLanguages && ghStats.topLanguages.length > 0 ? ghStats.topLanguages[0].language : "None";
   const totalContributions = ghStats.overview?.totalContributionsLastYear || 0;
   
-  // Weekly and Monthly tracking
+  // Weekly tracking only (since payload is now restricted to 7 days)
   const recentEvents = ghStats.recentEvents || [];
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-  const oneMonthAgo = new Date();
-  oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
   
   let contributionsThisWeek = 0;
-  let contributionsThisMonth = 0;
   
   for (const event of recentEvents) {
       const eventDate = new Date(event.createdAt);
       if (eventDate > oneWeekAgo) contributionsThisWeek++;
-      if (eventDate > oneMonthAgo) contributionsThisMonth++;
   }
   
   if (totalContributions === 0) {
-      degradeSeverity.push(`No GitHub contributions in the last year. Zero practical coding.`);
+      degradeSeverity.push(`No GitHub contributions in the last year.`);
       totalDegradeScore.value += 15;
   } else if (contributionsThisWeek === 0) {
-      degradeSeverity.push(`Zero GitHub pushes this week. No project work detected.`);
+      degradeSeverity.push(`Zero GitHub pushes this week.`);
       totalDegradeScore.value += 10;
   }
 
@@ -184,10 +180,9 @@ function getGithubMetrics(ghStats: any, degradeSeverity: string[], totalDegradeS
     followers: ghStats.overview?.followers || 0,
     total_contributions_annual: totalContributions,
     contributions_this_week: contributionsThisWeek,
-    contributions_this_month: contributionsThisMonth,
     top_language: topLang,
     public_repos: ghStats.overview?.publicRepos || 0,
-    status: contributionsThisWeek > 0 ? "Active Builder" : (totalContributions > 100 ? "Consistent Builder (Dormant this week)" : "Dormant")
+    status: contributionsThisWeek > 0 ? "Active Builder" : (totalContributions > 100 ? "Consistent Builder (No activity this week)" : "Inactive this week")
   };
 }
 

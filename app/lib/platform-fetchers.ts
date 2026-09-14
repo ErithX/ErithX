@@ -77,42 +77,161 @@ export async function fetchCodeforcesStats(handle: string) {
 
 export async function fetchGithubStats(username: string) {
   try {
-    // Note: In production, pass a GITHUB_TOKEN to avoid 60 req/hr rate limit
-    const headers: any = {
-      'Accept': 'application/vnd.github.v3+json',
-      'User-Agent': 'DSA-Quest-App'
-    };
+    const token = process.env.GITHUB_API_TOKEN;
     
-    if (process.env.GITHUB_API_TOKEN) {
-      headers['Authorization'] = `token ${process.env.GITHUB_API_TOKEN}`;
+    if (!token) {
+      // Fallback to original REST API if no token is provided
+      const headers: any = {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'DSA-Quest-App'
+      };
+
+      const [userRes, reposRes, eventsRes] = await Promise.all([
+        fetch(`https://api.github.com/users/${username}`, { headers }),
+        fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=10`, { headers }),
+        fetch(`https://api.github.com/users/${username}/events/public?per_page=100`, { headers })
+      ]);
+
+      if (!userRes.ok) return null;
+      
+      const user = await userRes.json();
+      const repos = reposRes.ok ? await reposRes.json() : [];
+      const events = eventsRes.ok ? await eventsRes.json() : [];
+
+      const recentEvents = Array.isArray(events) ? events
+        .filter((e: any) => e.type === 'PushEvent' || e.type === 'PullRequestEvent')
+        .map((e: any) => ({
+          type: e.type,
+          repoName: e.repo?.name || '',
+          createdAt: e.created_at
+        })) : [];
+
+      return {
+        user,
+        repos,
+        recentEvents
+      };
     }
 
-    const [userRes, reposRes, eventsRes] = await Promise.all([
-      fetch(`https://api.github.com/users/${username}`, { headers }),
-      fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=10`, { headers }),
-      fetch(`https://api.github.com/users/${username}/events/public?per_page=100`, { headers })
-    ]);
+    // GraphQL Implementation
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `bearer ${token}`,
+      'User-Agent': 'DSA-Quest-App'
+    };
 
-    if (!userRes.ok) return null;
+    const query = `
+      query($username: String!, $from: DateTime!, $to: DateTime!) {
+        user(login: $username) {
+          login
+          name
+          avatarUrl
+          followers { totalCount }
+          repositories(privacy: PUBLIC, orderBy: {field: PUSHED_AT, direction: DESC}, first: 10) {
+            totalCount
+            nodes {
+              name
+              stargazerCount
+              primaryLanguage { name }
+              pushedAt
+            }
+          }
+          contributionsCollection(from: $from, to: $to) {
+            totalCommitContributions
+            totalPullRequestContributions
+            totalIssueContributions
+            restrictedContributionsCount
+            contributionCalendar {
+              totalContributions
+              weeks {
+                contributionDays {
+                  contributionCount
+                  date
+                }
+              }
+            }
+          }
+          # We also need the total for the year for the 'Consistent Builder' check
+          fullYearContributions: contributionsCollection {
+            contributionCalendar {
+              totalContributions
+            }
+          }
+        }
+      }
+    `;
+
+    // Calculate dates for the last 7 days to keep payload minimal for weekly reviews
+    const toDate = new Date();
+    const fromDate = new Date();
+    fromDate.setDate(toDate.getDate() - 7);
+
+    const res = await fetch('https://api.github.com/graphql', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ 
+        query, 
+        variables: { 
+          username,
+          from: fromDate.toISOString(),
+          to: toDate.toISOString()
+        } 
+      })
+    });
+
+    if (!res.ok) return null;
+    const data = await res.json();
     
-    const user = await userRes.json();
-    const repos = reposRes.ok ? await reposRes.json() : [];
-    const events = eventsRes.ok ? await eventsRes.json() : [];
+    if (!data.data || !data.data.user) return null;
+    
+    const userNode = data.data.user;
+    
+    const user = {
+      login: userNode.login,
+      name: userNode.name,
+      avatar_url: userNode.avatarUrl,
+      followers: userNode.followers.totalCount,
+      public_repos: userNode.repositories.totalCount
+    };
+    
+    const repos = userNode.repositories.nodes.map((r: any) => ({
+      name: r.name,
+      stargazers_count: r.stargazerCount,
+      language: r.primaryLanguage ? r.primaryLanguage.name : null,
+      updated_at: r.pushedAt
+    }));
+    
+    // Translate contribution calendar into recentEvents format for backwards compatibility
+    const recentEvents: any[] = [];
+    const calendar = userNode.contributionsCollection.contributionCalendar;
+    
+    if (calendar && calendar.weeks) {
+      calendar.weeks.forEach((week: any) => {
+        week.contributionDays.forEach((day: any) => {
+           if (day.contributionCount > 0) {
+              for (let i = 0; i < day.contributionCount; i++) {
+                recentEvents.push({
+                   type: 'PushEvent',
+                   repoName: 'graphql-contribution',
+                   createdAt: day.date + 'T12:00:00Z' 
+                });
+              }
+           }
+        });
+      });
+    }
 
-    // Filter to only Push and PR events to calculate actual code contributions
-    const recentEvents = Array.isArray(events) ? events
-      .filter((e: any) => e.type === 'PushEvent' || e.type === 'PullRequestEvent')
-      .map((e: any) => ({
-        type: e.type,
-        repoName: e.repo?.name || '',
-        createdAt: e.created_at
-      })) : [];
+    // Inject total contributions for the year so dataFilter.ts logic remains intact
+    const graphqlStats = userNode.contributionsCollection;
+    graphqlStats.totalContributionsLastYear = userNode.fullYearContributions.contributionCalendar.totalContributions;
 
     return {
       user,
       repos,
-      recentEvents
+      recentEvents,
+      graphqlStats: userNode.contributionsCollection
     };
+
   } catch (error) {
     console.error('Error fetching GitHub stats:', error);
     return null;
