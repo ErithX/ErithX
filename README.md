@@ -1,8 +1,15 @@
 # ErithX — Unified Coding Contest Calendar & Placement Prep Platform
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE) [![Stars](https://img.shields.io/github/stars/user-no-18/contest-tracker)](https://github.com/user-no-18/contest-tracker/stargazers) [![Forks](https://img.shields.io/github/forks/user-no-18/contest-tracker)](https://github.com/user-no-18/contest-tracker/network/members) [![Issues](https://img.shields.io/github/issues/user-no-18/contest-tracker)](https://github.com/user-no-18/contest-tracker/issues)
+
 > **Stop juggling 10+ contest sites. Track everything in one place. Get smarter about placement prep.**
 
-🔗 **[Live Platform](https://erithx.dev)** • 📊 **[Performance Analysis](https://erithx.dev/docs/performance-analysis)** • 🏆 **[Live Contest Calendar](https://erithx.dev/contests)** • 📚 **[Resources & Guides](https://erithx.dev/resources)**
+🔗 **[Live Platform](https://erithx.dev)** • 📊 **[Performance Analysis](https://erithx.dev/docs/performance-analysis)** • 🏆 **[Live Contest Calendar](https://erithx.dev/contests)** • [...]
+
+---
+
+## TL;DR
+Unified contest calendar + weekly AI-powered performance reviews — MIT licensed. Live demo: https://erithx.dev
 
 ---
 
@@ -10,12 +17,20 @@
 
 ErithX is an engineering platform built for Indian students and developers who take competitive programming seriously. It combines:
 
-1. **Live Coding Contest Calendar** — Real-time tracking of 10+ platforms (LeetCode, Codeforces, CodeChef, AtCoder, HackerRank, GeeksforGeeks, etc.) with automatic **1-click Google Calendar & iCal sync**
+1. **Live Coding Contest Calendar** — Real-time tracking of 10+ platforms (LeetCode, Codeforces, CodeChef, AtCoder, HackerRank, GeeksforGeeks, etc.) with automatic **1-click Google Calendar & iCal** exports
 2. **Weekly Performance Review** — AI-powered analysis of your LeetCode, Codeforces, and GitHub activity every Sunday
 3. **Placement Prep Resources** — Curated system design, backend architecture, and project blueprint PDFs
 4. **Smart Email Alerts** — Never miss a contest round again
 
 Used by **2,400+ engineering students** across India. **Free to start, no credit card required.**
+
+---
+
+## Preview
+
+![App screenshot](./assets/screenshot.png)
+
+Add a screenshot or GIF at `assets/screenshot.png` to replace the placeholder above. A good preview helps reviewers and contributors evaluate the product quickly.
 
 ---
 
@@ -111,6 +126,8 @@ npm run dev
 - ✅ **Your data stays yours** — Full account deletion available anytime
 - ✅ **Zero tracking cookies** — Analytics for product improvement, never for advertising
 - 📄 **[Privacy Policy](https://erithx.dev/privacy)**
+
+> Note for contributors: use `.env.example` as a template for required environment variables. Never commit secrets — see SECURITY.md for more details.
 
 ---
 
