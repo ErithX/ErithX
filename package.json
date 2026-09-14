@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "echo \"No tests\" && exit 0"
   },
   "dependencies": {
     "@google-analytics/data": "^7.0.0",
@@ -68,13 +69,16 @@
     "url": "git+https://github.com/user-no-18/contest-tracker.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Debjyoti Roy <debjyoti2409@gmail.com> (founder@erithx.dev)",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/user-no-18/contest-tracker/issues"
   },
   "homepage": "https://github.com/user-no-18/contest-tracker#readme",
   "optionalDependencies": {
     "@img/sharp-linux-x64": "^0.35.3"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

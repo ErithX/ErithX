@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -51,9 +52,11 @@ next-env.d.ts
 contest-tracking-app-*.json
 *.json.key
 
-# Document files
-*.docx
-version-3/
+# Temporary build outputs & debugging
+build-output*.txt
+tsc-output.txt
+error.html
+*.log
 
 # Local test & benchmark scripts
 test-*.ts
@@ -64,6 +67,23 @@ test-*.mjs
 test_*.mjs
 ga_report_output.json
 
-# Untracked UI
-public/UI/
+# Scratch & temporary explorations
+/scratch/
+scratch_*.js
+scratch_*.mjs
 fetch_ga4.py
+
+# UI exploration files (use versioned design docs instead)
+UI/Temporary-*.html
+
+# Agent configuration (private)
+.agents/
+
+# Untracked files
+version-3/
+*.png
+payload.json
+check_*.mjs
+check_*.js
+FetchAnalytics.js
+template.html
