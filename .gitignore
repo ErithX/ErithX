@@ -87,3 +87,6 @@ check_*.mjs
 check_*.js
 FetchAnalytics.js
 template.html
+
+# Internal Admin & Business Logic
+.internal/

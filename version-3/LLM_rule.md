@@ -1,1 +1,0 @@
-"Last week maine tumhe kaha tha ki Arrays chhod kar Graphs par focus karo, aur is pure hafte tumne 1 bhi Graph problem touch nahi kiya. Yeh grinding nahi, comfort zone me time waste karna hai."
