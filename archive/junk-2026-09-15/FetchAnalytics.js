@@ -52,5 +52,5 @@ async function runReport() {
   }
 }
 
-// Archived here: archive/junk-2026-09-15/FetchAnalytics.js
-// To restore: git checkout main -- archive/junk-2026-09-15/FetchAnalytics.js
+// Uncomment to run:
+// runReport();
