@@ -66,15 +66,15 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/user-no-18/contest-tracker.git"
+    "url": "git+https://github.com/ErithX/ErithX.git"
   },
   "keywords": [],
   "author": "Debjyoti Roy <debjyoti2409@gmail.com> (founder@erithx.dev)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/user-no-18/contest-tracker/issues"
+    "url": "https://github.com/ErithX/ErithX/issues"
   },
-  "homepage": "https://github.com/user-no-18/contest-tracker#readme",
+  "homepage": "https://github.com/ErithX/ErithX#readme",
   "optionalDependencies": {
     "@img/sharp-linux-x64": "^0.35.3"
   },

@@ -5,7 +5,7 @@ import { UserCoderProfile } from '@/models/UserCoderProfile';
 import { User } from '@/models/User';
 import { generateAIContext } from '@/services/core/dataFilter';
 import { generateWeeklyReview } from '@/services/ai/reviewerRouter';
-import { getLatestUserReview, saveAIReview } from '@/services/ai/reviewStorage';
+import { getLatestUserReview, saveAIReview, getUserReviewCount } from '@/services/ai/reviewStorage';
 import { sendWeeklyReviewEmail } from '@/app/lib/email/emailService';
 import { 
   LeetCodeStats, 
@@ -78,6 +78,9 @@ export async function POST(req: NextRequest) {
                   history: {
                     date: new Date(),
                     totalSolved: overview.find((s: any) => s.difficulty === 'All')?.count || 0,
+                    easy: overview.find((s: any) => s.difficulty === 'Easy')?.count || 0,
+                    medium: overview.find((s: any) => s.difficulty === 'Medium')?.count || 0,
+                    hard: overview.find((s: any) => s.difficulty === 'Hard')?.count || 0,
                     contestRating: lcData.userContestRanking?.rating || 0
                   }
                 }
@@ -140,7 +143,14 @@ export async function POST(req: NextRequest) {
                     rating: userStats.rating || 0,
                     maxRating: userStats.maxRating || 0,
                     rank: userStats.rank || 'unrated'
-                  }
+                  },
+                  recentSubmissions: (cfData.recentSubmissions || []).map((s: any) => ({
+                    title: s.problem?.name || '',
+                    difficulty: s.problem?.rating ? String(s.problem.rating) : '',
+                    status: s.verdict || '',
+                    contestId: s.contestId || 0,
+                    timestamp: new Date((s.creationTimeSeconds || 0) * 1000)
+                  }))
                 },
                 $push: {
                   history: {
@@ -178,19 +188,24 @@ export async function POST(req: NextRequest) {
       career_target: mentorPrefs.goal,
       user_focus: mentorPrefs.focus,
       strictness: mentorPrefs.strictness,
-      admin_note: finalAdminNote
+      admin_note: finalAdminNote,
+      isBaselineReview: !previousReview
     });
 
-    const llmResponse = await generateWeeklyReview(filteredPayload);
+    // Determine if it's time for a Monthly Roadmap (First review, or every 4th review)
+    const reviewHistoryCount = await getUserReviewCount(userId);
+    const isMonthlyRoadmap = reviewHistoryCount === 0 || reviewHistoryCount % 4 === 0;
+
+    const llmResponse = await generateWeeklyReview(filteredPayload, isMonthlyRoadmap);
 
     const savedReview = await saveAIReview({
       userId,
       reviewText: llmResponse.review_text,
       hiddenSummary: llmResponse.hidden_summary,
       targetsSet: llmResponse.targets_set,
+      monthlyRoadmap: llmResponse.monthly_roadmap,
       previousTargets: previousTargets || undefined,
-      royFactorUpdate: llmResponse.roy_factor_update,
-      currentRoyFactor,
+      royFactor: llmResponse.roy_factor,
       modelUsed: llmResponse.model_used,
       promptTokensUsed: llmResponse.prompt_tokens,
       statsSnapshot: filteredPayload,

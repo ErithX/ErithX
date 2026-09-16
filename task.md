@@ -344,16 +344,18 @@ Remaining Vital tasks on 25/07/2026
   - Engineered `/api/user/profiles/verify` supporting real-time edge lookups for GitHub, LeetCode (GraphQL), and Codeforces.
   - Implemented `<ProfileLinkModal />` with debounced micro-spinners, live verified badges, and real avatar previews.
   - Integrated dynamic `<ConnectedProfilesCard />` on `/dashboard` with live sync indicators.
-- [ ] **Milestone 2: Platform Snapshot Scrapers & Deterministic Delta Engine**
+- [x] **Milestone 2: Platform Snapshot Scrapers & Deterministic Delta Engine**
   - [x] Create MongoDB schemas (`models/PlatformStats.ts`) for LeetCode, Codeforces, GitHub, CodeChef.
   - [x] Build API fetchers (`app/lib/platform-fetchers.ts`) for each platform.
   - [x] Implement the Weekly Cron Job endpoint (`app/api/cron/fetch-stats/route.ts`) to fetch all users sequentially.
   - [x] Deterministic progress rules filter (Δ active days, Δ contest rating, Δ hard/medium solves, slacking streaks).
+  - [x] Generic Trend Analyzer (`trendAnalyzer.ts`) replacing seeded labels with raw data arrays.
 - [ ] **Milestone 3: AI Reviewer LLM Reasoning Engine & Superadmin Audit Hub**
   - [x] Brutally honest senior engineer persona with dynamic tone variation and open loop assignments (`services/ai/prompts.ts`).
   - [x] Multi-tier provider fallback router (Llama 3.3 70B ⇄ Gemini 2.5 Flash ⇄ GLM/Nemotron) (`services/ai/reviewerRouter.ts`).
   - [x] AI Review database persistence layer, memory state tracking, and query service (`models/AIReview.ts`, `services/ai/reviewStorage.ts`).
   - [x] Context assembler cron endpoint connecting platform snapshots + previous review memory into LLM router (`app/api/cron/generate-reviews/route.ts`).
+  - [x] Multi-Review Pattern Detector (`patternDetector.ts`) and Variable Reward Weekly Focus Rotation.
   - [x] Unblock Performance Reviews in Production (Enabled DB flags across all 41 users & removed testing email failsafes).
   - [x] Superadmin AI Review Studio & Zero-Risk Verification Pipeline (`/dashboard/admin/reviews` - interactive custom admin note injection, on-demand dry-run generator, live review editor, and verified email dispatcher).
   - [x] Unified Admin Suite Centralization & Minimalist Dark Overhaul (Engineered `<AdminSidebar />`, unified `/dashboard/admin/reviews`, `/users`, `/review`, and `/superadmin` into `/settings` pitch black minimal aesthetic with Roy Factor tracking & past review history switcher).

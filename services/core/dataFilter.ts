@@ -1,15 +1,19 @@
 import { LeetCodeStats, CodeforcesStats, GithubStats, CodeChefStats } from '@/models/PlatformStats';
+import { UserActivity } from '@/models/UserActivity';
+import { computeTrend } from './trendAnalyzer';
+import { detectPatterns } from './patternDetector';
 
 export interface UserFilterConfig {
   id: string; // The user's ID
   is_pro: boolean; // Is the user a paid subscriber?
   admin_note?: string; // Optional note from Superadmin
   previous_recommendation?: string; // Last week's LLM advice to track compliance
-  roy_factor?: number; // Ignorance streak
+  roy_factor?: number; // LLM-decided escalation score (absolute)
   career_target?: string; // User selected career path (FAANG, Startup, etc)
   user_focus?: string; // What the user wants the AI to focus on
   strictness?: string; // Tone of the review
   mentor_id?: string; // Optional mentor ID for progress tracking
+  isBaselineReview?: boolean; // True for a user's first-ever review
 }
 
 // ----------------------------------------------------------------------
@@ -52,11 +56,7 @@ function getLeetCodeMetrics(lcStats: any, degradeSeverity: string[], totalDegrad
   const topTopics = (lcStats.topTags || []).slice(0, 3).map((t: any) => t.tag);
 
   // Degradation rules
-  if (history.length === 1) {
-    // This is the baseline week, so we don't have a previous snapshot to compare against.
-    // We shouldn't penalize them for '0 solved this week' because we don't actually know.
-    // We just established their baseline total today.
-  } else {
+  if (history.length > 1) {
     if (deltaSolved === 0) {
       degradeSeverity.push("0 LeetCode problems solved this week.");
       totalDegradeScore.value += 20;
@@ -70,6 +70,13 @@ function getLeetCodeMetrics(lcStats: any, degradeSeverity: string[], totalDegrad
        totalDegradeScore.value += 10;
     }
   }
+
+  // Trend computation (delegated to trendAnalyzer)
+  const trend_3_weeks = computeTrend(
+    history,
+    { solves_per_week: 'totalSolved', hard_per_week: 'hard' },
+    { rating_per_week: 'contestRating', active_days_per_week: 'activeDays' }
+  );
 
   // Raw History Payload
   // Paid gets all history. Free gets only the last 2 weeks (snapshots).
@@ -89,7 +96,8 @@ function getLeetCodeMetrics(lcStats: any, degradeSeverity: string[], totalDegrad
     acceptance_rate: lcStats.overview?.acceptanceRate || 0,
     active_days_this_week: activeDays,
     top_topics_focus: topTopics,
-    status: deltaSolved > 5 ? (ratingDelta > 0 ? "Thriving" : "High Volume") : (deltaSolved > 0 ? "Active" : "Inactive"),
+    trend_3_weeks: trend_3_weeks,
+    status: deltaSolved > 5 ? (ratingDelta > 0 ? "Thriving" : "High Volume") : (deltaSolved > 0 ? "Active" : "No problems solved this week"),
     history: rawHistory
   };
 }
@@ -102,11 +110,13 @@ function getCodeforcesMetrics(cfStats: any, degradeSeverity: string[], totalDegr
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
   
   let problemsSolvedThisWeek = 0;
+  const contestsEnteredThisWeek = new Set<number>();
   
   const recentSubs = cfStats.recentSubmissions || [];
   for (const sub of recentSubs) {
-    if (new Date(sub.timestamp) > oneWeekAgo && sub.status === "OK") {
+    if (new Date(sub.timestamp) > oneWeekAgo && (sub.status === "OK" || sub.verdict === "OK")) {
       problemsSolvedThisWeek++;
+      if (sub.contestId) contestsEnteredThisWeek.add(sub.contestId);
     }
   }
 
@@ -115,13 +125,19 @@ function getCodeforcesMetrics(cfStats: any, degradeSeverity: string[], totalDegr
      totalDegradeScore.value += 10;
   }
 
+  // Trend computation (delegated to trendAnalyzer)
+  const history = cfStats.history || [];
+  const trend_3_weeks = computeTrend(history, {}, { rating_per_week: 'rating' });
+
   return {
     current_rating: cfStats.rating || 0,
     max_rating: cfStats.maxRating || 0,
     rank: cfStats.rank || 'unrated',
     contribution: cfStats.contribution || 0,
     problems_solved_this_week: problemsSolvedThisWeek,
-    status: problemsSolvedThisWeek > 0 ? "Active" : "Inactive"
+    contests_entered_this_week: contestsEnteredThisWeek.size,
+    trend_3_weeks: trend_3_weeks,
+    status: problemsSolvedThisWeek > 0 ? "Active" : "No problems solved this week"
   };
 }
 
@@ -139,13 +155,18 @@ function getCodeChefMetrics(ccStats: any, degradeSeverity: string[], totalDegrad
     }
   }
 
+  // Trend computation (delegated to trendAnalyzer)
+  const history = ccStats.history || [];
+  const trend_3_weeks = computeTrend(history, {}, { rating_per_week: 'rating' });
+
   return {
     current_rating: ccStats.rating || 0,
     max_rating: ccStats.maxRating || 0,
     stars: ccStats.stars || '1★',
     global_rank: ccStats.globalRank || 0,
     problems_solved_this_week: problemsSolvedThisWeek,
-    status: problemsSolvedThisWeek > 0 ? "Active" : "Inactive"
+    trend_3_weeks: trend_3_weeks,
+    status: problemsSolvedThisWeek > 0 ? "Active" : "No problems solved this week"
   };
 }
 
@@ -175,6 +196,14 @@ function getGithubMetrics(ghStats: any, degradeSeverity: string[], totalDegradeS
       totalDegradeScore.value += 10;
   }
 
+  // Trend computation (delegated to trendAnalyzer)
+  const history = ghStats.history || [];
+  const trend_3_weeks = computeTrend(
+    history,
+    {},
+    { contributions_per_week: 'totalContributions', repos_per_week: 'publicRepos' }
+  );
+
   return {
     total_stars: ghStats.overview?.totalStars || 0,
     followers: ghStats.overview?.followers || 0,
@@ -182,7 +211,8 @@ function getGithubMetrics(ghStats: any, degradeSeverity: string[], totalDegradeS
     contributions_this_week: contributionsThisWeek,
     top_language: topLang,
     public_repos: ghStats.overview?.publicRepos || 0,
-    status: contributionsThisWeek > 0 ? "Active Builder" : (totalContributions > 100 ? "Consistent Builder (No activity this week)" : "Inactive this week")
+    trend_3_weeks: trend_3_weeks,
+    status: contributionsThisWeek > 0 ? "Active Builder" : (totalContributions > 100 ? "Consistent Builder (No activity this week)" : "No activity this week")
   };
 }
 
@@ -196,6 +226,14 @@ export async function generateAIContext(userConfig: UserFilterConfig) {
   const cfStats = await CodeforcesStats.findOne({ userId: userConfig.id }).lean();
   const ghStats = await GithubStats.findOne({ userId: userConfig.id }).lean();
   const ccStats = await CodeChefStats.findOne({ userId: userConfig.id }).lean();
+  
+  // fetching platform activity
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const recentActivities = await UserActivity.find({ 
+    userId: userConfig.id,
+    createdAt: { $gt: oneWeekAgo }
+  }).lean();
 
   // json intiializing
   const filteredJSON: any = {
@@ -205,9 +243,14 @@ export async function generateAIContext(userConfig: UserFilterConfig) {
     user_focus: userConfig.user_focus || '',
     strictness: userConfig.strictness || 'Normal',
     generated_at: new Date().toISOString(),
-    summary: {},
     calculations: {}
   };
+
+  // First-ever review guard: lets the prompt force roy_factor 0 even for
+  // ghost users so a brand-new user never gets escalated unfairly (Bug 3 fix).
+  if (userConfig.isBaselineReview) {
+    filteredJSON.is_baseline_review = true;
+  }
 
   // my inject review
   if (userConfig.admin_note && userConfig.admin_note.trim() !== '') {
@@ -242,41 +285,53 @@ export async function generateAIContext(userConfig: UserFilterConfig) {
   if (filteredJSON.github) activePlatforms++;
 
   if (activePlatforms === 0) {
-      filteredJSON.summary.progress_level = "Ghost";
       filteredJSON.calculations.overall_progress_score = 0;
+      filteredJSON.calculations.active_platforms = 0;
   } else {
-      // Base score 100, minus degrade severity
+      // Raw score 0-100. The LLM interprets what this means — we do NOT label it.
       let progressScore = 100 - totalDegradeScore.value;
       if (progressScore < 0) progressScore = 0;
-      
-      let trend = "Steady";
-      if (progressScore >= 90) trend = "Improving Rapidly";
-      else if (progressScore >= 70) trend = "Steady Growth";
-      else if (progressScore >= 50) trend = "Stagnant";
-      else trend = "Declining";
-
-      filteredJSON.summary.progress_level = trend;
       filteredJSON.calculations.overall_progress_score = progressScore;
       filteredJSON.calculations.active_platforms = activePlatforms;
+  }
+
+  // On-Platform Behavior
+  if (recentActivities.length > 0) {
+    const activityTypes = [...new Set(recentActivities.map((a: any) => a.type))];
+    filteredJSON.erithx_activity = {
+      activities_count: recentActivities.length,
+      activity_types: activityTypes
+    };
+  }
+
+  // Multi-Review Pattern Detection (delegated to patternDetector)
+  const patterns = await detectPatterns(userConfig.id);
+  if (patterns) {
+    filteredJSON.historical_patterns = patterns;
   }
 
   // Degrade Report Finalization
   if (degradeSeverity.length > 0) {
     filteredJSON.degrade_report = {
-      is_degrading: totalDegradeScore.value > 30,
       severity_score: totalDegradeScore.value,
       severity: degradeSeverity
     };
-  } else {
-    filteredJSON.degrade_report = {
-      is_degrading: false,
-      severity_score: 0,
-      severity: ["No significant degradation detected. User is on track."]
-    };
   }
 
-  // NOTE: Masking layer for Free users is DISABLED per user request for initial traction.
-  // All users get the premium deep analysis to maximize the "wow" factor.
+  // Weekly Rotation — controls which enrichment the LLM emphasizes.
+  // Creates variable reward: some weeks it focuses on trends, other weeks on behavior.
+  // The DATA is always complete; only the FOCUS HINT changes.
+  const weekNum = getISOWeekNumber(new Date());
+  const focusTypes = ['velocity_trends', 'platform_behavior', 'historical_patterns'] as const;
+  filteredJSON.review_focus_this_week = focusTypes[weekNum % 3];
 
   return filteredJSON;
+}
+
+// Helper: ISO week number for rotation logic
+function getISOWeekNumber(date: Date): number {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
 }

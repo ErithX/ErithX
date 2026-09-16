@@ -140,7 +140,14 @@ async function handler(request: Request) {
                     rating: userStats.rating || 0,
                     maxRating: userStats.maxRating || 0,
                     rank: userStats.rank || 'unrated'
-                  }
+                  },
+                  recentSubmissions: (cfData.recentSubmissions || []).map((s: any) => ({
+                    title: s.problem?.name || '',
+                    difficulty: s.problem?.rating ? String(s.problem.rating) : '',
+                    status: s.verdict || '',
+                    contestId: s.contestId || 0,
+                    timestamp: new Date((s.creationTimeSeconds || 0) * 1000)
+                  }))
                 },
                 $push: {
                   history: {
@@ -180,7 +187,8 @@ async function handler(request: Request) {
       career_target: mentorPrefs.goal,
       user_focus: mentorPrefs.focus,
       strictness: mentorPrefs.strictness,
-      admin_note: finalAdminNote
+      admin_note: finalAdminNote,
+      isBaselineReview: !previousReview
     });
 
     // C. Call LLM Reasoning Engine (Gemini/Llama)
@@ -193,8 +201,7 @@ async function handler(request: Request) {
       hiddenSummary: llmResponse.hidden_summary,
       targetsSet: llmResponse.targets_set,
       previousTargets: previousTargets || undefined,
-      royFactorUpdate: llmResponse.roy_factor_update,
-      currentRoyFactor,
+      royFactor: llmResponse.roy_factor,
       modelUsed: llmResponse.model_used,
       promptTokensUsed: llmResponse.prompt_tokens,
       statsSnapshot: filteredPayload,

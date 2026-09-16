@@ -56,6 +56,7 @@ const CodeforcesStatsSchema = new mongoose.Schema({
     title: String, 
     difficulty: String, 
     status: String, 
+    contestId: Number,
     timestamp: Date 
   }]
 }, { timestamps: true });

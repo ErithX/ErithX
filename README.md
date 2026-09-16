@@ -1,26 +1,26 @@
-# ErithX — Unified Coding Contest Calendar & Placement Prep Platform
+﻿# ErithX â€” Unified Coding Contest Calendar & Placement Prep Platform
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE) [![Stars](https://img.shields.io/github/stars/user-no-18/contest-tracker)](https://github.com/user-no-18/contest-tracker/stargazers) [![Forks](https://img.shields.io/github/forks/user-no-18/contest-tracker)](https://github.com/user-no-18/contest-tracker/network/members) [![Issues](https://img.shields.io/github/issues/user-no-18/contest-tracker)](https://github.com/user-no-18/contest-tracker/issues)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE) [![Stars](https://img.shields.io/github/stars/ErithX/ErithX)](https://github.com/ErithX/ErithX/stargazers) [![Forks](https://img.shields.io/github/forks/ErithX/ErithX)](https://github.com/ErithX/ErithX/network/members) [![Issues](https://img.shields.io/github/issues/ErithX/ErithX)](https://github.com/ErithX/ErithX/issues)
 
 > **Stop juggling 10+ contest sites. Track everything in one place. Get smarter about placement prep.**
 
-🔗 **[Live Platform](https://erithx.dev)** • 📊 **[Performance Analysis](https://erithx.dev/docs/performance-analysis)** • 🏆 **[Live Contest Calendar](https://erithx.dev/contests)** • [...]
+ðŸ”— **[Live Platform](https://erithx.dev)** â€¢ ðŸ“Š **[Performance Analysis](https://erithx.dev/docs/performance-analysis)** â€¢ ðŸ† **[Live Contest Calendar](https://erithx.dev/contests)** â€¢ [...]
 
 ---
 
 ## TL;DR
-Unified contest calendar + weekly AI-powered performance reviews — MIT licensed. Live demo: https://erithx.dev
+Unified contest calendar + weekly AI-powered performance reviews â€” MIT licensed. Live demo: https://erithx.dev
 
 ---
 
-## 🎯 What is ErithX?
+## ðŸŽ¯ What is ErithX?
 
 ErithX is an engineering platform built for Indian students and developers who take competitive programming seriously. It combines:
 
-1. **Live Coding Contest Calendar** — Real-time tracking of 10+ platforms (LeetCode, Codeforces, CodeChef, AtCoder, HackerRank, GeeksforGeeks, etc.) with automatic **1-click Google Calendar & iCal** exports
-2. **Weekly Performance Review** — AI-powered analysis of your LeetCode, Codeforces, and GitHub activity every Sunday
-3. **Placement Prep Resources** — Curated system design, backend architecture, and project blueprint PDFs
-4. **Smart Email Alerts** — Never miss a contest round again
+1. **Live Coding Contest Calendar** â€” Real-time tracking of 10+ platforms (LeetCode, Codeforces, CodeChef, AtCoder, HackerRank, GeeksforGeeks, etc.) with automatic **1-click Google Calendar & iCal** exports
+2. **Weekly Performance Review** â€” AI-powered analysis of your LeetCode, Codeforces, and GitHub activity every Sunday
+3. **Placement Prep Resources** â€” Curated system design, backend architecture, and project blueprint PDFs
+4. **Smart Email Alerts** â€” Never miss a contest round again
 
 Used by **2,400+ engineering students** across India. **Free to start, no credit card required.**
 
@@ -34,35 +34,35 @@ Add a screenshot or GIF at `assets/screenshot.png` to replace the placeholder ab
 
 ---
 
-## ✨ Key Features
+## âœ¨ Key Features
 
-### 🗓️ Contest Synchronization
+### ðŸ—“ï¸ Contest Synchronization
 - Aggregates contests from **10+ competitive programming platforms**
 - Automatic timezone conversion based on your location
 - 1-click export to **Google Calendar or Apple iCal**
 - Real-time contest status tracking (upcoming, live, concluded)
 
-### 📊 Automated Weekly Reviews
+### ðŸ“Š Automated Weekly Reviews
 - Connects to **LeetCode, Codeforces, and GitHub** public profiles (no password needed)
 - Analyzes your weekly problem difficulty distribution
 - Tracks contest attendance and rating trajectory
 - Generates actionable 7-day improvement targets
 - **Every Sunday at 9:00 PM**: Honest performance verdict + next week's focus areas
 
-### 📚 Engineering Resource Vault
+### ðŸ“š Engineering Resource Vault
 - Professionally curated articles on **system design, backend architecture, database patterns, and full-stack project blueprints**
 - Downloadable **PDFs** for offline study
 - Organized by difficulty and topic
 - Contributor-driven (add your best resources)
 
-### 📧 Smart Notifications
+### ðŸ“§ Smart Notifications
 - Configurable contest reminders (sent before contest starts)
 - Placement season alerts and industry hiring signals
 - Weekly digest of trending problems and solutions
 
 ---
 
-## 🚀 Quick Start
+## ðŸš€ Quick Start
 
 ### For Users
 1. Visit [erithx.dev](https://erithx.dev)
@@ -75,7 +75,7 @@ Add a screenshot or GIF at `assets/screenshot.png` to replace the placeholder ab
 
 ```bash
 # Clone the repository
-git clone https://github.com/user-no-18/contest-tracker.git
+git clone https://github.com/ErithX/ErithX.git
 cd contest-tracker
 
 # Install dependencies
@@ -99,7 +99,7 @@ npm run dev
 
 ---
 
-## 🏗️ Tech Stack
+## ðŸ—ï¸ Tech Stack
 
 - **Frontend**: Next.js 16 (App Router) + TypeScript + Tailwind CSS
 - **Backend**: Supabase (PostgreSQL + Auth + Storage)
@@ -110,34 +110,34 @@ npm run dev
 
 ---
 
-## 📖 Documentation
+## ðŸ“– Documentation
 
-- **[Performance Analysis Guide](https://erithx.dev/docs/performance-analysis)** — Understand how weekly reviews are calculated
-- **[Platform Features](https://erithx.dev/features)** — Full feature walkthrough
-- **[FAQ](https://erithx.dev/faq)** — Common questions about supported platforms, data privacy, and calendar sync
-- **[About Us](https://erithx.dev/about)** — Mission and team background
-
----
-
-## 🔒 Privacy & Security
-
-- ✅ **No password storage** — OAuth only (Google, GitHub)
-- ✅ **Public profiles only** — We never access private repositories or contest solutions
-- ✅ **Your data stays yours** — Full account deletion available anytime
-- ✅ **Zero tracking cookies** — Analytics for product improvement, never for advertising
-- 📄 **[Privacy Policy](https://erithx.dev/privacy)**
-
-> Note for contributors: use `.env.example` as a template for required environment variables. Never commit secrets — see SECURITY.md for more details.
+- **[Performance Analysis Guide](https://erithx.dev/docs/performance-analysis)** â€” Understand how weekly reviews are calculated
+- **[Platform Features](https://erithx.dev/features)** â€” Full feature walkthrough
+- **[FAQ](https://erithx.dev/faq)** â€” Common questions about supported platforms, data privacy, and calendar sync
+- **[About Us](https://erithx.dev/about)** â€” Mission and team background
 
 ---
 
-## 🤝 Contributing
+## ðŸ”’ Privacy & Security
+
+- âœ… **No password storage** â€” OAuth only (Google, GitHub)
+- âœ… **Public profiles only** â€” We never access private repositories or contest solutions
+- âœ… **Your data stays yours** â€” Full account deletion available anytime
+- âœ… **Zero tracking cookies** â€” Analytics for product improvement, never for advertising
+- ðŸ“„ **[Privacy Policy](https://erithx.dev/privacy)**
+
+> Note for contributors: use `.env.example` as a template for required environment variables. Never commit secrets â€” see SECURITY.md for more details.
+
+---
+
+## ðŸ¤ Contributing
 
 We welcome contributions from the community! Whether it's:
-- 📝 Adding new study resources
-- 🐛 Reporting bugs
-- ✨ Suggesting features
-- 🌍 Improving platform for other regions
+- ðŸ“ Adding new study resources
+- ðŸ› Reporting bugs
+- âœ¨ Suggesting features
+- ðŸŒ Improving platform for other regions
 
 **To contribute:**
 
@@ -151,7 +151,7 @@ We welcome contributions from the community! Whether it's:
 
 ---
 
-## 📊 Performance & Analytics
+## ðŸ“Š Performance & Analytics
 
 The platform tracks:
 - Contest participation trends across your cohort
@@ -165,7 +165,7 @@ The platform tracks:
 
 ---
 
-## 🎓 Who is ErithX for?
+## ðŸŽ“ Who is ErithX for?
 
 - **Engineering students** prepping for placements (all years)
 - **Competitive programmers** wanting to optimize their practice routine
@@ -175,21 +175,21 @@ The platform tracks:
 
 ---
 
-## 🆘 Support
+## ðŸ†˜ Support
 
-- **[Contact Us](https://erithx.dev/contact)** — Email support for account issues
-- **[GitHub Issues](https://github.com/user-no-18/contest-tracker/issues)** — Report bugs and feature requests
-- **[Discussions](https://github.com/user-no-18/contest-tracker/discussions)** — Ask questions, share feedback
-
----
-
-## 📜 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file for details.
+- **[Contact Us](https://erithx.dev/contact)** â€” Email support for account issues
+- **[GitHub Issues](https://github.com/ErithX/ErithX/issues)** â€” Report bugs and feature requests
+- **[Discussions](https://github.com/ErithX/ErithX/discussions)** â€” Ask questions, share feedback
 
 ---
 
-## 🌟 Acknowledgments
+## ðŸ“œ License
+
+This project is licensed under the **MIT License** â€” see the [LICENSE](./LICENSE) file for details.
+
+---
+
+## ðŸŒŸ Acknowledgments
 
 - Built by engineers, for engineers
 - Inspired by the placement prep struggles of 2,400+ students
@@ -197,6 +197,6 @@ This project is licensed under the **MIT License** — see the [LICENSE](./LICEN
 
 ---
 
-**Made with ❤️ for the engineering community in India**
+**Made with â¤ï¸ for the engineering community in India**
 
-Last updated: September 2026 | [Star on GitHub](https://github.com/user-no-18/contest-tracker) ⭐
+Last updated: September 2026 | [Star on GitHub](https://github.com/ErithX/ErithX) â­

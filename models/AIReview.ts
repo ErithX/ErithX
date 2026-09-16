@@ -12,7 +12,7 @@ export interface IAIReview extends Document {
   roy_factor: number;
   stats_snapshot?: Record<string, any>;
   admin_note?: string;
-  next_roadmap?: string;
+  monthly_roadmap?: string;
   week_start_date?: Date;
   email_sent: boolean;
   email_sent_at?: Date;
@@ -33,7 +33,7 @@ const AIReviewSchema = new Schema<IAIReview>({
   roy_factor: { type: Number, default: 0 },
   stats_snapshot: { type: Schema.Types.Mixed },
   admin_note: { type: String },
-  next_roadmap: { type: String },
+  monthly_roadmap: { type: String },
   week_start_date: { type: Date, index: true },
   email_sent: { type: Boolean, default: false },
   email_sent_at: { type: Date },

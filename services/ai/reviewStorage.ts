@@ -1,14 +1,15 @@
 import connectToDatabase from "@/app/lib/mongodb";
 import AIReview, { IAIReview } from "@/models/AIReview";
+import { sanitizeBannedWords } from "./sanitize";
 
 export interface SaveReviewParams {
   userId: string;
   reviewText: string;
   hiddenSummary?: string;
   targetsSet: string;
+  monthlyRoadmap?: string;
   previousTargets?: string;
-  royFactorUpdate?: number;
-  currentRoyFactor?: number;
+  royFactor?: number;
   modelUsed: string;
   promptTokensUsed?: number;
   isRoadmap?: boolean;
@@ -19,26 +20,30 @@ export interface SaveReviewParams {
 
 /**
  * Saves a newly generated AI Review to MongoDB.
- * Calculates updated roy_factor based on LLM response.
+ * The roy_factor is decided by the LLM (absolute value, not a delta) and stored
+ * as-is. Only a sanity clamp [0..5] is applied — no deterministic re-calculation
+ * of the LLM's judgment. The review text is post-filtered against banned words
+ * as a safety net for models that don't self-censor perfectly.
  */
 export async function saveAIReview(params: SaveReviewParams): Promise<IAIReview> {
   await connectToDatabase();
 
-  const currentRoy = params.currentRoyFactor ?? 0;
-  const updateDelta = params.royFactorUpdate ?? 0;
-  // Calculate new roy_factor (clamped at minimum 0)
-  const newRoyFactor = Math.max(0, currentRoy + updateDelta);
+  const rawRoy = params.royFactor ?? 0;
+  const roy = Math.min(5, Math.max(0, Math.round(rawRoy)));
+
+  const sanitized = sanitizeBannedWords(params.reviewText);
 
   const review = await AIReview.create({
     user_id: params.userId,
-    generated_text: params.reviewText,
+    generated_text: sanitized.text,
     targets_set: params.targetsSet,
+    monthly_roadmap: params.monthlyRoadmap,
     hidden_summary: params.hiddenSummary,
     previous_targets: params.previousTargets,
     model_used: params.modelUsed,
     prompt_tokens_used: params.promptTokensUsed,
     is_roadmap: params.isRoadmap ?? false,
-    roy_factor: newRoyFactor,
+    roy_factor: roy,
     stats_snapshot: params.statsSnapshot,
     admin_note: params.adminNote,
     week_start_date: params.weekStartDate || new Date(),
@@ -61,6 +66,14 @@ export async function getLatestUserReview(userId: string): Promise<IAIReview | n
     .lean<IAIReview>();
 
   return latest;
+}
+
+/**
+ * Gets the total number of reviews a user has received.
+ */
+export async function getUserReviewCount(userId: string): Promise<number> {
+  await connectToDatabase();
+  return await AIReview.countDocuments({ user_id: userId });
 }
 
 /**

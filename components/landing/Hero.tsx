@@ -37,11 +37,9 @@ export default function Hero() {
           </h1>
 
           <p className="text-[14px] sm:text-base text-zinc-400 leading-relaxed max-w-md sr" style={{ transitionDelay: '200ms' }}>
-            ErithX connects your LeetCode, Codeforces, and GitHub activity and gives you an honest weekly review. You get clear feedback on your habits and a focused plan for the next 7 days, plus a contest calendar with Google sync.
+            ErithX connects your LeetCode, Codeforces, and GitHub activity and gives you an honest weekly review. You get clear feedback on your habits and a focused plan for the next 7 days
           </p>
-          <p className="mt-3 text-sm sm:text-base italic text-zinc-300 sr" style={{ transitionDelay: '260ms' }}>
-            Preparation with intent, not burnout.
-          </p>
+        
 
           <div className="mt-6 md:mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start sr" style={{ transitionDelay: '300ms' }}>
             <AuthCTAButton className="inline-flex items-center gap-2 rounded-xl bg-white px-5 sm:px-6 py-2.5 sm:py-3 text-[14px] sm:text-sm font-semibold sm:font-medium text-zinc-900 shadow-2xl shadow-black/40 transition-transform hover:scale-105">
