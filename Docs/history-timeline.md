@@ -1,4 +1,4 @@
-# DSA Quest - Publishing Checklist
+# ErithX- Publishing Checklist
 
 ## Phase 1 (Immediate Launch Target)
 **Goal:** Bring creators onboard, fill up the resources page, and provide a seamless core experience.
