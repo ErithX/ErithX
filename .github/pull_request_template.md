@@ -22,7 +22,7 @@
 <!-- How did you verify this change? Skip if docs-only PR. -->
 - [ ] Ran `npm run lint`
 - [ ] Ran `npm run test`
-- [ ] Ran `npm run build` (if applicable)
+- [ ] Ran `npm run build` 
 - [ ] Tested locally with `npm run dev`
 <!-- Describe: -->
 
@@ -35,5 +35,3 @@
 - [ ] No secrets or credentials committed
 - [ ] Followed the [Contributing Guidelines](../CONTRIBUTING.md)
 
-## Additional Context
-<!-- Anything else reviewers should know -->
