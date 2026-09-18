@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "echo \"No tests\" && exit 0"
+    "test": "vitest run"
   },
   "dependencies": {
     "@google-analytics/data": "^7.0.0",
@@ -60,7 +60,8 @@
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.2",
     "tailwindcss": "^4.1.18",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
   },
   "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
   "main": "index.js",
