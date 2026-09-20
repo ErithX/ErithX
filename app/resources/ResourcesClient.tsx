@@ -293,7 +293,7 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
           </div>
         </div>
       </section>
-      <Footer />
+ 
     </div>
   );
 }
