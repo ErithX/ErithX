@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "env:pull:prod": "node scripts/pull-production-env.mjs",
+    "env:push:prod": "node scripts/push-production-env.mjs",
+    "vercel:env:pull": "vercel env pull .env.production.local --environment=production"
   },
   "dependencies": {
     "@google-analytics/data": "^7.0.0",
@@ -34,6 +37,7 @@
     "@tiptap/starter-kit": "^2.11.2",
     "@tiptap/suggestion": "^2.11.2",
     "@upstash/qstash": "^2.11.3",
+    "@vercel/sdk": "^1.28.35",
     "date-fns": "^4.4.0",
     "framer-motion": "^13.1.1",
     "highlight.js": "^11.11.1",
