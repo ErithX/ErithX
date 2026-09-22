@@ -38,7 +38,7 @@ export async function DELETE() {
           name: '[Deleted User]',
           email: 'deleted@user.local',
           bio: '',
-          avatarUrl: '',
+          avatar: '',
           // clear other personal fields here
         }
       }
@@ -54,6 +54,32 @@ export async function DELETE() {
       CodeChefStats.deleteMany({ userId: user.id }),
       Notification.deleteMany({ userId: user.id }),
       UserActivity.deleteMany({ userId: user.id }),
+    ]);
+
+    // 3.8. ANONYMIZE DENORMALIZED DATA (Resources & Comments are kept but PII is scrubbed)
+    const { Resource } = await import('@/models/Resource');
+    const Comment = (await import('@/models/Comment')).default;
+
+    await Promise.all([
+      Resource.updateMany(
+        { userId: user.id },
+        { 
+          $set: { 
+            authorName: '[Deleted User]', 
+            authorEmail: 'deleted@user.local', 
+            authorImg: '' 
+          } 
+        }
+      ),
+      Comment.updateMany(
+        { userId: user.id },
+        { 
+          $set: { 
+            authorName: '[Deleted User]', 
+            authorImg: '' 
+          } 
+        }
+      )
     ]);
 
     // 4. Delete from Supabase Auth & Public tables

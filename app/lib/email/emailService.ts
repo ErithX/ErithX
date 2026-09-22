@@ -40,7 +40,7 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, upco
         from: senderEmail,
         to: userEmail,
         subject,
-        react: WelcomeEmail({ userName }) as React.ReactElement,
+        react: <WelcomeEmail userName={userName} />,
       });
 
       if (data.error) {
@@ -77,7 +77,7 @@ export async function sendMentorReportEmail(userEmail: string, userName: string,
       from: 'ErithX Mentor <mentor@erithx.dev>',
       to: userEmail,
       subject: 'Your architecture review is ready',
-      react: MentorReportEmail({ userName, projectTitle, aiFeedbackText }) as React.ReactElement,
+      react: <MentorReportEmail userName={userName} projectTitle={projectTitle} aiFeedbackText={aiFeedbackText} />,
     });
 
     console.log(`Mentor Email sent to ${userEmail}`, data);
@@ -127,7 +127,7 @@ export async function sendContestAlert(
       from: 'ErithX Contests <contest@erithx.dev>',
       to: userEmail,
       subject,
-      react: AlertEmail({ userName, contest }) as React.ReactElement,
+      react: <AlertEmail userName={userName} contest={contest} />,
     });
     console.log(`Alert Email sent to ${userEmail}`, data);
     return { success: true, data };
@@ -281,10 +281,7 @@ export async function sendWeeklyReviewEmail(
       from: 'ErithX Core <mentor@erithx.dev>',
       to: userEmail,
       subject,
-      react: WeeklyPerformanceEmail({ 
-        userName, 
-        previewTextContent: previewSnippet 
-      }) as React.ReactElement,
+      react: <WeeklyPerformanceEmail userName={userName} previewTextContent={previewSnippet} />,
     });
     console.log(`Weekly Performance Email sent to ${userEmail}`, data);
     return { success: true, data };

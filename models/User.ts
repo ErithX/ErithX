@@ -35,7 +35,8 @@ const UserSchema = new mongoose.Schema({
         goal: { type: String, default: 'I want to balance everything' },
         focus: { type: String, default: '' },
         strictness: { type: String, default: 'Normal' }
-    }
+    },
+    isDeleted: { type: Boolean, default: false }
 },{timestamps : true});
 
 export const User = mongoose.models.User || mongoose.model('User' , UserSchema);
