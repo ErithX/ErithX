@@ -83,7 +83,7 @@ export async function GET(request: Request) {
             console.log(`[WELCOME EMAIL] Dispatching welcome email to new user: ${userEmail}`)
             const result = await sendWelcomeEmail(userEmail, userName)
 
-            if (result.success && !result.skipped) {
+            if (result?.success && !result?.skipped) {
               console.log(`[WELCOME EMAIL] Sent successfully to ${userEmail}`)
               await adminSupabase.from('email_logs').insert({
                 user_id: user.id,
@@ -93,15 +93,15 @@ export async function GET(request: Request) {
                 status: 'sent',
                 sent_at: new Date().toISOString(),
               })
-            } else if (!result.skipped) {
-              console.error(`[WELCOME EMAIL] Failed to send to ${userEmail}:`, result.error)
+            } else if (!result?.skipped) {
+              console.error(`[WELCOME EMAIL] Failed to send to ${userEmail}:`, result?.error)
               await adminSupabase.from('email_logs').insert({
                 user_id: user.id,
                 email_type: 'welcome',
                 recipient_email: userEmail,
                 subject: `Hey ${userName || 'Coder'} — a quick note before your first Sunday review`,
                 status: 'failed',
-                error_message: JSON.stringify(result.error || 'Unknown error'),
+                error_message: JSON.stringify(result?.error || 'Unknown error'),
               })
             }
           } else {
