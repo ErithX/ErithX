@@ -1,26 +1,26 @@
-name: Bi-weekly Contest Email Digest
+name: Daily Inactivity Check
 
 on:
   schedule:
-    # Runs twice a week (Tuesday and Friday) at 9:00 PM IST (15:30 UTC)
-    - cron: '30 15 * * 2,5'
+    # Runs every day at 10:00 AM IST (04:30 UTC)
+    - cron: '30 04 * * *'
 
   # Allow manual trigger from GitHub UI
   workflow_dispatch:
 
 jobs:
-  send-emails:
+  run-inactivity-check:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:
-      - name: Trigger Email Cron Job
+      - name: Trigger Inactivity Cron Job
         id: cron
         run: |
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
-            https://contest-tracker-zms3.vercel.app/api/cron/send-emails)
+            https://contest-tracker-zms3.vercel.app/api/cron/inactivity-check)
 
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
           BODY=$(echo "$RESPONSE" | sed '$d')

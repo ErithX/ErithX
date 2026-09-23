@@ -34,6 +34,9 @@ jobs:
       - name: Type check
         run: npx tsc --noEmit
 
+      - name: Build Next.js app
+        run: NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }} NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }} MONGODB_URI=${{ secrets.MONGODB_URI }} NEXT_PUBLIC_APP_URL="http://localhost:3000" npx next build --no-lint
+
       - name: Run unit tests
         run: npm run test
 
