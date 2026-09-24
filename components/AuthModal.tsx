@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, Zap, Loader2, GraduationCap, PenTool } from 'lucide-react';
+import Image from 'next/image';
+import { X, Loader2, GraduationCap, PenTool } from 'lucide-react';
 import { createClient } from '@/app/lib/supabase/client';
 
 interface AuthModalProps {
@@ -55,11 +56,21 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'student' }: 
         </button>
 
         <div className="p-8">
-          <div className="flex items-center gap-2 mb-8">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-              <Zap className="w-4 h-4 text-emerald-400" />
-            </div>
-            <span className="font-semibold text-lg tracking-tight text-white">ErithX</span>
+          <div className="flex items-center gap-3 mb-8">
+            <Image
+              src="/favicon.png"
+              alt="ErithX Icon"
+              width={32}
+              height={32}
+              className="object-contain rounded-lg"
+            />
+            <Image
+              src="/newLogo.png"
+              alt="ErithX Logo"
+              width={80}
+              height={26}
+              className="object-contain"
+            />
           </div>
 
           <h2 className="text-2xl font-medium tracking-tight mb-2 text-white">

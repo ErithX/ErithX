@@ -54,15 +54,12 @@ export default function SettingsPage() {
     focus: '',
     strictness: 'Normal'
   });
-  const [accountInfo] = useState({
-    status: 'active', // active | inactive | pending
-    lastVisit: '2026-08-16T10:00:00Z',
-    plan: 'free',
-    daysRemaining: 0,
-    quota: '3/4 Reviews Used',
-    inactivityDays: 12
+  const [accountInfo, setAccountInfo] = useState({
+    status: 'active' as 'active' | 'inactive' | 'pending',
+    inactivityDays: 0,
   });
   const [isSavingMentor, setIsSavingMentor] = useState(false);
+  const [isRequestingReactivation, setIsRequestingReactivation] = useState(false);
 
   const supabase = createClient();
 
@@ -126,6 +123,15 @@ export default function SettingsPage() {
               strictness: data.profile.mentorPrefs.strictness || 'Normal'
             });
           }
+          // Populate real account info from Supabase
+          const status = data.profile.account_status || 'active';
+          const lastVisit = data.profile.last_dashboard_visit
+            ? new Date(data.profile.last_dashboard_visit)
+            : new Date();
+          const daysSinceVisit = Math.floor((Date.now() - lastVisit.getTime()) / (1000 * 60 * 60 * 24));
+          // Inactivity suspension is at 14 days — show days remaining
+          const inactivityDays = Math.max(0, 14 - daysSinceVisit);
+          setAccountInfo({ status, inactivityDays });
         }
       })
       .catch(() => {});
@@ -278,6 +284,27 @@ export default function SettingsPage() {
     }
   };
 
+  const handleRequestReactivation = async () => {
+    setIsRequestingReactivation(true);
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_status: 'pending' }),
+      });
+      if (res.ok) {
+        setAccountInfo(prev => ({ ...prev, status: 'pending' }));
+        showToast('Reactivation request sent. We\'ll review it shortly.', 'success');
+      } else {
+        showToast('Failed to send request. Try again.', 'error');
+      }
+    } catch {
+      showToast('Failed to send request.', 'error');
+    } finally {
+      setIsRequestingReactivation(false);
+    }
+  };
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = '/';
@@ -375,9 +402,6 @@ export default function SettingsPage() {
                 </button>
                 <button onClick={() => scrollTo('connections')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all ${activeSection === 'connections' ? 'active' : ''}`}>
                   Coding Profiles
-                </button>
-                <button onClick={() => scrollTo('subscription')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all ${activeSection === 'subscription' ? 'active' : ''}`}>
-                  Subscription
                 </button>
                 <button onClick={() => scrollTo('email-prefs')} className={`settings-nav-link w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white rounded-md transition-all ${activeSection === 'email-prefs' ? 'active' : ''}`}>
                   Email Preferences
@@ -521,8 +545,12 @@ export default function SettingsPage() {
                         {accountInfo.status.charAt(0).toUpperCase() + accountInfo.status.slice(1)}
                       </span>
                       {accountInfo.status === 'inactive' && (
-                        <button className="px-3 py-1.5 rounded-lg bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors">
-                          Request Reactivation
+                        <button
+                          onClick={handleRequestReactivation}
+                          disabled={isRequestingReactivation}
+                          className="px-3 py-1.5 rounded-lg bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors disabled:opacity-50"
+                        >
+                          {isRequestingReactivation ? 'Sending...' : 'Request Reactivation'}
                         </button>
                       )}
                     </div>
@@ -554,21 +582,13 @@ export default function SettingsPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <label className="text-sm font-medium text-zinc-200">Current Focus Area</label>
-                        {accountInfo.plan === 'free' && (
-                          <div className="group relative flex items-center">
-                            <Info className="w-4 h-4 text-zinc-500 cursor-help hover:text-zinc-300 transition-colors" />
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 rounded-lg bg-zinc-800 text-xs text-zinc-300 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl border border-zinc-700 z-10 text-center">
-                              Pro unlocks 600 characters and higher LLM priority.
-                            </div>
-                          </div>
-                        )}
                       </div>
                     </div>
                     <p className="text-xs text-zinc-500">Provide direct context on what you are struggling with to guide the AI Review.</p>
                     <div className="relative">
                       <textarea 
                         rows={3} 
-                        maxLength={accountInfo.plan === 'free' ? 160 : 600}
+                        maxLength={160}
                         value={mentorPrefs.focus}
                         onChange={(e) => setMentorPrefs({...mentorPrefs, focus: e.target.value})}
                         placeholder="e.g., I am focusing heavily on Graph Data Structures for the next three weeks." 
@@ -576,11 +596,11 @@ export default function SettingsPage() {
                       />
                     </div>
                     <div className="flex justify-end items-center text-[11px] text-zinc-500 mt-2">
-                      <span className={mentorPrefs.focus.length >= 160 ? "text-amber-500" : ""}>{mentorPrefs.focus.length} / {accountInfo.plan === 'free' ? '160' : '600'} characters</span>
+                      <span className={mentorPrefs.focus.length >= 160 ? "text-amber-500" : ""}>{mentorPrefs.focus.length} / 160 characters</span>
                     </div>
                   </div>
 
-                  {/* Strictness Level */}
+                  {/* Strictness Level - Commented out for now
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 mt-4 border-t border-zinc-800/50">
                     <label className="text-sm font-medium text-zinc-200">Preferred Tone</label>
                     <div className="flex items-center gap-1 p-1 rounded-full bg-zinc-900/50 border border-zinc-800/80">
@@ -599,6 +619,7 @@ export default function SettingsPage() {
                       ))}
                     </div>
                   </div>
+                  */}
                 </div>
               </div>
               <div className="px-6 py-4 border-t border-zinc-800 bg-zinc-900/30 flex items-center justify-end">
@@ -616,7 +637,7 @@ export default function SettingsPage() {
             <CodingProfilesSettings />
 
             {/* SUBSCRIPTION & USAGE SECTION */}
-            <section id="subscription" className="max-w-4xl border border-zinc-800 rounded-lg bg-black overflow-hidden">
+            {/* <section id="subscription" className="max-w-4xl border border-zinc-800 rounded-lg bg-black overflow-hidden">
               <div className="p-6 md:p-8">
                 <h2 className="text-xl font-medium text-zinc-100 mb-6">Account & Subscription</h2>
                 
@@ -646,7 +667,7 @@ export default function SettingsPage() {
                   </button>
                 </div>
               </div>
-            </section>
+            </section> */}
 
             {/* EMAIL PREFERENCES SECTION */}
             <section id="email-prefs" className="max-w-4xl border border-zinc-800 rounded-lg bg-black overflow-hidden">

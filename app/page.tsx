@@ -54,7 +54,7 @@ export default function Home() {
           <Ecosystem />
           {/* <Journey /> */}
           <Stats />
-          <Testimonials />
+          {/* <Testimonials /> */}
           <CTA />
         </main>
         <ContestPrefetch />

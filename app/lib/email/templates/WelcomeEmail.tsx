@@ -18,7 +18,7 @@ interface WelcomeEmailProps {
 }
 
 export const WelcomeEmail = ({ userName = 'Coder' }: WelcomeEmailProps) => {
-  const previewText = `A quick note before your first Sunday review on ErithX`;
+  const previewText = `Welcome to ErithX — giving your coding era real direction.`;
 
   return (
     <Html>
@@ -31,80 +31,77 @@ export const WelcomeEmail = ({ userName = 'Coder' }: WelcomeEmailProps) => {
             supported-color-schemes: light dark;
           }
           @media (prefers-color-scheme: dark) {
-            .dark-text-primary {
-              color: #f3f4f6 !important;
-            }
-            .dark-text-secondary {
-              color: #9ca3af !important;
-            }
-            .dark-text-muted {
-              color: #6b7280 !important;
-            }
-            .dark-border {
-              border-color: #27272a !important;
-            }
+            .dark-bg { background-color: #0a0a0c !important; }
+            .dark-card-bg { background-color: #121216 !important; }
+            .dark-text-primary { color: #ffffff !important; }
+            .dark-text-secondary { color: #a1a1aa !important; }
+            .dark-text-muted { color: #71717a !important; }
+            .dark-border { border-color: #27272a !important; }
+            .dark-red-border { border-color: #ef4444 !important; }
           }
         `}</style>
       </Head>
       <Preview>{previewText}</Preview>
       <Tailwind>
-        <Body className="my-auto mx-auto font-sans px-2" style={{ margin: 'auto', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+        <Body className="my-auto mx-auto font-sans px-2 bg-white dark-bg" style={{ margin: 'auto', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
           <Container className="my-[32px] mx-auto p-[24px] max-w-[500px]">
-            <Heading className="text-[#111827] dark-text-primary text-[20px] font-semibold tracking-tight p-0 my-[16px] mx-0">
-              Welcome inside ✨
-            </Heading>
-            
-            <Text className="text-[#111827] dark-text-primary text-[15px] leading-[24px] mb-[16px]">
+            <Text className="text-[#18181b] dark-text-primary text-[15px] leading-[24px] mb-[12px]">
               Hey {userName},
             </Text>
 
-            <Text className="text-[#4b5563] dark-text-secondary text-[14px] leading-[24px] mb-[20px]">
-              We built ErithX around a simple belief: growing as a software engineer shouldn’t mean grinding in the dark. It’s about steady consistency, working with intent, and actually seeing your progress.
+            <Text className="text-[#3f3f46] dark-text-secondary text-[14px] leading-[23px] mb-[14px]">
+              First, wishing you steady consistency and real momentum on this journey—I genuinely hope this preparation leads straight to your dream SDE role.
             </Text>
 
-            <Section className="border-l-2 border-solid border-[#10b981] pl-[18px] py-[4px] my-[24px]">
-              <Text className="text-[#111827] dark-text-primary text-[14px] font-semibold m-0 mb-[6px]">
-                1. Connect your coding profiles
+            <Text className="text-[#52525b] dark-text-secondary text-[14px] leading-[23px] mb-[20px]">
+              We built ErithX to keep track of your productivity and give real shape to your preparation.
+            </Text>
+
+            <Section className="border-l-[3px] border-solid border-[#ef4444] dark-red-border bg-[#fafafa] dark-card-bg border-t border-r border-b border-t-[#f4f4f5] border-r-[#f4f4f5] border-b-[#f4f4f5] rounded-r-lg px-[16px] py-[14px] my-[24px]">
+              <Text className="text-[#09090b] dark-text-primary text-[14px] font-semibold m-0 mb-[4px]">
+                1. Set your target & link profiles
               </Text>
-              <Text className="text-[#4b5563] dark-text-secondary text-[13px] leading-[20px] m-0 mb-[16px]">
-                Head to <Link href="https://erithx.dev/dashboard/settings" className="text-[#10b981] underline font-medium">Dashboard → Settings → Coding Profiles</Link> and link your LeetCode, Codeforces, GitHub (or any platform you actively use). Takes 30 seconds—only public handles, never passwords.
+              <Text className="text-[#52525b] dark-text-secondary text-[13px] leading-[19px] m-0 mb-[14px]">
+                Head to <Link href="https://erithx.dev/dashboard/settings" className="text-[#ef4444] underline font-semibold">Settings</Link> to choose your career goal (FAANG, Startups, etc.) and link your active handles (LeetCode, GitHub, Codeforces). Takes 30 seconds.
               </Text>
 
-              <Text className="text-[#111827] dark-text-primary text-[14px] font-semibold m-0 mb-[6px]">
+              <Text className="text-[#09090b] dark-text-primary text-[14px] font-semibold m-0 mb-[4px]">
                 2. Watch your inbox this Sunday at 9:00 PM
               </Text>
-              <Text className="text-[#4b5563] dark-text-secondary text-[13px] leading-[20px] m-0">
-                Every Sunday evening, we review your week’s problem-solving rhythm and send you an honest breakdown along with a focused 7-day plan for the week ahead.
+              <Text className="text-[#52525b] dark-text-secondary text-[13px] leading-[19px] m-0">
+                Every Sunday evening, ErithX reviews your rhythm against your chosen target, flags where you're comfortable vs. what you're avoiding, and delivers your plan for the next 7 days.
               </Text>
             </Section>
 
-            <Section className="text-left my-[28px]">
+            <Section className="text-left my-[24px]">
               <Button
-                className="bg-[#10b981] rounded-lg text-white text-[13px] font-semibold no-underline text-center px-6 py-3 inline-block"
-                style={{ backgroundColor: '#10b981', color: '#ffffff' }}
+                className="bg-[#09090b] border border-solid border-[#27272a] rounded-md text-white text-[13px] font-semibold no-underline text-center px-[22px] py-[12px] inline-block"
                 href="https://erithx.dev/dashboard/settings"
               >
-                Connect Your Profiles →
+                Link Coding Profiles →
               </Button>
             </Section>
 
-            <Text className="text-[#4b5563] dark-text-secondary text-[13px] leading-[22px] mb-[24px]">
-              Got any questions or ideas? Just hit reply to this email—it goes straight to my personal inbox.
+            <Text className="text-[#71717a] dark-text-secondary text-[13px] leading-[21px] mb-[16px]">
+              If you run into any bugs or want to share feedback, just reply to this email. It lands straight in my personal inbox.
             </Text>
 
-            <Text className="text-[#111827] dark-text-primary text-[14px] leading-[22px] m-0 font-semibold">
+            <Text className="text-[#09090b] dark-text-primary text-[14px] leading-[20px] m-0 font-semibold">
               Debjyoti from ErithX
             </Text>
 
-            <Section className="border-t border-solid border-[#e5e7eb] dark-border mt-[28px] pt-[16px]">
-              <Text className="text-[#9ca3af] dark-text-muted text-[11px] leading-[18px] m-0">
-                You received this because you created an account on ErithX.
-                <br />
-                <Link href="https://erithx.dev/dashboard/settings" className="text-[#6b7280] dark-text-muted underline">
-                  Manage preferences
+            <Section className="border-t border-solid border-[#e4e4e7] dark-border mt-[24px] pt-[14px]">
+              <Text className="text-[#a1a1aa] dark-text-muted text-[11px] leading-[16px] m-0">
+                Account notification for ErithX ·{' '}
+                <Link href="https://erithx.dev/dashboard" className="text-[#71717a] dark-text-muted underline">
+                  Dashboard
                 </Link>
                 {' · '}
-                <Link href="https://erithx.dev" className="text-[#6b7280] dark-text-muted underline">
+                <Link href="https://erithx.dev/dashboard/settings" className="text-[#71717a] dark-text-muted underline">
+                  Preferences
+                </Link>
+                {' · '}
+                <Link href="https://erithx.dev" className="text-[#71717a] dark-text-muted underline">
                   erithx.dev
                 </Link>
               </Text>
@@ -117,3 +114,4 @@ export const WelcomeEmail = ({ userName = 'Coder' }: WelcomeEmailProps) => {
 };
 
 export default WelcomeEmail;
+

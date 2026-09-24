@@ -8,6 +8,7 @@ import { UserCoderProfile } from '@/models/UserCoderProfile';
 import { LeetCodeStats, CodeforcesStats, GithubStats, CodeChefStats } from '@/models/PlatformStats';
 import { Notification } from '@/models/Notification';
 import { UserActivity } from '@/models/UserActivity';
+import { BugReport } from '@/models/BugReport';
 
 export async function DELETE() {
   try {
@@ -54,6 +55,7 @@ export async function DELETE() {
       CodeChefStats.deleteMany({ userId: user.id }),
       Notification.deleteMany({ userId: user.id }),
       UserActivity.deleteMany({ userId: user.id }),
+      BugReport.deleteMany({ user_id: user.id }), // GDPR: remove user's bug reports on delete
     ]);
 
     // 3.8. ANONYMIZE DENORMALIZED DATA (Resources & Comments are kept but PII is scrubbed)
@@ -94,8 +96,10 @@ export async function DELETE() {
         process.env.SUPABASE_SERVICE_ROLE_KEY
       );
 
-      // Clear email logs so the developer can re-test the Welcome Email if they sign up again
-      await supabaseAdmin.from('email_logs').delete().eq('user_id', user.id);
+      // Clear email logs by BOTH user_id AND email so re-registering with the same
+      // email address never hits the duplicate guard in the auth callback.
+      await supabaseAdmin.from('email_logs').delete()
+        .or(`user_id.eq.${user.id},recipient_email.eq.${user.email}`);
 
       const { error: deleteAuthError } = await supabaseAdmin.auth.admin.deleteUser(user.id);
 

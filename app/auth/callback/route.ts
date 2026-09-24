@@ -66,15 +66,18 @@ export async function GET(request: Request) {
       // Strict Idempotency & Fresh Registration Guard:
       // Only dispatch welcome email for fresh signups (< 15 minutes old) and never sent before
       const accountCreatedAt = user.created_at ? new Date(user.created_at).getTime() : 0
-      const isNewRegistration = accountCreatedAt > 0 && (Date.now() - accountCreatedAt) < 15 * 60 * 1000
+      const accountAgeMs = Date.now() - accountCreatedAt
+      const isNewRegistration = accountCreatedAt > 0 && accountAgeMs < 15 * 60 * 1000
       
       const superAdmins = (process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS || '').split(',').map(e => e.trim());
       const isSuperAdmin = userEmail ? superAdmins.includes(userEmail) : false;
 
+      console.log(`[WELCOME EMAIL GATE] user=${userEmail} accountAgeMs=${accountAgeMs} isNewRegistration=${isNewRegistration} isSuperAdmin=${isSuperAdmin} hasEmail=${!!userEmail}`)
+
       // Superadmins bypass the 15-minute age lock for testing purposes, but are still protected by email_logs
       if (userEmail && (isNewRegistration || isSuperAdmin)) {
         try {
-          const { data: welcomeLog } = await adminSupabase
+          const { data: welcomeLog, error: logQueryError } = await adminSupabase
             .from('email_logs')
             .select('id')
             .or(`user_id.eq.${user.id},recipient_email.eq.${userEmail}`)
@@ -83,13 +86,16 @@ export async function GET(request: Request) {
             .limit(1)
             .maybeSingle()
 
+          console.log(`[WELCOME EMAIL LOG CHECK] existingLog=${JSON.stringify(welcomeLog)} queryError=${JSON.stringify(logQueryError)}`)
+
           if (!welcomeLog) {
             console.log(`[WELCOME EMAIL] Dispatching welcome email to new user: ${userEmail}`)
             const result = await sendWelcomeEmail(userEmail, userName)
+            console.log(`[WELCOME EMAIL RESULT] success=${result?.success} skipped=${result?.skipped} error=${JSON.stringify(result?.error)}`)
 
             if (result?.success && !result?.skipped) {
               console.log(`[WELCOME EMAIL] Sent successfully to ${userEmail}`)
-              await adminSupabase.from('email_logs').insert({
+              const { error: insertErr } = await adminSupabase.from('email_logs').insert({
                 user_id: user.id,
                 email_type: 'welcome',
                 recipient_email: userEmail,
@@ -97,7 +103,19 @@ export async function GET(request: Request) {
                 status: 'sent',
                 sent_at: new Date().toISOString(),
               })
-            } else if (!result?.skipped) {
+              if (insertErr) console.error('[WELCOME EMAIL] Failed to insert sent log:', insertErr)
+            } else if (result?.skipped) {
+              console.warn(`[WELCOME EMAIL] Skipped by emailService (kill switch or no API key). skipped=${result?.skipped} error=${JSON.stringify(result?.error)}`)
+              // Still log the skip so we know it happened
+              await adminSupabase.from('email_logs').insert({
+                user_id: user.id,
+                email_type: 'welcome',
+                recipient_email: userEmail,
+                subject: `Hey ${userName || 'Coder'} — a quick note before your first Sunday review`,
+                status: 'skipped',
+                error_message: JSON.stringify(result?.error || 'Kill switch or missing API key'),
+              }).then(({ error }) => { if (error) console.error('[WELCOME EMAIL] Failed to insert skip log:', error) })
+            } else {
               console.error(`[WELCOME EMAIL] Failed to send to ${userEmail}:`, result?.error)
               await adminSupabase.from('email_logs').insert({
                 user_id: user.id,
@@ -109,11 +127,13 @@ export async function GET(request: Request) {
               })
             }
           } else {
-            console.log(`[WELCOME EMAIL] Skipping duplicate welcome email for ${userEmail} (already sent).`)
+            console.log(`[WELCOME EMAIL] Skipping duplicate welcome email for ${userEmail} (already sent). logId=${welcomeLog?.id}`)
           }
         } catch (emailErr) {
           console.error('[WELCOME EMAIL] Error in welcome email workflow:', emailErr)
         }
+      } else {
+        console.log(`[WELCOME EMAIL GATE] Skipped. Conditions not met: userEmail=${!!userEmail} isNewRegistration=${isNewRegistration} isSuperAdmin=${isSuperAdmin}`)
       }
 
       // Determine correct navigation based on final role

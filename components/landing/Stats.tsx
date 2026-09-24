@@ -7,11 +7,11 @@ export default function Stats() {
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-12">
           <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-3 block">By The Numbers</span>
-          <h2 className="text-3xl md:text-4xl font-medium tracking-tighter">Built by students. Trusted by thousands.</h2>
+          <h2 className="text-3xl md:text-4xl font-medium tracking-tighter">Built by students. Trusted by hundreds.</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div className="scroll-reveal">
-            <div className="text-5xl font-semibold mb-2 gradient-text-hero">2.4K+</div>
+            <div className="text-5xl font-semibold mb-2 gradient-text-hero">400+</div>
             <div className="text-[10px] uppercase tracking-widest text-zinc-500">active students</div>
           </div>
           <div className="scroll-reveal" style={{ transitionDelay: '0.1s' }}>
