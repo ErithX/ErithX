@@ -67,8 +67,12 @@ export async function GET(request: Request) {
       // Only dispatch welcome email for fresh signups (< 15 minutes old) and never sent before
       const accountCreatedAt = user.created_at ? new Date(user.created_at).getTime() : 0
       const isNewRegistration = accountCreatedAt > 0 && (Date.now() - accountCreatedAt) < 15 * 60 * 1000
+      
+      const superAdmins = (process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS || '').split(',').map(e => e.trim());
+      const isSuperAdmin = userEmail ? superAdmins.includes(userEmail) : false;
 
-      if (userEmail && isNewRegistration) {
+      // Superadmins bypass the 15-minute age lock for testing purposes, but are still protected by email_logs
+      if (userEmail && (isNewRegistration || isSuperAdmin)) {
         try {
           const { data: welcomeLog } = await adminSupabase
             .from('email_logs')

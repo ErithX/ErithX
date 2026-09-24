@@ -94,6 +94,9 @@ export async function DELETE() {
         process.env.SUPABASE_SERVICE_ROLE_KEY
       );
 
+      // Clear email logs so the developer can re-test the Welcome Email if they sign up again
+      await supabaseAdmin.from('email_logs').delete().eq('user_id', user.id);
+
       const { error: deleteAuthError } = await supabaseAdmin.auth.admin.deleteUser(user.id);
 
       if (deleteAuthError) {
