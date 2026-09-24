@@ -120,19 +120,6 @@ export default function AdminSidebar({ activeTab }: AdminSidebarProps) {
         </nav>
       </div>
 
-      {/* Footer Return Link */}
-      <div className="pt-4 border-t border-zinc-800/80 space-y-2">
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.02] transition-colors"
-        >
-          <ArrowLeft className="w-3.5 h-3.5 text-zinc-500" />
-          <span>Return to Dashboard</span>
-        </Link>
-        <div className="px-3 text-[10px] text-zinc-600 font-mono">
-          Production V3 • Build 2026.1
-        </div>
-      </div>
     </aside>
   );
 }
