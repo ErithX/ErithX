@@ -7,7 +7,8 @@ import {
   ShieldAlert,
   Search,
   RefreshCw,
-  Clock
+  Clock,
+  Trash2
 } from "lucide-react";
 import { formatLastSeen } from "@/app/lib/lastSeenUtils";
 import AdminSidebar from "@/components/admin/AdminSidebar";
@@ -33,7 +34,9 @@ export default function SuperadminPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortOption, setSortOption] = useState<'lastActive' | 'newestJoined' | 'oldestJoined' | 'lastLogin'>('lastActive');
+  const [sortOption, setSortOption] = useState<'lastActive' | 'newestJoined' | 'oldestJoined'>('lastActive');
+  const [userToDelete, setUserToDelete] = useState<AdminUser | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const loadUsers = async () => {
     try {
@@ -78,13 +81,29 @@ export default function SuperadminPage() {
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       } else if (sortOption === 'oldestJoined') {
         return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-      } else {
-        const timeA = a.lastSignInAt ? new Date(a.lastSignInAt).getTime() : 0;
-        const timeB = b.lastSignInAt ? new Date(b.lastSignInAt).getTime() : 0;
-        return timeB - timeA;
       }
+      return 0;
     });
   }, [filteredUsers, sortOption]);
+
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/superadmin/users?id=${userToDelete.id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete user");
+      }
+      setUsers(users.filter(u => u.id !== userToDelete.id));
+      setUserToDelete(null);
+    } catch (err: any) {
+      setError(err.message || "Failed to delete user.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#09090b] text-white selection:bg-zinc-800 selection:text-white font-sans flex flex-col">
@@ -142,7 +161,6 @@ export default function SuperadminPage() {
                 <option value="lastActive">Sort: Last Active</option>
                 <option value="newestJoined">Sort: Newest</option>
                 <option value="oldestJoined">Sort: Oldest</option>
-                <option value="lastLogin">Sort: Last Login</option>
               </select>
             </div>
           </div>
@@ -168,8 +186,8 @@ export default function SuperadminPage() {
                       <th className="py-3 px-4">User</th>
                       <th className="py-3 px-4">Email</th>
                       <th className="py-3 px-4">Signed Up</th>
-                      <th className="py-3 px-4">Last Login</th>
                       <th className="py-3 px-4">Last Seen</th>
+                      <th className="py-3 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-900">
@@ -191,8 +209,16 @@ export default function SuperadminPage() {
                         </td>
                         <td className="py-3 px-4 text-zinc-400 font-mono text-[11px]">{user.email}</td>
                         <td className="py-3 px-4 text-zinc-500 font-mono text-[11px]">{formatDate(user.createdAt)}</td>
-                        <td className="py-3 px-4 text-zinc-500 font-mono text-[11px]">{formatDate(user.lastSignInAt)}</td>
                         <td className="py-3 px-4 text-zinc-400 font-mono text-[11px]">{formatLastSeen(user.lastSeen)}</td>
+                        <td className="py-3 px-4 text-right">
+                          <button
+                            onClick={() => setUserToDelete(user)}
+                            className="p-1.5 text-zinc-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                            title="Delete User"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -202,6 +228,38 @@ export default function SuperadminPage() {
           )}
         </main>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {userToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-[#18181b] border border-zinc-800 rounded-xl p-6 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
+            <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+              <ShieldAlert className="w-5 h-5 text-red-500" />
+              Delete User
+            </h3>
+            <p className="text-sm text-zinc-400 mb-6">
+              Are you sure you want to delete <span className="font-semibold text-white">{userToDelete.email || userToDelete.fullName}</span>? This action is irreversible and will remove all their data from both Supabase and MongoDB.
+            </p>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => setUserToDelete(null)}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteUser}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-lg text-sm font-medium bg-red-500 text-white hover:bg-red-600 transition-colors flex items-center gap-2 disabled:opacity-50"
+              >
+                {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
+                {isDeleting ? "Deleting..." : "Delete User"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

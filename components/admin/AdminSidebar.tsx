@@ -11,11 +11,13 @@ import {
   ArrowLeft, 
   Shield, 
   Activity,
-  Zap
+  Zap,
+  Bug,
+  Settings2
 } from 'lucide-react';
 
 interface AdminSidebarProps {
-  activeTab?: 'reviews' | 'users' | 'review' | 'resources';
+  activeTab?: 'reviews' | 'users' | 'review' | 'resources' | 'bugs' | 'preferences';
 }
 
 export default function AdminSidebar({ activeTab }: AdminSidebarProps) {
@@ -51,6 +53,22 @@ export default function AdminSidebar({ activeTab }: AdminSidebarProps) {
       name: 'Content Approvals',
       href: '/dashboard/admin/review',
       icon: FileText,
+      badge: null,
+      badgeColor: ''
+    },
+    {
+      id: 'bugs',
+      name: 'Bug Reports',
+      href: '/superadmin/bugs',
+      icon: Bug,
+      badge: 'New',
+      badgeColor: 'bg-red-500/10 text-red-400 border-red-500/20'
+    },
+    {
+      id: 'preferences',
+      name: 'User Preferences',
+      href: '/superadmin/preferences',
+      icon: Settings2,
       badge: null,
       badgeColor: ''
     }
