@@ -50,11 +50,11 @@ export const WelcomeEmail = ({ userName = 'Coder' }: WelcomeEmailProps) => {
             </Text>
 
             <Text className="text-[#3f3f46] dark-text-secondary text-[14px] leading-[23px] mb-[14px]">
-              First, wishing you steady consistency and real momentum on this journey—I genuinely hope this preparation leads straight to your dream SDE role.
+              You just joined a space that's going to notice things about your prep that you might be quietly avoiding — and tell you, every week, whether you like it or not.
             </Text>
 
             <Text className="text-[#52525b] dark-text-secondary text-[14px] leading-[23px] mb-[20px]">
-              We built ErithX to keep track of your productivity and give real shape to your preparation.
+              That's the whole point of ErithX. Every Sunday at 9 PM, it looks at what you actually did across LeetCode, Codeforces, GitHub (and others), not what you meant to do, and writes you a real review: where you're solid, where you've been coasting, and what next week should look like.
             </Text>
 
             <Section className="border-l-[3px] border-solid border-[#ef4444] dark-red-border bg-[#fafafa] dark-card-bg border-t border-r border-b border-t-[#f4f4f5] border-r-[#f4f4f5] border-b-[#f4f4f5] rounded-r-lg px-[16px] py-[14px] my-[24px]">
@@ -83,7 +83,7 @@ export const WelcomeEmail = ({ userName = 'Coder' }: WelcomeEmailProps) => {
             </Section>
 
             <Text className="text-[#71717a] dark-text-secondary text-[13px] leading-[21px] mb-[16px]">
-              If you run into any bugs or want to share feedback, just reply to this email. It lands straight in my personal inbox.
+              Whatever this week looks like for you — we're rooting for it to end with an offer letter in your inbox, not just ours.
             </Text>
 
             <Text className="text-[#09090b] dark-text-primary text-[14px] leading-[20px] m-0 font-semibold">
