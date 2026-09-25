@@ -1,212 +1,254 @@
-﻿# ErithX — Unified Coding Contest Calendar & Placement Prep Platform
+# ErithX — Contest Calendar + Placement Prep Platform
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE) [![Stars](https://img.shields.io/github/stars/ErithX/ErithX)](https://github.com/ErithX/ErithX/stargazers) [![Forks](https://img.shields.io/github/forks/ErithX/ErithX)](https://github.com/ErithX/ErithX/network/members) [![Issues](https://img.shields.io/github/issues/ErithX/ErithX)](https://github.com/ErithX/ErithX/issues)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![Stars](https://img.shields.io/github/stars/ErithX/ErithX)](https://github.com/ErithX/ErithX/stargazers)
+[![Forks](https://img.shields.io/github/forks/ErithX/ErithX)](https://github.com/ErithX/ErithX/network/members)
+[![Issues](https://img.shields.io/github/issues/ErithX/ErithX)](https://github.com/ErithX/ErithX/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/ErithX/ErithX)](https://github.com/ErithX/ErithX/commits/main)
+[![Live](https://img.shields.io/badge/Live-erithx.dev-0A66C2?logo=vercel&logoColor=white)](https://erithx.dev)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
 
-> **Stop juggling 10+ contest sites. Track everything in one place. Get smarter about placement prep.**
+> Stop juggling multiple coding platforms. Track contests, monitor consistency, and turn your competitive programming and dev activity into a weekly growth plan.
 
-🔗 **[Live Platform](https://erithx.dev)** • 📊 **[Performance Analysis](https://erithx.dev/docs/performance-analysis)** • 🏆 **[Live Contest Calendar](https://erithx.dev/contests)** • [...]
-
----
-
-## TL;DR
-
-Unified contest calendar + weekly AI-powered performance reviews — MIT licensed. Live demo: https://erithx.dev
-
----
-
-## 🎯 What is ErithX?
-
-ErithX is an engineering platform built for Indian students and developers who take competitive programming seriously. It combines:
-
-1. **Live Coding Contest Calendar** — Real-time tracking of 10+ platforms (LeetCode, Codeforces, CodeChef, AtCoder, HackerRank, GeeksforGeeks, etc.) with automatic **1-click Google Calendar & iCal** exports
-2. **Weekly Performance Review** — AI-powered analysis of your LeetCode, Codeforces, and GitHub activity every Sunday
-3. **Placement Prep Resources** — Curated system design, backend architecture, and project blueprint PDFs
-4. **Smart Email Alerts** — Never miss a contest round again
-
-Used by **2,400+ engineering students** across India. **Free to start, no credit card required.**
+Live app: https://erithx.dev  
+Docs: https://erithx.dev/docs  
+Features: https://erithx.dev/features
 
 ---
 
-## Preview
+## Product overview
 
-![App screenshot](./assets/screenshot.png)
+ErithX is a smart engineering growth platform built for students and developers who take competitive programming and placements seriously.
 
-Add a screenshot or GIF at `assets/screenshot.png` to replace the placeholder above. A good preview helps reviewers and contributors evaluate the product quickly.
+It connects the signals that matter most across your coding journey:
 
----
+- contest participation across Codeforces, LeetCode, CodeChef, AtCoder, HackerRank, and more
+- coding profile activity from GitHub, LeetCode, and Codeforces
+- weekly AI-powered review of performance, consistency, and weak areas
+- placement-focused learning resources, notes, and curated engineering resources
+- email alerts and calendar sync to keep you on track without missing important rounds
 
-## ✨ Key Features
-
-### 🗓️ Contest Synchronization
-
-* Aggregates contests from **10+ competitive programming platforms**
-* Automatic timezone conversion based on your location
-* 1-click export to **Google Calendar or Apple iCal**
-* Real-time contest status tracking (upcoming, live, concluded)
-
-### 📊 Automated Weekly Reviews
-
-* Connects to **LeetCode, Codeforces, and GitHub** public profiles (no password needed)
-* Analyzes your weekly problem difficulty distribution
-* Tracks contest attendance and rating trajectory
-* Generates actionable 7-day improvement targets
-* **Every Sunday at 9:00 PM**: Honest performance verdict + next week's focus areas
-
-### 📚 Engineering Resource Vault
-
-* Professionally curated articles on **system design, backend architecture, database patterns, and full-stack project blueprints**
-* Downloadable **PDFs** for offline study
-* Organized by difficulty and topic
-* Contributor-driven (add your best resources)
-
-### 📧 Smart Notifications
-
-* Configurable contest reminders (sent before contest starts)
-* Placement season alerts and industry hiring signals
-* Weekly digest of trending problems and solutions
+The platform is designed to help users move from “random practice” to a structured growth system with measurable momentum.
 
 ---
 
-## 🚀 Quick Start
+## Product flow
 
-### For Users
+ErithX follows a simple loop:
 
-1. Visit [erithx.dev](https://erithx.dev)
-2. Sign in with Google (no password required)
-3. Connect your **LeetCode**, **Codeforces**, and **GitHub** profiles
-4. Click "Add to Calendar" on any contest to sync instantly
-5. Receive your first performance review **next Sunday**
+1. Connect profiles
+   - Link your LeetCode, Codeforces, and GitHub profiles
+   - Confirm your coding identities and activity sources
+2. Track contests and momentum
+   - See upcoming and live contests in one place
+   - Add them to Google Calendar or Apple Calendar with one click
+   - Get reminders before competitions start
+3. Review performance weekly
+   - Receive honest AI-generated feedback
+   - Understand strengths, weak areas, and streak consistency
+   - Get a 7-day action plan tailored to your current progress
+4. Learn and improve
+   - Discover curated engineering notes, blogs, PDFs, and resources
+   - Publish and share useful resources with the community
 
-### For Developers (Local Setup)
+---
+
+## Platform preview
+
+### Product demo
+
+A short product preview is included in the repository and can be used for marketing and GitHub presentation.
+
+[Open product demo video](./Assets/Product%20GIF.mp4)
+
+### Screenshot gallery
+
+![Articles](./Assets/Articles.png)
+
+Resource Vault — engineering resource hub featuring shared resource statistics, filters, article previews, and weekly review CTA.
+
+![Coding profiles](./Assets/Coding%20profiles.png)
+
+Profile Connections — connect LeetCode, GitHub, and Codeforces for verification and personalization.
+
+![Contests](./Assets/Contests.png)
+
+Contests Dashboard — see live and upcoming rounds with countdowns, platform links, and alerts.
+
+![Customization](./Assets/Customization.png)
+
+AI Mentor Settings — customize the reviewer to match your target path, whether FAANG, startup, CP, or custom.
+
+![Dashboard](./Assets/Dashboard.png)
+
+User Dashboard — track growth, percentile ranking, focus score, next contests, and AI critique.
+
+![Email alert + calender](./Assets/Email%20alert%20%2B%20calender.png)
+
+Sync & Alerts — one-click calendar sync and email notifications for upcoming contests.
+
+![Report](./Assets/Report.png)
+
+AI Weekly Review — candid weekly report with performance trends, percentile, and actionable feedback.
+
+![Sign up](./Assets/SIgn%20up.png)
+
+Onboarding — clean sign-in flow with role-based onboarding and Google OAuth.
+
+![Write](./Assets/Write.png)
+
+Resource Editor — rich text publishing flow for submitting notes, articles, and study material.
+
+---
+
+## Why ErithX matters
+
+ErithX is built for the reality of competitive programming and placement prep:
+
+- students are juggling multiple platforms
+- contest schedules are fragmented across services
+- performance feedback is inconsistent or absent
+- preparation is harder without a long-term system
+
+The platform brings those workflows into one place so progress becomes easier to track and act on.
+
+---
+
+## Key features
+
+### Contest synchronization
+
+- aggregate contests from multiple platforms
+- local timezone conversion
+- Google Calendar / Apple Calendar support
+- upcoming and live contest tracking
+
+### Weekly AI review
+
+- connect public coding profiles
+- review consistency, strength, and weak spots
+- generate 7-day improvement plans
+- make performance analysis actionable, not generic
+
+### Resource vault
+
+- curated engineering resources and study material
+- notes, PDFs, blogs, and career-focused content
+- share-ready publishing workflow for contributors
+
+### Smart alerts
+
+- contest reminders
+- weekly digest summaries
+- user-specific performance nudges
+
+---
+
+## Technology stack
+
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
+[![Vercel](https://img.shields.io/badge/Deployment-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+
+- Frontend: Next.js 16 + TypeScript + Tailwind CSS
+- Backend: Supabase
+- Deployment: Vercel
+- Integrations: LeetCode, Codeforces, CodeChef, AtCoder, HackerRank, GeeksforGeeks, GitHub
+- Alerts: automated email and reminder flow
+
+---
+
+## Quick start
+
+### For users
+
+1. Visit https://erithx.dev
+2. Sign in with Google
+3. Connect your competitive programming and developer profiles
+4. Review upcoming contests and your weekly growth report
+5. Use calendar sync and notifications to stay consistent
+
+### For developers
 
 ```bash
 # Clone the repository
 git clone https://github.com/ErithX/ErithX.git
-cd contest-tracker
+cd ErithX
 
 # Install dependencies
 npm install
 
-# Set up environment variables
+# Create environment file
 cp .env.example .env.local
-# Add your Supabase, Google OAuth, and email service credentials
 
-# Run development server
+# Start the app
 npm run dev
-
-# Open http://localhost:3000
 ```
 
-**Prerequisites:**
+Then open http://localhost:3000
 
-* Node.js 18+
-* Supabase account (free tier works)
-* Google OAuth credentials
-* Email service (SendGrid, Resend, or similar)
+Requirements:
 
----
-
-## 🏗️ Tech Stack
-
-* **Frontend**: Next.js 16 (App Router) + TypeScript + Tailwind CSS
-* **Backend**: Supabase (PostgreSQL + Auth + Storage)
-* **Deployment**: Vercel
-* **APIs Integrated**: LeetCode, Codeforces, CodeChef, AtCoder, HackerRank, GeeksforGeeks, GitHub
-* **Email**: Automated weekly digests via Cron jobs
-* **Analytics**: Google Analytics 4 (privacy-respecting)
+- Node.js 18+
+- Supabase account
+- Google OAuth setup
+- Email service credentials
 
 ---
 
-## 📖 Documentation
+## Documentation
 
-* **[Performance Analysis Guide](https://erithx.dev/docs/performance-analysis)** — Understand how weekly reviews are calculated
-* **[Platform Features](https://erithx.dev/features)** — Full feature walkthrough
-* **[FAQ](https://erithx.dev/faq)** — Common questions about supported platforms, data privacy, and calendar sync
-* **[About Us](https://erithx.dev/about)** — Mission and team background
-
----
-
-## 🔒 Privacy & Security
-
-* ✅ **No password storage** — OAuth only (Google, GitHub)
-* ✅ **Public profiles only** — We never access private repositories or contest solutions
-* ✅ **Your data stays yours** — Full account deletion available anytime
-* ✅ **Zero tracking cookies** — Analytics for product improvement, never for advertising
-* 📄 **[Privacy Policy](https://erithx.dev/privacy)**
-
-> Note for contributors: use `.env.example` as a template for required environment variables. Never commit secrets — see SECURITY.md for more details.
+- [Docs Hub](https://erithx.dev/docs)
+- [Performance Analysis](https://erithx.dev/docs/performance-analysis)
+- [Contest Tracker Guide](https://erithx.dev/docs/contest-tracker)
+- [Creator Studio](https://erithx.dev/docs/creator-studio)
+- [Notifications](https://erithx.dev/docs/notifications)
+- [FAQ](https://erithx.dev/faq)
 
 ---
 
-## 🤝 Contributing
+## Security and privacy
 
-We welcome contributions from the community! Whether it's:
+- Public profile data only
+- No password storage for platform-linked account access
+- OAuth-based authentication
+- Responsible disclosure process available via SECURITY.md
 
-* 📝 Adding new study resources
-* 🐛 Reporting bugs
-* ✨ Suggesting features
-* 🌍 Improving platform for other regions
+---
 
-**To contribute:**
+## Contributing
+
+We welcome community contributions across bug reports, features, UI refinements, and documentation.
+
+To contribute:
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m "feat: add your feature"`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make a focused change
+4. Run lint and validation checks
+5. Open a PR with a clear summary
 
-**Important:** Before touching the system prompt or AI reviewer logic, open an issue first. These are core to the platform's value.
-
----
-
-## 📊 Performance & Analytics
-
-The platform tracks:
-
-* Contest participation trends across your cohort
-* Problem-solving velocity (easy/medium/hard distribution)
-* Placement season hiring signals (aggregated, anonymized)
-
-**We do NOT track:**
-
-* Specific problem solutions or your contest codes
-* Personal information beyond what you provide
-* Behavior for ad targeting
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full contributor guide.
 
 ---
 
-## 🎓 Who is ErithX for?
+## Support
 
-* **Engineering students** prepping for placements (all years)
-* **Competitive programmers** wanting to optimize their practice routine
-* **Job seekers** tracking hiring season timelines
-* **College tech clubs** coordinating contest participation
-* **Tech educators** tracking student progress
+- [Contact Us](https://erithx.dev/contact)
+- [GitHub Issues](https://github.com/ErithX/ErithX/issues)
+- [Security Policy](./SECURITY.md)
 
 ---
 
-## 🆘 Support
+## License
 
-* **[Contact Us](https://erithx.dev/contact)** — Email support for account issues
-* **[GitHub Issues](https://github.com/ErithX/ErithX/issues)** — Report bugs and feature requests
-* **[Discussions](https://github.com/ErithX/ErithX/discussions)** — Ask questions, share feedback
+This project is licensed under the MIT License. See [LICENSE](./LICENSE).
 
 ---
 
-## 📜 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file for details.
-
----
-
-## 🌟 Acknowledgments
-
-* Built by engineers, for engineers
-* Inspired by the placement prep struggles of 2,400+ students
-* Powered by amazing open-source communities (Next.js, Tailwind, Supabase, etc.)
-
----
-
-**Made with ❤️ for the engineering community in India**
-
-Last updated: September 2026 | [Star on GitHub](https://github.com/ErithX/ErithX) ⭐
+Made for engineering students, competitive programmers, and builders who want better structure and better growth.
