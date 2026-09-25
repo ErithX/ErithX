@@ -82,6 +82,7 @@ UI/Temporary-*.html
 # Untracked files
 version-3/
 *.png
+!Assets/*.png
 payload.json
 check_*.mjs
 check_*.js
