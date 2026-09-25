@@ -93,37 +93,45 @@ ErithX follows a simple loop:
 
 ### The User Journey
 
-<table>
-  <tr>
-    <td width="50%" valign="top" align="center">
-      <a href="./Assets/SIgn%20up.png"><img src="./Assets/SIgn%20up.png" width="100%" alt="Onboarding"></a>
-      <br><b>1. Onboarding</b><br>
-      <sub>Clean sign-in flow with role-based onboarding and Google OAuth.</sub>
-    </td>
-    <td width="50%" valign="top" align="center">
-      <a href="./Assets/Customization.png"><img src="./Assets/Customization.png" width="100%" alt="Personalization"></a>
-      <br><b>2. Personalization</b><br>
-      <sub>Customize the reviewer to match your target career path.</sub>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top" align="center">
-      <a href="./Assets/Coding%20profiles.png"><img src="./Assets/Coding%20profiles.png" width="100%" alt="Connect Profiles"></a>
-      <br><b>3. Connect Profiles</b><br>
-      <sub>Link LeetCode, GitHub, and Codeforces for verification.</sub>
-    </td>
-    <td width="50%" valign="top" align="center">
-      <a href="./Assets/Email%20alert%20+%20calender.png"><img src="./Assets/Email%20alert%20+%20calender.png" width="100%" alt="Sync and Alerts"></a>
-      <br><b>4. Sync &amp; Alerts</b><br>
-      <sub>One-click calendar sync and email notifications.</sub>
-    </td>
-  </tr>
-</table>
-
 <div align="center">
-  <a href="./Assets/Report.jpg"><img src="./Assets/Report.png" width="100%" alt="Automated Weekly Review"></a>
-  <br><b>5. Automated Weekly Review</b><br>
+
+  <!-- STEP 1 -->
+  <a href="./Assets/SIgn%20up.png"><img src="./Assets/SIgn%20up.png" width="80%" alt="Onboarding"></a>
+  <br><b>1. Onboarding</b><br>
+  <sub>Clean sign-in flow with role-based onboarding and Google OAuth.</sub>
+  <br><br>
+  <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/2b07.svg" width="36" alt="arrow down">
+  <br><br>
+
+  <!-- STEP 2 -->
+  <a href="./Assets/Customization.png"><img src="./Assets/Customization.png" width="80%" alt="Personalization"></a>
+  <br><b>2. Personalization</b><br>
+  <sub>Customize the reviewer to match your target career path.</sub>
+  <br><br>
+  <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/2b07.svg" width="36" alt="arrow down">
+  <br><br>
+
+  <!-- STEP 3 -->
+  <a href="./Assets/Coding%20profiles.png"><img src="./Assets/Coding%20profiles.png" width="80%" alt="Connect Profiles"></a>
+  <br><b>3. Connect Profiles</b><br>
+  <sub>Link LeetCode, GitHub, and Codeforces for verification.</sub>
+  <br><br>
+  <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/2b07.svg" width="36" alt="arrow down">
+  <br><br>
+
+  <!-- STEP 4 -->
+  <a href="./Assets/Email%20alert%20+%20calender.png"><img src="./Assets/Email%20alert%20+%20calender.png" width="80%" alt="Sync and Alerts"></a>
+  <br><b>4. Sync &amp; Alerts</b><br>
+  <sub>One-click calendar sync and email notifications.</sub>
+  <br><br>
+  <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/2b07.svg" width="36" alt="arrow down">
+  <br><br>
+
+  <!-- STEP 5 -->
+  <a href="./Assets/Report.jpg"><img src="./Assets/Report.jpg" width="80%" alt=" Weekly Review"></a>
+  <br><b>5.  Weekly Review</b><br>
   <sub>Candid weekly report with performance trends and feedback.</sub>
+
 </div>
 
 ---
@@ -277,17 +285,3 @@ This project is licensed under the MIT License. See [LICENSE](./LICENSE).
 ---
 
 Made for engineering students, competitive programmers, and builders who want better structure and better growth.
-````
-
-## What changed (images/videos only)
-
-- **Fixed widths → responsive widths.** The old `width="400"` images left huge blank margins on wide screens and overflowed on small ones. Now every image fills `100%` of a `50%` cell, so pairs always sit flush side-by-side and scale perfectly on any screen.
-- **Killed the empty cell.** Step 5 (Weekly Report) no longer sits in a half-empty table row — it's now a full-width centered showcase, which also gives the report (your product's key differentiator) a proper hero moment at the end of the journey.
-- **Captions restyled.** Titles are bold, descriptions are in small `<sub>` text directly under each screenshot — clean and scannable instead of the heavy grid-caption look.
-- **Images are now clickable** — each one links to its full-resolution file in the repo.
-- **Video kept full-width** at the top as the hero.
-- Everything renders borderless on GitHub (raw HTML tables get no borders), so it looks like a proper product gallery, not a data grid.
-
-**Two quick tips for an even better look:**
-1. Re-capture screenshots at the **same aspect ratio** (e.g., same browser window size) so each pair aligns pixel-perfectly.
-2. If you want, I can add **dark-mode-aware images** using GitHub's `#gh-dark-mode-only` / `#gh-light-mode-only` support — just provide light and dark variants of each screenshot.
