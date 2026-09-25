@@ -65,37 +65,37 @@ A short product preview is included in the repository and can be used for market
 
 ### Screenshot gallery
 
-![Articles](./Assets/Articles.png)
+![Sign up](./Assets/SIgn%20up.png)
 
-Resource Vault — engineering resource hub featuring shared resource statistics, filters, article previews, and weekly review CTA.
+Onboarding — clean sign-in flow with role-based onboarding and Google OAuth.
 
 ![Coding profiles](./Assets/Coding%20profiles.png)
 
 Profile Connections — connect LeetCode, GitHub, and Codeforces for verification and personalization.
 
-![Contests](./Assets/Contests.png)
-
-Contests Dashboard — see live and upcoming rounds with countdowns, platform links, and alerts.
-
-![Customization](./Assets/Customization.png)
-
-AI Mentor Settings — customize the reviewer to match your target path, whether FAANG, startup, CP, or custom.
-
 ![Dashboard](./Assets/Dashboard.png)
 
 User Dashboard — track growth, percentile ranking, focus score, next contests, and AI critique.
+
+![Contests](./Assets/Contests.png)
+
+Contests Dashboard — see live and upcoming rounds with countdowns, platform links, and alerts.
 
 ![Email alert + calender](./Assets/Email%20alert%20%2B%20calender.png)
 
 Sync & Alerts — one-click calendar sync and email notifications for upcoming contests.
 
+![Customization](./Assets/Customization.png)
+
+AI Mentor Settings — customize the reviewer to match your target path, whether FAANG, startup, CP, or custom.
+
 ![Report](./Assets/Report.png)
 
 AI Weekly Review — candid weekly report with performance trends, percentile, and actionable feedback.
 
-![Sign up](./Assets/SIgn%20up.png)
+![Articles](./Assets/Articles.png)
 
-Onboarding — clean sign-in flow with role-based onboarding and Google OAuth.
+Resource Vault — engineering resource hub featuring shared resource statistics, filters, article previews, and weekly review CTA.
 
 ![Write](./Assets/Write.png)
 
