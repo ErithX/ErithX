@@ -26,7 +26,7 @@ It connects the signals that matter most across your coding journey:
 
 - contest participation across Codeforces, LeetCode, CodeChef, AtCoder, HackerRank, and more
 - coding profile activity from GitHub, LeetCode, and Codeforces
-- weekly AI-powered review of performance, consistency, and weak areas
+- weekly system-powered review of performance, consistency, and weak areas
 - placement-focused learning resources, notes, and curated engineering resources
 - email alerts and calendar sync to keep you on track without missing important rounds
 
@@ -46,7 +46,7 @@ ErithX follows a simple loop:
    - Add them to Google Calendar or Apple Calendar with one click
    - Get reminders before competitions start
 3. Review performance weekly
-   - Receive honest AI-generated feedback
+   - Receive honest system-generated feedback
    - Understand strengths, weak areas, and streak consistency
    - Get a 7-day action plan tailored to your current progress
 4. Learn and improve
@@ -75,7 +75,7 @@ Profile Connections — connect LeetCode, GitHub, and Codeforces for verificatio
 
 ![Dashboard](./Assets/Dashboard.png)
 
-User Dashboard — track growth, percentile ranking, focus score, next contests, and AI critique.
+User Dashboard — track growth, percentile ranking, focus score, next contests, and automated critique.
 
 ![Contests](./Assets/Contests.png)
 
@@ -87,11 +87,11 @@ Sync & Alerts — one-click calendar sync and email notifications for upcoming c
 
 ![Customization](./Assets/Customization.png)
 
-AI Mentor Settings — customize the reviewer to match your target path, whether FAANG, startup, CP, or custom.
+Reviewer Settings — customize the reviewer to match your target path, whether FAANG, startup, CP, or custom.
 
 ![Report](./Assets/Report.png)
 
-AI Weekly Review — candid weekly report with performance trends, percentile, and actionable feedback.
+Automated Weekly Review — candid weekly report with performance trends, percentile, and actionable feedback.
 
 ![Articles](./Assets/Articles.png)
 
@@ -125,7 +125,7 @@ The platform brings those workflows into one place so progress becomes easier to
 - Google Calendar / Apple Calendar support
 - upcoming and live contest tracking
 
-### Weekly AI review
+### Weekly automated review
 
 - connect public coding profiles
 - review consistency, strength, and weak spots
