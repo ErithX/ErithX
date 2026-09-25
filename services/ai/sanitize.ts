@@ -33,7 +33,7 @@ const BANNED_REPLACEMENTS: Record<string, string> = {
   "commendable": "solid",
   "noteworthy": "noticeable",
   "stagnant": "stuck",
-  "declining": "slipping"
+  
 };
 
 /**
