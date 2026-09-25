@@ -57,49 +57,27 @@ ErithX follows a simple loop:
 
 ## Platform preview
 
-### Product demo
+<div align="center">
+  <video src="https://github.com/ErithX/ErithX/raw/main/Assets/Product%20GIF.mp4" autoplay loop muted playsinline width="100%"></video>
+</div>
 
-A short product preview is included in the repository and can be used for marketing and GitHub presentation.
+### Product Overview
 
-[Open product demo video](./Assets/Product%20GIF.mp4)
+| <img src="./Assets/Dashboard.png" width="400"> | <img src="./Assets/Contests.png" width="400"> |
+| :---: | :---: |
+| **User Dashboard**<br>Track growth, percentile ranking, focus score, and critique. | **Contests Dashboard**<br>Live and upcoming rounds with countdowns and alerts. |
+| <img src="./Assets/Articles.png" width="400"> | <img src="./Assets/Write.png" width="400"> |
+| **Resource Vault**<br>Engineering resource hub with shared statistics and filters. | **Resource Editor**<br>Rich text publishing flow for submitting study material. |
 
-### Screenshot gallery
+### The User Journey
 
-![Sign up](./Assets/SIgn%20up.png)
-
-Onboarding — clean sign-in flow with role-based onboarding and Google OAuth.
-
-![Coding profiles](./Assets/Coding%20profiles.png)
-
-Profile Connections — connect LeetCode, GitHub, and Codeforces for verification and personalization.
-
-![Dashboard](./Assets/Dashboard.png)
-
-User Dashboard — track growth, percentile ranking, focus score, next contests, and automated critique.
-
-![Contests](./Assets/Contests.png)
-
-Contests Dashboard — see live and upcoming rounds with countdowns, platform links, and alerts.
-
-![Email alert + calender](./Assets/Email%20alert%20%2B%20calender.png)
-
-Sync & Alerts — one-click calendar sync and email notifications for upcoming contests.
-
-![Customization](./Assets/Customization.png)
-
-Reviewer Settings — customize the reviewer to match your target path, whether FAANG, startup, CP, or custom.
-
-![Report](./Assets/Report.png)
-
-Automated Weekly Review — candid weekly report with performance trends, percentile, and actionable feedback.
-
-![Articles](./Assets/Articles.png)
-
-Resource Vault — engineering resource hub featuring shared resource statistics, filters, article previews, and weekly review CTA.
-
-![Write](./Assets/Write.png)
-
-Resource Editor — rich text publishing flow for submitting notes, articles, and study material.
+| <img src="./Assets/SIgn%20up.png" width="400"> | <img src="./Assets/Customization.png" width="400"> |
+| :---: | :---: |
+| **1. Onboarding**<br>Clean sign-in flow with role-based onboarding and Google OAuth. | **2. Personalization**<br>Customize the reviewer to match your target career path. |
+| <img src="./Assets/Coding%20profiles.png" width="400"> | <img src="./Assets/Email%20alert%20+%20calender.png" width="400"> |
+| **3. Connect Profiles**<br>Link LeetCode, GitHub, and Codeforces for verification. | **4. Sync & Alerts**<br>One-click calendar sync and email notifications. |
+| <img src="./Assets/Report.png" width="400"> | |
+| **5. Automated Weekly Review**<br>Candid weekly report with performance trends and feedback. | |
 
 ---
 
