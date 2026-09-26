@@ -1,4 +1,3 @@
-
 # ErithX — Contest Calendar + Placement Prep Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
@@ -128,8 +127,8 @@ ErithX follows a simple loop:
   <br><br>
 
   <!-- STEP 5 -->
-  <a href="./Assets/Report.jpg"><img src="./Assets/Report.jpg" width="80%" alt=" Weekly Review"></a>
-  <br><b>5.  Weekly Review</b><br>
+  <a href="./Assets/Report.png"><img src="./Assets/Report.png" width="80%" alt="Automated Weekly Review"></a>
+  <br><b>5. Automated Weekly Review</b><br>
   <sub>Candid weekly report with performance trends and feedback.</sub>
 
 </div>
