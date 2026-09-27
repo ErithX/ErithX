@@ -57,9 +57,9 @@ export default function DsaContestCard({ contest, index }: { contest: Contest, i
     const startDate = new Date(contest.startDate);
     const endDate = new Date(startDate.getTime() + contest.duration * 60000);
     const format = (date: Date) => date.toISOString().replace(/-|:|\.\d\d\d/g, "");
-    const text = encodeURIComponent(`${formatPlatformName(contest.platform)} ${contest.title}`);
+    const text = encodeURIComponent(`[ErithX] ${formatPlatformName(contest.platform)} ${contest.title}`);
     const dates = `${format(startDate)}/${format(endDate)}`;
-    const details = encodeURIComponent(`Join the contest: ${contest.url}`);
+    const details = encodeURIComponent(`Join the contest: ${contest.url}\n\nAdded via ErithX (https://erithx.dev)`);
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${dates}&details=${details}`;
   };
 
