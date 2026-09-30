@@ -20,7 +20,7 @@ jobs:
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
-            https://contest-tracker-zms3.vercel.app/api/cron/send-emails)
+            https://erithx.dev/api/cron/send-emails)
 
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
           BODY=$(echo "$RESPONSE" | sed '$d')
