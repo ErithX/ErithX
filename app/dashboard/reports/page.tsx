@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { Search, MoreHorizontal, ShieldAlert, Lock, Sparkles, X, ArrowLeft } from 'lucide-react';
+import { Search, MoreHorizontal, ShieldAlert, Lock, Sparkles, X, ArrowLeft, Mail } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import CustomDatePicker from '@/components/dashboard/CustomDatePicker';
@@ -270,11 +270,11 @@ const NextStep = ({ review }: { review: ReviewItem }) => {
           <p className="text-sm text-zinc-400 leading-relaxed mb-8 max-w-xl whitespace-pre-wrap">
             {review.targets_set || "No targets logged for this week."}
           </p>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-8 pt-6 border-t border-white/5">
             <button 
               onClick={handleAcknowledge}
               disabled={acknowledged || isAcknowledging}
-              className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 ${
                 acknowledged 
                   ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 opacity-100'
                   : 'bg-white text-zinc-900 hover:bg-zinc-200'
@@ -282,6 +282,16 @@ const NextStep = ({ review }: { review: ReviewItem }) => {
             >
               {acknowledged ? "Goal Locked" : isAcknowledging ? "Locking..." : "Lock in for this week"}
             </button>
+
+            <p className="text-xs text-zinc-500">
+              Need personal support or notice something off?{" "}
+              <a 
+                href="mailto:hello@erithx.dev?subject=ErithX%20Personal%20Support%20%26%20Review%20Help" 
+                className="text-zinc-400 hover:text-emerald-400 underline underline-offset-4 decoration-zinc-700 hover:decoration-emerald-400/50 transition-colors"
+              >
+                Reach out to hello@erithx.dev
+              </a>
+            </p>
           </div>
         </div>
       </div>
@@ -354,7 +364,14 @@ function ReportsContent() {
         <div className="glass p-8 rounded-2xl flex flex-col items-center max-w-sm text-center">
           <ShieldAlert className="w-8 h-8 text-zinc-500 mb-4" />
           <h2 className="text-lg font-medium mb-2">No Reports Yet</h2>
-          <p className="text-xs text-zinc-400">Complete your weekly tasks to generate your first AI Mentor Review.</p>
+          <p className="text-xs text-zinc-400 mb-6">Complete your weekly tasks to generate your first AI Mentor Review.</p>
+          <a
+            href="mailto:hello@erithx.dev?subject=ErithX%20Report%20Question%20/%20Issue"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/20 text-xs font-medium transition-colors"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            <span>Need help? hello@erithx.dev</span>
+          </a>
         </div>
       </div>
     );

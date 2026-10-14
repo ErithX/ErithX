@@ -92,3 +92,5 @@ template.html
 # Internal Admin & Business Logic
 .internal/
 AI-slop-and-critical-bugs-audit.md
+
+/docs/engineering

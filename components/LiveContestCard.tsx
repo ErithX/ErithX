@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Users, ExternalLink, Trophy } from 'lucide-react';
 import { Contest } from './DsaContestCard';
-import { getFakeParticipantCount } from '@/app/utils/participants/generator';
+
 
 const PlatformLogo = ({ url, platformName }: { url: string, platformName: string }) => {
   const [error, setError] = useState(false);
@@ -90,7 +90,7 @@ export default function LiveContestCard({ contest, index }: { contest: Contest, 
   }, [contest.startDate, contest.duration]);
 
   const participantCount = (!contest.participants || contest.participants === '-') 
-    ? getFakeParticipantCount(contest.id || contest.title) 
+    ? "400+" 
     : contest.participants;
 
   return (

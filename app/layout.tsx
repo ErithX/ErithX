@@ -21,6 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_NEW_DOMAIN || "https://erithx.dev"),
   title: {
     default: "ErithX — Coding Contests, 1-Click Calendar Sync & Career Readiness",
     template: "%s | ErithX"
@@ -45,14 +46,6 @@ export const metadata: Metadata = {
     siteName: "ErithX",
     title: "ErithX — Coding Contests, 1-Click Calendar Sync & Weekly Performance Review",
     description: "Never miss a coding contest! Track LeetCode, Codeforces, CodeChef & 10+ platforms with 1-Click Google Calendar sync, automated weekly reviews, and practical engineering resources.",
-    images: [
-      {
-        url: "https://erithx.dev/ErithX.png",
-        width: 1489,
-        height: 656,
-        alt: "ErithX — Coding Contests, 1-Click Calendar Sync & Weekly Performance Review",
-      },
-    ],
   },
   alternates: {
     canonical: process.env.NEXT_PUBLIC_NEW_DOMAIN || "https://erithx.dev",
@@ -61,7 +54,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ErithX — Coding Contests, 1-Click Calendar Sync & Weekly Performance Review",
     description: "Track coding contests from 10+ platforms with 1-Click Google Calendar sync, automated weekly reviews, and practical engineering resources.",
-    images: ["https://erithx.dev/ErithX.png"],
   },
   icons: {
     icon: [

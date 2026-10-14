@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Users, Clock, Swords, BookOpen, CalendarPlus, Trophy } from 'lucide-react';
-import { getFakeParticipantCount } from '@/app/utils/participants/generator';
+
 
 export interface Contest {
   id: number;
@@ -135,7 +135,7 @@ export default function DsaContestCard({ contest, index }: { contest: Contest, i
   const timerLabel = contest.status === 'live' ? 'Ends in' : 'Starts in';
 
   const participantCount = (!contest.participants || contest.participants === '-') 
-    ? getFakeParticipantCount(contest.id || contest.title) 
+    ? "400+" 
     : contest.participants;
 
   return (
@@ -246,15 +246,19 @@ export default function DsaContestCard({ contest, index }: { contest: Contest, i
               } catch (e) {}
             }}
 
-            className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white transition-all"
+            className="p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center"
           >
-            <CalendarPlus className="w-4 h-4" />
+            <img 
+              src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" 
+              alt="Google Calendar" 
+              className="w-5 h-5" 
+            />
           </a>
 
           <button 
-            onClick={() => alert('Solutions will be available after the contest!')} 
-            title="View Solutions & Editorials"
-            className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white transition-all"
+            disabled
+            title="Solutions will be available after the contest ends"
+            className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-zinc-600 cursor-not-allowed transition-all opacity-50"
           >
             <BookOpen className="w-4 h-4" />
           </button>

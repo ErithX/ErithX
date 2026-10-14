@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Bug, Send, X, CheckCircle2 } from 'lucide-react';
+import { Bug, Send, X, CheckCircle2, Mail } from 'lucide-react';
 
 export default function BugReportWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -91,6 +91,17 @@ export default function BugReportWidget() {
               {status === 'loading' ? 'Sending...' : 'Transmit'}
               <Send className="w-3 h-3" />
             </button>
+          </div>
+
+          <div className="pt-2.5 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-500">
+            <span>Need personal support?</span>
+            <a 
+              href="mailto:hello@erithx.dev?subject=ErithX%20Personal%20Support%20%26%20Feedback"
+              className="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 font-medium"
+            >
+              <Mail className="w-3 h-3" />
+              <span>hello@erithx.dev</span>
+            </a>
           </div>
         </div>
       )}
