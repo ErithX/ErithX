@@ -268,8 +268,11 @@ async function fetchHackerRank() {
 
 async function fetchClist() {
   try {
-    const username = process.env.CLIST_USERNAME || 'debjyoti_018';
-    const apiKey = process.env.CLIST_API_KEY || 'd951bbdbb021c2a5723761340bcf7c3788e6d7bb';
+    const username = process.env.CLIST_USERNAME;
+    const apiKey = process.env.CLIST_API_KEY;
+    if (!username || !apiKey) {
+      return [];
+    }
     const res = await fetch(
       `https://clist.by/api/v4/contest/?upcoming=true&format_time=true&limit=100&order_by=start&username=${username}&api_key=${apiKey}`,
       {

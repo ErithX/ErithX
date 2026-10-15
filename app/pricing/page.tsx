@@ -4,7 +4,7 @@ import PricingClient from './PricingClient';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Pricing | DSA Quest',
+  title: 'Pricing | ErithX',
   description: 'Simple pricing for serious progress. Stop guessing. Get honest weekly feedback that actually pushes you forward.',
 };
 

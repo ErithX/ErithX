@@ -1,6 +1,7 @@
 # ErithX- Publishing Checklist
 
 ## Phase 1 (Immediate Launch Target)
+
 **Goal:** Bring creators onboard, fill up the resources page, and provide a seamless core experience.
 
 - [x] **Clean Up Professional Dashboard**
@@ -31,6 +32,7 @@
   - Dynamic timers and contest stats integrated.
 
 ## Phase 2 & Beyond (Post-Launch)
+
 **Goal:** Enhance engagement, social features, and gamification.
 
 - [ ] **Tag-Based Content Suggestions**
@@ -56,6 +58,7 @@
   - `[x]` Create `app/resources/[id]/layout.tsx` to handle dynamic metadata for resources.
 
 ## New Backend & Profile Tasks
+
 - [x] **Creator Dashboard & Settings Page Aesthetics**
   - Redesign settings profile page with clean dark theme and transparent fields.
   - Add verified fields for Bio, X (Twitter), LinkedIn, and Coding Profiles.
@@ -73,17 +76,19 @@
   - Show actual user Bio and Social Links directly in the Top Contributors sidebar.
 - [x] **Cold Start Seeding (Growth Hack)**
   - Write a seed script (`seedUsers.mjs`) to inject "Ambassador" User profiles directly into MongoDB.
-  - Setup an "Official Verified Account" (e.g. DSA Quest) for premium resources.
+  - Setup an "Official Verified Account" (e.g. ErithX) for premium resources.
   - Build logic to allow posting resources on behalf of these seeded bot accounts (`overrideAuthorId`).
 - [x] Backend Image Compression
 - [x] Cache Resources
 
 ## Image Optimization & SEO Tasks
+
 - [x] Convert standard `<img>` tags to Next.js `<Image>` component for main Landing Page images (Hero section, Ecosystem, Manifesto, Journey, etc.).
 - [x] **Dynamic Alt Text Implementation**: When a user uploads a cover image or resource image in the dashboard, either (A) prompt the user with a mandatory 'Alt Text' input field to describe the image manually, OR (B) use an AI API (like Google Gemini Vision) in the backend to auto-generate descriptive alt text from the image buffer before saving. Save this generated/inputted `alt_text` alongside the image URL in the MongoDB/Supabase database. Update frontend components (`<img alt={item.alt_text} />`) to render it.
 - [x] Configure `next.config.mjs` with proper remote patterns (domains) to support external images in `next/image` (proper image routing).
 
 ## Recent UI & SSR Tweaks
+
 - [x] Step 1: Fix build errors (Dynamic server usage in app/contests)
 - [x] Step 2: Fix missing property errors in DsaContestCard interface
 - [x] Step 5: Refactor /resources feed to Server-Side Rendering (SSR)
@@ -95,18 +100,19 @@
   - [x] Make 'view all contests' (for both live & upcoming) functional
 
 ## Backlog (For Later Implementation)
+
 - `[ ]` Refactor main `/resources` feed page to Server-Side Rendering (SSR) to eliminate initial loading spinner.
- [x] Add the Calender data related frontend implementation plan
- [x] Execute the Calendar data related frontend implementation plan
+  [x] Add the Calender data related frontend implementation plan
+  [x] Execute the Calendar data related frontend implementation plan
 
 Remaining Vital tasks on 25/07/2026
 
- 1.[x] Fixing Broken security in backend & Critical internal bugs [secutity issue.md]
- 2.[x] Fixing Broken cron job & email infrastructure for user retention (added weekly_digest & product_updates fields to user_profiles and created 4 HTML preview templates: welcome, digest, alert, product) [Cron-Job report.md, Email-Fix-Solution.md]
- 3.Add hidden admin level analytics to track Views & calender adding event
- 4. Do Nothing & Sleep
+1.[x] Fixing Broken security in backend & Critical internal bugs [secutity issue.md]
+2.[x] Fixing Broken cron job & email infrastructure for user retention (added weekly_digest & product_updates fields to user_profiles and created 4 HTML preview templates: welcome, digest, alert, product) [Cron-Job report.md, Email-Fix-Solution.md]
+3.Add hidden admin level analytics to track Views & calender adding event 4. Do Nothing & Sleep
 
 ## AI Discoverability, Feature Docs, Competitor Comparisons & Brand Vibe Overhaul
+
 - [x] **Pillar 1: AI-Discoverability & Calendar Feature Spotlight**
   - Updated `public/llms.txt` with 1-Click Calendar Sync specifications, timezone conversion, competitor comparison matrix (vs Clist & CodeClock), and 2026+ practical career readiness focus.
   - Injected rich JSON-LD `WebApplication` schema markup in `app/page.tsx` with featureList and AI-discoverable metadata.
@@ -115,7 +121,7 @@ Remaining Vital tasks on 25/07/2026
   - Built polished `app/features/page.tsx` matched strictly to the clean typography and design system of `UI/landing.html` & `UI/Terms&condition.html`.
   - Linked `/features` in `Navbar.tsx`, `Footer.tsx`, and `app/sitemap.ts`.
 - [x] **Pillar 3: Competitor Comparison (UI-Free AI Ingestion)**
-  - Embedded competitive comparison matrix (DSA Quest vs Clist & CodeClock) directly into `public/llms.txt` and `schema.org` data for LLM crawlers (Perplexity, ChatGPT, Gemini, Claude).
+  - Embedded competitive comparison matrix (ErithX vs Clist & CodeClock) directly into `public/llms.txt` and `schema.org` data for LLM crawlers (Perplexity, ChatGPT, Gemini, Claude).
 - [x] **Pillar 4: Platform Documentation Hub (`/docs`)**
   - Built `app/docs/page.tsx` following the clean documentation layout and typography of `UI/Terms&condition.html`.
   - Linked `/docs` in `Navbar.tsx`, `Footer.tsx`, and `app/sitemap.ts`.
@@ -125,11 +131,12 @@ Remaining Vital tasks on 25/07/2026
 - [x] **Pillar 5: Brand Vibe & Mindset Rules**
   - Persisted platform vibe guidelines and copy restrictions in `.agents/AGENTS.md`.
 
-
 ## Preparation for Open Sourcing
+
 - [ ] Codebase cleanup and secret management review (We need to open source this project later carefully).
 
 ## Critical Bug Fixes & Reliability Backlog (August 2026)
+
 - [x] **Email System Reliability (Gmail App Password Restored)**
   - Updated fresh 16-character Gmail App Password in `.env`. Successfully verified SMTP authentication and delivered test emails.
 
@@ -148,6 +155,7 @@ Remaining Vital tasks on 25/07/2026
   - Stashed, wiped hurried commit, cleanly merged and pushed bug fixes to `origin/version-3`.
 
 ## Version 3 Execution (The AI Reviewer & Coder Identity Engine)
+
 - **Philosophy**: Build it from scratch optimally. This feature is Art, Mastery, Melody. Others should think it cannot be done by AI alone.
 - [x] **Milestone 1: Live Profile Linking & Real-Time Edge Verifier**
   - Built `UserCoderProfile` MongoDB model & `/api/user/profiles` CRUD endpoint.
@@ -172,11 +180,14 @@ Remaining Vital tasks on 25/07/2026
   - [ ] Update docs.
 
 ## Upcoming Marketing & Platform Tasks (Next Sprint)
+
 - [ ] **ErithX Rebranding Email Campaign**
-  - Prepare a "First Email" template for users announcing the transition from DSA Quest to ErithX.
-# DSA Quest - Publishing Checklist
+  - Prepare a "First Email" template for users announcing the transition from ErithX to ErithX.
+
+# ErithX - Publishing Checklist
 
 ## Phase 1 (Immediate Launch Target)
+
 **Goal:** Bring creators onboard, fill up the resources page, and provide a seamless core experience.
 
 - [x] **Clean Up Professional Dashboard**
@@ -207,6 +218,7 @@ Remaining Vital tasks on 25/07/2026
   - Dynamic timers and contest stats integrated.
 
 ## Phase 2 & Beyond (Post-Launch)
+
 **Goal:** Enhance engagement, social features, and gamification.
 
 - [ ] **Tag-Based Content Suggestions**
@@ -232,6 +244,7 @@ Remaining Vital tasks on 25/07/2026
   - `[x]` Create `app/resources/[id]/layout.tsx` to handle dynamic metadata for resources.
 
 ## New Backend & Profile Tasks
+
 - [x] **Creator Dashboard & Settings Page Aesthetics**
   - Redesign settings profile page with clean dark theme and transparent fields.
   - Add verified fields for Bio, X (Twitter), LinkedIn, and Coding Profiles.
@@ -249,17 +262,19 @@ Remaining Vital tasks on 25/07/2026
   - Show actual user Bio and Social Links directly in the Top Contributors sidebar.
 - [x] **Cold Start Seeding (Growth Hack)**
   - Write a seed script (`seedUsers.mjs`) to inject "Ambassador" User profiles directly into MongoDB.
-  - Setup an "Official Verified Account" (e.g. DSA Quest) for premium resources.
+  - Setup an "Official Verified Account" (e.g. ErithX) for premium resources.
   - Build logic to allow posting resources on behalf of these seeded bot accounts (`overrideAuthorId`).
 - [x] Backend Image Compression
 - [x] Cache Resources
 
 ## Image Optimization & SEO Tasks
+
 - [x] Convert standard `<img>` tags to Next.js `<Image>` component for main Landing Page images (Hero section, Ecosystem, Manifesto, Journey, etc.).
 - [x] **Dynamic Alt Text Implementation**: When a user uploads a cover image or resource image in the dashboard, either (A) prompt the user with a mandatory 'Alt Text' input field to describe the image manually, OR (B) use an AI API (like Google Gemini Vision) in the backend to auto-generate descriptive alt text from the image buffer before saving. Save this generated/inputted `alt_text` alongside the image URL in the MongoDB/Supabase database. Update frontend components (`<img alt={item.alt_text} />`) to render it.
 - [x] Configure `next.config.mjs` with proper remote patterns (domains) to support external images in `next/image` (proper image routing).
 
 ## Recent UI & SSR Tweaks
+
 - [x] Step 1: Fix build errors (Dynamic server usage in app/contests)
 - [x] Step 2: Fix missing property errors in DsaContestCard interface
 - [x] Step 5: Refactor /resources feed to Server-Side Rendering (SSR)
@@ -271,10 +286,12 @@ Remaining Vital tasks on 25/07/2026
   - [x] Make 'view all contests' (for both live & upcoming) functional
 
 ## Backlog (For Later Implementation)
+
 - `[ ]` Refactor main `/resources` feed page to Server-Side Rendering (SSR) to eliminate initial loading spinner.
- [x] Execute the Calendar data related frontend implementation plan
+  [x] Execute the Calendar data related frontend implementation plan
 
 ## Soft Internal Linking Architecture (September 2026)
+
 - [x] **Modular Sunday Review Components (`components/SundayReview/`)**
   - Built `useNextSunday.ts`: Live appointment countdown calculating relative Sunday date label (`Tonight` / `Sun, Sep 13`).
   - Refined `SundayReviewCard.tsx`: Streamlined, Linear-grade sidebar card stripped of redundant 7-day progress bars and duplicate date labels, delivering a calm, high-converting digital sanctuary aesthetic.
@@ -291,12 +308,12 @@ Remaining Vital tasks on 25/07/2026
 
 Remaining Vital tasks on 25/07/2026
 
- 1.[x] Fixing Broken security in backend & Critical internal bugs [secutity issue.md]
- 2.[x] Fixing Broken cron job & email infrastructure for user retention (added weekly_digest & product_updates fields to user_profiles and created 4 HTML preview templates: welcome, digest, alert, product) [Cron-Job report.md, Email-Fix-Solution.md]
- 3.Add hidden admin level analytics to track Views & calender adding event
- 4. Do Nothing & Sleep
+1.[x] Fixing Broken security in backend & Critical internal bugs [secutity issue.md]
+2.[x] Fixing Broken cron job & email infrastructure for user retention (added weekly_digest & product_updates fields to user_profiles and created 4 HTML preview templates: welcome, digest, alert, product) [Cron-Job report.md, Email-Fix-Solution.md]
+3.Add hidden admin level analytics to track Views & calender adding event 4. Do Nothing & Sleep
 
 ## AI Discoverability, Feature Docs, Competitor Comparisons & Brand Vibe Overhaul
+
 - [x] **Pillar 1: AI-Discoverability & Calendar Feature Spotlight**
   - Updated `public/llms.txt` with 1-Click Calendar Sync specifications, timezone conversion, competitor comparison matrix (vs Clist & CodeClock), and 2026+ practical career readiness focus.
   - Injected rich JSON-LD `WebApplication` schema markup in `app/page.tsx` with featureList and AI-discoverable metadata.
@@ -305,7 +322,7 @@ Remaining Vital tasks on 25/07/2026
   - Built polished `app/features/page.tsx` matched strictly to the clean typography and design system of `UI/landing.html` & `UI/Terms&condition.html`.
   - Linked `/features` in `Navbar.tsx`, `Footer.tsx`, and `app/sitemap.ts`.
 - [x] **Pillar 3: Competitor Comparison (UI-Free AI Ingestion)**
-  - Embedded competitive comparison matrix (DSA Quest vs Clist & CodeClock) directly into `public/llms.txt` and `schema.org` data for LLM crawlers (Perplexity, ChatGPT, Gemini, Claude).
+  - Embedded competitive comparison matrix (ErithX vs Clist & CodeClock) directly into `public/llms.txt` and `schema.org` data for LLM crawlers (Perplexity, ChatGPT, Gemini, Claude).
 - [x] **Pillar 4: Platform Documentation Hub (`/docs`)**
   - Built `app/docs/page.tsx` following the clean documentation layout and typography of `UI/Terms&condition.html`.
   - Linked `/docs` in `Navbar.tsx`, `Footer.tsx`, and `app/sitemap.ts`.
@@ -315,11 +332,12 @@ Remaining Vital tasks on 25/07/2026
 - [x] **Pillar 5: Brand Vibe & Mindset Rules**
   - Persisted platform vibe guidelines and copy restrictions in `.agents/AGENTS.md`.
 
-
 ## Preparation for Open Sourcing
+
 - [ ] Codebase cleanup and secret management review (We need to open source this project later carefully).
 
 ## Critical Bug Fixes & Reliability Backlog (August 2026)
+
 - [x] **Email System Reliability (Gmail App Password Restored)**
   - Updated fresh 16-character Gmail App Password in `.env`. Successfully verified SMTP authentication and delivered test emails.
 
@@ -338,6 +356,7 @@ Remaining Vital tasks on 25/07/2026
   - Stashed, wiped hurried commit, cleanly merged and pushed bug fixes to `origin/version-3`.
 
 ## Version 3 Execution (The AI Reviewer & Coder Identity Engine)
+
 - **Philosophy**: Build it from scratch optimally. This feature is Art, Mastery, Melody. Others should think it cannot be done by AI alone.
 - [x] **Milestone 1: Live Profile Linking & Real-Time Edge Verifier**
   - Built `UserCoderProfile` MongoDB model & `/api/user/profiles` CRUD endpoint.
@@ -367,8 +386,9 @@ Remaining Vital tasks on 25/07/2026
   - [ ] Update docs.
 
 ## Upcoming Marketing & Platform Tasks (Next Sprint)
+
 - [ ] **ErithX Rebranding Email Campaign**
-  - Prepare a "First Email" template for users announcing the transition from DSA Quest to ErithX.
+  - Prepare a "First Email" template for users announcing the transition from ErithX to ErithX.
   - Announce the new Performance Metrics feature.
   - Provide clear, step-by-step instructions on how to connect their coding profiles.
   - Include an official ErithX logo (ensure the design is extremely professional, not spam/scam).
@@ -379,6 +399,7 @@ Remaining Vital tasks on 25/07/2026
   - Identify and fix any broken pages, 404s, or missing metadata hurting SEO performance.
 
 ## Modular Docs Refactor (Completed)
+
 - [x] Extract Docs Layout (Navbar, Sidebar, Modal)
 - [x] Implement `app/docs/page.tsx` (Introduction)
 - [x] Implement `app/docs/performance-analysis/page.tsx`
@@ -386,6 +407,7 @@ Remaining Vital tasks on 25/07/2026
 - [x] Implement `app/docs/notifications/page.tsx`
 
 ## Future Features & Polish (Backlog)
+
 - [ ] **Social Sharing Feature**
   - Add a feature for users to share their achievements on LinkedIn, X, and other platforms.
   - Must include dynamic auto-generated images and default pre-written text.
@@ -399,9 +421,10 @@ Remaining Vital tasks on 25/07/2026
   - Develop a proprietary "Global Focus Score" metric that synthesizes multi-platform data into a single trademark metric for ErithX.
 - [ ] **LLM Adaptation for New Users (Historical Data)**
   - Modify the LLM context assembler to detect brand-new users.
-  - For new users, analyze their *historical data* (past months) rather than just the *current week's* data, preventing the AI from being overly harsh on their first review.
+  - For new users, analyze their _historical data_ (past months) rather than just the _current week's_ data, preventing the AI from being overly harsh on their first review.
 
 ## Mobile PageSpeed & Core Web Vitals Optimization (Completed)
+
 - [x] Fix LCP bottleneck (5.6s -> <1.5s) in `HeroConstellation.tsx` by pre-rendering words in DOM instead of sequential setTimeout mounting.
 - [x] Remove non-composited `filter: drop-shadow(...)` animation from hero constellation text.
 - [x] Replace blocking HTML <link rel="preload"> with non-blocking deferred idle prefetching (`ContestPrefetch.tsx` via `requestIdleCallback`) so `/api/contests` is warm in browser cache without blocking initial mobile LCP.
@@ -413,6 +436,7 @@ Remaining Vital tasks on 25/07/2026
 - [x] Update `tsconfig.json` target to `ES2022` to eliminate ~14 KiB of legacy polyfills.
 
 ## Critical SEO & llms.txt Remediation (Completed)
+
 - [x] Fixed broken canonical on `/contests` (`undefined/contests` -> `https://erithx.dev/contests`) with universal `https://erithx.dev` fallbacks across `app/contests/layout.tsx`, `app/layout.tsx`, `app/resources/layout.tsx`, and `app/resources/[id]/layout.tsx`.
 - [x] Fixed title duplication bug (`... | ErithX | ErithX`) by configuring explicit `title: { absolute: '...' }` in `app/contests/layout.tsx`, `app/contests/page.tsx`, and `app/page.tsx`.
 - [x] Added missing Open Graph and Twitter card images (`ErithX.png` on root layout, `landing/live-contests-dashboard.png` on contests layout).
@@ -424,6 +448,7 @@ Remaining Vital tasks on 25/07/2026
 - [x] Whitelisted `/llms.txt` in `app/robots.ts`.
 
 ## Production Automation & Email Infrastructure Remediation (Completed)
+
 - [x] Configured native Vercel Cron in `vercel.json` (`schedule: "30 15 * * 0"`, Sundays at 9:00 PM IST / 15:30 UTC) targeting `/api/qstash/trigger-weekly-reviews`.
 - [x] Hardened QStash base URL resolution in `app/api/qstash/trigger-weekly-reviews/route.ts` against `localhost` fallbacks, auto-resolving to `erithx.dev` or `VERCEL_URL`.
 - [x] Fixed Serverless early-termination bug in `app/auth/callback/route.ts`: removed heavy blocking scrapers and directly `await`ed `sendWelcomeEmail()` prior to HTTP redirect.

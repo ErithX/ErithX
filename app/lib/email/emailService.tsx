@@ -316,7 +316,7 @@ export async function sendWeeklyReviewEmail(
 // --- SUSPENSION & REACTIVATION EMAILS ---
 
 export async function sendInactivityWarningEmail(userEmail: string, userName: string) {
-  const subject = `Notice: Your DSA Quest Mentor Reviews will be paused soon`;
+  const subject = `Notice: Your ErithX Mentor Reviews will be paused soon`;
   const html = emailWrapper(`
     <tr>
       <td style="padding:32px 32px 24px 32px;">

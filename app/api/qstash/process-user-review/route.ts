@@ -167,6 +167,7 @@ async function handler(request: Request) {
     await Promise.allSettled(fetchPromises);
 
     // 3. AI Generation Phase
+    
     // A. Load previous review memory (to evaluate previous goals & active roy_factor)
     const previousReview = await getLatestUserReview(userId);
     const currentRoyFactor = previousReview?.roy_factor || 0;

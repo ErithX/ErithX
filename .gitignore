@@ -94,3 +94,6 @@ template.html
 AI-slop-and-critical-bugs-audit.md
 
 /docs/engineering
+
+# Local Backups
+/backups/

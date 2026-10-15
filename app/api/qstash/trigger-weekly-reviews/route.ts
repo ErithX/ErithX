@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     // 1. Verify Trigger Authorization (either QStash Cron or Vercel Cron)
     const authHeader = request.headers.get('authorization');
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      // return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Uncomment for strict prod
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Uncomment for strict prod
     }
 
     if (!process.env.QSTASH_TOKEN) {
@@ -105,3 +105,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
 }
+

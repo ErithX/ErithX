@@ -19,11 +19,7 @@ export default function PlatformMarquee() {
             <span className="text-xl font-semibold text-zinc-400 hover:text-zinc-200 transition-colors whitespace-nowrap">Kick Start</span>
             <span className="text-xl font-semibold text-zinc-400 transition-colors whitespace-nowrap">and more</span>
           </div>
-          {/* Duplicated for smooth infinite scroll effect if the CSS uses it, but the user asked to 'Remove duplicated platform list'. 
-              Wait, if we remove the duplicated one, CSS marquee will look broken. Marquee usually needs a duplicate for the infinite loop.
-              But the user said "Platforms (single line, no duplication)". 
-              So I'll just remove the duplicate and maybe remove the marquee class or let it be a static single line centered if there's no duplicate? 
-              I'll remove the duplicate block and keep it as a flex row, maybe animated maybe not, but single line no duplication. */}
+          
         </div>
       </div>
     </section>

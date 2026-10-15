@@ -673,7 +673,7 @@ export default function SettingsPage() {
             <section id="email-prefs" className="max-w-4xl border border-zinc-800 rounded-lg bg-black overflow-hidden">
               <div className="p-6 md:p-8">
                 <h2 className="text-xl font-medium text-zinc-100">Email Preferences</h2>
-                <p className="text-sm text-zinc-400 mt-1 mb-8">Manage what emails you receive from DSA Quest.</p>
+                <p className="text-sm text-zinc-400 mt-1 mb-8">Manage what emails you receive from ErithX.</p>
 
                 <div className="space-y-0">
                   
