@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IAIReview extends Document {
   user_id: string;
+  cycle_key?: string;
   generated_text: string;
   targets_set: string;
   hidden_summary?: string;
@@ -23,6 +24,7 @@ export interface IAIReview extends Document {
 
 const AIReviewSchema = new Schema<IAIReview>({
   user_id: { type: String, required: true, index: true },
+  cycle_key: { type: String, index: true },
   generated_text: { type: String, required: true },
   targets_set: { type: String, required: true },
   hidden_summary: { type: String },
@@ -41,6 +43,13 @@ const AIReviewSchema = new Schema<IAIReview>({
   acknowledged_at: { type: Date },
   created_at: { type: Date, default: Date.now, index: true },
 });
+
+// Compound unique index with partial filter: strictly enforces 1 review per user per cycle
+// while safely ignoring legacy historical reviews where cycle_key is missing.
+AIReviewSchema.index(
+  { user_id: 1, cycle_key: 1 },
+  { unique: true, partialFilterExpression: { cycle_key: { $type: "string" } } }
+);
 
 // Compound index for querying user's latest review efficiently
 AIReviewSchema.index({ user_id: 1, created_at: -1 });

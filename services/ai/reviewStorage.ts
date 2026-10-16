@@ -1,9 +1,11 @@
 import connectToDatabase from "@/app/lib/mongodb";
 import AIReview, { IAIReview } from "@/models/AIReview";
 import { sanitizeBannedWords } from "./sanitize";
+import { calculateCycleKey } from "@/app/lib/algorithms/cycleAnchor";
 
 export interface SaveReviewParams {
   userId: string;
+  cycleKey?: string;
   reviewText: string;
   hiddenSummary?: string;
   targetsSet: string;
@@ -32,9 +34,11 @@ export async function saveAIReview(params: SaveReviewParams): Promise<IAIReview>
   const roy = Math.min(5, Math.max(0, Math.round(rawRoy)));
 
   const sanitized = sanitizeBannedWords(params.reviewText);
+  const cycleKey = params.cycleKey || calculateCycleKey(params.weekStartDate || new Date());
 
   const review = await AIReview.create({
     user_id: params.userId,
+    cycle_key: cycleKey,
     generated_text: sanitized.text,
     targets_set: params.targetsSet,
     monthly_roadmap: params.monthlyRoadmap,
@@ -52,6 +56,14 @@ export async function saveAIReview(params: SaveReviewParams): Promise<IAIReview>
   });
 
   return review;
+}
+
+/**
+ * Retrieves an AI Review for a user for a specific weekly cycle key.
+ */
+export async function getReviewByCycle(userId: string, cycleKey: string): Promise<IAIReview | null> {
+  await connectToDatabase();
+  return await AIReview.findOne({ user_id: userId, cycle_key: cycleKey }).lean<IAIReview>();
 }
 
 /**

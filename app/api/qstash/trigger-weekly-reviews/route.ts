@@ -3,6 +3,8 @@ import { Client } from '@upstash/qstash';
 import { createClient } from '@supabase/supabase-js';
 import connectToDatabase from '@/app/lib/mongodb';
 import { UserCoderProfile } from '@/models/UserCoderProfile';
+import { calculateCycleKey, buildDeduplicationId } from '@/app/lib/algorithms/cycleAnchor';
+import { calculateStaggerDelay } from '@/app/lib/algorithms/staggerDelay';
 
 export const maxDuration = 60; // 60s is plenty to just query DB and publish 100 messages
 export const dynamic = 'force-dynamic';
@@ -16,7 +18,7 @@ export async function GET(request: Request) {
     // 1. Verify Trigger Authorization (either QStash Cron or Vercel Cron)
     const authHeader = request.headers.get('authorization');
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Uncomment for strict prod
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); // Strict prod guard
     }
 
     if (!process.env.QSTASH_TOKEN) {
@@ -69,14 +71,23 @@ export async function GET(request: Request) {
       });
     }
 
-    // 4. Publish a job to QStash for each valid user
+    // 4. Compute Canonical Cycle Key and Publish Staggered Jobs
+    const cycleKey = calculateCycleKey();
     const cleanAppUrl = appUrl.endsWith('/') ? appUrl.slice(0, -1) : appUrl;
 
-    const publishPromises = profiles.map(profile => {
+    const publishPromises = profiles.map((profile, index) => {
+      const delaySeconds = calculateStaggerDelay(index);
+      const deduplicationId = buildDeduplicationId(profile.userId, cycleKey);
+
       return qstash.publishJSON({
         url: `${cleanAppUrl}/api/qstash/process-user-review`,
-        body: { userId: profile.userId },
-        retries: 3, // If Vercel timeouts/fails, QStash will retry up to 3 times
+        body: { 
+          userId: profile.userId,
+          cycleKey,
+        },
+        delay: delaySeconds,
+        deduplicationId,
+        retries: 3,
       });
     });
 
@@ -95,6 +106,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       success: true,
+      cycleKey,
       message: `Triggered ${successful} review jobs in QStash. Failed to trigger ${failed}.`,
       errors,
       totalEligible: profiles.length

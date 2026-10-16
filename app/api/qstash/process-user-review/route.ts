@@ -4,10 +4,12 @@ import connectToDatabase from '@/app/lib/mongodb';
 import { UserCoderProfile } from '@/models/UserCoderProfile';
 import { User } from '@/models/User';
 import { SystemLog } from '@/models/SystemLog';
+import AIReview from '@/models/AIReview';
 import { generateAIContext } from '@/services/core/dataFilter';
 import { generateWeeklyReview } from '@/services/ai/reviewerRouter';
-import { getLatestUserReview, saveAIReview } from '@/services/ai/reviewStorage';
+import { getLatestUserReview, saveAIReview, markReviewEmailSent } from '@/services/ai/reviewStorage';
 import { sendWeeklyReviewEmail } from '@/app/lib/email/emailService';
+import { calculateCycleKey } from '@/app/lib/algorithms/cycleAnchor';
 import { 
   LeetCodeStats, 
   CodeforcesStats, 
@@ -28,12 +30,63 @@ async function handler(request: Request) {
   try {
     const body = await request.json();
     const userId = body.userId;
+    const cycleKey = body.cycleKey || calculateCycleKey();
 
     if (!userId) {
       return NextResponse.json({ error: 'Missing userId in payload' }, { status: 400 });
     }
 
     await connectToDatabase();
+
+    
+    // PHASE GUARD: Idempotency & Duplicate Prevention
+
+    const existingReview = await AIReview.findOne({ user_id: userId, cycle_key: cycleKey });
+
+    if (existingReview) {
+      // Branch A: Review was generated AND email was already delivered.
+      if (existingReview.email_sent) {
+        return NextResponse.json({ 
+          success: true, 
+          message: `Review already generated and email already delivered for user ${userId} in cycle ${cycleKey}. Skipping.`,
+          status: 'already_completed',
+          cycleKey
+        });
+      }
+
+      // Branch B: Review was generated earlier, but email failed/timed out.
+      // SKIP scraping and SKIP Gemini LLM call! Only recover email delivery.
+      console.log(`[Worker] Review exists for ${userId} in cycle ${cycleKey} but email not sent. Recovering email delivery...`);
+
+      const userSettings = await User.findOne({ supabaseId: userId }).lean();
+      const profile = await UserCoderProfile.findOne({ userId });
+      const targetEmail = userSettings?.email || profile?.userEmail;
+      const targetName = userSettings?.name?.split(' ')[0] || 'Developer';
+
+      let emailStatus = 'Not attempted';
+      if (targetEmail) {
+        const res = await sendWeeklyReviewEmail(targetEmail, targetName, existingReview.generated_text);
+        if (res.success) {
+          await markReviewEmailSent(existingReview._id.toString());
+          emailStatus = 'Sent successfully';
+        } else {
+          emailStatus = res.skipped ? 'Skipped by service' : 'Failed to send';
+        }
+      } else {
+        emailStatus = 'Missing target email';
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: `Recovered email delivery for user ${userId} in cycle ${cycleKey}.`,
+        email_status: emailStatus,
+        cycleKey
+      });
+    }
+
+    // ----------------------------------------------------------------------
+    // NORMAL WORKER PIPELINE (Review does not exist yet)
+    // ----------------------------------------------------------------------
 
     // 1. Fetch user profile and settings
     const profile = await UserCoderProfile.findOne({ userId });
@@ -99,20 +152,21 @@ async function handler(request: Request) {
               {
                 $set: {
                   userId,
-                  handle: profile.platforms.github.handle,
+                  username: profile.platforms.github.handle,
                   lastUpdated: new Date(),
                   overview: {
                     publicRepos: ghData.user.public_repos || 0,
                     followers: ghData.user.followers || 0,
-                    totalContributions: ghData.recentEvents?.length || 0
+                    totalContributionsLastYear: ghData.recentEvents?.length || 0
                   }
                 },
                 $push: {
-                  history: {
-                    date: new Date(),
-                    publicRepos: ghData.user.public_repos || 0,
-                    followers: ghData.user.followers || 0,
-                    totalContributions: ghData.recentEvents?.length || 0
+                  recentEvents: {
+                    $each: (ghData.recentEvents || []).map((e: any) => ({
+                      type: e.type,
+                      repoName: e.repo?.name || '',
+                      createdAt: new Date(e.created_at)
+                    })).slice(0, 10)
                   }
                 }
               },
@@ -136,11 +190,11 @@ async function handler(request: Request) {
                   userId,
                   handle: profile.platforms.codeforces.handle,
                   lastUpdated: new Date(),
-                  overview: {
-                    rating: userStats.rating || 0,
-                    maxRating: userStats.maxRating || 0,
-                    rank: userStats.rank || 'unrated'
-                  },
+                  rating: userStats.rating || 0,
+                  maxRating: userStats.maxRating || 0,
+                  rank: userStats.rank || 'unrated',
+                  maxRank: userStats.maxRank || 'unrated',
+                  contribution: userStats.contribution || 0,
                   recentSubmissions: (cfData.recentSubmissions || []).map((s: any) => ({
                     title: s.problem?.name || '',
                     difficulty: s.problem?.rating ? String(s.problem.rating) : '',
@@ -148,18 +202,35 @@ async function handler(request: Request) {
                     contestId: s.contestId || 0,
                     timestamp: new Date((s.creationTimeSeconds || 0) * 1000)
                   }))
-                },
-                $push: {
-                  history: {
-                    date: new Date(),
-                    rating: userStats.rating || 0
-                  }
                 }
               },
               { upsert: true }
             );
           }
         }).catch(err => console.error(`Codeforces fetch error for ${userId}:`, err))
+      );
+    }
+
+    // 2d. CodeChef
+    if (profile.platforms?.codechef?.handle) {
+      fetchPromises.push(
+        fetchCodeChefStats(profile.platforms.codechef.handle).then(async (ccData) => {
+          if (ccData) {
+            await CodeChefStats.findOneAndUpdate(
+              { userId },
+              {
+                $set: {
+                  userId,
+                  handle: profile.platforms.codechef.handle,
+                  lastUpdated: new Date(),
+                  rating: ccData.rating || 0,
+                  stars: ccData.stars || '1★'
+                }
+              },
+              { upsert: true }
+            );
+          }
+        }).catch(err => console.error(`CodeChef fetch error for ${userId}:`, err))
       );
     }
     
@@ -195,19 +266,31 @@ async function handler(request: Request) {
     // C. Call LLM Reasoning Engine (Gemini/Llama)
     const llmResponse = await generateWeeklyReview(filteredPayload);
 
-    // D. Save new review document with updated targets & roy_factor
-    await saveAIReview({
-      userId,
-      reviewText: llmResponse.review_text,
-      hiddenSummary: llmResponse.hidden_summary,
-      targetsSet: llmResponse.targets_set,
-      previousTargets: previousTargets || undefined,
-      royFactor: llmResponse.roy_factor,
-      modelUsed: llmResponse.model_used,
-      promptTokensUsed: llmResponse.prompt_tokens,
-      statsSnapshot: filteredPayload,
-      adminNote: finalAdminNote
-    });
+    // D. Save new review document with cycle_key & compound unique index protection
+    let savedReview;
+    try {
+      savedReview = await saveAIReview({
+        userId,
+        cycleKey,
+        reviewText: llmResponse.review_text,
+        hiddenSummary: llmResponse.hidden_summary,
+        targetsSet: llmResponse.targets_set,
+        previousTargets: previousTargets || undefined,
+        royFactor: llmResponse.roy_factor,
+        modelUsed: llmResponse.model_used,
+        promptTokensUsed: llmResponse.prompt_tokens,
+        statsSnapshot: filteredPayload,
+        adminNote: finalAdminNote
+      });
+    } catch (saveErr: any) {
+      // If MongoDB returns duplicate key error (code 11000), another worker just created it
+      if (saveErr.code === 11000) {
+        console.warn(`[Worker] Duplicate key (11000) caught for user ${userId} in cycle ${cycleKey}. Recovering saved review.`);
+        savedReview = await AIReview.findOne({ user_id: userId, cycle_key: cycleKey });
+      } else {
+        throw saveErr;
+      }
+    }
 
     // Clear consumed pendingAdminNote
     if (profile?.pendingAdminNote) {
@@ -221,7 +304,14 @@ async function handler(request: Request) {
 
     if (targetEmail) {
       const res = await sendWeeklyReviewEmail(targetEmail, targetName, llmResponse.review_text);
-      emailStatus = res.success ? "Sent successfully" : (res.skipped ? "Skipped by service" : "Failed to send");
+      if (res.success) {
+        if (savedReview?._id) {
+          await markReviewEmailSent(savedReview._id.toString());
+        }
+        emailStatus = "Sent successfully";
+      } else {
+        emailStatus = res.skipped ? "Skipped by service" : "Failed to send";
+      }
     } else {
       console.warn(`No target email found for userId: ${userId}`);
       emailStatus = "Missing target email";
@@ -229,6 +319,7 @@ async function handler(request: Request) {
 
     return NextResponse.json({ 
       success: true, 
+      cycleKey,
       message: `Processed ${userId} successfully.`,
       email_status: emailStatus 
     });
