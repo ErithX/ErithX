@@ -1,3 +1,6 @@
+<img width="2216" height="709" alt="image" src="https://github.com/user-attachments/assets/d3f63aba-2fe6-4df7-86bc-1228b8232a8f" />
+
+
 # ErithX — Contest Calendar + Placement Prep Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
