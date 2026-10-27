@@ -64,7 +64,7 @@ export default function SundayReviewCard({ className = '' }: SundayReviewCardPro
           onClick={handleAction}
           className="group/btn flex w-full items-center justify-center gap-1.5 rounded-lg bg-white px-3 py-2.5 text-xs font-semibold text-zinc-950 transition-all duration-200 hover:bg-rose-400 hover:shadow-[0_0_20px_rgba(244,63,94,0.3)]"
         >
-          <span>{user ? 'Open Dashboard' : 'Start my first weekly review'}</span>
+          <span>{user ? 'Open Dashboard' : 'Start Weekly Review'}</span>
           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
         </button>
 

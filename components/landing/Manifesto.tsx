@@ -48,10 +48,10 @@ export default function Manifesto() {
           <div className="lg:col-span-5 lg:pb-1">
             <div className="max-w-md space-y-4 text-sm leading-relaxed text-zinc-400 sm:text-base sr" style={{ transitionDelay: '200ms' }}>
               <p>
-                Most platforms show totals: problems solved, rating, streaks.
+                Green GitHub streaks and problem counters don’t prepare you for technical interviews. Solving 200 easy problems creates an illusion of progress.
               </p>
               <p>
-                ErithX studies how you work: your consistency, the topics you avoid, and whether your projects match your goals. Every week you get a direct report and a focused plan for the next 7 days.
+                ErithX cuts through vanity metrics. We analyze the substance of your preparation—diagnosing difficulty stagnation, topic avoidance, and whether your practice translates to actual interview readiness.
               </p>
             </div>
           </div>

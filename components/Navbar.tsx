@@ -83,7 +83,7 @@ export default function Navbar({ darkMode, setDarkMode }: NavbarProps = {}) {
                 href="/resources" 
                 className="px-3.5 py-2 text-xs font-medium text-zinc-300 hover:text-white transition-colors rounded-lg hover:bg-white/5"
               >
-                Resources
+                Articles
               </Link>
 
               {/* Isolated Platform Dropdown Component */}
@@ -215,7 +215,7 @@ export default function Navbar({ darkMode, setDarkMode }: NavbarProps = {}) {
           <div className="md:hidden absolute top-16 left-0 w-full bg-[#09090b]/95 border-b border-white/10 backdrop-blur-2xl animate-in slide-in-from-top-2 shadow-2xl p-4 space-y-3">
             <div className="flex flex-col gap-1">
               <Link onClick={() => setIsMobileMenuOpen(false)} href="/contests" className="p-2.5 text-xs font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Contests</Link>
-              <Link onClick={() => setIsMobileMenuOpen(false)} href="/resources" className="p-2.5 text-xs font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Resources</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/resources" className="p-2.5 text-xs font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Articles</Link>
               {user && (
                 <Link onClick={() => setIsMobileMenuOpen(false)} href={user?.user_metadata?.role === 'professional' ? '/dashboard/pro' : '/dashboard'} className="p-2.5 text-xs font-medium text-zinc-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors">Dashboard</Link>
               )}

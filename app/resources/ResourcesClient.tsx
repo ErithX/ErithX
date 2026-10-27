@@ -63,15 +63,15 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
           <div className="max-w-2xl">
             <div className="flex items-center gap-2 mb-4">
               <span className="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
-              <span className="text-xs font-medium text-emerald-400">2,000+ learners active now</span>
+              <span className="text-xs font-medium text-emerald-400">Curated for CS Students & SDE Aspirants</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4 gradient-text">The Complete Software Engineering Resource Vault</h1>
+            <h1 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4 gradient-text">Engineering Blueprints, DSA Guides & Career Roadmaps</h1>
             <p className="text-sm text-zinc-400 leading-relaxed mb-8 max-w-lg">
-              Access curated engineering blueprints, system architecture PDFs, algorithmic deep-dives, and 2026 tech career roadmaps. Curated by verified engineers, built for zero-fluff mastery.
+              High-signal study guides, system architecture breakdowns, and tech interview roadmaps. Curated for developers preparing for top software engineering roles.
             </p>
             <div className="flex items-center gap-4">
               <a href="#feed" className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-zinc-900 text-xs font-medium hover:bg-zinc-200 transition-all">
-                Browse All Resources
+                Browse All Guides
                 <ArrowDown className="w-3.5 h-3.5" />
               </a>
               <button onClick={() => router.push('/dashboard/write')} className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/10 text-zinc-300 text-xs font-medium hover:bg-white/5 transition-all">
@@ -123,13 +123,13 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
                 className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all ${activeFilter === 'all' ? 'active bg-white/10 text-white' : ''}`}
                 onClick={() => filterCards('all')}
               >
-                All
+                All Guides
               </button>
               <button 
                 className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5 ${activeFilter === 'blog' ? 'active bg-white/10 text-white' : ''}`}
                 onClick={() => filterCards('blog')}
               >
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Blogs
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Articles & Strategy
               </button>
               <button 
                 className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5 ${activeFilter === 'pdf' ? 'active bg-white/10 text-white' : ''}`}
@@ -138,10 +138,16 @@ export default function ResourcesClient({ initialItems }: { initialItems: FeedIt
                 <span className="w-2 h-2 rounded-full bg-orange-500"></span> Notes & PDFs
               </button>
               <button 
+                className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5 ${activeFilter === 'project' ? 'active bg-white/10 text-white' : ''}`}
+                onClick={() => filterCards('project')}
+              >
+                <span className="w-2 h-2 rounded-full bg-cyan-500"></span> Project Blueprints
+              </button>
+              <button 
                 className={`filter-btn px-3 py-1.5 rounded-md text-xs font-medium text-zinc-400 border border-transparent hover:text-white transition-all flex items-center gap-1.5 ${activeFilter === 'career' ? 'active bg-white/10 text-white' : ''}`}
                 onClick={() => filterCards('career')}
               >
-                <span className="w-2 h-2 rounded-full bg-purple-500"></span> Career
+                <span className="w-2 h-2 rounded-full bg-purple-500"></span> Career Roadmaps
               </button>
             </div>
 

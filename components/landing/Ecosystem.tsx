@@ -15,9 +15,9 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 type Principle = { icon: LucideIcon; lead: string; tail: string; desc: string; color: string };
 
 const PRINCIPLES: Principle[] = [
-  { icon: Layers,     lead: 'Behavior', tail: 'numbers',   desc: 'We don’t focus on how many problems you solved. We focus on whether you’re solving harder problems, staying consistent, and moving toward your target role.', color: 'emerald' },
-  { icon: BadgeCheck, lead: 'Trends',   tail: 'snapshots', desc: 'Your activity is compared week to week. The system notices when you slow down, when you improve, and when you’re mostly solving easy tasks.', color: 'cyan' },
-  { icon: Filter,     lead: 'Plans',    tail: 'panic',     desc: 'No random grinding. Each review ends with clear targets: what to solve, what to build, and what contests to attend.', color: 'purple' },
+  { icon: Layers,     lead: 'Topic Depth', tail: 'raw counts',   desc: 'We detect when you avoid hard topics like DP, Trees, or Graphs. Practice is weighted by problem difficulty and interview relevance, not easy problem volume.', color: 'emerald' },
+  { icon: BadgeCheck, lead: 'Trends',   tail: 'snapshots', desc: 'Your velocity is tracked week over week. The engine flags when your momentum slows, when consistency drops, and when you are ready to jump to harder tiers.', color: 'cyan' },
+  { icon: Filter,     lead: 'Plans',    tail: 'guesswork',     desc: 'No more wondering what to solve each morning. Every Sunday review ends with concrete weekly targets: exact problem sets, contest rounds, and project milestones.', color: 'purple' },
 ];
 
 const CONTEST_FEATURES: { icon: LucideIcon; label: string }[] = [
@@ -342,10 +342,7 @@ export default function Ecosystem() {
 
           <div className="lg:col-span-5 lg:pb-1 text-[15px] leading-relaxed text-zinc-400 sr" style={{ transitionDelay: '200ms' }}>
             <p>
-              ErithX doesn&rsquo;t just show totals. It studies how you work: your consistency, the
-              topics you avoid, how often you stay in your comfort zone, and whether your projects
-              match your goals. Every week, you get a direct report and a focused plan for the next
-              7 days.
+              Every Sunday, ErithX runs an automated audit across your connected accounts. We evaluate three critical diagnostic signals—topic avoidance, difficulty progression, and engineering balance—to generate an honest assessment and your 7-day action plan.
             </p>
           </div>
         </div>

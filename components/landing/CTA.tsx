@@ -9,7 +9,7 @@ import AuthCTAButton from './AuthCTAButton';
    Better: hoist this into lib/fonts.ts and share it with Hero. */
 const serif = Instrument_Serif({ subsets: ['latin'], weight: '400', style: ['italic'], display: 'swap' });
 
-const TRUST = ['No spam, ever', 'Unsubscribe anytime', 'Built by a solo dev grinding SDE interviews'];
+const TRUST = ['No spam, ever', 'Unsubscribe anytime', 'Built for ambitious software developers'];
 
 export default function CTA() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -186,7 +186,7 @@ export default function CTA() {
         <div className="mb-4 inline-block p-1.5" style={fade('0.58s')}>
           <div ref={magRef} onMouseMove={onMagMove} onMouseLeave={onMagLeave}>
             <AuthCTAButton className="group inline-flex items-center gap-2.5 rounded-lg bg-white px-7 py-3.5 text-sm font-semibold text-zinc-950 shadow-[0_8px_30px_rgba(255,255,255,0.08)] transition-colors duration-300 hover:bg-emerald-400">
-              Begin my ErithX review
+              Start Your Weekly Review
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" strokeWidth={2} />
             </AuthCTAButton>
           </div>

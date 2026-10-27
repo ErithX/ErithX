@@ -4,7 +4,7 @@ import { Resource } from '@/models/Resource';
 import ResourcesClient from './ResourcesClient';
 
 export const metadata: Metadata = {
-  title: 'Focused Tech Resources for DSA Students – ErithX',
+  title: 'Engineering Blueprints, DSA Guides & Career Roadmaps – ErithX',
   description: 'Read curated articles on DSA strategy, system design, and career growth for 2026. Built to complement your weekly ErithX review, not replace it.',
   keywords: [
     "DSA strategy articles for students", "system design for entry level SDE 2026", 
