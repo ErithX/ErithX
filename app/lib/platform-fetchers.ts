@@ -9,11 +9,31 @@ export async function fetchLeetCodeStats(username: string) {
             count
             submissions
           }
+         
+
         }
         profile {
           ranking
           reputation
           starRating
+        }
+        submissionCalendar
+        tagProblemCounts {
+          fundamental {
+            tagName
+            tagSlug
+            problemsSolved
+          }
+          intermediate {
+            tagName
+            tagSlug
+            problemsSolved
+          }
+          advanced {
+            tagName
+            tagSlug
+            problemsSolved
+          }
         }
       }
       userContestRanking(username: $username) {
@@ -24,7 +44,10 @@ export async function fetchLeetCodeStats(username: string) {
         title
         titleSlug
         timestamp
+      
       }
+      
+        
     }
   `;
 
@@ -34,6 +57,7 @@ export async function fetchLeetCodeStats(username: string) {
       headers: {
         'Content-Type': 'application/json',
         'Referer': 'https://leetcode.com',
+         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
       },
       body: JSON.stringify({
         query,

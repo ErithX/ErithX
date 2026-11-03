@@ -35,6 +35,19 @@ function getLeetCodeMetrics(lcStats: any, degradeSeverity: string[], totalDegrad
     ratingDelta = (latest.contestRating || 0) - (previous.contestRating || 0);
   }
 
+  // Fallback: If delta is 0 or only 1 snapshot exists, inspect recentSubmissions within the past 7 days
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+  const recentSubmissions = lcStats.recentSubmissions || [];
+  const recentSubsThisWeek = recentSubmissions.filter((sub: any) => {
+    return sub.timestamp && new Date(sub.timestamp) > oneWeekAgo;
+  });
+
+  if (deltaSolved === 0 && recentSubsThisWeek.length > 0) {
+    deltaSolved = recentSubsThisWeek.length;
+  }
+
   const totalSolved = lcStats.overview?.totalSolved || 0;
   const hardCount = lcStats.overview?.hard || 0;
   const hardRatio = totalSolved > 0 ? ((hardCount / totalSolved) * 100).toFixed(1) : "0.0";
@@ -43,17 +56,19 @@ function getLeetCodeMetrics(lcStats: any, degradeSeverity: string[], totalDegrad
   const easyCount = lcStats.overview?.easy || 0;
   const easyRatio = totalSolved > 0 ? ((easyCount / totalSolved) * 100).toFixed(1) : "0.0";
 
-  // Consistency & Streaks from Calendar
+  // Consistency & Streaks from Calendar (handles Unix epoch seconds as well as ISO dates)
   const calendar = lcStats.calendar || {};
-  const activeDays = Object.keys(calendar).filter(date => {
-      // Filter for last 7 days
-      const d = new Date(date);
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return d > weekAgo;
+  const activeDays = Object.keys(calendar).filter(timestampStr => {
+    const timestampSec = parseInt(timestampStr, 10);
+    if (isNaN(timestampSec)) {
+      const d = new Date(timestampStr);
+      return !isNaN(d.getTime()) && d > oneWeekAgo;
+    }
+    const d = new Date(timestampSec * 1000);
+    return d > oneWeekAgo;
   }).length;
   
-  const topTopics = (lcStats.topTags || []).slice(0, 3).map((t: any) => t.tag);
+  const topTopics = (lcStats.topTags || []).slice(0, 5).map((t: any) => t.tag);
 
   // Degradation rules
   if (history.length > 1) {
@@ -96,6 +111,7 @@ function getLeetCodeMetrics(lcStats: any, degradeSeverity: string[], totalDegrad
     acceptance_rate: lcStats.overview?.acceptanceRate || 0,
     active_days_this_week: activeDays,
     top_topics_focus: topTopics,
+    recent_solved_problems: recentSubmissions.slice(0, 5).map((s: any) => s.title),
     trend_3_weeks: trend_3_weeks,
     status: deltaSolved > 5 ? (ratingDelta > 0 ? "Thriving" : "High Volume") : (deltaSolved > 0 ? "Active" : "No problems solved this week"),
     history: rawHistory

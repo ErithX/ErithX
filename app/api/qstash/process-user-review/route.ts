@@ -107,6 +107,32 @@ async function handler(request: Request) {
         fetchLeetCodeStats(profile.platforms.leetcode.handle).then(async (lcData) => {
           if (lcData?.matchedUser) {
             const overview = lcData.matchedUser.submitStats?.acSubmissionNum || [];
+            
+            // 1. Safely parse submissionCalendar string
+            let parsedCalendar: Record<string, number> = {};
+            try {
+              if (lcData.matchedUser.submissionCalendar) {
+                parsedCalendar = JSON.parse(lcData.matchedUser.submissionCalendar);
+              }
+            } catch (err) {
+              console.error('Failed to parse LeetCode submissionCalendar:', err);
+            }
+
+            // 2. Flatten and sort tagProblemCounts
+            const tagCounts = lcData.matchedUser.tagProblemCounts;
+            const allTags = [
+              ...(tagCounts?.fundamental || []),
+              ...(tagCounts?.intermediate || []),
+              ...(tagCounts?.advanced || [])
+            ];
+            
+            const topTags = allTags
+              .map((t: any) => ({
+                tag: t.tagName,
+                count: t.problemsSolved
+              }))
+              .sort((a, b) => b.count - a.count);
+
             await LeetCodeStats.findOneAndUpdate(
               { userId },
               {
@@ -122,6 +148,8 @@ async function handler(request: Request) {
                     contestRating: lcData.userContestRanking?.rating || 0,
                     ranking: lcData.matchedUser.profile?.ranking || 0
                   },
+                  calendar: parsedCalendar,
+                  topTags,
                   recentSubmissions: (lcData.recentAcSubmissionList || []).map((s: any) => ({
                     title: s.title,
                     timestamp: new Date(parseInt(s.timestamp) * 1000)

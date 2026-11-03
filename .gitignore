@@ -96,4 +96,9 @@ AI-slop-and-critical-bugs-audit.md
 /docs/engineering
 
 # Local Backups
-/backups/
+/backups/
+
+
+# Test benchmark results & private test outputs
+tests/unit/platform/test-result-*.md
+test.excalidraw
