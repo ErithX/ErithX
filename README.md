@@ -1,4 +1,4 @@
-<img width="2216" height="709" alt="image" src="https://github.com/user-attachments/assets/d3f63aba-2fe6-4df7-86bc-1228b8232a8f" />
+<img width="2216" height="709" alt="image" src="assets/Banner.png" />
 
 
 # ErithX — Contest Calendar + Placement Prep Platform
