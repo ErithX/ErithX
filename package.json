@@ -7,10 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run",
+    "test": "vitest run tests/unit",
+    "test:live": "vitest run tests/integration/leetcode.integration.test.ts",
     "env:pull:prod": "node scripts/pull-production-env.mjs",
     "env:push:prod": "node scripts/push-production-env.mjs",
-    "vercel:env:pull": "vercel env pull .env.production.local --environment=production"
+    "vercel:env:pull": "vercel env pull .env.production.local --environment=production",
+    "test:integration": "vitest run tests/integration"
   },
   "dependencies": {
     "@google-analytics/data": "^7.0.0",
