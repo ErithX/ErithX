@@ -200,14 +200,29 @@ function getGithubMetrics(ghStats: any, degradeSeverity: string[], totalDegradeS
   let contributionsThisWeek = 0;
   
   for (const event of recentEvents) {
-      const eventDate = new Date(event.createdAt);
-      if (eventDate > oneWeekAgo) contributionsThisWeek++;
+    const rawDate = event.createdAt || event.created_at;
+    if (!rawDate) continue;
+    const eventDate = new Date(rawDate);
+    if (!isNaN(eventDate.getTime()) && eventDate > oneWeekAgo) {
+      contributionsThisWeek++;
+    }
+  }
+
+  // Fallback: If no push events were caught (e.g. public event API limit), check recently updated public repos
+  if (contributionsThisWeek === 0 && Array.isArray(ghStats.topRepos)) {
+    const activeRepos = ghStats.topRepos.filter((r: any) => {
+      const pushed = r.updated_at || r.pushedAt;
+      return pushed && new Date(pushed) > oneWeekAgo;
+    });
+    if (activeRepos.length > 0) {
+      contributionsThisWeek = activeRepos.length;
+    }
   }
   
-  if (totalContributions === 0) {
+  if (totalContributions === 0 && contributionsThisWeek === 0) {
       degradeSeverity.push(`No GitHub contributions in the last year.`);
       totalDegradeScore.value += 15;
-  } else if (contributionsThisWeek === 0) {
+  } else if (contributionsThisWeek === 0 && totalContributions > 0) {
       degradeSeverity.push(`Zero GitHub pushes this week.`);
       totalDegradeScore.value += 10;
   }
@@ -226,6 +241,7 @@ function getGithubMetrics(ghStats: any, degradeSeverity: string[], totalDegradeS
     total_contributions_annual: totalContributions,
     contributions_this_week: contributionsThisWeek,
     top_language: topLang,
+    top_repos: (ghStats.topRepos || []).slice(0, 3).map((r: any) => r.name),
     public_repos: ghStats.overview?.publicRepos || 0,
     trend_3_weeks: trend_3_weeks,
     status: contributionsThisWeek > 0 ? "Active Builder" : (totalContributions > 100 ? "Consistent Builder (No activity this week)" : "No activity this week")

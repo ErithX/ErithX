@@ -175,6 +175,41 @@ async function handler(request: Request) {
       fetchPromises.push(
         fetchGithubStats(profile.platforms.github.handle).then(async (ghData) => {
           if (ghData && ghData.user) {
+            const repos = ghData.repos || [];
+            const totalStars = repos.reduce((acc: number, r: any) => acc + (r.stargazers_count || 0), 0);
+
+            // Compute top languages breakdown from repos
+            const langCounts: Record<string, number> = {};
+            repos.forEach((r: any) => {
+              if (r.language) {
+                langCounts[r.language] = (langCounts[r.language] || 0) + 1;
+              }
+            });
+            const totalLangs = Object.values(langCounts).reduce((a, b) => a + b, 0);
+            const topLanguages = Object.entries(langCounts)
+              .map(([lang, count]) => ({
+                language: lang,
+                percentage: Math.round((count / (totalLangs || 1)) * 100)
+              }))
+              .sort((a, b) => b.percentage - a.percentage);
+
+            const topRepos = repos.slice(0, 5).map((r: any) => ({
+              name: r.name,
+              stars: r.stargazers_count || 0,
+              language: r.language || '',
+              url: `https://github.com/${profile.platforms.github.handle}/${r.name}`,
+              description: r.description || ''
+            }));
+
+            // Format recent events cleanly with valid Date objects
+            const recentEvents = (ghData.recentEvents || []).map((e: any) => ({
+              type: e.type || 'PushEvent',
+              repoName: e.repoName || e.repo?.name || '',
+              createdAt: new Date(e.createdAt || e.created_at || Date.now())
+            })).slice(0, 20);
+
+            const totalContributions = ghData.graphqlStats?.totalContributionsLastYear || ghData.recentEvents?.length || 0;
+
             await GithubStats.findOneAndUpdate(
               { userId },
               {
@@ -185,16 +220,19 @@ async function handler(request: Request) {
                   overview: {
                     publicRepos: ghData.user.public_repos || 0,
                     followers: ghData.user.followers || 0,
-                    totalContributionsLastYear: ghData.recentEvents?.length || 0
-                  }
+                    totalStars,
+                    totalContributionsLastYear: totalContributions
+                  },
+                  topLanguages,
+                  topRepos,
+                  recentEvents
                 },
                 $push: {
-                  recentEvents: {
-                    $each: (ghData.recentEvents || []).map((e: any) => ({
-                      type: e.type,
-                      repoName: e.repo?.name || '',
-                      createdAt: new Date(e.created_at)
-                    })).slice(0, 10)
+                  history: {
+                    date: new Date(),
+                    publicRepos: ghData.user.public_repos || 0,
+                    followers: ghData.user.followers || 0,
+                    totalContributions
                   }
                 }
               },
