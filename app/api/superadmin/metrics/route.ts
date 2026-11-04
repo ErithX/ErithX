@@ -37,6 +37,123 @@ export async function GET() {
       .limit(50)
       .lean();
 
+    // Compute 30-day timeline aggregations
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    thirtyDaysAgo.setHours(0, 0, 0, 0);
+
+    const [dailyAggregations, platformAggregations] = await Promise.all([
+      UserActivity.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: thirtyDaysAgo }
+          }
+        },
+        {
+          $group: {
+            _id: {
+              date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+              type: '$type'
+            },
+            count: { $sum: 1 },
+            users: { $addToSet: { $ifNull: ['$userId', '$userEmail'] } }
+          }
+        },
+        {
+          $sort: { '_id.date': 1 }
+        }
+      ]),
+      UserActivity.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: thirtyDaysAgo }
+          }
+        },
+        {
+          $group: {
+            _id: '$platform',
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $sort: { count: -1 }
+        },
+        {
+          $limit: 10
+        }
+      ])
+    ]);
+
+    // Build unbroken continuous 30-day timeline
+    const dayMap: Record<string, any> = {};
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().split('T')[0];
+      dayMap[key] = {
+        date: key,
+        displayDate: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        total: 0,
+        calendarSyncs: 0,
+        contestClicks: 0,
+        pdfDownloads: 0,
+        uniqueUsers: 0,
+        _userSet: new Set<string>()
+      };
+    }
+
+    dailyAggregations.forEach((item: any) => {
+      const day = item._id?.date;
+      if (day && dayMap[day]) {
+        const cnt = item.count || 0;
+        dayMap[day].total += cnt;
+        if (item._id.type === 'contest_calendar_sync') dayMap[day].calendarSyncs += cnt;
+        else if (item._id.type === 'contest_platform_click') dayMap[day].contestClicks += cnt;
+        else if (item._id.type === 'pdf_download') dayMap[day].pdfDownloads += cnt;
+
+        if (Array.isArray(item.users)) {
+          item.users.forEach((u: string) => {
+            if (u) dayMap[day]._userSet.add(u);
+          });
+        }
+      }
+    });
+
+    const dailyTrends = Object.values(dayMap).map((d: any) => {
+      const uniqueUsers = d._userSet.size;
+      delete d._userSet;
+      return {
+        ...d,
+        uniqueUsers
+      };
+    });
+
+    let totalActions30d = 0;
+    let peakDay = { date: 'None', count: 0 };
+    const allUsersIn30d = new Set<string>();
+
+    dailyTrends.forEach((d: any) => {
+      totalActions30d += d.total;
+      if (d.total > peakDay.count) {
+        peakDay = { date: d.displayDate, count: d.total };
+      }
+    });
+
+    recentActivities.forEach((act: any) => {
+      if (act.userId || act.userEmail) {
+        allUsersIn30d.add(act.userId || act.userEmail);
+      }
+    });
+
+    const totalPlatformActions = platformAggregations.reduce((acc: number, curr: any) => acc + curr.count, 0) || 1;
+    const platformDistribution = platformAggregations
+      .filter((p: any) => p._id && p._id.trim() !== '')
+      .map((p: any) => ({
+        platform: p._id,
+        count: p.count,
+        percentage: Math.round((p.count / totalPlatformActions) * 100)
+      }));
+
     const formatBreakdown = (raw: any): Record<string, number> => {
       const result: Record<string, number> = {};
       if (!raw || typeof raw !== 'object') return result;
@@ -47,7 +164,7 @@ export async function GET() {
           result[key] = val;
         } else if (typeof val === 'object' && val !== null) {
           // Flatten nested objects (e.g. { com: 1 })
-          const nestedEntries = val instanceof Map ? Array.from(val.entries()) : Object.entries(val);
+          const nestedEntries = val instanceof Map ? Array.from(val.entries()) : Object.entries(raw);
           for (const [nKey, nVal] of nestedEntries) {
             if (typeof nVal === 'number') {
               result[`${key}.${nKey}`] = nVal;
@@ -72,6 +189,14 @@ export async function GET() {
         pdfDownloads: {
           total: pdfDownloadsMetric.count || 0,
           topResources: topPdfResources
+        },
+        dailyTrends,
+        platformDistribution,
+        summary: {
+          totalActions30d,
+          activeUsers30d: allUsersIn30d.size,
+          peakDay,
+          avgDailyActions: Math.round((totalActions30d / 30) * 10) / 10
         },
         recentActivities: recentActivities.map((act: any) => ({
           id: act._id?.toString(),

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Users, Loader2, AlertTriangle, Search, Clock, Mail, Shield, Activity, CalendarPlus, Swords, Download, Sparkles } from 'lucide-react';
 import { formatLastSeen } from '@/app/lib/lastSeenUtils';
 import AdminSidebar from '@/components/admin/AdminSidebar';
+import AnalyticsEngagementChart from '@/components/admin/AnalyticsEngagementChart';
 
 
 function formatTimeAgo(dateStr: string) {
@@ -195,6 +196,11 @@ export default function AdminUsersPage() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Engagement Analytics Chart */}
+        {metrics?.dailyTrends && (
+          <AnalyticsEngagementChart data={metrics} />
         )}
 
         {/* LIVE USER INTENT ACTIVITY STREAM */}

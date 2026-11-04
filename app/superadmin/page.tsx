@@ -8,10 +8,12 @@ import {
   Search,
   RefreshCw,
   Clock,
-  Trash2
+  Trash2,
+  BarChart2
 } from "lucide-react";
 import { formatLastSeen } from "@/app/lib/lastSeenUtils";
 import AdminSidebar from "@/components/admin/AdminSidebar";
+import AnalyticsEngagementChart from "@/components/admin/AnalyticsEngagementChart";
 
 interface AdminUser {
   id: string;
@@ -38,6 +40,25 @@ export default function SuperadminPage() {
   const [userToDelete, setUserToDelete] = useState<AdminUser | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Analytics Metrics state
+  const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(true);
+
+  const loadAnalytics = async () => {
+    try {
+      setLoadingAnalytics(true);
+      const res = await fetch("/api/superadmin/metrics");
+      if (res.ok) {
+        const json = await res.json();
+        setAnalyticsData(json.data);
+      }
+    } catch (e) {
+      console.error("Failed to load metrics", e);
+    } finally {
+      setLoadingAnalytics(false);
+    }
+  };
+
   const loadUsers = async () => {
     try {
       setLoading(true);
@@ -57,8 +78,14 @@ export default function SuperadminPage() {
     }
   };
 
+  const handleRefreshAll = () => {
+    loadUsers();
+    loadAnalytics();
+  };
+
   useEffect(() => {
     loadUsers();
+    loadAnalytics();
   }, []);
 
   const filteredUsers = useMemo(() => {
@@ -110,17 +137,17 @@ export default function SuperadminPage() {
       {/* Top Header Bar */}
       <header className="border-b border-zinc-800/80 bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-30 px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+          <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
           <span className="text-sm font-semibold tracking-tight text-white">ErithX Admin</span>
           <span className="text-zinc-600 font-mono text-xs">/</span>
-          <span className="text-xs text-zinc-400 font-medium">Users Directory</span>
+          <span className="text-xs text-zinc-400 font-medium">Analytics & Users Hub</span>
         </div>
         <button
-          onClick={loadUsers}
-          className="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 transition-colors"
-          title="Reload Users"
+          onClick={handleRefreshAll}
+          className="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 transition-colors px-2.5 py-1 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/5"
+          title="Reload Data"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-emerald-400" : ""}`} />
+          <RefreshCw className={`w-3.5 h-3.5 ${loading || loadingAnalytics ? "animate-spin text-emerald-400" : ""}`} />
           <span>Refresh</span>
         </button>
       </header>
@@ -130,12 +157,23 @@ export default function SuperadminPage() {
         <AdminSidebar activeTab="resources" />
 
         <main className="flex-1 p-6 md:p-8 overflow-y-auto max-w-7xl">
-          {/* Header & Controls */}
+          {/* ANALYTICS ENGAGEMENT CHART SECTION */}
+          {analyticsData && (
+            <AnalyticsEngagementChart
+              data={analyticsData}
+              isLoading={loadingAnalytics}
+            />
+          )}
+
+          {/* Users Directory Header & Controls */}
           <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-white">Users Directory</h1>
+              <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                <Users className="w-5 h-5 text-emerald-400" />
+                Users Directory
+              </h1>
               <p className="text-xs text-zinc-500 mt-0.5">
-                {users.length -7} Total User
+                {users.length} Registered Coder{users.length === 1 ? '' : 's'} & Activity History
               </p>
             </div>
 
