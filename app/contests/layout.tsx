@@ -13,10 +13,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://erithx.dev/landing/live-contests-dashboard.png',
-        width: 1024,
-        height: 594,
-        alt: 'Coding Contest Calendar – LeetCode, Codeforces, CodeChef | ErithX',
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'ErithX — Track contests. Review habits. Level up every week.',
       },
     ],
   },
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Coding Contest Calendar – LeetCode, Codeforces, CodeChef | ErithX',
     description: 'Track coding contests from LeetCode, Codeforces & more in real-time with 1-click Google Calendar sync.',
-    images: ['https://erithx.dev/landing/live-contests-dashboard.png'],
+    images: ['/og-image.jpg'],
   },
   alternates: {
     canonical: 'https://erithx.dev/contests',

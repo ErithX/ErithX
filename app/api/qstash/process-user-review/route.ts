@@ -26,7 +26,7 @@ import {
 export const maxDuration = 60; // 60s max execution time per user for serverless
 export const dynamic = 'force-dynamic';
 
-async function handler(request: Request) {
+export async function processUserReviewHandler(request: Request) {
   try {
     const body = await request.json();
     const userId = body.userId;
@@ -64,13 +64,25 @@ async function handler(request: Request) {
       const targetName = userSettings?.name?.split(' ')[0] || 'Developer';
 
       let emailStatus = 'Not attempted';
-      if (targetEmail) {
-        const res = await sendWeeklyReviewEmail(targetEmail, targetName, existingReview.generated_text);
-        if (res.success) {
-          await markReviewEmailSent(existingReview._id.toString());
-          emailStatus = 'Sent successfully';
+      if (targetEmail && existingReview?._id) {
+        // ATOMIC CLAIM: Only the first worker to transition email_sent false -> true gets send rights
+        const lockAcquired = await AIReview.findOneAndUpdate(
+          { _id: existingReview._id, email_sent: false },
+          { $set: { email_sent: true, email_sent_at: new Date() } },
+          { new: true }
+        );
+
+        if (lockAcquired) {
+          const res = await sendWeeklyReviewEmail(targetEmail, targetName, existingReview.generated_text);
+          if (!res.success && !res.skipped) {
+            await AIReview.updateOne({ _id: existingReview._id }, { $set: { email_sent: false } });
+            emailStatus = 'Failed to send (rolled back)';
+          } else {
+            emailStatus = res.skipped ? 'Skipped by service' : 'Sent successfully';
+          }
         } else {
-          emailStatus = res.skipped ? 'Skipped by service' : 'Failed to send';
+          console.log(`[Worker] Existing review ${existingReview._id} email already claimed by concurrent worker. Dropping duplicate send.`);
+          emailStatus = 'Skipped (already claimed by concurrent worker)';
         }
       } else {
         emailStatus = 'Missing target email';
@@ -363,20 +375,31 @@ async function handler(request: Request) {
       await UserCoderProfile.updateOne({ userId }, { $set: { pendingAdminNote: '' } });
     }
 
-    // 4. Trigger Email
+    // 4. Trigger Email (Guarded by Atomic Compare-and-Swap State Transition)
     let emailStatus = "Not attempted";
     const targetEmail = userSettings?.email || profile.userEmail;
     const targetName = userSettings?.name?.split(' ')[0] || 'Developer';
 
-    if (targetEmail) {
-      const res = await sendWeeklyReviewEmail(targetEmail, targetName, llmResponse.review_text);
-      if (res.success) {
-        if (savedReview?._id) {
-          await markReviewEmailSent(savedReview._id.toString());
+    if (targetEmail && savedReview?._id) {
+      // ATOMIC CLAIM: Only the single worker that transitions email_sent false -> true is authorized to send
+      const lockAcquired = await AIReview.findOneAndUpdate(
+        { _id: savedReview._id, email_sent: false },
+        { $set: { email_sent: true, email_sent_at: new Date() } },
+        { new: true }
+      );
+
+      if (lockAcquired) {
+        const textToSend = savedReview.generated_text || llmResponse.review_text;
+        const res = await sendWeeklyReviewEmail(targetEmail, targetName, textToSend);
+        if (!res.success && !res.skipped) {
+          await AIReview.updateOne({ _id: savedReview._id }, { $set: { email_sent: false } });
+          emailStatus = "Failed to send (rolled back)";
+        } else {
+          emailStatus = res.skipped ? "Skipped by service" : "Sent successfully";
         }
-        emailStatus = "Sent successfully";
       } else {
-        emailStatus = res.skipped ? "Skipped by service" : "Failed to send";
+        console.log(`[Worker] Review ${savedReview._id} email already claimed by concurrent worker. Dropping duplicate send.`);
+        emailStatus = "Skipped (already claimed by concurrent worker)";
       }
     } else {
       console.warn(`No target email found for userId: ${userId}`);
@@ -406,6 +429,6 @@ async function handler(request: Request) {
 
 // verifySignatureAppRouter checks the Upstash-Signature header 
 // to ensure only QStash can call this endpoint
-export const POST = process.env.NODE_ENV === 'development' 
-  ? handler 
-  : verifySignatureAppRouter(handler);
+export const POST = (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') 
+  ? processUserReviewHandler 
+  : verifySignatureAppRouter(processUserReviewHandler);
